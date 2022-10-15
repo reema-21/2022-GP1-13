@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "919398316951",
+    "project_id": "motazen-f2cc8",
+    "storage_bucket": "motazen-f2cc8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919398316951:android:64c095d9b9bfb8a91962d2",
+        "android_client_info": {
+          "package_name": "com.example.motazen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "919398316951-03mcfs3c0rfkahfb80en2kt8ejmjbe75.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgjbr63P_ObC7uEt_-2tMmlMTR_TIPnMw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "919398316951-03mcfs3c0rfkahfb80en2kt8ejmjbe75.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "919398316951-6c9psjrk065q8tpqv2jj92fr8os5rfss.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.flutter.flutter.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
