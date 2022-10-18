@@ -23,38 +23,98 @@ Future main() async {
   // at the end the answare mab will have as the value answarenumber+short of the aspect in char .
   /*Start if fetching quastion */
   Var.activeStep = 0; //always zero to start the stepper from thw first step .
-  var temaspect = ["family","career","health"]; //take it as an array from Manar and reem code .
+  var temaspect = ["Family","career","Physical Environment","Personal Growth"]; //take it as an array from Manar and reem code .
   List<dynamic> templist = []; //temporary store each aspect quastion 
   int countr = 0 ; //to fill in the answer list 
   int endpoint = 0 ; // to know where to stop in  creating the answers list ; 
   for (int i = 0 ; i<temaspect.length;i++){ //the output of this loop is the quastion list and the answer list 
     String aspect = temaspect[i];
     switch(aspect){ // include all the aspect make sure the index is write 
-      case "family":
+      case "money and finances":
       
      var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(0));
      templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
      Var.quastionsList.addAll(templist);
    for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0F";
+    Var.answares[countr]="0M";
+   }
+   endpoint= countr;
+      break;
+      case "Fun and Recreation":
+      
+     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(7));
+     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
+     Var.quastionsList.addAll(templist);
+   for (countr;countr<=templist.length-1+endpoint;countr++){
+    Var.answares[countr]="0R";
    }
    endpoint= countr;
       break;
       case "career":
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(1));
+      
+     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(6));
      templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
      Var.quastionsList.addAll(templist);
    for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0c";
+    Var.answares[countr]="0C";
    }
    endpoint= countr;
-      break; 
-      case "health":
+      break;
+      case "Significant Other":
+      
+     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(5));
+     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
+     Var.quastionsList.addAll(templist);
+   for (countr;countr<=templist.length-1+endpoint;countr++){
+    Var.answares[countr]="0S";
+   }
+   endpoint= countr;
+      break;
+      case "Physical Environment":
+      
+     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(4));
+     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
+     Var.quastionsList.addAll(templist);
+   for (countr;countr<=templist.length-1+endpoint;countr++){
+    Var.answares[countr]="0E";
+   }
+   endpoint= countr;
+      break;
+      case "Personal Growth":
+      
+     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(3));
+     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
+     Var.quastionsList.addAll(templist);
+   for (countr;countr<=templist.length-1+endpoint;countr++){
+    Var.answares[countr]="0G";
+   }
+   endpoint= countr;
+      break;
+
+      case "Health and Wellbeing":
      var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(2));
      templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
      Var.quastionsList.addAll(templist);
    for (countr;countr<=templist.length-1+endpoint;countr++){
     Var.answares[countr]="0H";
+   }
+   endpoint= countr;
+      break; 
+      case "Friends":
+     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(1));
+     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
+     Var.quastionsList.addAll(templist);
+   for (countr;countr<=templist.length-1+endpoint;countr++){
+    Var.answares[countr]="0D";
+   }
+   endpoint= countr;
+      break;
+       case "Family":
+     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(0));
+     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
+     Var.quastionsList.addAll(templist);
+   for (countr;countr<=templist.length-1+endpoint;countr++){
+    Var.answares[countr]="0F";
    }
    endpoint= countr;
       break;
@@ -278,23 +338,78 @@ class _IconStepperDemo extends State<IconStepperDemo> {
           {
             // statements;
             iconStepper.add(const Icon(
-              Icons.health_and_safety_rounded,
+              Icons.spa,
               color: Colors.blue,
             ));
           }
           break;
 
-        case "c":
+        case "C":
           {
             //statements;
-            iconStepper.add(const Icon(Icons.ac_unit_outlined, color: Colors.pink));
+            iconStepper.add(const Icon(Icons.work, color: Colors.pink));
           }
           break;
         case "F":
           {
             //statements;
             iconStepper.add(const Icon(
-              Icons.h_plus_mobiledata_rounded,
+              Icons.family_restroom,
+              color: Colors.purple,
+            ));
+          }
+          break;
+           case "D":
+          {
+            //statements;
+            iconStepper.add(const Icon(
+                Icons.people,
+              color: Colors.purple,
+            ));
+          }
+          break;
+           case "S":
+          {
+            
+            //statements;
+            iconStepper.add(const Icon(
+              Icons.heart_broken,
+              color: Colors.purple,
+            ));
+          }
+          break;
+           case "E":
+          {
+            //statements;
+            iconStepper.add(const Icon(
+              Icons.heart_broken,
+              color: Colors.purple,
+            ));
+          }
+          break;
+          case "M":
+          {
+            //statements;
+            iconStepper.add(const Icon(
+              Icons.money,
+              color: Colors.purple,
+            ));
+          }
+          break;
+          case "G":
+          {
+            //statements;
+            iconStepper.add(const Icon(
+              Icons.psychology,
+              color: Colors.purple,
+            ));
+          }
+          break;
+          case "R":
+          {
+            //statements;
+            iconStepper.add(const Icon(
+              Icons.celebration,
               color: Colors.purple,
             ));
           }
@@ -322,8 +437,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
         }
       }// to check whether all the quastions are answerd or not .
         return ElevatedButton(onPressed: isAllQuastionAnswerd? () { 
-          // store the users answare and move to home 
-          
+
+            
             } :null,child: const Text("انتهيت "),);   
 }
 
