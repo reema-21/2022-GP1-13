@@ -1,17 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'dart:developer';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import 'package:im_stepper/stepper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'var.dart'; // for the global varible
 import 'alert_dialog.dart'; //for the alert
-import 'homePag.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized(); // to inizlize the db
