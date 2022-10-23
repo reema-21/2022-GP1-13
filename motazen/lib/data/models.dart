@@ -57,7 +57,7 @@ class Data {
   ///rename to aspect
   final String name;
 
-  final double points;
+   double  points;
 
   final Color color;
 
@@ -68,4 +68,6 @@ class Data {
       required this.points,
       required this.color,
       required this.icon});
+
+      
 }

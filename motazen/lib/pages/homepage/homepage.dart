@@ -52,7 +52,7 @@ class _MyHomepageState extends State<Homepage> {
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                          image: AssetImage('assets/images/wheel.png'),
+                          image: AssetImage('assets/images/wheelHome.png'),
                           fit: BoxFit.fill),
                     ),
                   ),

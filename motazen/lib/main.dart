@@ -36,7 +36,7 @@ Future main() async {
   Var.activeStep = 0; //always zero to start the stepper from thw first step .
   //take it as an array from Manar and reem code .
   //List<Aspect> temaspect = [];
-    var temaspect = ["Family","career","Physical Environment","Personal Growth","Friends","Fun and Recreation","Health and Wellbeing","Significant Other","money and finances"]; //take it as an array from Manar and reem code .
+    var temaspect = ["Fun and Recreation","Health and Wellbeing","Significant Other","money and finances"]; //take it as an array from Manar and reem code .
 
 
   //temaspect = await iser.getAspectFirstTime();
@@ -462,6 +462,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
 
           Evaluate(widget.isr); 
 
+           Navigator.push(context, MaterialPageRoute(builder: (context) {return const Homepage();}));
 
             
             } :null,child: const Text("انتهيت "),);   

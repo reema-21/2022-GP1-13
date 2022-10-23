@@ -87,6 +87,11 @@ Future <List<Aspect>> getAspectFirstTime () async{
   return isar.aspects.where().findAll()
 ;}
 
+Future <List<Point>> getpointsFirstTime () async{
+  final isar = await db ;
+  return isar.points.where().findAll()
+;}
+
     // to get all other collection records based on a specific Aspect 
     // get points for a specfic aspect 
     //get goals for a specfic aspect 
