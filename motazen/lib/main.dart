@@ -1,11 +1,10 @@
 import 'package:datatry/isar_service.dart';
 import 'package:datatry/entities/aspect.dart';
 import 'package:datatry/entities/point.dart';
-
+import"package:fl_chart/fl_chart.dart";
 import 'package:isar/isar.dart';//for local Storage
 import 'dart:io';//for the directory
 import 'package:path_provider/path_provider.dart';
-import 'package:isar/isar.dart' ;
 import 'package:flutter/material.dart';
 import 'package:isar_flutter_libs/isar_flutter_libs.dart';
 import 'package:im_stepper/stepper.dart';
@@ -13,6 +12,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'var.dart'; // for the global varible
 import 'alert_dialog.dart'; //for the alert
+import 'package:datatry/pages/homepage/homepage.dart';
+
 Future main() async {
  
   WidgetsFlutterBinding.ensureInitialized();
@@ -460,6 +461,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
         return ElevatedButton(onPressed: isAllQuastionAnswerd? () { 
 
           Evaluate(widget.isr); 
+
 
             
             } :null,child: const Text("انتهيت "),);   
