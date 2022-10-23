@@ -1,6 +1,8 @@
+import 'package:datatry/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'models.dart';
-
+import 'package:datatry/entities/aspect.dart';
+import 'package:datatry/entities/point.dart';
 /// Fake data used to demo the application.
 final fakeData = Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: [
   Item(
@@ -54,6 +56,24 @@ final fakeData = Todo(id: 'todo-tag-1', description: 'مهام اليوم', item
 ]);
 
 class WheelData {
+  // IsarService isar = IsarService();
+  // Future <void > createData() async{
+  //      List <Aspect> AspectList =[];
+  // List<Point> points =[];
+  //   AspectList = await isar.getAspectFirstTime();
+  //   for ( int i = 0 ; i<AspectList.length ; i++)
+  //   // ignore: curly_braces_in_flow_control_structures
+  //   points = await isar.getAspectPoints(AspectList[i]);
+  //   List<Data> data = [];
+  //   for (int i = 0 ; i<points.length ;i++){
+  //     data[i].name = points[i].aspect.value.name;
+  //     data[i].points = points[i].finalValues;
+      
+  //   }
+
+  // }
+
+  // }
   static List<Data> data = [
     Data(
         name: 'career',
