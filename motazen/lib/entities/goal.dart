@@ -1,4 +1,5 @@
 import 'package:datatry/entities/aspect.dart';
+import 'package:datatry/entities/goal.dart';
 import 'package:isar/isar.dart';
 part 'goal.g.dart';
 @collection 
