@@ -1,7 +1,6 @@
 import 'package:isar/isar.dart';
-import 'package:datatry/entities/aspect.dart';
+import 'package:isar/isar.dart';
 
-part 'aspect.g.dart';
 @collection
 class Aspect{
   Id id = Isar.autoIncrement;
