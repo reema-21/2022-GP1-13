@@ -34,9 +34,11 @@ Future main() async {
   /*Start if fetching quastion */
   Var.activeStep = 0; //always zero to start the stepper from thw first step .
   //take it as an array from Manar and reem code .
-  List<Aspect> temaspect = [];
+  //List<Aspect> temaspect = [];
+    var temaspect = ["Family","career","Physical Environment","Personal Growth","Friends","Fun and Recreation","Health and Wellbeing","Significant Other","money and finances"]; //take it as an array from Manar and reem code .
 
-  temaspect = await iser.getAspectFirstTime();
+
+  //temaspect = await iser.getAspectFirstTime();
   
   //create Aspects to be used in the with points .
   
@@ -45,11 +47,12 @@ Future main() async {
   int countr = 0 ; //to fill in the answer list 
   int endpoint = 0 ; // to know where to stop in  creating the answers list ; 
   for (int i = 0 ; i<temaspect.length;i++){ //the output of this loop is the quastion list and the answer list 
-    Aspect aspect = temaspect[i];
-    switch(aspect.name){ // include all the aspect make sure the index is write 
+    //Aspect aspect = temaspect[i];
+    String name = temaspect[i];
+    switch(name){ // include all the aspect make sure the index is write 
       case "money and finances":
       
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(0));
+     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(8));
      templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
      Var.quastionsList.addAll(templist);
    for (countr;countr<=templist.length-1+endpoint;countr++){
@@ -535,7 +538,7 @@ for (int i= 0 ; i<Var.answares.length ;i++){ // i will sunm the point of each as
           case "M":
           {          
             x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-            funAndRecreationAspectPoints=funAndRecreationAspectPoints+x;
+            moneyAspectPoints=moneyAspectPoints+x;
 
 
           }
@@ -559,12 +562,17 @@ for (int i= 0 ; i<Var.answares.length ;i++){ // i will sunm the point of each as
       }
 
       //devide and create points and save in local storage . 
-      if (moneyAspectPoints != 0 ){
+      
+
+
+
+}
+if (moneyAspectPoints != 0 ){
       final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
         aspect.name = "money and finances";
       isar.createAspect(aspect);
         final Point point = Point();
-        point.finalValues = moneyAspectPoints/40;
+        point.finalValues = moneyAspectPoints/50;
         point.aspect.value = aspect; //because it is linked . 
         isar.createPoint(point);
             }
@@ -640,11 +648,6 @@ for (int i= 0 ; i<Var.answares.length ;i++){ // i will sunm the point of each as
         point.aspect.value = aspect; //because it is linked . 
         isar.createPoint(point);
             }
-
-
-
-}
-
 
 
   

@@ -111,6 +111,12 @@ Future <List<Aspect>> getAspectFirstTime () async{
 
     }
 
+    // Future <void> LinkPoinToAspect(String name ,Aspect aspect ) async{
+    //   final isar = await db ;
+    //   await isar.points.where().filter().findFirst();
+
+    // }
+
 
 
 }
