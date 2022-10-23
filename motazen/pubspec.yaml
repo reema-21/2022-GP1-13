@@ -42,6 +42,7 @@ dependencies:
   isar: ^3.0.0-dev.8
   path_provider: ^2.0.11
   introduction_screen: ^3.0.2
+  isar_flutter_libs: ^3.0.2
 
   
 dev_dependencies:
