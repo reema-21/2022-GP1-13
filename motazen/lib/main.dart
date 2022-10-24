@@ -1,12 +1,9 @@
 import 'package:datatry/isar_service.dart';
 import 'package:datatry/entities/aspect.dart';
 import 'package:datatry/entities/point.dart';
-import"package:fl_chart/fl_chart.dart";
-import 'package:isar/isar.dart';//for local Storage
-import 'dart:io';//for the directory
+import 'dart:io'; //for the directory
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:isar_flutter_libs/isar_flutter_libs.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,12 +12,11 @@ import 'alert_dialog.dart'; //for the alert
 import 'package:datatry/pages/homepage/homepage.dart';
 
 Future main() async {
- 
   WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp(); // to inizlize the db
+  await Firebase.initializeApp(); // to inizlize the db
   Directory doc = await getApplicationDocumentsDirectory();
   IsarService iser = IsarService();
-  iser.openIsar(); 
+  iser.openIsar();
 
   /********************************************* 
    Here i will fetch the quastion based on the chosen asspect 
@@ -36,118 +32,153 @@ Future main() async {
   Var.activeStep = 0; //always zero to start the stepper from thw first step .
   //take it as an array from Manar and reem code .
   //List<Aspect> temaspect = [];
-    var temaspect = ["Fun and Recreation","Health and Wellbeing","Significant Other","money and finances"]; //take it as an array from Manar and reem code .
-
+  var temaspect = [
+    "Fun and Recreation",
+    "Health and Wellbeing",
+    "Significant Other",
+    "money and finances"
+  ]; //take it as an array from Manar and reem code .
 
   //temaspect = await iser.getAspectFirstTime();
-  
+
   //create Aspects to be used in the with points .
-  
-  
-  List<dynamic> templist = []; //temporary store each aspect quastion 
-  int countr = 0 ; //to fill in the answer list 
-  int endpoint = 0 ; // to know where to stop in  creating the answers list ; 
-  for (int i = 0 ; i<temaspect.length;i++){ //the output of this loop is the quastion list and the answer list 
+
+  List<dynamic> templist = []; //temporary store each aspect quastion
+  int countr = 0; //to fill in the answer list
+  int endpoint = 0; // to know where to stop in  creating the answers list ;
+  for (int i = 0; i < temaspect.length; i++) {
+    //the output of this loop is the quastion list and the answer list
     //Aspect aspect = temaspect[i];
     String name = temaspect[i];
-    switch(name){ // include all the aspect make sure the index is write 
+    switch (name) {
+      // include all the aspect make sure the index is write
       case "money and finances":
-      
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(8));
-     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
-     Var.quastionsList.addAll(templist);
-   for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0M";
-   }
-   endpoint= countr;
-      break;
+        var aspectQuastions = await FirebaseFirestore.instance
+            .collection("aspect_Quastion")
+            .get()
+            .then((value) => value.docs.elementAt(8));
+        templist =
+            Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
+        Var.quastionsList.addAll(templist);
+        for (countr; countr <= templist.length - 1 + endpoint; countr++) {
+          Var.answares[countr] = "0M";
+        }
+        endpoint = countr;
+        break;
       case "Fun and Recreation":
-      
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(7));
-     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
-     Var.quastionsList.addAll(templist);
-   for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0R";
-   }
-   endpoint= countr;
-      break;
+        var aspectQuastions = await FirebaseFirestore.instance
+            .collection("aspect_Quastion")
+            .get()
+            .then((value) => value.docs.elementAt(7));
+        templist =
+            Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
+        Var.quastionsList.addAll(templist);
+        for (countr; countr <= templist.length - 1 + endpoint; countr++) {
+          Var.answares[countr] = "0R";
+        }
+        endpoint = countr;
+        break;
       case "career":
-      
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(6));
-     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
-     Var.quastionsList.addAll(templist);
-   for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0C";
-   }
-   endpoint= countr;
-      break;
+        var aspectQuastions = await FirebaseFirestore.instance
+            .collection("aspect_Quastion")
+            .get()
+            .then((value) => value.docs.elementAt(6));
+        templist =
+            Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
+        Var.quastionsList.addAll(templist);
+        for (countr; countr <= templist.length - 1 + endpoint; countr++) {
+          Var.answares[countr] = "0C";
+        }
+        endpoint = countr;
+        break;
       case "Significant Other":
-      
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(5));
-     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
-     Var.quastionsList.addAll(templist);
-   for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0S";
-   }
-   endpoint= countr;
-      break;
+        var aspectQuastions = await FirebaseFirestore.instance
+            .collection("aspect_Quastion")
+            .get()
+            .then((value) => value.docs.elementAt(5));
+        templist =
+            Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
+        Var.quastionsList.addAll(templist);
+        for (countr; countr <= templist.length - 1 + endpoint; countr++) {
+          Var.answares[countr] = "0S";
+        }
+        endpoint = countr;
+        break;
       case "Physical Environment":
-      
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(4));
-     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
-     Var.quastionsList.addAll(templist);
-   for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0E";
-   }
-   endpoint= countr;
-      break;
+        var aspectQuastions = await FirebaseFirestore.instance
+            .collection("aspect_Quastion")
+            .get()
+            .then((value) => value.docs.elementAt(4));
+        templist =
+            Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
+        Var.quastionsList.addAll(templist);
+        for (countr; countr <= templist.length - 1 + endpoint; countr++) {
+          Var.answares[countr] = "0E";
+        }
+        endpoint = countr;
+        break;
       case "Personal Growth":
-      
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(3));
-     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
-     Var.quastionsList.addAll(templist);
-   for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0G";
-   }
-   endpoint= countr;
-      break;
+        var aspectQuastions = await FirebaseFirestore.instance
+            .collection("aspect_Quastion")
+            .get()
+            .then((value) => value.docs.elementAt(3));
+        templist =
+            Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
+        Var.quastionsList.addAll(templist);
+        for (countr; countr <= templist.length - 1 + endpoint; countr++) {
+          Var.answares[countr] = "0G";
+        }
+        endpoint = countr;
+        break;
 
       case "Health and Wellbeing":
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(2));
-     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
-     Var.quastionsList.addAll(templist);
-   for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0H";
-   }
-   endpoint= countr;
-      break; 
+        var aspectQuastions = await FirebaseFirestore.instance
+            .collection("aspect_Quastion")
+            .get()
+            .then((value) => value.docs.elementAt(2));
+        templist =
+            Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
+        Var.quastionsList.addAll(templist);
+        for (countr; countr <= templist.length - 1 + endpoint; countr++) {
+          Var.answares[countr] = "0H";
+        }
+        endpoint = countr;
+        break;
       case "Friends":
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(1));
-     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
-     Var.quastionsList.addAll(templist);
-   for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0D";
-   }
-   endpoint= countr;
-      break;
-       case "Family":
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(0));
-     templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
-     Var.quastionsList.addAll(templist);
-   for (countr;countr<=templist.length-1+endpoint;countr++){
-    Var.answares[countr]="0F";
-   }
-   endpoint= countr;
-      break;
+        var aspectQuastions = await FirebaseFirestore.instance
+            .collection("aspect_Quastion")
+            .get()
+            .then((value) => value.docs.elementAt(1));
+        templist =
+            Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
+        Var.quastionsList.addAll(templist);
+        for (countr; countr <= templist.length - 1 + endpoint; countr++) {
+          Var.answares[countr] = "0D";
+        }
+        endpoint = countr;
+        break;
+      case "Family":
+        var aspectQuastions = await FirebaseFirestore.instance
+            .collection("aspect_Quastion")
+            .get()
+            .then((value) => value.docs.elementAt(0));
+        templist =
+            Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
+        Var.quastionsList.addAll(templist);
+        for (countr; countr <= templist.length - 1 + endpoint; countr++) {
+          Var.answares[countr] = "0F";
+        }
+        endpoint = countr;
+        break;
     }
   }
 
 /**End of fetching quastions  */
-  runApp( MaterialApp (home :IconStepperDemo(isr : iser ))); // my widget
+  runApp(MaterialApp(home: IconStepperDemo(isr: iser))); // my widget
 }
 
 class IconStepperDemo extends StatefulWidget {
-  final IsarService isr ; 
+  final IsarService isr;
   const IconStepperDemo({super.key, required this.isr});
   @override
   _IconStepperDemo createState() => _IconStepperDemo();
@@ -189,7 +220,6 @@ class _IconStepperDemo extends State<IconStepperDemo> {
 
   Widget build(BuildContext context) {
     return MaterialApp(
-      
       debugShowCheckedModeBanner: false,
       home: Directionality(
           // <-- Add this Directionality
@@ -198,37 +228,35 @@ class _IconStepperDemo extends State<IconStepperDemo> {
             backgroundColor: const Color.fromRGBO(238, 238, 238, 1),
             appBar: AppBar(
               leading: IconButton(
-                  // ignore: prefer_const_constructors
-                  icon: Icon(Icons.arrow_back,
-                      color: const Color.fromARGB(255, 245, 241, 241)),
-                  onPressed:() async {
-            final action = await AlertDialogs.yesCancelDialog( context, 'هل انت متاكد من الرجوع ', 'بالنقر على "تاكيد"لن يتم حفظ الاجابات ');
-            if(action == DialogsAction.yes) {
-              //return to the previouse page different code for the ios .
-             // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
-            } else {
-             print ("bey");
-            }
-          },
-
-                  ),
+                // ignore: prefer_const_constructors
+                icon: Icon(Icons.arrow_back,
+                    color: const Color.fromARGB(255, 245, 241, 241)),
+                onPressed: () async {
+                  final action = await AlertDialogs.yesCancelDialog(
+                      context,
+                      'هل انت متاكد من الرجوع ',
+                      'بالنقر على "تاكيد"لن يتم حفظ الاجابات ');
+                  if (action == DialogsAction.yes) {
+                    //return to the previouse page different code for the ios .
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
+                  } else {
+                    print("bey");
+                  }
+                },
+              ),
               title: const Text(
                 'اسئلة تقييم جوانب الحياة ',
               ),
               elevation: 0,
-              
-              flexibleSpace://for coloring
-               Container(
-                decoration:const BoxDecoration(
-                  gradient:LinearGradient(
-          // ignore: prefer_const_literals_to_create_immutables
-          colors: [Color(0xff66bf77), Color(0xff3d82c4)],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-        )
-      
-                )
-              ),
+              flexibleSpace: //for coloring
+                  Container(
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                // ignore: prefer_const_literals_to_create_immutables
+                colors: [Color(0xff66bf77), Color(0xff3d82c4)],
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+              ))),
             ),
             body: Padding(
               padding: const EdgeInsets.all(0),
@@ -240,14 +268,15 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                   ),
                   Container(
                       decoration: BoxDecoration(
-                          color:
-                              Colors.grey[200],
+                          color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(0)),
                       child: IconStepper(
-                        stepReachedAnimationEffect:Curves.linear,//stop the jumping 
+                        stepReachedAnimationEffect:
+                            Curves.linear, //stop the jumping
                         lineColor: Colors.black,
                         stepColor: Colors.white,
-                        activeStepColor: const Color.fromARGB(255, 165, 154, 154),
+                        activeStepColor:
+                            const Color.fromARGB(255, 165, 154, 154),
                         stepRadius: 20,
                         stepPadding: 0,
                         // move it to a function so that you take the aspect and the number of quastion = x and then you reapt the icon    x times
@@ -292,15 +321,14 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                     child: Column(
                       textDirection: TextDirection.rtl,
                       children: [
-                        Text(
-                          headerText(),
-                           style: const TextStyle(color: Colors.white, fontSize:30)
-                        ),
+                        Text(headerText(),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 30)),
                         Container(
                             margin: const EdgeInsets.only(top: 20),
                             padding: const EdgeInsets.all(20),
                             child: Row(
-                              textDirection:TextDirection.ltr,
+                              textDirection: TextDirection.ltr,
                               children: [
                                 buildSlideLable(10),
                                 Expanded(
@@ -312,11 +340,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                       ],
                     ),
                   ),
-
-                  
                 ],
               ),
-              
             ),
             bottomSheet: doneButton(widget.isr),
           )),
@@ -332,12 +357,15 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     return Text.rich(
       TextSpan(
         text: "السؤال $start ",
-        style:const TextStyle(color: Colors.black54 , fontSize: 30,fontWeight: FontWeight.bold),
+        style: const TextStyle(
+            color: Colors.black54, fontSize: 30, fontWeight: FontWeight.bold),
         children: [
           TextSpan(
-            text: "/ $last",
-            style:const TextStyle(color: Colors.black54 , fontSize: 30,fontWeight: FontWeight.bold)
-          )
+              text: "/ $last",
+              style: const TextStyle(
+                  color: Colors.black54,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold))
         ],
       ),
     );
@@ -381,26 +409,16 @@ class _IconStepperDemo extends State<IconStepperDemo> {
             ));
           }
           break;
-           case "D":
+        case "D":
           {
             //statements;
             iconStepper.add(const Icon(
-                Icons.people,
+              Icons.people,
               color: Colors.purple,
             ));
           }
           break;
-           case "S":
-          {
-            
-            //statements;
-            iconStepper.add(const Icon(
-              Icons.heart_broken,
-              color: Colors.purple,
-            ));
-          }
-          break;
-           case "E":
+        case "S":
           {
             //statements;
             iconStepper.add(const Icon(
@@ -409,7 +427,16 @@ class _IconStepperDemo extends State<IconStepperDemo> {
             ));
           }
           break;
-          case "M":
+        case "E":
+          {
+            //statements;
+            iconStepper.add(const Icon(
+              Icons.heart_broken,
+              color: Colors.purple,
+            ));
+          }
+          break;
+        case "M":
           {
             //statements;
             iconStepper.add(const Icon(
@@ -418,7 +445,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
             ));
           }
           break;
-          case "G":
+        case "G":
           {
             //statements;
             iconStepper.add(const Icon(
@@ -427,7 +454,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
             ));
           }
           break;
-          case "R":
+        case "R":
           {
             //statements;
             iconStepper.add(const Icon(
@@ -446,217 +473,218 @@ class _IconStepperDemo extends State<IconStepperDemo> {
         width: 25,
         child: Text(
           value.round().toString(),
-          style: const TextStyle(color:Colors.white,fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
         ),
       );
 
-      Widget doneButton(IsarService isar){ //once all quastion answare and the user is n any quastion it will be enabeld  
-      bool isAllQuastionAnswerd = true ; 
-      for (int i =0; i<Var.answares.length ;i++ ){
-        var result =double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-        if (result == 0 ){
-            isAllQuastionAnswerd = false ;
-        }
-      }// to check whether all the quastions are answerd or not .
-        return ElevatedButton(onPressed: isAllQuastionAnswerd? () { 
+  Widget doneButton(IsarService isar) {
+    //once all quastion answare and the user is n any quastion it will be enabeld
+    bool isAllQuastionAnswerd = true;
+    for (int i = 0; i < Var.answares.length; i++) {
+      var result = double.parse(
+          Var.answares[i].substring(0, Var.answares[i].length - 1));
+      if (result == 0) {
+        isAllQuastionAnswerd = false;
+      }
+    } // to check whether all the quastions are answerd or not .
+    return ElevatedButton(
+      onPressed: isAllQuastionAnswerd
+          ? () {
+              Evaluate(widget.isr);
 
-          Evaluate(widget.isr); 
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const Homepage();
+              }));
+            }
+          : null,
+      child: const Text("انتهيت "),
+    );
+  }
 
-           Navigator.push(context, MaterialPageRoute(builder: (context) {return const Homepage();}));
-
-            
-            } :null,child: const Text("انتهيت "),);   
-}
-
-Evaluate (IsarService isar) async{
-  //calculate each aspect points ; 
-  /**
+  Evaluate(IsarService isar) async {
+    //calculate each aspect points ;
+    /**
    * 1- i will seprate answers array into answareArrays for each aspect ; 
    * 2- if the arrays is null then this aspect is not choosed . 
    * 3- if the arrays is null then the aspect is not choosed . 
    * 4- if the arrays hass value then sum and devide and save into the points collection .
    */
- double moneyAspectPoints = 0 ; 
- double familyAspectPoints  = 0 ; 
- double friendsAspectPoints  = 0 ; 
- double healthAndWellbeingAspectPoints  = 0;
- double personalGrowthAspectPoints  = 0; 
- double physicalEnvironmentAspectPoints  = 0 ; 
- double significantOtherAspectPoints  = 0 ;
- double CareerAspectPoints = 0 ; 
- double funAndRecreationAspectPoints = 0 ; 
+    double moneyAspectPoints = 0;
+    double familyAspectPoints = 0;
+    double friendsAspectPoints = 0;
+    double healthAndWellbeingAspectPoints = 0;
+    double personalGrowthAspectPoints = 0;
+    double physicalEnvironmentAspectPoints = 0;
+    double significantOtherAspectPoints = 0;
+    double CareerAspectPoints = 0;
+    double funAndRecreationAspectPoints = 0;
 
-for (int i= 0 ; i<Var.answares.length ;i++){ // i will sunm the point of each aspect ; 
- String aspectType = Var.answares[i].substring(Var.answares[i].length - 1);
- double x = 0 ; 
- switch (aspectType) {
+    for (int i = 0; i < Var.answares.length; i++) {
+      // i will sunm the point of each aspect ;
+      String aspectType = Var.answares[i].substring(Var.answares[i].length - 1);
+      double x = 0;
+      switch (aspectType) {
         //Must include all the aspect characters and specify an icon for that
         case "H":
           {
-            x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-            healthAndWellbeingAspectPoints =healthAndWellbeingAspectPoints+x;
-           
+            x = double.parse(
+                Var.answares[i].substring(0, Var.answares[i].length - 1));
+            healthAndWellbeingAspectPoints = healthAndWellbeingAspectPoints + x;
           }
           break;
 
         case "C":
           {
-           x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-           CareerAspectPoints=CareerAspectPoints+x;
-
-            
+            x = double.parse(
+                Var.answares[i].substring(0, Var.answares[i].length - 1));
+            CareerAspectPoints = CareerAspectPoints + x;
           }
           break;
         case "F":
           {
-           x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-           familyAspectPoints=familyAspectPoints+x;
-
-          
+            x = double.parse(
+                Var.answares[i].substring(0, Var.answares[i].length - 1));
+            familyAspectPoints = familyAspectPoints + x;
           }
           break;
-           case "D":
+        case "D":
           {
-          x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-          friendsAspectPoints=friendsAspectPoints+x;
-          
+            x = double.parse(
+                Var.answares[i].substring(0, Var.answares[i].length - 1));
+            friendsAspectPoints = friendsAspectPoints + x;
           }
           break;
-           case "S":
+        case "S":
           {
-           x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-           significantOtherAspectPoints=significantOtherAspectPoints+x;
-           
+            x = double.parse(
+                Var.answares[i].substring(0, Var.answares[i].length - 1));
+            significantOtherAspectPoints = significantOtherAspectPoints + x;
           }
           break;
-           case "E":
+        case "E":
           {
-           x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-           physicalEnvironmentAspectPoints=physicalEnvironmentAspectPoints+x;
-
-
-          
+            x = double.parse(
+                Var.answares[i].substring(0, Var.answares[i].length - 1));
+            physicalEnvironmentAspectPoints =
+                physicalEnvironmentAspectPoints + x;
           }
           break;
-          case "M":
-          {          
-            x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-            moneyAspectPoints=moneyAspectPoints+x;
-
-
-          }
-          break;
-          case "G":
+        case "M":
           {
-          x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-          personalGrowthAspectPoints=personalGrowthAspectPoints+x;
-
-            
+            x = double.parse(
+                Var.answares[i].substring(0, Var.answares[i].length - 1));
+            moneyAspectPoints = moneyAspectPoints + x;
           }
           break;
-          case "R":
-
+        case "G":
           {
-              x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-             funAndRecreationAspectPoints=funAndRecreationAspectPoints+x;
-          
+            x = double.parse(
+                Var.answares[i].substring(0, Var.answares[i].length - 1));
+            personalGrowthAspectPoints = personalGrowthAspectPoints + x;
+          }
+          break;
+        case "R":
+          {
+            x = double.parse(
+                Var.answares[i].substring(0, Var.answares[i].length - 1));
+            funAndRecreationAspectPoints = funAndRecreationAspectPoints + x;
           }
           break;
       }
 
-      //devide and create points and save in local storage . 
-      
+      //devide and create points and save in local storage .
 
-
-
-}
-if (moneyAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "money and finances";
+    }
+    if (moneyAspectPoints != 0) {
+      final Aspect aspect =
+          Aspect(); // this should be the same as the one created above ;
+      aspect.name = "money and finances";
       isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = moneyAspectPoints/50;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (funAndRecreationAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Fun and Recreation";
+      final Point point = Point();
+      point.finalValues = moneyAspectPoints / 50;
+      point.aspect.value = aspect; //because it is linked .
+      isar.createPoint(point);
+    }
+    if (funAndRecreationAspectPoints != 0) {
+      final Aspect aspect =
+          Aspect(); // this should be the same as the one created above ;
+      aspect.name = "Fun and Recreation";
       isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = funAndRecreationAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (healthAndWellbeingAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Health and Wellbeing";
+      final Point point = Point();
+      point.finalValues = funAndRecreationAspectPoints / 40;
+      point.aspect.value = aspect; //because it is linked .
+      isar.createPoint(point);
+    }
+    if (healthAndWellbeingAspectPoints != 0) {
+      final Aspect aspect =
+          Aspect(); // this should be the same as the one created above ;
+      aspect.name = "Health and Wellbeing";
       isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = healthAndWellbeingAspectPoints/50;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (significantOtherAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Significant Other";
+      final Point point = Point();
+      point.finalValues = healthAndWellbeingAspectPoints / 50;
+      point.aspect.value = aspect; //because it is linked .
+      isar.createPoint(point);
+    }
+    if (significantOtherAspectPoints != 0) {
+      final Aspect aspect =
+          Aspect(); // this should be the same as the one created above ;
+      aspect.name = "Significant Other";
       isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = significantOtherAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (physicalEnvironmentAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Physical Environment";
+      final Point point = Point();
+      point.finalValues = significantOtherAspectPoints / 40;
+      point.aspect.value = aspect; //because it is linked .
+      isar.createPoint(point);
+    }
+    if (physicalEnvironmentAspectPoints != 0) {
+      final Aspect aspect =
+          Aspect(); // this should be the same as the one created above ;
+      aspect.name = "Physical Environment";
       isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = physicalEnvironmentAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (personalGrowthAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Personal Growth";
+      final Point point = Point();
+      point.finalValues = physicalEnvironmentAspectPoints / 40;
+      point.aspect.value = aspect; //because it is linked .
+      isar.createPoint(point);
+    }
+    if (personalGrowthAspectPoints != 0) {
+      final Aspect aspect =
+          Aspect(); // this should be the same as the one created above ;
+      aspect.name = "Personal Growth";
       isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = personalGrowthAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if ( familyAspectPoints!= 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Family";
+      final Point point = Point();
+      point.finalValues = personalGrowthAspectPoints / 40;
+      point.aspect.value = aspect; //because it is linked .
+      isar.createPoint(point);
+    }
+    if (familyAspectPoints != 0) {
+      final Aspect aspect =
+          Aspect(); // this should be the same as the one created above ;
+      aspect.name = "Family";
       isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = familyAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (friendsAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Friends";
+      final Point point = Point();
+      point.finalValues = familyAspectPoints / 40;
+      point.aspect.value = aspect; //because it is linked .
+      isar.createPoint(point);
+    }
+    if (friendsAspectPoints != 0) {
+      final Aspect aspect =
+          Aspect(); // this should be the same as the one created above ;
+      aspect.name = "Friends";
       isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = friendsAspectPoints/50;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (CareerAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "career";
+      final Point point = Point();
+      point.finalValues = friendsAspectPoints / 50;
+      point.aspect.value = aspect; //because it is linked .
+      isar.createPoint(point);
+    }
+    if (CareerAspectPoints != 0) {
+      final Aspect aspect =
+          Aspect(); // this should be the same as the one created above ;
+      aspect.name = "career";
       isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = CareerAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-
-
-  
-
-
-
-}
-
+      final Point point = Point();
+      point.finalValues = CareerAspectPoints / 40;
+      point.aspect.value = aspect; //because it is linked .
+      isar.createPoint(point);
+    }
+  }
 }
