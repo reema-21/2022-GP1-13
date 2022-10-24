@@ -1,5 +1,4 @@
 import 'package:isar/isar.dart';
-import 'package:isar/isar.dart';
 part 'aspect.g.dart';
 
 @collection

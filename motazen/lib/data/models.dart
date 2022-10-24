@@ -55,7 +55,7 @@ class Item {
 
 class Data {
   ///rename to aspect
-  final String name;
+  String name;
 
    double  points;
 

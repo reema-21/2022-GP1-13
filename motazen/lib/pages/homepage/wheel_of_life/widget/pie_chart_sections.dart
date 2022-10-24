@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:datatry/data/data.dart';
 
-List<PieChartSectionData> getSections(int touchedIndex) => WheelData.data
+List<PieChartSectionData> getSections(int touchedIndex) => WheelData().data
     .asMap()
     .map<int, PieChartSectionData>((index, data) {
       double points = data.points;
