@@ -10,6 +10,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'var.dart'; // for the global varible
 import 'alert_dialog.dart'; //for the alert
 import 'package:motazen/pages/homepage/homepage.dart';
+import 'package:motazen/data/models.dart';
+import 'package:motazen/data/models.dart';
+import 'package:motazen/data/data.dart';
+
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,8 +40,8 @@ Future main() async {
   var temaspect = [
     "Fun and Recreation",
     "Health and Wellbeing",
-    "Significant Other",
-    "money and finances"
+    "Friends",
+    
   ]; //take it as an array from Manar and reem code .
 
   //temaspect = await iser.getAspectFirstTime();
@@ -503,6 +508,11 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   }
 
   Evaluate(IsarService isar) async {
+    WheelData x = WheelData();
+    x.createData();
+    x.convertFutureListToList();
+    
+    
     //calculate each aspect points ;
     /**
    * 1- i will seprate answers array into answareArrays for each aspect ; 
@@ -613,6 +623,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       isar.createAspect(aspect);
       final Point point = Point();
       point.finalValues = funAndRecreationAspectPoints / 40;
+      point.finalValues=point.finalValues*100;
       point.aspect.value = aspect; //because it is linked .
       isar.createPoint(point);
     }
@@ -623,6 +634,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       isar.createAspect(aspect);
       final Point point = Point();
       point.finalValues = healthAndWellbeingAspectPoints / 50;
+      point.finalValues=point.finalValues*100;
       point.aspect.value = aspect; //because it is linked .
       isar.createPoint(point);
     }
