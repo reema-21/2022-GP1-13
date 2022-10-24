@@ -1,4 +1,4 @@
-import 'package:datatry/pages/homepage/wheel_of_life/widget/pie_chart_sections.dart';
+import 'package:motazen/pages/homepage/wheel_of_life/widget/pie_chart_sections.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 

@@ -1,6 +1,6 @@
-import 'package:datatry/isar_service.dart';
-import 'package:datatry/entities/aspect.dart';
-import 'package:datatry/entities/point.dart';
+import 'package:motazen/isar_service.dart';
+import 'package:motazen/entities/aspect.dart';
+import 'package:motazen/entities/point.dart';
 import 'dart:io'; //for the directory
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'var.dart'; // for the global varible
 import 'alert_dialog.dart'; //for the alert
-import 'package:datatry/pages/homepage/homepage.dart';
+import 'package:motazen/pages/homepage/homepage.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

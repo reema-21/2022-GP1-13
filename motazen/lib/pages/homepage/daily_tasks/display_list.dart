@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:datatry/data/models.dart';
-import 'package:datatry/pages/homepage/daily_tasks/custom_rect_tween.dart';
-import 'package:datatry/pages/homepage/daily_tasks/hero_dialog_route.dart';
+import 'package:motazen/data/models.dart';
+import 'package:motazen/pages/homepage/daily_tasks/custom_rect_tween.dart';
+import 'package:motazen/pages/homepage/daily_tasks/hero_dialog_route.dart';
 
 /// {@template todo_card}
 /// Card that display a [Todo]'s content.

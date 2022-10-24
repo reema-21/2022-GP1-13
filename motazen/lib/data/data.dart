@@ -1,8 +1,9 @@
-import 'package:datatry/isar_service.dart';
+import 'package:motazen/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'models.dart';
-import 'package:datatry/entities/aspect.dart';
-import 'package:datatry/entities/point.dart';
+import 'package:motazen/entities/aspect.dart';
+import 'package:motazen/entities/point.dart';
+
 /// Fake data used to demo the application.
 final fakeData = Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: [
   Item(
@@ -56,7 +57,6 @@ final fakeData = Todo(id: 'todo-tag-1', description: 'مهام اليوم', item
 ]);
 
 class WheelData {
-   
   late List<Data> data = [
     Data(
         name: 'career',
@@ -100,21 +100,18 @@ class WheelData {
         icon: const Icon(Icons.person)),
   ];
 
-
-   IsarService isar = IsarService();
-  Future <void > createData() async{
-        List <Aspect> aspectList =[];
-   List<Point> points =[];
+  IsarService isar = IsarService();
+  Future<void> createData() async {
+    List<Aspect> aspectList = [];
+    List<Point> points = [];
     aspectList = await isar.getAspectFirstTime();
-    for ( int i = 0 ; i<aspectList.length ; i++)
-   // ignore: curly_braces_in_flow_control_structures
-   points = await isar.getAspectPoints(aspectList[i]);
+    for (int i = 0; i < aspectList.length; i++)
+      // ignore: curly_braces_in_flow_control_structures
+      points = await isar.getAspectPoints(aspectList[i]);
     List<Data> data = [];
-    for (int i = 0 ; i<points.length ;i++){
+    for (int i = 0; i < points.length; i++) {
       data[i].name = points[i].aspect.value!.name;
       data[i].points = points[i].finalValues;
-      
     }
-
-   }
+  }
 }
