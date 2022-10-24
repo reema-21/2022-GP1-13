@@ -1,27 +1,15 @@
-import 'package:datatry/isar_service.dart';
-import 'package:datatry/entities/aspect.dart';
-import 'package:datatry/entities/point.dart';
-import"package:fl_chart/fl_chart.dart";
-import 'package:isar/isar.dart';//for local Storage
-import 'dart:io';//for the directory
-import 'package:path_provider/path_provider.dart';
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
-import 'package:isar_flutter_libs/isar_flutter_libs.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'var.dart'; // for the global varible
 import 'alert_dialog.dart'; //for the alert
-import 'package:datatry/pages/homepage/homepage.dart';
 
 Future main() async {
- 
-  WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp(); // to inizlize the db
-  Directory doc = await getApplicationDocumentsDirectory();
-  IsarService iser = IsarService();
-  iser.openIsar(); 
-
+  WidgetsFlutterBinding.ensureInitialized(); // to inizlize the db
+  await Firebase.initializeApp();
   /********************************************* 
    Here i will fetch the quastion based on the chosen asspect 
    The output form here should be : 
@@ -34,26 +22,16 @@ Future main() async {
   // at the end the answare mab will have as the value answarenumber+short of the aspect in char .
   /*Start if fetching quastion */
   Var.activeStep = 0; //always zero to start the stepper from thw first step .
-  //take it as an array from Manar and reem code .
-  //List<Aspect> temaspect = [];
-    var temaspect = ["Fun and Recreation","Health and Wellbeing","Significant Other","money and finances"]; //take it as an array from Manar and reem code .
-
-
-  //temaspect = await iser.getAspectFirstTime();
-  
-  //create Aspects to be used in the with points .
-  
-  
+  var temaspect = ["Family","career","Physical Environment","Personal Growth","Health and Wellbeing"]; //take it as an array from Manar and reem code .
   List<dynamic> templist = []; //temporary store each aspect quastion 
   int countr = 0 ; //to fill in the answer list 
   int endpoint = 0 ; // to know where to stop in  creating the answers list ; 
   for (int i = 0 ; i<temaspect.length;i++){ //the output of this loop is the quastion list and the answer list 
-    //Aspect aspect = temaspect[i];
-    String name = temaspect[i];
-    switch(name){ // include all the aspect make sure the index is write 
+    String aspect = temaspect[i];
+    switch(aspect){ // include all the aspect make sure the index is write 
       case "money and finances":
       
-     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(8));
+     var aspectQuastions = await FirebaseFirestore.instance.collection("aspect_Quastion").get().then((value) => value.docs.elementAt(0));
      templist=Map<String, dynamic>.from(aspectQuastions.data()).values.toList(); 
      Var.quastionsList.addAll(templist);
    for (countr;countr<=templist.length-1+endpoint;countr++){
@@ -143,12 +121,11 @@ Future main() async {
   }
 
 /**End of fetching quastions  */
-  runApp( MaterialApp (home :IconStepperDemo(isr : iser ))); // my widget
+  runApp( MaterialApp (home :IconStepperDemo())); // my widget
 }
 
 class IconStepperDemo extends StatefulWidget {
-  final IsarService isr ; 
-  const IconStepperDemo({super.key, required this.isr});
+  const IconStepperDemo({super.key});
   @override
   _IconStepperDemo createState() => _IconStepperDemo();
 }
@@ -318,7 +295,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
               ),
               
             ),
-            bottomSheet: doneButton(widget.isr),
+            bottomSheet: doneButton(),
           )),
     );
   }
@@ -450,7 +427,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
         ),
       );
 
-      Widget doneButton(IsarService isar){ //once all quastion answare and the user is n any quastion it will be enabeld  
+      Widget doneButton(){ //once all quastion answare and the user is n any quastion it will be enabeld  
       bool isAllQuastionAnswerd = true ; 
       for (int i =0; i<Var.answares.length ;i++ ){
         var result =double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
@@ -460,203 +437,10 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       }// to check whether all the quastions are answerd or not .
         return ElevatedButton(onPressed: isAllQuastionAnswerd? () { 
 
-          Evaluate(widget.isr); 
-
-           Navigator.push(context, MaterialPageRoute(builder: (context) {return const Homepage();}));
-
             
             } :null,child: const Text("انتهيت "),);   
 }
 
-Evaluate (IsarService isar) async{
-  //calculate each aspect points ; 
-  /**
-   * 1- i will seprate answers array into answareArrays for each aspect ; 
-   * 2- if the arrays is null then this aspect is not choosed . 
-   * 3- if the arrays is null then the aspect is not choosed . 
-   * 4- if the arrays hass value then sum and devide and save into the points collection .
-   */
- double moneyAspectPoints = 0 ; 
- double familyAspectPoints  = 0 ; 
- double friendsAspectPoints  = 0 ; 
- double healthAndWellbeingAspectPoints  = 0;
- double personalGrowthAspectPoints  = 0; 
- double physicalEnvironmentAspectPoints  = 0 ; 
- double significantOtherAspectPoints  = 0 ;
- double CareerAspectPoints = 0 ; 
- double funAndRecreationAspectPoints = 0 ; 
 
-for (int i= 0 ; i<Var.answares.length ;i++){ // i will sunm the point of each aspect ; 
- String aspectType = Var.answares[i].substring(Var.answares[i].length - 1);
- double x = 0 ; 
- switch (aspectType) {
-        //Must include all the aspect characters and specify an icon for that
-        case "H":
-          {
-            x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-            healthAndWellbeingAspectPoints =healthAndWellbeingAspectPoints+x;
-           
-          }
-          break;
-
-        case "C":
-          {
-           x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-           CareerAspectPoints=CareerAspectPoints+x;
-
-            
-          }
-          break;
-        case "F":
-          {
-           x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-           familyAspectPoints=familyAspectPoints+x;
-
-          
-          }
-          break;
-           case "D":
-          {
-          x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-          friendsAspectPoints=friendsAspectPoints+x;
-          
-          }
-          break;
-           case "S":
-          {
-           x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-           significantOtherAspectPoints=significantOtherAspectPoints+x;
-           
-          }
-          break;
-           case "E":
-          {
-           x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-           physicalEnvironmentAspectPoints=physicalEnvironmentAspectPoints+x;
-
-
-          
-          }
-          break;
-          case "M":
-          {          
-            x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-            moneyAspectPoints=moneyAspectPoints+x;
-
-
-          }
-          break;
-          case "G":
-          {
-          x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-          personalGrowthAspectPoints=personalGrowthAspectPoints+x;
-
-            
-          }
-          break;
-          case "R":
-
-          {
-              x = double.parse(Var.answares[i].substring(0,Var.answares[i].length -1));
-             funAndRecreationAspectPoints=funAndRecreationAspectPoints+x;
-          
-          }
-          break;
-      }
-
-      //devide and create points and save in local storage . 
-      
-
-
-
-}
-if (moneyAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "money and finances";
-      isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = moneyAspectPoints/50;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (funAndRecreationAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Fun and Recreation";
-      isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = funAndRecreationAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (healthAndWellbeingAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Health and Wellbeing";
-      isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = healthAndWellbeingAspectPoints/50;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (significantOtherAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Significant Other";
-      isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = significantOtherAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (physicalEnvironmentAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Physical Environment";
-      isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = physicalEnvironmentAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (personalGrowthAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Personal Growth";
-      isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = personalGrowthAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if ( familyAspectPoints!= 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Family";
-      isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = familyAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (friendsAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "Friends";
-      isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = friendsAspectPoints/50;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-            if (CareerAspectPoints != 0 ){
-      final  Aspect aspect = Aspect(); // this should be the same as the one created above ; 
-        aspect.name = "career";
-      isar.createAspect(aspect);
-        final Point point = Point();
-        point.finalValues = CareerAspectPoints/40;
-        point.aspect.value = aspect; //because it is linked . 
-        isar.createPoint(point);
-            }
-
-
-  
-
-
-
-}
 
 }
