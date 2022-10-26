@@ -55,19 +55,20 @@ class Item {
 
 class Data {
   ///rename to aspect
-  String name;
+   late String name;
 
-   double  points;
+    late double  points;
 
-  final Color color;
+
+  final  Color color;
 
   final Widget icon;
 
   Data(
       {required this.name,
       required this.points,
-      required this.color,
-      required this.icon});
+      this.color: const Color(0xFFff9100),
+       this.icon: const Icon(Icons.person)});
 
-      
+
 }

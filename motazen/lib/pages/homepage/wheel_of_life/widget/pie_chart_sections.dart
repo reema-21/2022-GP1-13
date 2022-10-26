@@ -1,8 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:motazen/data/data.dart';
 
-List<PieChartSectionData> getSections(int touchedIndex) => WheelData()
-    .data
+List<PieChartSectionData> getSections(int touchedIndex) => WheelData
+    .ListData
     .asMap()
     .map<int, PieChartSectionData>((index, data) {
       double points = data.points;
@@ -10,7 +10,7 @@ List<PieChartSectionData> getSections(int touchedIndex) => WheelData()
       if (isTouched) {}
 
       final value = PieChartSectionData(
-        color: data.color,
+       // color: data.color,
         value: 22.5,
         title: '',
         radius: points,
