@@ -21,6 +21,11 @@ const AspectSchema = CollectionSchema(
       id: 0,
       name: r'name',
       type: IsarType.string,
+    ),
+    r'percentagePoints': PropertySchema(
+      id: 1,
+      name: r'percentagePoints',
+      type: IsarType.double,
     )
   },
   estimateSize: _aspectEstimateSize,
@@ -54,6 +59,7 @@ void _aspectSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.name);
+  writer.writeDouble(offsets[1], object.percentagePoints);
 }
 
 Aspect _aspectDeserialize(
@@ -65,6 +71,7 @@ Aspect _aspectDeserialize(
   final object = Aspect();
   object.id = id;
   object.name = reader.readString(offsets[0]);
+  object.percentagePoints = reader.readDouble(offsets[1]);
   return object;
 }
 
@@ -77,6 +84,8 @@ P _aspectDeserializeProp<P>(
   switch (propertyId) {
     case 0:
       return (reader.readString(offset)) as P;
+    case 1:
+      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -350,6 +359,69 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> percentagePointsEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'percentagePoints',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition>
+      percentagePointsGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'percentagePoints',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> percentagePointsLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'percentagePoints',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> percentagePointsBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'percentagePoints',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
 }
 
 extension AspectQueryObject on QueryBuilder<Aspect, Aspect, QFilterCondition> {}
@@ -366,6 +438,18 @@ extension AspectQuerySortBy on QueryBuilder<Aspect, Aspect, QSortBy> {
   QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByPercentagePoints() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'percentagePoints', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByPercentagePointsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'percentagePoints', Sort.desc);
     });
   }
 }
@@ -394,6 +478,18 @@ extension AspectQuerySortThenBy on QueryBuilder<Aspect, Aspect, QSortThenBy> {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByPercentagePoints() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'percentagePoints', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByPercentagePointsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'percentagePoints', Sort.desc);
+    });
+  }
 }
 
 extension AspectQueryWhereDistinct on QueryBuilder<Aspect, Aspect, QDistinct> {
@@ -401,6 +497,12 @@ extension AspectQueryWhereDistinct on QueryBuilder<Aspect, Aspect, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QDistinct> distinctByPercentagePoints() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'percentagePoints');
     });
   }
 }
@@ -415,6 +517,12 @@ extension AspectQueryProperty on QueryBuilder<Aspect, Aspect, QQueryProperty> {
   QueryBuilder<Aspect, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Aspect, double, QQueryOperations> percentagePointsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'percentagePoints');
     });
   }
 }

@@ -14,6 +14,7 @@ class IsarService {
 
   Future<Isar> openIsar() async {
     if (Isar.instanceNames.isEmpty) {
+      
       //if didn't opend before open one if iopen used an exsit one
       return await Isar.open(
           [
@@ -100,6 +101,19 @@ class IsarService {
     final isar = await db;
     return isar.points.where().findAll();
   }
+
+   Future<Map<String,double >> getpointsAspects(List<Aspect> aspects) async {
+    final isar = await db;
+  Map 
+    for (int i = 0 ; i<aspects.length ;i++){
+
+    }
+
+    return Map();
+
+  }
+
+
 
   // to get all other collection records based on a specific Aspect
   // get points for a specfic aspect
