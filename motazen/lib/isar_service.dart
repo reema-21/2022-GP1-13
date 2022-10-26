@@ -102,17 +102,19 @@ class IsarService {
     return isar.points.where().findAll();
   }
 
-   Future<Map<String,double >> getpointsAspects(List<Aspect> aspects) async {
+    Future<Map<String,double>> getpointsAspects(List<Aspect> aspects) async { //get a list of aspect/points
     final isar = await db;
-  Map 
+  Map<String,double> pointsList = {};
     for (int i = 0 ; i<aspects.length ;i++){
+      String tempAspect = aspects[i].name;
+      Aspect?  tempPoints = await isar.aspects.where().idEqualTo(aspects[i].id).findFirst();
+      pointsList[tempAspect]=tempPoints!.percentagePoints; 
 
     }
 
-    return Map();
+    return  pointsList;
 
   }
-
 
 
   // to get all other collection records based on a specific Aspect

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motazen/assesment_page/assesment_question_page_assignments.dart';
 import 'models.dart';
 
 /// Fake data used to demo the application.
@@ -55,45 +56,45 @@ final fakeData = Todo(id: 'todo-tag-1', description: 'مهام اليوم', item
 
 class WheelData {
   static List<Data> data = [
-    Data(
-        name: 'career',
-        points: 80,
-        color: const Color(0xff0065A3),
-        icon: const Icon(Icons.work)),
-    Data(
-        name: 'relationships',
-        points: 40,
-        color: const Color(0xffff4949),
-        icon: const Icon(Icons.work)),
-    Data(
-        name: 'enviroment',
-        points: 95,
-        color: const Color(0xFF9E19F0),
-        icon: const Icon(Icons.work)),
-    Data(
-        name: 'finance',
-        points: 50,
-        color: const Color(0xff54e360),
-        icon: const Icon(Icons.attach_money)),
-    Data(
-        name: 'entertainment',
-        points: 70,
-        color: const Color(0xff008adf),
-        icon: const Icon(Icons.games)),
-    Data(
-        name: 'personal development',
-        points: 80,
-        color: const Color(0xFF2CDDCB),
-        icon: const Icon(Icons.work)),
-    Data(
-        name: 'health',
-        points: 60,
-        color: const Color(0xFFffd400),
-        icon: const Icon(Icons.health_and_safety)),
-    Data(
-        name: 'friends and family',
-        points: 95,
-        color: const Color(0xFFff9100),
-        icon: const Icon(Icons.person)),
+    // Data(
+    //     name: 'career',
+    //     points: 80,
+    //     color: const Color(0xff0065A3),
+    //     icon: const Icon(Icons.work)),
+    // Data(
+    //     name: 'relationships',
+    //     points: 40,
+    //     color: const Color(0xffff4949),
+    //     icon: const Icon(Icons.work)),
+    // Data(
+    //     name: 'enviroment',
+    //     points: 95,
+    //     color: const Color(0xFF9E19F0),
+    //     icon: const Icon(Icons.work)),
+    // Data(
+    //     name: 'finance',
+    //     points: 50,
+    //     color: const Color(0xff54e360),
+    //     icon: const Icon(Icons.attach_money)),
+    // Data(
+    //     name: 'entertainment',
+    //     points: 70,
+    //     color: const Color(0xff008adf),
+    //     icon: const Icon(Icons.games)),
+    // Data(
+    //     name: 'personal development',
+    //     points: 80,
+    //     color: const Color(0xFF2CDDCB),
+    //     icon: const Icon(Icons.work)),
+    // Data(
+    //     name: 'health',
+    //     points: 60,
+    //     color: const Color(0xFFffd400),
+    //     icon: const Icon(Icons.health_and_safety)),
+    // Data(
+    //     name: 'friends and family',
+    //     points: 95,
+    //     color: const Color(0xFFff9100),
+    //     icon: const Icon(Icons.person)),
   ];
 }
