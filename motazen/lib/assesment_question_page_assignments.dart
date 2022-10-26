@@ -157,7 +157,17 @@ class AssesmentQuestionPageAssignments {
           break;
       }
     }
-
+    createQuestionAnswersList (quastionsList , tempAspect);
     return quastionsList;
+  }
+
+  Map<dynamic , dynamic> createQuestionAnswersList (List<dynamic> questions , List<Aspect> aspects ){
+  Map answares = {};
+  
+
+
+
+  return answares ; 
+
   }
 }
