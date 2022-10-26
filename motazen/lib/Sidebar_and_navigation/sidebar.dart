@@ -32,17 +32,6 @@ class NavBar extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('Friends'),
-            onTap: () => null,
-          ),
-          ListTile(
-            leading: const Icon(Icons.share),
-            title: const Text('Share'),
-            onTap: () => null,
-          ),
-          const Divider(),
-          ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () => null,

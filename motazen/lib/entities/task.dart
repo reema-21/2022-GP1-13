@@ -1,6 +1,5 @@
-import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/entities/goal.dart';
-import 'package:motazen/entities/task.dart';
+import '/entities/aspect.dart';
+import '/entities/goal.dart';
 
 import 'package:isar/isar.dart';
 part 'task.g.dart';

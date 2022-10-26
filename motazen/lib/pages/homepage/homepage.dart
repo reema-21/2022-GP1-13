@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:motazen/pages/homepage/wheel_of_life/pie_chart_page.dart';
-import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
-import 'package:motazen/Sidebar_and_navigation/sidebar.dart';
-import 'package:motazen/data/data.dart';
-import 'package:motazen/pages/homepage/daily_tasks/display_list.dart';
+import '/pages/homepage/wheel_of_life/pie_chart_page.dart';
+import '/Sidebar_and_navigation/navigation-bar.dart';
+import '/Sidebar_and_navigation/sidebar.dart';
+import '/data/data.dart';
+import '/pages/homepage/daily_tasks/display_list.dart';
 
 // import 'homepage/wheel_of_life/render-chart.dart'; file accidentally deleted add later
 // how is it implemented

@@ -1,15 +1,16 @@
-import 'package:motazen/isar_service.dart';
-import 'package:motazen/entities/aspect.dart';
+import '/isar_service.dart';
+import '/entities/aspect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'assesmentQuestionPageGlobals.dart'; // for the global varible
 
 class AssesmentQuestionPageAssignments {
   IsarService iser = IsarService();
   Future<List<dynamic>> questionListCreationg() async {
-    List<Aspect> tempAspect = []; //store the fetched chosen aspect from the user 
-    List<dynamic> tempQuestionList = [];//temporary store one aspect quastion 
-    tempAspect = await iser.getAspectFirstTime(); //fetch the chosen aspect 
-    List<dynamic> quastionsList = []; //the list of all chosen aspect quastion 
+    List<Aspect> tempAspect =
+        []; //store the fetched chosen aspect from the user
+    List<dynamic> tempQuestionList = []; //temporary store one aspect quastion
+    tempAspect = await iser.getAspectFirstTime(); //fetch the chosen aspect
+    List<dynamic> quastionsList = []; //the list of all chosen aspect quastion
     int countr = 0; //to fill in the answer list
     int endpoint = 0; // to know where to stop in creating the answers list ;
     for (int i = 0; i < tempAspect.length; i++) {
@@ -27,7 +28,9 @@ class AssesmentQuestionPageAssignments {
               Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
           quastionsList.addAll(tempQuestionList);
 
-          for (countr; countr <= tempQuestionList.length - 1 + endpoint; countr++) {
+          for (countr;
+              countr <= tempQuestionList.length - 1 + endpoint;
+              countr++) {
             AssesmentQuestionPageGlobals.answares[countr] = "0M";
           }
 
@@ -43,7 +46,9 @@ class AssesmentQuestionPageAssignments {
               Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
           quastionsList.addAll(tempQuestionList);
 
-          for (countr; countr <= tempQuestionList.length - 1 + endpoint; countr++) {
+          for (countr;
+              countr <= tempQuestionList.length - 1 + endpoint;
+              countr++) {
             AssesmentQuestionPageGlobals.answares[countr] = "0R";
           }
 
@@ -59,7 +64,9 @@ class AssesmentQuestionPageAssignments {
               Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
           quastionsList.addAll(tempQuestionList);
 
-          for (countr; countr <= tempQuestionList.length - 1 + endpoint; countr++) {
+          for (countr;
+              countr <= tempQuestionList.length - 1 + endpoint;
+              countr++) {
             AssesmentQuestionPageGlobals.answares[countr] = "0C";
           }
 
@@ -75,7 +82,9 @@ class AssesmentQuestionPageAssignments {
               Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
           quastionsList.addAll(tempQuestionList);
 
-          for (countr; countr <= tempQuestionList.length - 1 + endpoint; countr++) {
+          for (countr;
+              countr <= tempQuestionList.length - 1 + endpoint;
+              countr++) {
             AssesmentQuestionPageGlobals.answares[countr] = "0S";
           }
 
@@ -91,7 +100,9 @@ class AssesmentQuestionPageAssignments {
               Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
           quastionsList.addAll(tempQuestionList);
 
-          for (countr; countr <= tempQuestionList.length - 1 + endpoint; countr++) {
+          for (countr;
+              countr <= tempQuestionList.length - 1 + endpoint;
+              countr++) {
             AssesmentQuestionPageGlobals.answares[countr] = "0E";
           }
 
@@ -107,7 +118,9 @@ class AssesmentQuestionPageAssignments {
               Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
           quastionsList.addAll(tempQuestionList);
 
-          for (countr; countr <= tempQuestionList.length - 1 + endpoint; countr++) {
+          for (countr;
+              countr <= tempQuestionList.length - 1 + endpoint;
+              countr++) {
             AssesmentQuestionPageGlobals.answares[countr] = "0G";
           }
           endpoint = countr;
@@ -122,7 +135,9 @@ class AssesmentQuestionPageAssignments {
           tempQuestionList =
               Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
           quastionsList.addAll(tempQuestionList);
-          for (countr; countr <= tempQuestionList.length - 1 + endpoint; countr++) {
+          for (countr;
+              countr <= tempQuestionList.length - 1 + endpoint;
+              countr++) {
             AssesmentQuestionPageGlobals.answares[countr] = "0H";
           }
           endpoint = countr;
@@ -136,7 +151,9 @@ class AssesmentQuestionPageAssignments {
           tempQuestionList =
               Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
           quastionsList.addAll(tempQuestionList);
-          for (countr; countr <= tempQuestionList.length - 1 + endpoint; countr++) {
+          for (countr;
+              countr <= tempQuestionList.length - 1 + endpoint;
+              countr++) {
             AssesmentQuestionPageGlobals.answares[countr] = "0D";
           }
           endpoint = countr;
@@ -150,24 +167,23 @@ class AssesmentQuestionPageAssignments {
               Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
           quastionsList.addAll(tempQuestionList);
 
-          for (countr; countr <= tempQuestionList.length - 1 + endpoint; countr++) {
+          for (countr;
+              countr <= tempQuestionList.length - 1 + endpoint;
+              countr++) {
             AssesmentQuestionPageGlobals.answares[countr] = "0F";
           }
           endpoint = countr;
           break;
       }
     }
-    createQuestionAnswersList (quastionsList , tempAspect);
+    createQuestionAnswersList(quastionsList, tempAspect);
     return quastionsList;
   }
 
-  Map<dynamic , dynamic> createQuestionAnswersList (List<dynamic> questions , List<Aspect> aspects ){
-  Map answares = {};
-  
+  Map<dynamic, dynamic> createQuestionAnswersList(
+      List<dynamic> questions, List<Aspect> aspects) {
+    Map answares = {};
 
-
-
-  return answares ; 
-
+    return answares;
   }
 }

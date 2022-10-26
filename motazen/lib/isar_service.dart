@@ -1,11 +1,10 @@
-import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/entities/goal.dart';
-import 'package:motazen/entities/task.dart';
-import 'package:motazen/entities/habit.dart';
-import 'package:motazen/entities/point.dart';
+import '/entities/aspect.dart';
+import '/entities/goal.dart';
+import '/entities/task.dart';
+import '/entities/habit.dart';
+import '/entities/point.dart';
 
 import 'package:isar/isar.dart';
-import 'package:isar_flutter_libs/isar_flutter_libs.dart';
 
 class IsarService {
   late Future<Isar> db;
@@ -61,7 +60,7 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.points.putSync(newPoint));
   }
 
-  /********************** */
+  /// ******************** */
   //we are listiening for data not just getting //
   Stream<List<Goal>> getAllGoals() async* {
     //Streams so that it is reflected when add immedeitly .

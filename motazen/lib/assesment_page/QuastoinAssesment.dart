@@ -1,34 +1,28 @@
-import 'package:motazen/isar_service.dart';
-import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/entities/point.dart';
-import 'dart:io'; //for the directory
-import 'package:path_provider/path_provider.dart';
+// ignore_for_file: file_names, prefer_interpolation_to_compose_strings, non_constant_identifier_names
+
+import '/isar_service.dart';
+import '/entities/aspect.dart';
+import '/entities/point.dart';
+//for the directory
 import 'package:flutter/material.dart';
 import 'package:im_stepper/stepper.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'alert_dialog.dart'; //for the alert
-import 'package:motazen/pages/homepage/homepage.dart';
-import 'package:motazen/data/models.dart';
-import 'package:motazen/data/models.dart';
-import 'package:motazen/data/data.dart';
-import 'dart:developer';
-import 'assesment_question_page_assignments.dart';
+import '/pages/homepage/homepage.dart';
 import 'assesmentQuestionPageGlobals.dart';
 
 class IconStepperDemo extends StatefulWidget {
-final IsarService isr;
-final List<dynamic>? q ;
-static double  upperBound = 0;
- IconStepperDemo({super.key, required this.isr , required this.q});
+  final IsarService isr;
+  final List<dynamic>? q;
+  static double upperBound = 0;
+  const IconStepperDemo({super.key, required this.isr, required this.q});
   @override
-  State <IconStepperDemo> createState() => _IconStepperDemo();
+  State<IconStepperDemo> createState() => _IconStepperDemo();
 }
+
 class _IconStepperDemo extends State<IconStepperDemo> {
- 
   // THE FOLLOWING TWO VARIABLES ARE REQUIRED TO CONTROL THE STEPPER.
   // Initial step set to 0 to be Reversed start from the right .
-   // upperBound MUST BE total number of icons minus 1. // total numberofquastion-1 = AssesmentQuestionPageGlobals.activeSteps so that it start from the right
+  // upperBound MUST BE total number of icons minus 1. // total numberofquastion-1 = AssesmentQuestionPageGlobals.activeSteps so that it start from the right
 //------------------------------------------------------------
 
   // always the value of the sliderRange = answare if no answare then zero
@@ -36,29 +30,35 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   Widget sliderRange() {
     return Slider.adaptive(
       //it should be good in ios or we use Cupertino
-      value: AssesmentQuestionPageGlobals.currentSliderValue, //answare of that quastion
+      value: AssesmentQuestionPageGlobals
+          .currentSliderValue, //answare of that quastion
       min: 0,
       max: 10,
       divisions: 10, //to stick
-      label: AssesmentQuestionPageGlobals.currentSliderValue.round().toString(), // to show the lable number
+      label: AssesmentQuestionPageGlobals.currentSliderValue
+          .round()
+          .toString(), // to show the lable number
       onChanged: (double value) {
         setState(() {
           //save the value chosen by the user
           AssesmentQuestionPageGlobals.currentSliderValue = value;
-          AssesmentQuestionPageGlobals.answares[AssesmentQuestionPageGlobals.activeStep] = "$value" +
-              AssesmentQuestionPageGlobals.answares[AssesmentQuestionPageGlobals.activeStep].substring(AssesmentQuestionPageGlobals
-                      .answares[AssesmentQuestionPageGlobals.activeStep].length -
-                  1); //take the answare chosen by the user for that quastion
+          AssesmentQuestionPageGlobals.answares[
+              AssesmentQuestionPageGlobals
+                  .activeStep] = "$value" +
+              AssesmentQuestionPageGlobals
+                  .answares[AssesmentQuestionPageGlobals.activeStep]
+                  .substring(AssesmentQuestionPageGlobals
+                          .answares[AssesmentQuestionPageGlobals.activeStep]
+                          .length -
+                      1); //take the answare chosen by the user for that quastion
         });
       },
     );
   }
 
   /// End of the sliderRange  */
- @override
-
+  @override
   Widget build(BuildContext context) {
-
 // setState(() {
 // widget.q?=AssesmentQuestionPageAssignments().returnThefinalValue();
 //   print (widget.q?);
@@ -67,8 +67,6 @@ class _IconStepperDemo extends State<IconStepperDemo> {
 //       .substring(0, AssesmentQuestionPageGlobals.answares[AssesmentQuestionPageGlobals.activeStep].length - 1));
 // });
 
-        
-    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Directionality(
@@ -89,9 +87,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                   if (action == DialogsAction.yes) {
                     //return to the previouse page different code for the ios .
                     // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
-                  } else {
-                    print("bey");
-                  }
+                  } else {}
                 },
               ),
               title: const Text(
@@ -143,11 +139,18 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                     if not the value is 1 */
 
                             AssesmentQuestionPageGlobals.activeStep = index;
-                            AssesmentQuestionPageGlobals.currentSliderValue = double.parse(
-                                AssesmentQuestionPageGlobals.answares[AssesmentQuestionPageGlobals.activeStep].substring(
-                                    0,
-                                    AssesmentQuestionPageGlobals.answares[AssesmentQuestionPageGlobals.activeStep].length -
-                                        1)); // this is for reseting the slider for each quasion but the problem we want to save the value
+                            AssesmentQuestionPageGlobals.currentSliderValue =
+                                double.parse(AssesmentQuestionPageGlobals
+                                    .answares[
+                                        AssesmentQuestionPageGlobals.activeStep]
+                                    .substring(
+                                        0,
+                                        AssesmentQuestionPageGlobals
+                                                .answares[
+                                                    AssesmentQuestionPageGlobals
+                                                        .activeStep]
+                                                .length -
+                                            1)); // this is for reseting the slider for each quasion but the problem we want to save the value
                           });
                         },
                       )),
@@ -171,7 +174,6 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                     child: Column(
                       textDirection: TextDirection.rtl,
                       children: [
-                        
                         Text(headerText(),
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 30)),
@@ -203,7 +205,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
 
   /// Returns the header wrapping the header text.
   Widget header() {
-    var upperBound = widget.q!.length-1;
+    var upperBound = widget.q!.length - 1;
     String start = (AssesmentQuestionPageGlobals.activeStep + 1).toString();
     String last = (upperBound + 1).toString();
     return Text.rich(
@@ -232,8 +234,9 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   List<Icon> createIcon() {
     // create the icons and the length of the IconsList based on the answare map
     List<Icon> iconStepper = [];
-    for (int i = 0; i <= widget.q!.length-1; i++) {
-      String aspect = AssesmentQuestionPageGlobals.answares[i].substring(AssesmentQuestionPageGlobals.answares[i].length - 1);
+    for (int i = 0; i <= widget.q!.length - 1; i++) {
+      String aspect = AssesmentQuestionPageGlobals.answares[i]
+          .substring(AssesmentQuestionPageGlobals.answares[i].length - 1);
       switch (aspect) {
         //Must include all the aspect characters and specify an icon for that
         case "H":
@@ -321,7 +324,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     return iconStepper;
   }
 
-  Widget buildSlideLable(double value) => Container(
+  Widget buildSlideLable(double value) => SizedBox(
         width: 25,
         child: Text(
           value.round().toString(),
@@ -334,8 +337,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     //once all quastion answare and the user is n any quastion it will be enabeld
     bool isAllQuastionAnswerd = true;
     for (int i = 0; i < AssesmentQuestionPageGlobals.answares.length; i++) {
-      var result = double.parse(
-          AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+      var result = double.parse(AssesmentQuestionPageGlobals.answares[i]
+          .substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
       if (result == 0) {
         isAllQuastionAnswerd = false;
       }
@@ -355,9 +358,6 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   }
 
   Evaluate(IsarService isar) async {
-    
-    
-    
     //calculate each aspect points ;
     /**
    * 1- i will seprate answers array into answareArrays for each aspect ; 
@@ -377,72 +377,73 @@ class _IconStepperDemo extends State<IconStepperDemo> {
 
     for (int i = 0; i < AssesmentQuestionPageGlobals.answares.length; i++) {
       // i will sunm the point of each aspect ;
-      String aspectType = AssesmentQuestionPageGlobals.answares[i].substring(AssesmentQuestionPageGlobals.answares[i].length - 1);
+      String aspectType = AssesmentQuestionPageGlobals.answares[i]
+          .substring(AssesmentQuestionPageGlobals.answares[i].length - 1);
       double x = 0;
       switch (aspectType) {
         //Must include all the aspect characters and specify an icon for that
         case "H":
           {
-            x = double.parse(
-                AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
+                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             healthAndWellbeingAspectPoints = healthAndWellbeingAspectPoints + x;
           }
           break;
 
         case "C":
           {
-            x = double.parse(
-                AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
+                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             CareerAspectPoints = CareerAspectPoints + x;
           }
           break;
         case "F":
           {
-            x = double.parse(
-                AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
+                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             familyAspectPoints = familyAspectPoints + x;
           }
           break;
         case "D":
           {
-            x = double.parse(
-                AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
+                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             friendsAspectPoints = friendsAspectPoints + x;
           }
           break;
         case "S":
           {
-            x = double.parse(
-                AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
+                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             significantOtherAspectPoints = significantOtherAspectPoints + x;
           }
           break;
         case "E":
           {
-            x = double.parse(
-                AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
+                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             physicalEnvironmentAspectPoints =
                 physicalEnvironmentAspectPoints + x;
           }
           break;
         case "M":
           {
-            x = double.parse(
-                AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
+                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             moneyAspectPoints = moneyAspectPoints + x;
           }
           break;
         case "G":
           {
-            x = double.parse(
-                AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
+                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             personalGrowthAspectPoints = personalGrowthAspectPoints + x;
           }
           break;
         case "R":
           {
-            x = double.parse(
-                AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
+                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             funAndRecreationAspectPoints = funAndRecreationAspectPoints + x;
           }
           break;
@@ -468,7 +469,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       isar.createAspect(aspect);
       final Point point = Point();
       point.finalValues = funAndRecreationAspectPoints / 40;
-      point.finalValues=point.finalValues*100;
+      point.finalValues = point.finalValues * 100;
       point.aspect.value = aspect; //because it is linked .
       isar.createPoint(point);
     }
@@ -479,7 +480,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       isar.createAspect(aspect);
       final Point point = Point();
       point.finalValues = healthAndWellbeingAspectPoints / 50;
-      point.finalValues=point.finalValues*100;
+      point.finalValues = point.finalValues * 100;
       point.aspect.value = aspect; //because it is linked .
       isar.createPoint(point);
     }

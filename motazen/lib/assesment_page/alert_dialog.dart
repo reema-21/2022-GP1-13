@@ -20,7 +20,7 @@ class AlertDialogs {
               TextButton(
                 onPressed: () =>
                     Navigator.of(context).pop(DialogsAction.cancel),
-                child: Text(
+                child: const Text(
                   'إلغاء',
                   style: TextStyle(
                       color: Color.fromARGB(255, 26, 37, 196), fontWeight: FontWeight.bold),
@@ -28,7 +28,7 @@ class AlertDialogs {
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(DialogsAction.yes),
-                child: Text(
+                child: const Text(
                   'تأكيد',
                   style: TextStyle(
                       color: Color(0xFFC41A3B), fontWeight: FontWeight.w700),
