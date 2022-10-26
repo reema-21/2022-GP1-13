@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:motazen/styles.dart';
+import 'package:motazen/theme.dart';
 
 import 'custom_rect_tween.dart';
 import 'hero_dialog_route.dart';
