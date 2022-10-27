@@ -124,7 +124,7 @@ void assignPointAspect(String aspectName , double points) async {
       final isar = await db ;
       Aspect?  tempAspect = await isar.aspects.filter().nameEqualTo(aspectName).findFirst();
       tempAspect!.percentagePoints= points;
-      isar.writeTxnSync<int>(() => isar.aspects.putSync(tempAspect));
+      isar.writeTxnSync<int>(() => isar.aspects.putSync(tempAspect));// update that object 
 
      
 
