@@ -3,6 +3,7 @@ import 'package:im_stepper/stepper.dart';
 import 'package:motazen/data/data.dart';
 import 'package:motazen/data/models.dart';
 import 'package:motazen/isar_service.dart';
+import 'package:motazen/pages/homepage/homepage.dart';
 import 'package:motazen/pages/homepage/wheel_of_life/pie_chart_page.dart';
 
 import 'assesment_page/assesment_question_page_assignments.dart';
@@ -47,7 +48,7 @@ class _GetPointsState extends State<GetPoints> {
         icon=const Icon(Icons.games);
           break;
         case "career":
-         color=const Color(0xff0065A3);
+         color=Color.fromARGB(255, 163, 0, 35); //fix colors
          icon=const Icon(Icons.work);
           break;
         case "Significant Other":
@@ -81,8 +82,9 @@ class _GetPointsState extends State<GetPoints> {
                     color:color,
                     icon: icon));
                 }); 
-              
-                return life_wheel(dataList: dataList);
+              print ("here is the data list");
+              print(dataList[0].name);
+                return Homepage(dataList: dataList);
               } else {
                 return CircularProgressIndicator();
               }

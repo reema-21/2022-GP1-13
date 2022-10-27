@@ -1,4 +1,7 @@
 
+import 'package:motazen/assesment_page/assesment_question_page_assignments.dart';
+
+import '../get_points.dart';
 import '/isar_service.dart';
 import '/entities/aspect.dart';
 import '/entities/point.dart';
@@ -44,7 +47,12 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       },
     );
   }
-
+@override
+  void initState() {
+    print(AssesmentQuestionPageGlobals.answares);
+    // TODO: implement initState
+    super.initState();
+  }
   /// End of the sliderRange  */
  @override
 
@@ -335,10 +343,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       onPressed: isAllQuastionAnswerd
           ? () {
               Evaluate(widget.isr);
-
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const Homepage();
-              }));
+//the nevigator is downs 
+             
             }
           : null,
       child: const Text("انتهيت "),
@@ -346,7 +352,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   }
 
   Evaluate(IsarService isar) async {
-    
+     print ("this is the array of answers ");
+     print(AssesmentQuestionPageGlobals.answares);
     
     
     //calculate each aspect points ;
@@ -357,8 +364,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
    * 4- if the arrays hass value then sum and devide and save into the points collection .
    */
     double moneyAspectPoints = 0;
-    double familyAspectPoints = 0;
-    double friendsAspectPoints = 0;
+    double familyAndFriendsAspectPoints = 0;
     double healthAndWellbeingAspectPoints = 0;
     double personalGrowthAspectPoints = 0;
     double physicalEnvironmentAspectPoints = 0;
@@ -382,6 +388,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
 
         case "C":
           {
+            print("i am in the careeeeer");
             x = double.parse(
                 AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             CareerAspectPoints = CareerAspectPoints + x;
@@ -391,16 +398,10 @@ class _IconStepperDemo extends State<IconStepperDemo> {
           {
             x = double.parse(
                 AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
-            familyAspectPoints = familyAspectPoints + x;
+            familyAndFriendsAspectPoints = familyAndFriendsAspectPoints + x;
           }
           break;
-        case "D":
-          {
-            x = double.parse(
-                AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
-            friendsAspectPoints = friendsAspectPoints + x;
-          }
-          break;
+        
         case "S":
           {
             x = double.parse(
@@ -446,96 +447,107 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       final Aspect aspect =
           Aspect(); // this should be the same as the one created above ;
       aspect.name = "money and finances";
-      isar.createAspect(aspect);
-      final Point point = Point();
-      point.finalValues = moneyAspectPoints / 50;
-      point.aspect.value = aspect; //because it is linked .
-      isar.createPoint(point);
+      double point = (moneyAspectPoints / 50 ) * 100 ; 
+      isar.assignPointAspect("money and finances", point);
+
+      // isar.createAspect(aspect);
+      // final Point point = Point();
+      // point.finalValues = moneyAspectPoints / 50;
+      // point.aspect.value = aspect; //because it is linked .
+      // isar.createPoint(point);
     }
     if (funAndRecreationAspectPoints != 0) {
-      final Aspect aspect =
-          Aspect(); // this should be the same as the one created above ;
-      aspect.name = "Fun and Recreation";
-      isar.createAspect(aspect);
-      final Point point = Point();
-      point.finalValues = funAndRecreationAspectPoints / 40;
-      point.finalValues=point.finalValues*100;
-      point.aspect.value = aspect; //because it is linked .
-      isar.createPoint(point);
+      double point = (funAndRecreationAspectPoints / 40 ) * 100 ; 
+      isar.assignPointAspect("Fun and Recreation", point);
+      // final Aspect aspect =
+      //     Aspect(); // this should be the same as the one created above ;
+      // aspect.name = "Fun and Recreation";
+      // isar.createAspect(aspect);
+      // final Point point = Point();
+      // point.finalValues = funAndRecreationAspectPoints / 40;
+      // point.finalValues=point.finalValues*100;
+      // point.aspect.value = aspect; //because it is linked .
+      // isar.createPoint(point);
     }
     if (healthAndWellbeingAspectPoints != 0) {
-      final Aspect aspect =
-          Aspect(); // this should be the same as the one created above ;
-      aspect.name = "Health and Wellbeing";
-      isar.createAspect(aspect);
-      final Point point = Point();
-      point.finalValues = healthAndWellbeingAspectPoints / 50;
-      point.finalValues=point.finalValues*100;
-      point.aspect.value = aspect; //because it is linked .
-      isar.createPoint(point);
+      double point = (healthAndWellbeingAspectPoints / 50 ) * 100 ; 
+      isar.assignPointAspect("Health and Wellbeing", point);
+      // final Aspect aspect =
+      //     Aspect(); // this should be the same as the one created above ;
+      // aspect.name = "Health and Wellbeing";
+      // isar.createAspect(aspect);
+      // final Point point = Point();
+      // point.finalValues = healthAndWellbeingAspectPoints / 50;
+      // point.finalValues=point.finalValues*100;
+      // point.aspect.value = aspect; //because it is linked .
+      // isar.createPoint(point);
     }
     if (significantOtherAspectPoints != 0) {
-      final Aspect aspect =
-          Aspect(); // this should be the same as the one created above ;
-      aspect.name = "Significant Other";
-      isar.createAspect(aspect);
-      final Point point = Point();
-      point.finalValues = significantOtherAspectPoints / 40;
-      point.aspect.value = aspect; //because it is linked .
-      isar.createPoint(point);
+      double point = (significantOtherAspectPoints / 40 ) * 100 ; 
+      isar.assignPointAspect("Significant Other", point);
+      // final Aspect aspect =
+      //     Aspect(); // this should be the same as the one created above ;
+      // aspect.name = "Significant Other";
+      // isar.createAspect(aspect);
+      // final Point point = Point();
+      // point.finalValues = significantOtherAspectPoints / 40;
+      // point.aspect.value = aspect; //because it is linked .
+      // isar.createPoint(point);
     }
     if (physicalEnvironmentAspectPoints != 0) {
-      final Aspect aspect =
-          Aspect(); // this should be the same as the one created above ;
-      aspect.name = "Physical Environment";
-      isar.createAspect(aspect);
-      final Point point = Point();
-      point.finalValues = physicalEnvironmentAspectPoints / 40;
-      point.aspect.value = aspect; //because it is linked .
-      isar.createPoint(point);
+      double point = (physicalEnvironmentAspectPoints / 50 ) * 100 ; 
+      isar.assignPointAspect("Physical Environment", point);
+      // final Aspect aspect =
+      //     Aspect(); // this should be the same as the one created above ;
+      // aspect.name = "Physical Environment";
+      // isar.createAspect(aspect);
+      // final Point point = Point();
+      // point.finalValues = physicalEnvironmentAspectPoints / 40;
+      // point.aspect.value = aspect; //because it is linked .
+      // isar.createPoint(point);
     }
     if (personalGrowthAspectPoints != 0) {
-      final Aspect aspect =
-          Aspect(); // this should be the same as the one created above ;
-      aspect.name = "Personal Growth";
-      isar.createAspect(aspect);
-      final Point point = Point();
-      point.finalValues = personalGrowthAspectPoints / 40;
-      point.aspect.value = aspect; //because it is linked .
-      isar.createPoint(point);
+      double point = (personalGrowthAspectPoints / 40 ) * 100 ; 
+      isar.assignPointAspect("Personal Growth", point);
+      // final Aspect aspect =
+      //     Aspect(); // this should be the same as the one created above ;
+      // aspect.name = "Personal Growth";
+      // isar.createAspect(aspect);
+      // final Point point = Point();
+      // point.finalValues = personalGrowthAspectPoints / 40;
+      // point.aspect.value = aspect; //because it is linked .
+      // isar.createPoint(point);
     }
-    if (familyAspectPoints != 0) {
-      final Aspect aspect =
-          Aspect(); // this should be the same as the one created above ;
-      aspect.name = "Family";
-      isar.createAspect(aspect);
-      final Point point = Point();
-      point.finalValues = familyAspectPoints / 40;
-      point.aspect.value = aspect; //because it is linked .
-      isar.createPoint(point);
-    }
-    if (friendsAspectPoints != 0) {
-      final Aspect aspect =
-          Aspect(); // this should be the same as the one created above ;
-      aspect.name = "Friends";
-      isar.createAspect(aspect);
-      final Point point = Point();
-      point.finalValues = friendsAspectPoints / 50;
-      point.aspect.value = aspect; //because it is linked .
-      isar.createPoint(point);
+    if (familyAndFriendsAspectPoints != 0) {
+      double point = (familyAndFriendsAspectPoints / 90 ) * 100 ; 
+      isar.assignPointAspect("Family and Friends", point);
+      // final Aspect aspect =
+      //     Aspect(); // this should be the same as the one created above ;
+      // aspect.name = "Family";
+      // isar.createAspect(aspect);
+      // final Point point = Point();
+      // point.finalValues = familyAspectPoints / 40;
+      // point.aspect.value = aspect; //because it is linked .
+      // isar.createPoint(point);
     }
     if (CareerAspectPoints != 0) {
-      final Aspect aspect =
-          Aspect(); // this should be the same as the one created above ;
-      aspect.name = "career";
-      isar.createAspect(aspect);
-      final Point point = Point();
-      point.finalValues = CareerAspectPoints / 40;
-      point.aspect.value = aspect; //because it is linked .
-      isar.createPoint(point);
+      double point = (CareerAspectPoints / 40 ) * 100 ; 
+      isar.assignPointAspect("career", point);
+      // final Aspect aspect =
+      //     Aspect(); // this should be the same as the one created above ;
+      // aspect.name = "career";
+      // isar.createAspect(aspect);
+      // final Point point = Point();
+      // point.finalValues = CareerAspectPoints / 40;
+      // point.aspect.value = aspect; //because it is linked .
+      // isar.createPoint(point);
     }
+    List<Aspect> tempAspect = []; //store the fetched chosen aspect from the user 
+    tempAspect = await isar.getAspectFirstTime();
 
-    
+     Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return GetPoints(isr:widget.isr, aspects:tempAspect);
+              }));
   }
 
 

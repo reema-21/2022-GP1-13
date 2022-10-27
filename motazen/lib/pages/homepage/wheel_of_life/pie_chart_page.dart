@@ -11,10 +11,12 @@ class life_wheel extends StatefulWidget {
   const life_wheel({super.key, required this.dataList});
 
   @override
-  State<StatefulWidget> createState() => PieChart2State();
+  State<life_wheel> createState() => PieChart2State();
 }
 
-class PieChart2State extends State {
+class PieChart2State extends State<life_wheel>{
+  @override
+ 
   int touchedIndex = -1;
 
   @override
@@ -48,7 +50,7 @@ class PieChart2State extends State {
                 ),
                 sectionsSpace: 0,
                 centerSpaceRadius: 0,
-                sections: getSections(touchedIndex , widget.dataList),
+                sections: getSections(touchedIndex , widget.dataList), ///
               ),
             ),
           ),

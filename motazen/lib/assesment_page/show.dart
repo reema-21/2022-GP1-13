@@ -1,10 +1,8 @@
-// ignore_for_file: camel_case_types
-
-import '/isar_service.dart';
+import 'package:motazen/isar_service.dart';
 
 import 'package:flutter/material.dart';
-import '/assesment_page/assesment_question_page_assignments.dart';
-import "QuastoinAssesment.dart";
+import 'package:motazen/assesment_page/assesment_question_page_assignments.dart';
+import 'QuastoinAssesment.dart';
 
 class shows extends StatefulWidget {
   final IsarService iser;
@@ -24,9 +22,10 @@ class _showsState extends State<shows> {
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 List? q = snapshot.data;
+  print (q);
                 return IconStepperDemo(isr: widget.iser, q: q);
               } else {
-                return const CircularProgressIndicator();
+                return CircularProgressIndicator();
               }
             })),
       ),

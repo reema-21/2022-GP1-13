@@ -5,5 +5,5 @@ part 'aspect.g.dart';
 class Aspect{
   Id id = Isar.autoIncrement;
   late String name  ; 
-  late double percentagePoints;
+  late double percentagePoints ;//
 }

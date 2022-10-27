@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import '/entities/aspect.dart';
 import '/entities/goal.dart';
 import '/entities/task.dart';
@@ -112,9 +114,17 @@ class IsarService {
 
     }
 
+    
     return  pointsList;
 
   }
+
+void assignPointAspect(String aspectName , double points) async {
+      final isar = await db ;
+      Aspect?  tempAspect = await isar.aspects.filter().nameEqualTo(aspectName).findFirst();
+      print(tempAspect!.name);
+      tempAspect.percentagePoints= points;
+    }
 
 
   // to get all other collection records based on a specific Aspect
