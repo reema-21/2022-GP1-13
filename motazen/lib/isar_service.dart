@@ -111,9 +111,10 @@ class IsarService {
       String tempAspect = aspects[i].name;
       Aspect?  tempPoints = await isar.aspects.where().idEqualTo(aspects[i].id).findFirst();
       pointsList[tempAspect]=tempPoints!.percentagePoints; 
+     
 
     }
-
+   
     
     return  pointsList;
 
@@ -122,8 +123,11 @@ class IsarService {
 void assignPointAspect(String aspectName , double points) async {
       final isar = await db ;
       Aspect?  tempAspect = await isar.aspects.filter().nameEqualTo(aspectName).findFirst();
-      print(tempAspect!.name);
-      tempAspect.percentagePoints= points;
+      tempAspect!.percentagePoints= points;
+      isar.writeTxnSync<int>(() => isar.aspects.putSync(tempAspect));
+
+     
+
     }
 
 

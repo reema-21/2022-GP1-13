@@ -392,6 +392,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
             x = double.parse(
                 AssesmentQuestionPageGlobals.answares[i].substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
             CareerAspectPoints = CareerAspectPoints + x;
+            print(CareerAspectPoints);
           }
           break;
         case "F":
@@ -532,6 +533,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     }
     if (CareerAspectPoints != 0) {
       double point = (CareerAspectPoints / 40 ) * 100 ; 
+      print("i am in here before assigning");
       isar.assignPointAspect("career", point);
       // final Aspect aspect =
       //     Aspect(); // this should be the same as the one created above ;
@@ -544,7 +546,11 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     }
     List<Aspect> tempAspect = []; //store the fetched chosen aspect from the user 
     tempAspect = await isar.getAspectFirstTime();
-
+    //delete the aspects you have create a new one with the values you have 
+for (int i = 0 ; i<tempAspect.length;i++){
+  print("here is the aspects points before passing ");
+  print(tempAspect[i].percentagePoints);
+}
      Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return GetPoints(isr:widget.isr, aspects:tempAspect);
               }));
