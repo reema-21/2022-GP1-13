@@ -161,6 +161,13 @@ void assignPointAspect(String aspectName , double points) async {
         .findAll();
   }
 
+  void deleteAllAspects(List<dynamic>? aspectsChosen) async{
+    final isar = await db ; 
+    for (int i = 0 ; i<aspectsChosen!.length ;i++){
+      isar.aspects.filter().nameContains(aspectsChosen[i]).deleteAll();}
+
+  }
+
   // Future <void> LinkPoinToAspect(String name ,Aspect aspect ) async{
   //   final isar = await db ;
   //   await isar.points.where().filter().findFirst();

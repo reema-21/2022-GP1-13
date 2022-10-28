@@ -5,6 +5,22 @@ import 'assesmentQuestionPageGlobals.dart'; // for the global varible
 
 class AssesmentQuestionPageAssignments {
   IsarService iser = IsarService();
+
+  Future<List<dynamic>> aspectsFetching() async {
+    //for Select Aspect Page
+    List<dynamic> allAspects = [];
+    for (int i = 0; i <= 7; i++) {
+      var aspect = await FirebaseFirestore.instance
+          .collection("aspect")
+          .get()
+          .then((value) => value.docs.elementAt(i));
+
+      allAspects.addAll(aspect.data().values);
+    }
+    return allAspects;
+  }
+  
+
   Future<List<dynamic>> questionListCreationg() async {
     List<Aspect> tempAspect =
         []; //store the fetched chosen aspect from the user
@@ -31,7 +47,12 @@ class AssesmentQuestionPageAssignments {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0M";
+                if (AssesmentQuestionPageGlobals.answares[countr] == null) {
+                  AssesmentQuestionPageGlobals.answares[countr] = "0M";
+                } else {
+                  AssesmentQuestionPageGlobals.answares[countr++] = "0M";
+                }
+
           }
 
           endpoint = countr;
@@ -151,17 +172,22 @@ class AssesmentQuestionPageAssignments {
           tempQuestionList =
               Map<String, dynamic>.from(aspectQuastions.data()).values.toList();
           quastionsList.addAll(tempQuestionList);
-          
+          for (countr;
+              countr <= tempQuestionList.length - 1 + endpoint;
+              countr++) {
+            AssesmentQuestionPageGlobals.answares[countr] = "0F";
+              }
+              endpoint = countr;
+
           break;
       }
     }
-
-    createQuestionAnswersList(quastionsList, tempAspect);
+print (AssesmentQuestionPageGlobals.answares);
     return quastionsList;
   }
 
   void createQuestionAnswersList(
-    List<dynamic> questions, List<Aspect> aspects) {
+      List<dynamic> questions, List<Aspect> aspects) {
     int countr = 0; //to fill in the answer list
     int endpoint = 0; // to know where to stop in  creating the answers list ;
 
@@ -226,6 +252,5 @@ class AssesmentQuestionPageAssignments {
           break;
       }
     }
-
   }
 }

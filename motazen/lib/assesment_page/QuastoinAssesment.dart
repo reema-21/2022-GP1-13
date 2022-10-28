@@ -1,21 +1,22 @@
 
-import 'package:motazen/assesment_page/assesment_question_page_assignments.dart';
+import 'package:isar/isar.dart';
 
 import '../get_points.dart';
 import '/isar_service.dart';
-import '/entities/aspect.dart';
-import '/entities/point.dart';
-//for the directory
+import '/entities/aspect.dart';//for the directory
 import 'package:flutter/material.dart';
 import 'package:im_stepper/stepper.dart';
 import 'alert_dialog.dart'; //for the alert
-import '/pages/homepage/homepage.dart';
 import 'assesmentQuestionPageGlobals.dart';
+import"package:motazen/select_aspectPage/select_aspect.dart";
 class IconStepperDemo extends StatefulWidget {
 final IsarService isr;
 final List<dynamic>? q ;
+final List<dynamic>? fixedAspect;
+final List<dynamic>? chosenAspect;
+
 static double  upperBound = 0;
- IconStepperDemo({super.key, required this.isr , required this.q});
+ IconStepperDemo({super.key, required this.isr , required this.q, this.fixedAspect, this.chosenAspect});
   @override
   State <IconStepperDemo> createState() => _IconStepperDemo();
 }
@@ -49,7 +50,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   }
 @override
   void initState() {
-    print(AssesmentQuestionPageGlobals.answares);
+    print("here is the fixed aspect ");
+    print(widget.fixedAspect);
     // TODO: implement initState
     super.initState();
   }
@@ -76,9 +78,9 @@ class _IconStepperDemo extends State<IconStepperDemo> {
           child: Scaffold(
             backgroundColor: const Color.fromRGBO(238, 238, 238, 1),
             appBar: AppBar(
-              leading: IconButton(
+              actions: [IconButton(
                 // ignore: prefer_const_constructors
-                icon: Icon(Icons.arrow_back,
+                icon: Icon(Icons.arrow_forward_ios,
                     color: const Color.fromARGB(255, 245, 241, 241)),
                 onPressed: () async {
                   final action = await AlertDialogs.yesCancelDialog(
@@ -87,12 +89,14 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                       'بالنقر على "تاكيد"لن يتم حفظ الاجابات ');
                   if (action == DialogsAction.yes) {
                     //return to the previouse page different code for the ios .
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
+                    widget.isr.deleteAllAspects(widget.chosenAspect);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {return selectAspect(isr:widget.isr,aspects:widget.fixedAspect,);}));
                   } else {
                     print("bey");
                   }
                 },
               ),
+              ],
               title: const Text(
                 'اسئلة تقييم جوانب الحياة ',
               ),
@@ -229,10 +233,15 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   }
 
   List<Icon> createIcon() {
+    
     // create the icons and the length of the IconsList based on the answare map
     List<Icon> iconStepper = [];
-    for (int i = 0; i <= widget.q!.length-1; i++) {
+ 
+    for (int i = 0; i < widget.q!.length; i++) {
+      print(AssesmentQuestionPageGlobals.answares[i]);
       String aspect = AssesmentQuestionPageGlobals.answares[i].substring(AssesmentQuestionPageGlobals.answares[i].length - 1);
+     
+     
       switch (aspect) {
         //Must include all the aspect characters and specify an icon for that
         case "H":
@@ -240,7 +249,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
             // statements;
             iconStepper.add(const Icon(
               Icons.spa,
-              color: Colors.blue,
+              color:   Color(0xFFffd400)
             ));
           }
           break;
@@ -248,15 +257,15 @@ class _IconStepperDemo extends State<IconStepperDemo> {
         case "C":
           {
             //statements;
-            iconStepper.add(const Icon(Icons.work, color: Colors.pink));
+            iconStepper.add(const Icon(Icons.work, color:const Color(0xff0065A3)));
           }
           break;
         case "F":
           {
             //statements;
             iconStepper.add(const Icon(
-              Icons.family_restroom,
-              color: Colors.purple,
+              Icons.person,
+              color: Color(0xFFff9100)
             ));
           }
           break;
@@ -273,8 +282,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
           {
             //statements;
             iconStepper.add(const Icon(
-              Icons.heart_broken,
-              color: Colors.purple,
+              Icons.favorite,
+              color: const Color(0xffff4949),
             ));
           }
           break;
@@ -282,8 +291,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
           {
             //statements;
             iconStepper.add(const Icon(
-              Icons.heart_broken,
-              color: Colors.purple,
+              Icons.home,
+              color:   Color(0xFF9E19F0),
             ));
           }
           break;
@@ -291,8 +300,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
           {
             //statements;
             iconStepper.add(const Icon(
-              Icons.money,
-              color: Colors.purple,
+               Icons.attach_money,
+              color:   Color(0xff54e360),
             ));
           }
           break;
@@ -301,7 +310,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
             //statements;
             iconStepper.add(const Icon(
               Icons.psychology,
-              color: Colors.purple,
+              color:   Color(0xFF2CDDCB),
             ));
           }
           break;
@@ -309,8 +318,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
           {
             //statements;
             iconStepper.add(const Icon(
-              Icons.celebration,
-              color: Colors.purple,
+              Icons.games,
+              color: const Color(0xff008adf),
             ));
           }
           break;
@@ -547,10 +556,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     List<Aspect> tempAspect = []; //store the fetched chosen aspect from the user 
     tempAspect = await isar.getAspectFirstTime();
     //delete the aspects you have create a new one with the values you have 
-for (int i = 0 ; i<tempAspect.length;i++){
-  print("here is the aspects points before passing ");
-  print(tempAspect[i].percentagePoints);
-}
+
      Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return GetPoints(isr:widget.isr, aspects:tempAspect);
               }));

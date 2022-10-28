@@ -6,7 +6,9 @@ import 'QuastoinAssesment.dart';
 
 class shows extends StatefulWidget {
   final IsarService iser;
-  const shows({super.key, required this.iser});
+  final List<dynamic>? fixedAspect;
+  final List<dynamic>? chosenAspect;
+  const shows({super.key, required this.iser, this.fixedAspect,  this.chosenAspect});
 
   @override
   State<shows> createState() => _showsState();
@@ -23,7 +25,7 @@ class _showsState extends State<shows> {
               if (snapshot.connectionState == ConnectionState.done) {
                 List? q = snapshot.data;
   print (q);
-                return IconStepperDemo(isr: widget.iser, q: q);
+                return IconStepperDemo(isr: widget.iser, q: q , fixedAspect:widget.fixedAspect ,chosenAspect:widget.chosenAspect);
               } else {
                 return CircularProgressIndicator();
               }
