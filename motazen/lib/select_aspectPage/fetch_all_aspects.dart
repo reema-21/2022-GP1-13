@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:motazen/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:motazen/assesment_page/assesment_question_page_assignments.dart';
@@ -21,7 +23,6 @@ class _fetchAspect extends State<fetchAspect> {
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 List? allAspects = snapshot.data;
-                print (allAspects);
                 return selectAspect(isr: widget.iser, aspects: allAspects);
               } else {
                 return const CircularProgressIndicator();

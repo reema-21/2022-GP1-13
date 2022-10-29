@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import '/entities/aspect.dart';
 import '/entities/goal.dart';
 import '/entities/task.dart';
@@ -16,7 +14,6 @@ class IsarService {
 
   Future<Isar> openIsar() async {
     if (Isar.instanceNames.isEmpty) {
-      
       //if didn't opend before open one if iopen used an exsit one
       return await Isar.open(
           [
@@ -104,32 +101,28 @@ class IsarService {
     return isar.points.where().findAll();
   }
 
-    Future<Map<String,double>> getpointsAspects(List<Aspect> aspects) async { //get a list of aspect/points
+  Future<Map<String, double>> getpointsAspects(List<Aspect> aspects) async {
+    //get a list of aspect/points
     final isar = await db;
-  Map<String,double> pointsList = {};
-    for (int i = 0 ; i<aspects.length ;i++){
+    Map<String, double> pointsList = {};
+    for (int i = 0; i < aspects.length; i++) {
       String tempAspect = aspects[i].name;
-      Aspect?  tempPoints = await isar.aspects.where().idEqualTo(aspects[i].id).findFirst();
-      pointsList[tempAspect]=tempPoints!.percentagePoints; 
-     
-
+      Aspect? tempPoints =
+          await isar.aspects.where().idEqualTo(aspects[i].id).findFirst();
+      pointsList[tempAspect] = tempPoints!.percentagePoints;
     }
-   
-    
-    return  pointsList;
 
+    return pointsList;
   }
 
-void assignPointAspect(String aspectName , double points) async {
-      final isar = await db ;
-      Aspect?  tempAspect = await isar.aspects.filter().nameEqualTo(aspectName).findFirst();
-      tempAspect!.percentagePoints= points;
-      isar.writeTxnSync<int>(() => isar.aspects.putSync(tempAspect));// update that object 
-
-     
-
-    }
-
+  void assignPointAspect(String aspectName, double points) async {
+    final isar = await db;
+    Aspect? tempAspect =
+        await isar.aspects.filter().nameEqualTo(aspectName).findFirst();
+    tempAspect!.percentagePoints = points;
+    isar.writeTxnSync<int>(
+        () => isar.aspects.putSync(tempAspect)); // update that object
+  }
 
   // to get all other collection records based on a specific Aspect
   // get points for a specfic aspect
@@ -161,17 +154,15 @@ void assignPointAspect(String aspectName , double points) async {
         .findAll();
   }
 
-  void deleteAllAspects(List<dynamic>? aspectsChosen) async{
-    final isar = await db ; 
-    for (int i = 0 ; i<aspectsChosen!.length ;i++){
+  void deleteAllAspects(List<dynamic>? aspectsChosen) async {
+    final isar = await db;
+    for (int i = 0; i < aspectsChosen!.length; i++) {
       Aspect x = aspectsChosen[i];
-      
+
       await isar.writeTxn(() async {
-    await isar.aspects.delete(x.id);
-  });
-  }
-
-
+        await isar.aspects.delete(x.id);
+      });
+    }
   }
 
   // Future <void> LinkPoinToAspect(String name ,Aspect aspect ) async{

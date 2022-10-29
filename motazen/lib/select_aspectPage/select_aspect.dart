@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import "package:motazen/assesment_page/alert_dialog.dart";
 import 'package:flutter/material.dart';
 import 'package:motazen/assesment_page/show.dart';
@@ -5,13 +7,10 @@ import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
-import '../assesment_page/assesment_question_page_assignments.dart';
-import 'data.dart';
-
 class selectAspect extends StatefulWidget {
   final IsarService isr;
   final List<dynamic>? aspects;
-  const selectAspect({super.key, required this.isr,  this.aspects});
+  const selectAspect({super.key, required this.isr, this.aspects});
 
   @override
   State<selectAspect> createState() => _selectAspectState();
@@ -21,7 +20,6 @@ class _selectAspectState extends State<selectAspect> {
   var indexs = []; //must have the selected aspct
   int? selectedIndex;
 
-
   bool isSelected(String selectedaaspect) {
     if (indexs.contains(selectedaaspect)) {
       return true;
@@ -29,115 +27,114 @@ class _selectAspectState extends State<selectAspect> {
     return false;
   }
 
-
-  
-
-
   saveChosenAspect(IsarService isar) async {
-    for (int i = 0 ; i< indexs.length ; i++){
-     Aspect x = Aspect(); 
-  x.name= indexs[i];
-  x.percentagePoints=0;
-  isar.createAspect(x);
-  print(x.name);
-  
-
+    for (int i = 0; i < indexs.length; i++) {
+      Aspect x = Aspect();
+      x.name = indexs[i];
+      x.percentagePoints = 0;
+      isar.createAspect(x);
     }
 
-     Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return shows(iser: widget.isr ,fixedAspect: widget.aspects ,chosenAspect:indexs);
-              }));
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return shows(
+          iser: widget.isr, fixedAspect: widget.aspects, chosenAspect: indexs);
+    }));
   }
-  
+
+  @override
   Widget build(BuildContext context) {
-    String f = widget.aspects?[0];
-Widget doneButton(IsarService isar) {
-    //once all quastion answare and the user is n any quastion it will be enabeld
-    bool isAllQuastionAnswerd = true;
-    if (indexs.isEmpty){
-      isAllQuastionAnswerd=false;
-    }
-   
-    return ElevatedButton(
-      onPressed: isAllQuastionAnswerd
-          ? () {
+    Widget doneButton(IsarService isar) {
+      //once all quastion answare and the user is n any quastion it will be enabeld
+      bool isAllQuastionAnswerd = true;
+      if (indexs.isEmpty) {
+        isAllQuastionAnswerd = false;
+      }
+
+      return ElevatedButton(
+        onPressed: isAllQuastionAnswerd
+            ? () {
 //call a method that add the index to the local and go to assignment page .
-             saveChosenAspect(widget.isr );
-            }
-          : null,
-      child: const Text("التالي"),
-    );
-  }
+                saveChosenAspect(widget.isr);
+              }
+            : null,
+        child: const Text("التالي"),
+      );
+    }
+
     Size size = MediaQuery.of(context).size;
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Directionality(
-            textDirection: TextDirection.rtl,
-            child: Scaffold(
-                body: Stack(
-                  children: [
-                     Opacity(opacity: 0.5, child: ClipPath( clipper:OvalBottomBorderClipper(), child:Container(height: 210 , decoration: const BoxDecoration(
-                      color:Color.fromARGB(255, 134, 190, 144))),),),
-              Opacity( 
-                
-                opacity: 1,
-                child:ClipPath(
+      debugShowCheckedModeBanner: false,
+      home: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Opacity(
+                opacity: 0.5,
+                child: ClipPath(
                   clipper: OvalBottomBorderClipper(),
-                child: Container(
-                  padding: const EdgeInsets.only(left: 24, right: 24),
-                height:200,
-                  decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 134, 190, 144)),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                  // ignore: prefer_const_constructors
-                                  icon: Icon(Icons.arrow_back_ios_new,
-                                      color: const Color.fromARGB(
-                                          255, 245, 241, 241)),
-                                  onPressed: () async {
-                                    final action = await AlertDialogs.yesCancelDialog(
-                                        context,
-                                        ' هل انت متاكد من الرجوع ',
-                                        'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
-                                    if (action == DialogsAction.yes) {
-                                      //return to the previouse page different code for the ios .
-                                      // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
-                                    } else {
-                                      print("bey");
-                                    }
-                                  }),
-                            ],
-                          ),
-                          const Text(
-                            "هل أنت مستعد لإنشاء عجلة الحياة الخاصة بك ؟",
-                            style: TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          const Text(
-                            "اختر الجوانب اللي تريد اضافتها للعجلة",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
-                          ),
-                        ]),
-                  ),
-                ),)
+                  child: Container(
+                      height: 210,
+                      decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 134, 190, 144))),
+                ),
               ),
-
-             
+              Opacity(
+                  opacity: 1,
+                  child: ClipPath(
+                    clipper: OvalBottomBorderClipper(),
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 24, right: 24),
+                      height: 200,
+                      decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 134, 190, 144)),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                      // ignore: prefer_const_constructors
+                                      icon: Icon(Icons.arrow_back_ios_new,
+                                          color: const Color.fromARGB(
+                                              255, 245, 241, 241)),
+                                      onPressed: () async {
+                                        final action =
+                                            await AlertDialogs.yesCancelDialog(
+                                                context,
+                                                ' هل انت متاكد من الرجوع ',
+                                                'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
+                                        if (action == DialogsAction.yes) {
+                                          //return to the previouse page different code for the ios .
+                                          // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
+                                        } else {}
+                                      }),
+                                ],
+                              ),
+                              const Text(
+                                "هل أنت مستعد لإنشاء عجلة الحياة الخاصة بك ؟",
+                                style: TextStyle(
+                                    fontSize: 23,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              const Text(
+                                "اختر الجوانب اللي تريد اضافتها للعجلة",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white),
+                              ),
+                            ]),
+                      ),
+                    ),
+                  )),
               Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -148,15 +145,14 @@ Widget doneButton(IsarService isar) {
                         color: Colors.white,
                         // ignore: prefer_const_constructors
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
+                          topLeft: const Radius.circular(20),
+                          topRight: const Radius.circular(20),
                         ),
                       ),
                       child: Center(
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,7 +167,8 @@ Widget doneButton(IsarService isar) {
                                           color:
                                               isSelected("Family and Friends")
                                                   ? const Color(0xFFff9100)
-                                                  :  const Color.fromARGB(101, 255, 145, 0),
+                                                  : const Color.fromARGB(
+                                                      101, 255, 145, 0),
                                           border: Border.all(
                                               color: Colors.white, width: 10),
                                           boxShadow: [
@@ -191,7 +188,6 @@ Widget doneButton(IsarService isar) {
                                               size: 30,
                                               color: Colors.white,
                                             ),
-
                                             Text(
                                               widget.aspects?[0],
                                               style: const TextStyle(
@@ -210,7 +206,6 @@ Widget doneButton(IsarService isar) {
                                               : indexs
                                                   .add("Family and Friends"));
                                         });
-                                        print(indexs);
                                       },
                                     ),
                                     const SizedBox(
@@ -227,7 +222,8 @@ Widget doneButton(IsarService isar) {
                                           color:
                                               isSelected("Health and Wellbeing")
                                                   ? const Color(0xFFffd400)
-                                                  :Color.fromARGB(99, 255, 213, 0),
+                                                  : const Color.fromARGB(
+                                                      99, 255, 213, 0),
                                           border: Border.all(
                                               color: Colors.white, width: 10),
                                           boxShadow: [
@@ -248,8 +244,8 @@ Widget doneButton(IsarService isar) {
                                               color: Colors.white,
                                             ),
                                             const SizedBox(
-                                      width:5,
-                                    ),
+                                              width: 5,
+                                            ),
                                             Text(
                                               widget.aspects?[1],
                                               style: const TextStyle(
@@ -262,17 +258,17 @@ Widget doneButton(IsarService isar) {
                                       ),
                                       onTap: () {
                                         setState(() {
-                                          (indexs.contains("Health and Wellbeing")
-                                              ? indexs
-                                                  .remove("Health and Wellbeing")
+                                          (indexs.contains(
+                                                  "Health and Wellbeing")
+                                              ? indexs.remove(
+                                                  "Health and Wellbeing")
                                               : indexs
                                                   .add("Health and Wellbeing"));
                                         });
-                                        print(indexs);
                                       },
                                     ),
                                   ]),
-                              SizedBox(
+                              const SizedBox(
                                 height: 15,
                                 width: 10,
                               ),
@@ -287,10 +283,10 @@ Widget doneButton(IsarService isar) {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(24),
-                                          color:
-                                              isSelected("Personal Growth")
-                                                  ? const Color(0xFF2CDDCB)
-                                                  : Color.fromARGB(92, 44, 221, 203),
+                                          color: isSelected("Personal Growth")
+                                              ? const Color(0xFF2CDDCB)
+                                              : const Color.fromARGB(
+                                                  92, 44, 221, 203),
                                           border: Border.all(
                                               color: Colors.white, width: 10),
                                           boxShadow: [
@@ -310,9 +306,9 @@ Widget doneButton(IsarService isar) {
                                               size: 30,
                                               color: Colors.white,
                                             ),
-                                             const SizedBox(
-                                      width:5,
-                                    ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
                                             Text(
                                               widget.aspects?[2],
                                               style: const TextStyle(
@@ -326,12 +322,9 @@ Widget doneButton(IsarService isar) {
                                       onTap: () {
                                         setState(() {
                                           (indexs.contains("Personal Growth")
-                                              ? indexs
-                                                  .remove("Personal Growth")
-                                              : indexs
-                                                  .add("Personal Growth"));
+                                              ? indexs.remove("Personal Growth")
+                                              : indexs.add("Personal Growth"));
                                         });
-                                        print(indexs);
                                       },
                                     ),
                                     const SizedBox(
@@ -348,7 +341,8 @@ Widget doneButton(IsarService isar) {
                                           color:
                                               isSelected("Physical Environment")
                                                   ? const Color(0xFF9E19F0)
-                                                  : Color.fromARGB(92, 158, 25, 240),
+                                                  : const Color.fromARGB(
+                                                      92, 158, 25, 240),
                                           border: Border.all(
                                               color: Colors.white, width: 10),
                                           boxShadow: [
@@ -368,9 +362,9 @@ Widget doneButton(IsarService isar) {
                                               size: 30,
                                               color: Colors.white,
                                             ),
-                                             const SizedBox(
-                                      width:5,
-                                    ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
                                             Text(
                                               widget.aspects?[3],
                                               style: const TextStyle(
@@ -383,13 +377,13 @@ Widget doneButton(IsarService isar) {
                                       ),
                                       onTap: () {
                                         setState(() {
-                                          (indexs.contains("Physical Environment")
-                                              ? indexs
-                                                  .remove("Physical Environment")
+                                          (indexs.contains(
+                                                  "Physical Environment")
+                                              ? indexs.remove(
+                                                  "Physical Environment")
                                               : indexs
                                                   .add("Physical Environment"));
                                         });
-                                        print(indexs);
                                       },
                                     ),
                                   ]),
@@ -408,10 +402,10 @@ Widget doneButton(IsarService isar) {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(24),
-                                          color:
-                                              isSelected("Significant Other")
-                                                  ? const Color(0xffff4949)
-                                                  : Color.fromARGB(103, 255, 73, 73),
+                                          color: isSelected("Significant Other")
+                                              ? const Color(0xffff4949)
+                                              : const Color.fromARGB(
+                                                  103, 255, 73, 73),
                                           border: Border.all(
                                               color: Colors.white, width: 10),
                                           boxShadow: [
@@ -431,9 +425,9 @@ Widget doneButton(IsarService isar) {
                                               size: 30,
                                               color: Colors.white,
                                             ),
-                                             const SizedBox(
-                                      width:5,
-                                    ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
                                             Text(
                                               widget.aspects?[4],
                                               style: const TextStyle(
@@ -452,7 +446,6 @@ Widget doneButton(IsarService isar) {
                                               : indexs
                                                   .add("Significant Other"));
                                         });
-                                        print(indexs);
                                       },
                                     ),
                                     const SizedBox(
@@ -466,10 +459,10 @@ Widget doneButton(IsarService isar) {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(24),
-                                          color:
-                                              isSelected("career")
-                                                  ?const Color(0xff0065A3)
-                                                  : Color.fromARGB(103, 0, 100, 163),
+                                          color: isSelected("career")
+                                              ? const Color(0xff0065A3)
+                                              : const Color.fromARGB(
+                                                  103, 0, 100, 163),
                                           border: Border.all(
                                               color: Colors.white, width: 10),
                                           boxShadow: [
@@ -489,9 +482,9 @@ Widget doneButton(IsarService isar) {
                                               size: 30,
                                               color: Colors.white,
                                             ),
-                                             const SizedBox(
-                                      width:5,
-                                    ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
                                             Text(
                                               widget.aspects?[5],
                                               style: const TextStyle(
@@ -505,12 +498,9 @@ Widget doneButton(IsarService isar) {
                                       onTap: () {
                                         setState(() {
                                           (indexs.contains("career")
-                                              ? indexs
-                                                  .remove("career")
-                                              : indexs
-                                                  .add("career"));
+                                              ? indexs.remove("career")
+                                              : indexs.add("career"));
                                         });
-                                        print(indexs);
                                       },
                                     ),
                                   ]),
@@ -532,7 +522,7 @@ Widget doneButton(IsarService isar) {
                                           color:
                                               isSelected("Fun and Recreation")
                                                   ? const Color(0xff008adf)
-                                                  : Color.fromARGB(
+                                                  : const Color.fromARGB(
                                                       106, 90, 112, 124),
                                           border: Border.all(
                                               color: Colors.white, width: 10),
@@ -553,9 +543,9 @@ Widget doneButton(IsarService isar) {
                                               size: 30,
                                               color: Colors.white,
                                             ),
-                                             const SizedBox(
-                                      width:5,
-                                    ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
                                             Text(
                                               widget.aspects?[6],
                                               style: const TextStyle(
@@ -574,7 +564,6 @@ Widget doneButton(IsarService isar) {
                                               : indexs
                                                   .add("Fun and Recreation"));
                                         });
-                                        print(indexs);
                                       },
                                     ),
                                     const SizedBox(
@@ -590,8 +579,9 @@ Widget doneButton(IsarService isar) {
                                               BorderRadius.circular(24),
                                           color:
                                               isSelected("money and finances")
-                                                  ?  const Color(0xff54e360)
-                                                  :  Color.fromARGB(90, 84, 227, 96),
+                                                  ? const Color(0xff54e360)
+                                                  : const Color.fromARGB(
+                                                      90, 84, 227, 96),
                                           border: Border.all(
                                               color: Colors.white, width: 10),
                                           boxShadow: [
@@ -607,13 +597,13 @@ Widget doneButton(IsarService isar) {
                                               MainAxisAlignment.center,
                                           children: [
                                             const Icon(
-                                             Icons.attach_money,
+                                              Icons.attach_money,
                                               size: 30,
                                               color: Colors.white,
                                             ),
-                                             const SizedBox(
-                                      width:5,
-                                    ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
                                             Text(
                                               widget.aspects?[7],
                                               style: const TextStyle(
@@ -632,20 +622,17 @@ Widget doneButton(IsarService isar) {
                                               : indexs
                                                   .add("money and finances"));
                                         });
-                                        print(indexs);
                                       },
                                     ),
-                                   
                                   ]),
                             ]),
                       )))
-            ],),
-            bottomSheet: doneButton(widget.isr),
-            ),),
-
-            );
-
-
+            ],
+          ),
+          bottomSheet: doneButton(widget.isr),
+        ),
+      ),
+    );
 
 // class AspectCard extends StatelessWidget {
 //   final  Color color;

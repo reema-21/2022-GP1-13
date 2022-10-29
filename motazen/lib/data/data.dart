@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:motazen/assesment_page/assesment_question_page_assignments.dart';
 import 'models.dart';
 
 /// Fake data used to demo the application.
@@ -53,14 +52,13 @@ final fakeData = Todo(id: 'todo-tag-1', description: 'مهام اليوم', item
     ),
   ),
 ]);
-class WheelData with ChangeNotifier{
-  List<Data> data =[];
-  void addToList(Data obj){
-    data.add(obj);
-    print('$data has been added');
+
+class WheelData with ChangeNotifier {
+  List<Data> data = [];
+  Future<void> copyList(List<Data> list) async {
+    data = await list;
     notifyListeners();
   }
-
 }
 // class WheelData {
 //   static List<Data> data = [

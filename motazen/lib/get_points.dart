@@ -25,65 +25,61 @@ class _GetPointsState extends State<GetPoints> {
                 .aspects), // do not forget to sended it when using it in the stepper widget
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                var aspectData= Provider.of<WheelData>(context);
+                var aspectList = Provider.of<WheelData>(context);
                 Map? points = snapshot.data;
                 List<Data> dataList = [];
                 String name;
                 double point;
-                 Color color=const Color(0xFFff9100);
-                 Widget icon= const Icon(Icons.person);
-                points!.forEach((k,v) {
-                  name = k ;
-                  point=v ;
+                Color color = const Color(0xFFff9100);
+                Widget icon = const Icon(Icons.person);
+                points!.forEach((k, v) {
+                  name = k;
+                  point = v;
                   switch (name) {
-        case "money and finances":
-        color=const Color(0xff54e360);
-        icon=const Icon(Icons.attach_money);
-         
-          break;
-        case "Fun and Recreation":
-          color= const Color(0xff008adf);
-        icon=const Icon(Icons.games);
-          break;
-        case "career":
-         color=Color.fromARGB(255, 163, 0, 35); //fix colors
-         icon=const Icon(Icons.work);
-          break;
-        case "Significant Other":
-           color= const Color(0xffff4949);
-        icon=const Icon(Icons.work);//fix
-          break;
-        case "Physical Environment":
-          color= const Color(0xFF9E19F0);
-        icon= const Icon(Icons.work);//fix
-          break;
-        case "Personal Growth":
-          color= const Color(0xFF2CDDCB);
-        icon=const Icon(Icons.work);//fix
-          break;
+                    case "money and finances":
+                      color = const Color(0xff54e360);
+                      icon = const Icon(Icons.attach_money);
 
-        case "Health and Wellbeing":
-         color= const Color(0xFFffd400);
-         icon=const Icon(Icons.health_and_safety); //
-          break;
-        case "Family and Friends":
-        color=const Color(0xFFff9100);
-        icon=const Icon(Icons.person);
-         
-          break;
-          
+                      break;
+                    case "Fun and Recreation":
+                      color = const Color(0xff008adf);
+                      icon = const Icon(Icons.games);
+                      break;
+                    case "career":
+                      color =
+                          const Color.fromARGB(255, 163, 0, 35); //fix colors
+                      icon = const Icon(Icons.work);
+                      break;
+                    case "Significant Other":
+                      color = const Color(0xffff4949);
+                      icon = const Icon(Icons.work); //fix
+                      break;
+                    case "Physical Environment":
+                      color = const Color(0xFF9E19F0);
+                      icon = const Icon(Icons.work); //fix
+                      break;
+                    case "Personal Growth":
+                      color = const Color(0xFF2CDDCB);
+                      icon = const Icon(Icons.work); //fix
+                      break;
+
+                    case "Health and Wellbeing":
+                      color = const Color(0xFFffd400);
+                      icon = const Icon(Icons.health_and_safety); //
+                      break;
+                    case "Family and Friends":
+                      color = const Color(0xFFff9100);
+                      icon = const Icon(Icons.person);
+
+                      break;
                   }
-
-   aspectData.addToList(Data(
-                    name:name,
-                    points:point,
-                    color:color,
-                    icon: icon));
-                }); 
-             
-                return Homepage(dataList: dataList);
+                  dataList.add(Data(
+                      name: name, points: point, color: color, icon: icon));
+                });
+                aspectList.copyList(dataList);
+                return const Homepage();
               } else {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
             })),
       ),

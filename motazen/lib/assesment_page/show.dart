@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:motazen/isar_service.dart';
 
 import 'package:flutter/material.dart';
@@ -8,7 +10,8 @@ class shows extends StatefulWidget {
   final IsarService iser;
   final List<dynamic>? fixedAspect;
   final List<dynamic>? chosenAspect;
-  const shows({super.key, required this.iser, this.fixedAspect,  this.chosenAspect});
+  const shows(
+      {super.key, required this.iser, this.fixedAspect, this.chosenAspect});
 
   @override
   State<shows> createState() => _showsState();
@@ -24,10 +27,13 @@ class _showsState extends State<shows> {
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 List? q = snapshot.data;
-  print (q);
-                return IconStepperDemo(isr: widget.iser, q: q , fixedAspect:widget.fixedAspect ,chosenAspect:widget.chosenAspect);
+                return IconStepperDemo(
+                    isr: widget.iser,
+                    q: q,
+                    fixedAspect: widget.fixedAspect,
+                    chosenAspect: widget.chosenAspect);
               } else {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
             })),
       ),

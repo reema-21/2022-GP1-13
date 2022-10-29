@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../data/models.dart';
 import '/pages/homepage/wheel_of_life/pie_chart_page.dart';
 import '/Sidebar_and_navigation/navigation-bar.dart';
 import '/Sidebar_and_navigation/sidebar.dart';
@@ -9,8 +8,7 @@ import '/pages/homepage/daily_tasks/display_list.dart';
 // import 'homepage/wheel_of_life/render-chart.dart'; file accidentally deleted add later
 // how is it implemented
 class Homepage extends StatefulWidget {
-  final List<Data> dataList ;
-  const Homepage({super.key, required this.dataList});
+  const Homepage({super.key});
   @override
   State<Homepage> createState() => _MyHomepageState();
 }
@@ -18,12 +16,6 @@ class Homepage extends StatefulWidget {
 class _MyHomepageState extends State<Homepage> {
 //progress Widget
   @override
-  void initState() {
-    print("i am at the home");
-    print(widget.dataList[0].points);
-    // TODO: implement initState
-    super.initState();
-  }
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -65,7 +57,7 @@ class _MyHomepageState extends State<Homepage> {
                     ),
                   ),
                 ),
-                 life_wheel(dataList:widget.dataList),
+                const life_wheel(),
               ],
             ),
             // displays the daily tasks list

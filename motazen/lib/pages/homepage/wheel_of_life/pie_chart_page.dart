@@ -1,23 +1,19 @@
 import 'package:motazen/data/data.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/models.dart';
 import '/pages/homepage/wheel_of_life/widget/pie_chart_sections.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 // ignore: camel_case_types
 class life_wheel extends StatefulWidget {
-  final List<Data> dataList ; 
-  const life_wheel({super.key, required this.dataList});
+  const life_wheel({super.key});
 
   @override
   State<life_wheel> createState() => PieChart2State();
 }
 
-class PieChart2State extends State<life_wheel>{
-  @override
- 
+class PieChart2State extends State<life_wheel> {
   int touchedIndex = -1;
 
   @override
@@ -52,7 +48,9 @@ class PieChart2State extends State<life_wheel>{
                 ),
                 sectionsSpace: 0,
                 centerSpaceRadius: 0,
-                sections: getSections(touchedIndex , aspctData.data), ///
+                sections: getSections(touchedIndex, aspctData.data),
+
+                ///
               ),
             ),
           ),
