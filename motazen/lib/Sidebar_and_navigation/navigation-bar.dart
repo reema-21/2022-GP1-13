@@ -30,7 +30,7 @@ Widget navBar = Container(
             text: 'مجتمعاتي',
           ),
           GButton(
-            icon: LineIcons.check,
+            icon: LineIcons.check, //click here move me to a page 
             text: 'عاداتي وأهدافي',
           ),
           GButton(
