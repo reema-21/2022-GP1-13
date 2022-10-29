@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:im_stepper/stepper.dart';
-import 'package:motazen/data/data.dart';
 import 'package:motazen/data/models.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/homepage/homepage.dart';
-import 'package:motazen/pages/homepage/wheel_of_life/pie_chart_page.dart';
-
-import 'assesment_page/assesment_question_page_assignments.dart';
+import 'package:provider/provider.dart';
+import 'data/data.dart';
 import 'entities/aspect.dart';
 
 class GetPoints extends StatefulWidget {
@@ -28,6 +25,7 @@ class _GetPointsState extends State<GetPoints> {
                 .aspects), // do not forget to sended it when using it in the stepper widget
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
+                var aspectData= Provider.of<WheelData>(context);
                 Map? points = snapshot.data;
                 List<Data> dataList = [];
                 String name;
@@ -76,14 +74,13 @@ class _GetPointsState extends State<GetPoints> {
           
                   }
 
-   dataList.add(Data(
+   aspectData.addToList(Data(
                     name:name,
                     points:point,
                     color:color,
                     icon: icon));
                 }); 
-              print ("here is the data list");
-              print(dataList[0].name);
+             
                 return Homepage(dataList: dataList);
               } else {
                 return CircularProgressIndicator();

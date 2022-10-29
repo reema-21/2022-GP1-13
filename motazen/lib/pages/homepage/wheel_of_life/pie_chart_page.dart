@@ -1,4 +1,5 @@
 import 'package:motazen/data/data.dart';
+import 'package:provider/provider.dart';
 
 import '../../../data/models.dart';
 import '/pages/homepage/wheel_of_life/widget/pie_chart_sections.dart';
@@ -21,6 +22,7 @@ class PieChart2State extends State<life_wheel>{
 
   @override
   Widget build(BuildContext context) {
+    var aspctData = Provider.of<WheelData>(context);
     return Row(
       children: <Widget>[
         const SizedBox(
@@ -50,7 +52,7 @@ class PieChart2State extends State<life_wheel>{
                 ),
                 sectionsSpace: 0,
                 centerSpaceRadius: 0,
-                sections: getSections(touchedIndex , widget.dataList), ///
+                sections: getSections(touchedIndex , aspctData.data), ///
               ),
             ),
           ),

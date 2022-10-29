@@ -53,9 +53,17 @@ final fakeData = Todo(id: 'todo-tag-1', description: 'مهام اليوم', item
     ),
   ),
 ]);
+class WheelData with ChangeNotifier{
+  List<Data> data =[];
+  void addToList(Data obj){
+    data.add(obj);
+    print('$data has been added');
+    notifyListeners();
+  }
 
-class WheelData {
-  static List<Data> data = [
+}
+// class WheelData {
+//   static List<Data> data = [
     // Data(
     //     name: 'career',
     //     points: 80,
@@ -95,6 +103,4 @@ class WheelData {
     //     name: 'friends and family',
     //     points: 95,
     //     color: const Color(0xFFff9100),
-    //     icon: const Icon(Icons.person)),
-  ];
-}
+  

@@ -182,7 +182,7 @@ class AssesmentQuestionPageAssignments {
           break;
       }
     }
-print (AssesmentQuestionPageGlobals.answares);
+
     return quastionsList;
   }
 

@@ -2,12 +2,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:motazen/data/data.dart';
 import 'package:motazen/data/models.dart';
 
-List<PieChartSectionData> getSections(int touchedIndex ,List<Data> dataList) => 
-dataList // if not worikng check the old one an d start over form there 
-    .asMap()
+List<PieChartSectionData> getSections(int touchedIndex ,List<Data> data) => 
+ // if not worikng check the old one an d start over form there 
+data.asMap()
     .map<int, PieChartSectionData>((index, data) {
       double points = data.points;
-      
+      print(data);
       final isTouched = index == touchedIndex;
       if (isTouched) {}
 
