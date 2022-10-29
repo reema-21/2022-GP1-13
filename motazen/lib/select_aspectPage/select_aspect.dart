@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:motazen/assesment_page/show.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/isar_service.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 import '../assesment_page/assesment_question_page_assignments.dart';
 import 'data.dart';
@@ -73,78 +74,89 @@ Widget doneButton(IsarService isar) {
         home: Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
-                body: Stack(children: [
-              Container(
-                padding: const EdgeInsets.only(left: 24, right: 24),
-                height: size.height,
-                width: size.width,
-                decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 134, 190, 144)),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                                // ignore: prefer_const_constructors
-                                icon: Icon(Icons.arrow_back_ios_new,
-                                    color: const Color.fromARGB(
-                                        255, 245, 241, 241)),
-                                onPressed: () async {
-                                  final action = await AlertDialogs.yesCancelDialog(
-                                      context,
-                                      ' هل انت متاكد من الرجوع ',
-                                      'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
-                                  if (action == DialogsAction.yes) {
-                                    //return to the previouse page different code for the ios .
-                                    // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
-                                  } else {
-                                    print("bey");
-                                  }
-                                }),
-                          ],
-                        ),
-                        const Text(
-                          "هل أنت مستعد لإنشاء عجلة الحياة الخاصة بك ؟",
-                          style: TextStyle(
-                              fontSize: 23,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        const Text(
-                          "اختر الجوانب اللي تريد اضافتها للعجلة",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white),
-                        ),
-                      ]),
-                ),
+                body: Stack(
+                  children: [
+                     Opacity(opacity: 0.5, child: ClipPath( clipper:OvalBottomBorderClipper(), child:Container(height: 210 , decoration: const BoxDecoration(
+                      color:Color.fromARGB(255, 134, 190, 144))),),),
+              Opacity( 
+                
+                opacity: 1,
+                child:ClipPath(
+                  clipper: OvalBottomBorderClipper(),
+                child: Container(
+                  padding: const EdgeInsets.only(left: 24, right: 24),
+                height:200,
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 134, 190, 144)),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                  // ignore: prefer_const_constructors
+                                  icon: Icon(Icons.arrow_back_ios_new,
+                                      color: const Color.fromARGB(
+                                          255, 245, 241, 241)),
+                                  onPressed: () async {
+                                    final action = await AlertDialogs.yesCancelDialog(
+                                        context,
+                                        ' هل انت متاكد من الرجوع ',
+                                        'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
+                                    if (action == DialogsAction.yes) {
+                                      //return to the previouse page different code for the ios .
+                                      // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
+                                    } else {
+                                      print("bey");
+                                    }
+                                  }),
+                            ],
+                          ),
+                          const Text(
+                            "هل أنت مستعد لإنشاء عجلة الحياة الخاصة بك ؟",
+                            style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          const Text(
+                            "اختر الجوانب اللي تريد اضافتها للعجلة",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white),
+                          ),
+                        ]),
+                  ),
+                ),)
               ),
+
+             
               Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                      height: size.height - (size.height / 5),
+                      height: size.height - (size.height / 3),
                       width: size.width,
                       // ignore: prefer_const_constructors
                       decoration: BoxDecoration(
                         color: Colors.white,
                         // ignore: prefer_const_constructors
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(34),
-                          topRight: Radius.circular(34),
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
                         ),
                       ),
                       child: Center(
                         child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
