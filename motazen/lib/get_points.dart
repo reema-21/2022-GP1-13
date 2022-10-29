@@ -19,7 +19,7 @@ class _GetPointsState extends State<GetPoints> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SafeArea(
         child: FutureBuilder(
             future: IsarService().getpointsAspects(widget
                 .aspects), // do not forget to sended it when using it in the stepper widget

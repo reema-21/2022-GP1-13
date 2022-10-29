@@ -1,11 +1,13 @@
 // ignore_for_file: file_names, non_constant_identifier_names
 
+import 'package:motazen/theme.dart';
+
 import '../get_points.dart';
 import '/isar_service.dart';
-import '/entities/aspect.dart'; //for the directory
+import '/entities/aspect.dart';
 import 'package:flutter/material.dart';
 import 'package:im_stepper/stepper.dart';
-import 'alert_dialog.dart'; //for the alert
+import 'alert_dialog.dart';
 import 'assesmentQuestionPageGlobals.dart';
 import "package:motazen/select_aspectPage/select_aspect.dart";
 
@@ -41,6 +43,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       min: 0,
       max: 10,
       divisions: 10, //to stick
+      activeColor: kPrimaryColor,
+
       label: AssesmentQuestionPageGlobals.currentSliderValue
           .round()
           .toString(), // to show the lable number
@@ -50,7 +54,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
           AssesmentQuestionPageGlobals.currentSliderValue = value;
           AssesmentQuestionPageGlobals.answares[
               AssesmentQuestionPageGlobals
-                  .activeStep] = "$value" +
+                  .activeStep] = '$value' +
               AssesmentQuestionPageGlobals
                   .answares[AssesmentQuestionPageGlobals.activeStep]
                   .substring(AssesmentQuestionPageGlobals
@@ -62,166 +66,155 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     );
   }
 
-  @override
-  void initState() {
-    // ignore: todo
-    // TODO: implement initState
-    super.initState();
-  }
-
   /// End of the sliderRange  */
   @override
   Widget build(BuildContext context) {
-// setState(() {
-// widget.q?=AssesmentQuestionPageAssignments().returnThefinalValue();
-//   print (widget.q?);
-//   IconStepperDemo.upperBound = widget.q?.length -1;
-//   AssesmentQuestionPageGlobals.currentSliderValue = double.parse(AssesmentQuestionPageGlobals.answares[AssesmentQuestionPageGlobals.activeStep]
-//       .substring(0, AssesmentQuestionPageGlobals.answares[AssesmentQuestionPageGlobals.activeStep].length - 1));
-// });
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Directionality(
-          // <-- Add this Directionality
-          textDirection: TextDirection.rtl,
-          child: Scaffold(
-            backgroundColor: const Color.fromRGBO(238, 238, 238, 1),
-            appBar: AppBar(
-              actions: [
-                IconButton(
-                  // ignore: prefer_const_constructors
-                  icon: Icon(Icons.arrow_forward_ios,
-                      color: const Color.fromARGB(255, 245, 241, 241)),
-                  onPressed: () async {
-                    final action = await AlertDialogs.yesCancelDialog(
-                        context,
-                        'هل انت متاكد من الرجوع ',
-                        'بالنقر على "تاكيد"لن يتم حفظ الاجابات ');
-                    if (action == DialogsAction.yes) {
-                      //return to the previouse page different code for the ios .
-                      List<dynamic> tempAspect =
-                          await widget.isr.getAspectFirstTime();
-                      widget.isr.deleteAllAspects(tempAspect);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return selectAspect(
-                          isr: widget.isr,
-                          aspects: widget.fixedAspect,
-                        );
-                      }));
-                    } else {}
-                  },
-                ),
-              ],
-              title: const Text(
-                'اسئلة تقييم جوانب الحياة ',
+    return Directionality(
+        // <-- Add this Directionality
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            actions: [
+              IconButton(
+                // ignore: prefer_const_constructors
+                icon: Icon(Icons.arrow_forward_ios, color: kBlackColor),
+                onPressed: () async {
+                  final action = await AlertDialogs.yesCancelDialog(
+                      context,
+                      'هل انت متاكد من الرجوع ',
+                      'بالنقر على "تاكيد"لن يتم حفظ الاجابات ');
+                  if (action == DialogsAction.yes) {
+                    //return to the previouse page different code for the ios .
+                    List<dynamic> tempAspect =
+                        await widget.isr.getAspectFirstTime();
+                    widget.isr.deleteAllAspects(tempAspect);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return selectAspect(
+                        isr: widget.isr,
+                        aspects: widget.fixedAspect,
+                      );
+                    }));
+                  }
+                },
               ),
-              elevation: 0,
-              flexibleSpace: //for coloring
-                  Container(
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                // ignore: prefer_const_literals_to_create_immutables
-                colors: [Color(0xff66bf77), Color(0xff3d82c4)],
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-              ))),
+            ],
+            title: const Text(
+              'اسئلة تقييم جوانب الحياة ',
+              style: TextStyle(
+                color: kBlackColor,
+              ),
             ),
-            body: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(0)),
-                      child: IconStepper(
-                        stepReachedAnimationEffect:
-                            Curves.linear, //stop the jumping
-                        lineColor: Colors.black,
-                        stepColor: Colors.white,
-                        activeStepColor:
-                            const Color.fromARGB(255, 165, 154, 154),
-                        stepRadius: 20,
-                        stepPadding: 0,
-                        // move it to a function so that you take the aspect and the number of quastion = x and then you reapt the icon    x times
-                        icons: createIcon(),
+            elevation: 0,
+            backgroundColor: kWhiteColor,
+          ),
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(0)),
+                    child: IconStepper(
+                      stepReachedAnimationEffect:
+                          Curves.linear, //stop the jumping
+                      lineColor: Colors.black,
+                      stepReachedAnimationDuration:
+                          const Duration(milliseconds: 200),
+                      activeStepColor: kWhiteColor,
+                      stepColor: kDisabled,
+                      stepRadius: 20,
+                      stepPadding: 0,
+                      // move it to a function so that you take the aspect and the number of quastion = x and then you reapt the icon    x times
+                      icons: createIcon(),
 
-                        // AssesmentQuestionPageGlobals.activeStep property set to AssesmentQuestionPageGlobals.activeStep variable defined above.
-                        activeStep: AssesmentQuestionPageGlobals.activeStep,
+                      // AssesmentQuestionPageGlobals.activeStep property set to AssesmentQuestionPageGlobals.activeStep variable defined above.
+                      activeStep: AssesmentQuestionPageGlobals.activeStep,
 
-                        // This ensures step-tapping updates the AssesmentQuestionPageGlobals.activeStep.
-                        onStepReached: (index) {
-                          setState(() {
-                            // possible so for the below problem
-                            /* if the answare has value then the value is the currenslide 
+                      // This ensures step-tapping updates the AssesmentQuestionPageGlobals.activeStep.
+                      onStepReached: (index) {
+                        setState(() {
+                          // possible so for the below problem
+                          /* if the answare has value then the value is the currenslide 
                     if not the value is 1 */
 
-                            AssesmentQuestionPageGlobals.activeStep = index;
-                            AssesmentQuestionPageGlobals.currentSliderValue =
-                                double.parse(AssesmentQuestionPageGlobals
-                                    .answares[
-                                        AssesmentQuestionPageGlobals.activeStep]
-                                    .substring(
-                                        0,
-                                        AssesmentQuestionPageGlobals
-                                                .answares[
-                                                    AssesmentQuestionPageGlobals
-                                                        .activeStep]
-                                                .length -
-                                            1)); // this is for reseting the slider for each quasion but the problem we want to save the value
-                          });
-                        },
-                      )),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  header(), // apply quasion
-                  const Divider(
-                    color: Colors.white,
-                    thickness: 0.5,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[700],
-                        borderRadius: BorderRadius.circular(25)),
-                    child: Column(
-                      textDirection: TextDirection.rtl,
-                      children: [
-                        Text(headerText(),
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 30)),
-                        Container(
-                            margin: const EdgeInsets.only(top: 20),
-                            padding: const EdgeInsets.all(20),
-                            child: Row(
-                              textDirection: TextDirection.ltr,
-                              children: [
-                                buildSlideLable(10),
-                                Expanded(
-                                  child: sliderRange(),
-                                ),
-                                buildSlideLable(0),
-                              ],
-                            )),
-                      ],
+                          AssesmentQuestionPageGlobals.activeStep = index;
+                          AssesmentQuestionPageGlobals.currentSliderValue =
+                              double.parse(AssesmentQuestionPageGlobals
+                                  .answares[
+                                      AssesmentQuestionPageGlobals.activeStep]
+                                  .substring(
+                                      0,
+                                      AssesmentQuestionPageGlobals
+                                              .answares[
+                                                  AssesmentQuestionPageGlobals
+                                                      .activeStep]
+                                              .length -
+                                          1)); // this is for reseting the slider for each quasion but the problem we want to save the value
+                        });
+                      },
+                    )),
+                const SizedBox(
+                  height: 40,
+                ),
+                header(), // apply quasion
+                const Divider(
+                  color: Colors.white,
+                  thickness: 0.5,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Hero(
+                  tag: 'question-card',
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Material(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.white,
+                      elevation: 10.0,
+                      child: SizedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            textDirection: TextDirection.rtl,
+                            children: [
+                              Text(headerText(),
+                                  style: const TextStyle(
+                                      color: kBlackColor, fontSize: 30)),
+                              Row(
+                                textDirection: TextDirection.ltr,
+                                children: [
+                                  buildSlideLable(10),
+                                  Expanded(
+                                    child: sliderRange(),
+                                  ),
+                                  buildSlideLable(0),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: doneButton(widget.isr),
+                  ),
+                )
+              ],
             ),
-            bottomSheet: doneButton(widget.isr),
-          )),
-    );
+          ),
+        ));
   }
 
   /// Returns the next button.
@@ -231,19 +224,24 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     var upperBound = widget.q!.length - 1;
     String start = (AssesmentQuestionPageGlobals.activeStep + 1).toString();
     String last = (upperBound + 1).toString();
-    return Text.rich(
-      TextSpan(
-        text: "السؤال $start ",
-        style: const TextStyle(
-            color: Colors.black54, fontSize: 30, fontWeight: FontWeight.bold),
-        children: [
-          TextSpan(
-              text: "/ $last",
-              style: const TextStyle(
-                  color: Colors.black54,
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: Text.rich(
+        TextSpan(
+          text: "السؤال $start ",
+          style: const TextStyle(
+            color: kBlackColor,
+            fontSize: 30,
+          ),
+          children: [
+            TextSpan(
+                text: "/ $last",
+                style: const TextStyle(
+                  color: kBlackColor,
                   fontSize: 30,
-                  fontWeight: FontWeight.bold))
-        ],
+                ))
+          ],
+        ),
       ),
     );
   }
@@ -348,7 +346,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
         child: Text(
           value.round().toString(),
           style: const TextStyle(
-              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              color: kBlackColor, fontSize: 18, fontWeight: FontWeight.bold),
         ),
       );
 
@@ -458,8 +456,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
           break;
       }
 
-      //devide and create points and save in local storage .
-
+////////////////////find the percentage for the points and save it in the local storage///////////////
     }
     if (moneyAspectPoints != 0) {
       final Aspect aspect =
@@ -467,98 +464,34 @@ class _IconStepperDemo extends State<IconStepperDemo> {
       aspect.name = "money and finances";
       double point = (moneyAspectPoints / 50) * 100;
       isar.assignPointAspect("money and finances", point);
-
-      // isar.createAspect(aspect);
-      // final Point point = Point();
-      // point.finalValues = moneyAspectPoints / 50;
-      // point.aspect.value = aspect; //because it is linked .
-      // isar.createPoint(point);
     }
     if (funAndRecreationAspectPoints != 0) {
       double point = (funAndRecreationAspectPoints / 40) * 100;
       isar.assignPointAspect("Fun and Recreation", point);
-      // final Aspect aspect =
-      //     Aspect(); // this should be the same as the one created above ;
-      // aspect.name = "Fun and Recreation";
-      // isar.createAspect(aspect);
-      // final Point point = Point();
-      // point.finalValues = funAndRecreationAspectPoints / 40;
-      // point.finalValues=point.finalValues*100;
-      // point.aspect.value = aspect; //because it is linked .
-      // isar.createPoint(point);
     }
     if (healthAndWellbeingAspectPoints != 0) {
       double point = (healthAndWellbeingAspectPoints / 50) * 100;
       isar.assignPointAspect("Health and Wellbeing", point);
-      // final Aspect aspect =
-      //     Aspect(); // this should be the same as the one created above ;
-      // aspect.name = "Health and Wellbeing";
-      // isar.createAspect(aspect);
-      // final Point point = Point();
-      // point.finalValues = healthAndWellbeingAspectPoints / 50;
-      // point.finalValues=point.finalValues*100;
-      // point.aspect.value = aspect; //because it is linked .
-      // isar.createPoint(point);
     }
     if (significantOtherAspectPoints != 0) {
       double point = (significantOtherAspectPoints / 40) * 100;
       isar.assignPointAspect("Significant Other", point);
-      // final Aspect aspect =
-      //     Aspect(); // this should be the same as the one created above ;
-      // aspect.name = "Significant Other";
-      // isar.createAspect(aspect);
-      // final Point point = Point();
-      // point.finalValues = significantOtherAspectPoints / 40;
-      // point.aspect.value = aspect; //because it is linked .
-      // isar.createPoint(point);
     }
     if (physicalEnvironmentAspectPoints != 0) {
       double point = (physicalEnvironmentAspectPoints / 50) * 100;
       isar.assignPointAspect("Physical Environment", point);
-      // final Aspect aspect =
-      //     Aspect(); // this should be the same as the one created above ;
-      // aspect.name = "Physical Environment";
-      // isar.createAspect(aspect);
-      // final Point point = Point();
-      // point.finalValues = physicalEnvironmentAspectPoints / 40;
-      // point.aspect.value = aspect; //because it is linked .
-      // isar.createPoint(point);
     }
     if (personalGrowthAspectPoints != 0) {
       double point = (personalGrowthAspectPoints / 40) * 100;
       isar.assignPointAspect("Personal Growth", point);
-      // final Aspect aspect =
-      //     Aspect(); // this should be the same as the one created above ;
-      // aspect.name = "Personal Growth";
-      // isar.createAspect(aspect);
-      // final Point point = Point();
-      // point.finalValues = personalGrowthAspectPoints / 40;
-      // point.aspect.value = aspect; //because it is linked .
-      // isar.createPoint(point);
     }
     if (familyAndFriendsAspectPoints != 0) {
       double point = (familyAndFriendsAspectPoints / 90) * 100;
       isar.assignPointAspect("Family and Friends", point);
-      // final Aspect aspect =
-      //     Aspect(); // this should be the same as the one created above ;
-      // aspect.name = "Family";
-      // isar.createAspect(aspect);
-      // final Point point = Point();
-      // point.finalValues = familyAspectPoints / 40;
-      // point.aspect.value = aspect; //because it is linked .
-      // isar.createPoint(point);
     }
     if (CareerAspectPoints != 0) {
       double point = (CareerAspectPoints / 40) * 100;
       isar.assignPointAspect("career", point);
-      // final Aspect aspect =
-      //     Aspect(); // this should be the same as the one created above ;
-      // aspect.name = "career";
-      // isar.createAspect(aspect);
-      // final Point point = Point();
-      // point.finalValues = CareerAspectPoints / 40;
-      // point.aspect.value = aspect; //because it is linked .
-      // isar.createPoint(point);
     }
     List<Aspect> tempAspect =
         []; //store the fetched chosen aspect from the user
