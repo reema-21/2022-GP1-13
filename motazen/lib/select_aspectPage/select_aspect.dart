@@ -529,7 +529,7 @@ Widget doneButton(IsarService isar) {
                                                 blurRadius: 50,
                                                 color: const Color(0xFF0B0C2A)
                                                     .withOpacity(0.09),
-                                                offset: const Offset(10, 10))
+                                                offset: const Offset(8, 8))
                                           ],
                                         ),
                                         child: Row(

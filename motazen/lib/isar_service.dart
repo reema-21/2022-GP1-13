@@ -164,7 +164,13 @@ void assignPointAspect(String aspectName , double points) async {
   void deleteAllAspects(List<dynamic>? aspectsChosen) async{
     final isar = await db ; 
     for (int i = 0 ; i<aspectsChosen!.length ;i++){
-      isar.aspects.filter().nameContains(aspectsChosen[i]).deleteAll();}
+      Aspect x = aspectsChosen[i];
+      
+      await isar.writeTxn(() async {
+    await isar.aspects.delete(x.id);
+  });
+  }
+
 
   }
 

@@ -89,7 +89,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                       'بالنقر على "تاكيد"لن يتم حفظ الاجابات ');
                   if (action == DialogsAction.yes) {
                     //return to the previouse page different code for the ios .
-                    widget.isr.deleteAllAspects(widget.chosenAspect);
+                    List<dynamic> tempAspect = await widget.isr.getAspectFirstTime();
+                    widget.isr.deleteAllAspects(tempAspect);
                     Navigator.push(context, MaterialPageRoute(builder: (context) {return selectAspect(isr:widget.isr,aspects:widget.fixedAspect,);}));
                   } else {
                     print("bey");
