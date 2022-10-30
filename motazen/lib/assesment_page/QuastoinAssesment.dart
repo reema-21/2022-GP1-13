@@ -13,7 +13,7 @@ import "package:motazen/select_aspectPage/select_aspect.dart";
 import"show.dart";
 class WheelOfLifeAssessmentPage extends StatefulWidget {
   final IsarService isr;
-  final List<dynamic>? q;
+  final List<dynamic>? question;
   final List<dynamic>? fixedAspect;
   final List<dynamic>? chosenAspect;
 
@@ -21,14 +21,14 @@ class WheelOfLifeAssessmentPage extends StatefulWidget {
   const WheelOfLifeAssessmentPage(
       {super.key,
       required this.isr,
-      required this.q,
+      required this.question,
       this.fixedAspect,
       this.chosenAspect});
   @override
-  State<WheelOfLifeAssessmentPage> createState() => _IconStepperDemo();
+  State<WheelOfLifeAssessmentPage> createState() => _WheelOfLifeAssessmentPage();
 }
 
-class _IconStepperDemo extends State<WheelOfLifeAssessmentPage> {
+class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   // THE FOLLOWING TWO VARIABLES ARE REQUIRED TO CONTROL THE STEPPER.
   // Initial step set to 0 to be Reversed start from the right .
   // upperBound MUST BE total number of icons minus 1. // total numberofquastion-1 = AssesmentQuestionPageGlobals.activeSteps so that it start from the right
@@ -224,7 +224,7 @@ class _IconStepperDemo extends State<WheelOfLifeAssessmentPage> {
 
   /// Returns the header wrapping the header text.
   Widget header() {
-    var upperBound = widget.q!.length - 1;
+    var upperBound = widget.question!.length - 1;
     String start = (AssesmentQuestionPageGlobals.activeStep + 1).toString();
     String last = (upperBound + 1).toString();
     return Padding(
@@ -253,14 +253,14 @@ class _IconStepperDemo extends State<WheelOfLifeAssessmentPage> {
 
   String headerText() {
     ///can be added to a different page
-    return widget.q?[AssesmentQuestionPageGlobals.activeStep];
+    return widget.question?[AssesmentQuestionPageGlobals.activeStep];
   }
 
   List<Icon> createIcon() {
     // create the icons and the length of the IconsList based on the answare map
     List<Icon> iconStepper = [];
 
-    for (int i = 0; i < widget.q!.length; i++) {
+    for (int i = 0; i < widget.question!.length; i++) {
       String aspect = AssesmentQuestionPageGlobals.answares[i]
           .substring(AssesmentQuestionPageGlobals.answares[i].length - 1);
 
