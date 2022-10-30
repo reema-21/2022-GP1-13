@@ -10,25 +10,25 @@ import 'package:im_stepper/stepper.dart';
 import 'alert_dialog.dart';
 import 'assesmentQuestionPageGlobals.dart';
 import "package:motazen/select_aspectPage/select_aspect.dart";
-
-class IconStepperDemo extends StatefulWidget {
+import"show.dart";
+class WheelOfLifeAssessmentPage extends StatefulWidget {
   final IsarService isr;
   final List<dynamic>? q;
   final List<dynamic>? fixedAspect;
   final List<dynamic>? chosenAspect;
 
   static double upperBound = 0;
-  const IconStepperDemo(
+  const WheelOfLifeAssessmentPage(
       {super.key,
       required this.isr,
       required this.q,
       this.fixedAspect,
       this.chosenAspect});
   @override
-  State<IconStepperDemo> createState() => _IconStepperDemo();
+  State<WheelOfLifeAssessmentPage> createState() => _IconStepperDemo();
 }
 
-class _IconStepperDemo extends State<IconStepperDemo> {
+class _IconStepperDemo extends State<WheelOfLifeAssessmentPage> {
   // THE FOLLOWING TWO VARIABLES ARE REQUIRED TO CONTROL THE STEPPER.
   // Initial step set to 0 to be Reversed start from the right .
   // upperBound MUST BE total number of icons minus 1. // total numberofquastion-1 = AssesmentQuestionPageGlobals.activeSteps so that it start from the right
@@ -91,7 +91,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                     widget.isr.deleteAllAspects(tempAspect);
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return selectAspect(
+                      return AspectSelection(
                         isr: widget.isr,
                         aspects: widget.fixedAspect,
                       );
@@ -504,7 +504,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
     //delete the aspects you have create a new one with the values you have
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return GetPoints(isr: widget.isr, aspects: tempAspect);
+      return AspectPoints(isr: widget.isr, aspects: tempAspect);
     }));
   }
 }

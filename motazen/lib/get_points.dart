@@ -6,16 +6,16 @@ import 'package:provider/provider.dart';
 import 'data/data.dart';
 import 'entities/aspect.dart';
 
-class GetPoints extends StatefulWidget {
+class AspectPoints extends StatefulWidget {
   final IsarService isr;
   final List<Aspect> aspects;
-  const GetPoints({super.key, required this.isr, required this.aspects});
+  const AspectPoints({super.key, required this.isr, required this.aspects});
 
   @override
-  State<GetPoints> createState() => _GetPointsState();
+  State<AspectPoints> createState() => _GetPointsState();
 }
 
-class _GetPointsState extends State<GetPoints> {
+class _GetPointsState extends State<AspectPoints> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
