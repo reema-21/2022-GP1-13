@@ -3,7 +3,7 @@ import 'package:motazen/entities/aspect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'assesmentQuestionPageGlobals.dart'; // for the global varible
 
-class AssesmentQuestionPageAssignments {
+class AssessmentQuestions {
   IsarService iser = IsarService();
 
   Future<List<dynamic>> aspectsFetching() async {

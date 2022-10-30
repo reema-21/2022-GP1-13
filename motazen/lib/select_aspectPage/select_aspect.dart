@@ -9,16 +9,16 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 import '../theme.dart';
 
-class selectAspect extends StatefulWidget {
+class AspectSelection  extends StatefulWidget {
   final IsarService isr;
   final List<dynamic>? aspects;
-  const selectAspect({super.key, required this.isr, this.aspects});
+  const AspectSelection({super.key, required this.isr, this.aspects});
 
   @override
-  State<selectAspect> createState() => _selectAspectState();
+  State<AspectSelection> createState() => _selectAspectState();
 }
 
-class _selectAspectState extends State<selectAspect> {
+class _selectAspectState extends State<AspectSelection> {
   var indexs = []; //must have the selected aspct
   int? selectedIndex;
 
@@ -38,7 +38,7 @@ class _selectAspectState extends State<selectAspect> {
     }
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return shows(
+      return AssessmentQuestionsList(
           iser: widget.isr, fixedAspect: widget.aspects, chosenAspect: indexs);
     }));
   }

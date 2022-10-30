@@ -19,11 +19,11 @@ class _fetchAspect extends State<fetchAspect> {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-            future: AssesmentQuestionPageAssignments().aspectsFetching(),
+            future: AssessmentQuestions().aspectsFetching(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 List? allAspects = snapshot.data;
-                return selectAspect(isr: widget.iser, aspects: allAspects);
+                return AspectSelection(isr: widget.iser, aspects: allAspects);
               } else {
                 return const CircularProgressIndicator();
               }
