@@ -5,7 +5,6 @@ import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:motazen/select_aspectPage/fetch_all_aspects.dart';
 import 'package:provider/provider.dart';
 
 import 'entities/goal.dart';
@@ -16,7 +15,16 @@ Future main() async {
   IsarService iser = IsarService(); // inislize the local storage
 
   iser.openIsar();
- 
+ Aspect career = Aspect();
+ career.name="career";
+ career.percentagePoints = 0 ;
+ iser.createAspect(career);
+
+  Aspect health = Aspect();
+ health.name="Health and Wellbeing";
+ health.percentagePoints = 0 ;
+ iser.createAspect(health);
+
 Goal x = Goal();
 Aspect? y = await iser.findSepecificAspect("career");
 x.aspect.value = y ; 
@@ -35,6 +43,13 @@ yi.aspect.value = y;
 yi.titel = "صحتي هي حياتي "; 
 yi.frequency=  "3 times a day "; 
 iser.createHabit(yi);
+Habit ji=Habit();
+Aspect? k = await iser.findSepecificAspect("Health and Wellbeing");
+
+ji.aspect.value = k; 
+ji.titel = "صحتي هي rgfd حياتي "; 
+ji.frequency=  "3 times a day "; 
+iser.createHabit(ji);
 
 
 
