@@ -136,12 +136,7 @@ class _selectAspectState extends State<selectAspect> {
                   child: Container(
                       height: size.height - (size.height / 3),
                       width: size.width,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                      ),
+                      color: Colors.white,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
