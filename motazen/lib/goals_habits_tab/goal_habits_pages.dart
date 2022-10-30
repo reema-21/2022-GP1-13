@@ -76,7 +76,7 @@ class Goals_habitState extends State<Goals_habit> {
                     )
                   ],
                 ),
-                bottomNavigationBar: navBar,
+                
                 ),
           ),
         ),

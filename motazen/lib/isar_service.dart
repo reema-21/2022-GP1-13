@@ -154,7 +154,18 @@ class IsarService {
         .findAll();
   }
 
-  void deleteAllAspects(List<dynamic>? aspectsChosen) async {
+ 
+
+  Future<Aspect?> findSepecificAspect (String name)async{
+    final isar = await db;
+    return await isar.aspects.where()
+  .filter()
+  .nameEqualTo(name)
+  .findFirst();
+  }
+
+//Delete //
+ void deleteAllAspects(List<dynamic>? aspectsChosen) async {
     final isar = await db;
     for (int i = 0; i < aspectsChosen!.length; i++) {
       Aspect x = aspectsChosen[i];
@@ -165,18 +176,26 @@ class IsarService {
     }
   }
 
-  Future<Aspect?> findSepecificAspect (String name)async{
-    final isar = await db;
-    return await isar.aspects.where()
-  .filter()
-  .nameEqualTo(name)
-  .findFirst();
-  }
 
+   void deleteGoal(Goal goal) async {
+    final isar = await db;
+      await isar.writeTxn(() async {
+        await isar.goals.delete(goal.id);
+      });
+    }
+  
+
+   void deleteHabit(Habit habit) async {
+    final isar = await db;
+      await isar.writeTxn(() async {
+        await isar.habits.delete(habit.id);
+      });
+    }
+  }
   // Future <void> LinkPoinToAspect(String name ,Aspect aspect ) async{
   //   final isar = await db ;
   //   await isar.points.where().filter().findFirst();
 
   // }
 
-}
+

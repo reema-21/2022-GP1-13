@@ -71,7 +71,7 @@ class _MyHomepageState extends State<Homepage> {
           ],
         ),
       ),
-      bottomNavigationBar: navBar,
+      // bottomNavigationBar: navBar,
     );
   }
 }
