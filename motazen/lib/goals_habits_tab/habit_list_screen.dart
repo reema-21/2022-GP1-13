@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:motazen/entities/goal.dart';
+import 'package:motazen/entities/habit.dart';
 import"package:motazen/isar_service.dart";
 
-class GoalListScreen extends StatefulWidget {
+class HabitListScreen extends StatefulWidget {
   final IsarService isr;
-  const GoalListScreen({super.key, required this.isr});
+  const HabitListScreen({super.key, required this.isr});
 
   @override
-  State<GoalListScreen> createState() => _GoalListScreenState();
+  State<HabitListScreen> createState() => _HabitListScreenState();
 }
 
-class _GoalListScreenState extends State<GoalListScreen> {
+class _HabitListScreenState extends State<HabitListScreen> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: StreamBuilder<List<Goal>>(
-      stream: IsarService().getAllGoals(),
+    return Expanded(child: StreamBuilder<List<Habit>>(
+      stream: IsarService().getAllHabits(),
       builder:(context, snapshot) {
         if(snapshot.hasData){
-          final goals = snapshot.data;
-          if(goals!.isEmpty){
+          final habits = snapshot.data;
+          if(habits!.isEmpty){
             return const Center(child: Text("no goals "),); // here add a plust button to add
           }
           return ListView.builder(
-            itemCount: goals.length,
+            itemCount: habits.length,
             itemBuilder:(context, index) {
-              final goal = goals[index];
+              final habit = habits[index];
               return Card( // here is the code of each item you have 
 child: ListTile(
-  title: Text(goal.titel)),
+  title: Text(habit.titel)),
               );
               
             });

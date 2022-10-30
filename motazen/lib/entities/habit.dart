@@ -6,6 +6,7 @@ part 'habit.g.dart';
 @collection
 class Habit {
   Id id = Isar.autoIncrement;
+  late String titel; 
   late String
       frequency; // i think we must provide the user to chose a number and then whether this number is within a month or a week .
   //late DateTime endDate //  i thought we can make is fixed to be today date +21

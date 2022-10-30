@@ -30,7 +30,7 @@ class IsarService {
   }
 
   /// ADD GOALS , ADD TASKS , ADD ASPECT  */
-  Future<void> createGoal(Goal newgoal) async {
+  Future<void> createGoal(Goal newgoal ) async {
     //Add goals
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
@@ -163,6 +163,14 @@ class IsarService {
         await isar.aspects.delete(x.id);
       });
     }
+  }
+
+  Future<Aspect?> findSepecificAspect (String name)async{
+    final isar = await db;
+    return await isar.aspects.where()
+  .filter()
+  .nameEqualTo(name)
+  .findFirst();
   }
 
   // Future <void> LinkPoinToAspect(String name ,Aspect aspect ) async{

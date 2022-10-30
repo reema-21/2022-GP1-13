@@ -28,6 +28,7 @@ Widget navBar = Container(
           GButton(
             icon: LineIcons.peopleCarry,
             text: 'مجتمعاتي',
+
           ),
           GButton(
             icon: LineIcons.check, //click here move me to a page 
@@ -38,5 +39,6 @@ Widget navBar = Container(
             text: 'الرئسية',
           )
         ]),
+        
   ),
 );
