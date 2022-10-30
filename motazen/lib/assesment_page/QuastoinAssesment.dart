@@ -10,6 +10,7 @@ import 'package:im_stepper/stepper.dart';
 import 'alert_dialog.dart';
 import 'assesmentQuestionPageGlobals.dart';
 import "package:motazen/select_aspectPage/select_aspect.dart";
+import 'assesment_question_page_assignments.dart';
 import "show.dart";
 
 class WheelOfLifeAssessmentPage extends StatefulWidget {
@@ -33,11 +34,11 @@ class WheelOfLifeAssessmentPage extends StatefulWidget {
 class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   // THE FOLLOWING TWO VARIABLES ARE REQUIRED TO CONTROL THE STEPPER.
   // Initial step set to 0 to be Reversed start from the right .
-  // upperBound MUST BE total number of icons minus 1. // total numberofquastion-1 = AssesmentQuestionPageGlobals.activeSteps so that it start from the right
+  // upperBound MUST BE total number of icons minus 1. // total numberofquastion-1 = AssessmentQuestions.activeSteps so that it start from the right
 //------------------------------------------------------------
   // always the value of the sliderRange = answare if no answare then zero
   //Start of the slider Range  = the answares of the quastion //
-  double _currentValue = AssesmentQuestionPageGlobals.currentSliderValue;
+  double _currentValue = AssessmentQuestions.currentSliderValue;
   Widget setQuestionAnswer() {
     return SliderTheme(
       data: SliderThemeData(),
@@ -54,13 +55,13 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
           setState(() {
             //save the value chosen by the user
             _currentValue = value;
-            AssesmentQuestionPageGlobals.answares[
-                AssesmentQuestionPageGlobals
+            AssessmentQuestions.answares[
+                AssessmentQuestions
                     .activeStep] = '$value' +
-                AssesmentQuestionPageGlobals
-                    .answares[AssesmentQuestionPageGlobals.activeStep]
-                    .substring(AssesmentQuestionPageGlobals
-                            .answares[AssesmentQuestionPageGlobals.activeStep]
+                AssessmentQuestions
+                    .answares[AssessmentQuestions.activeStep]
+                    .substring(AssessmentQuestions
+                            .answares[AssessmentQuestions.activeStep]
                             .length -
                         1); //take the answare chosen by the user for that quastion
           });
@@ -135,26 +136,26 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                       // move it to a function so that you take the aspect and the number of quastion = x and then you reapt the icon    x times
                       icons: createIcon(),
 
-                      // AssesmentQuestionPageGlobals.activeStep property set to AssesmentQuestionPageGlobals.activeStep variable defined above.
-                      activeStep: AssesmentQuestionPageGlobals.activeStep,
+                      // AssessmentQuestions.activeStep property set to AssessmentQuestions.activeStep variable defined above.
+                      activeStep: AssessmentQuestions.activeStep,
 
-                      // This ensures step-tapping updates the AssesmentQuestionPageGlobals.activeStep.
+                      // This ensures step-tapping updates the AssessmentQuestions.activeStep.
                       onStepReached: (index) {
                         setState(() {
                           // possible so for the below problem
                           /* if the answare has value then the value is the currenslide 
                     if not the value is 1 */
 
-                          AssesmentQuestionPageGlobals.activeStep = index;
-                          AssesmentQuestionPageGlobals.currentSliderValue =
-                              double.parse(AssesmentQuestionPageGlobals
+                          AssessmentQuestions.activeStep = index;
+                          AssessmentQuestions.currentSliderValue =
+                              double.parse(AssessmentQuestions
                                   .answares[
-                                      AssesmentQuestionPageGlobals.activeStep]
+                                      AssessmentQuestions.activeStep]
                                   .substring(
                                       0,
-                                      AssesmentQuestionPageGlobals
+                                      AssessmentQuestions
                                               .answares[
-                                                  AssesmentQuestionPageGlobals
+                                                  AssessmentQuestions
                                                       .activeStep]
                                               .length -
                                           1)); // this is for reseting the slider for each quasion but the problem we want to save the value
@@ -228,7 +229,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   /// Returns the header wrapping the header text.
   Widget header() {
     var upperBound = widget.question!.length - 1;
-    String start = (AssesmentQuestionPageGlobals.activeStep + 1).toString();
+    String start = (AssessmentQuestions.activeStep + 1).toString();
     String last = (upperBound + 1).toString();
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
@@ -252,11 +253,11 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     );
   }
 
-  // Returns the header text based on the AssesmentQuestionPageGlobals.activeStep.
+  // Returns the header text based on the AssessmentQuestions.activeStep.
 
   String headerText() {
     ///can be added to a different page
-    return widget.question?[AssesmentQuestionPageGlobals.activeStep];
+    return widget.question?[AssessmentQuestions.activeStep];
   }
 
   List<Icon> createIcon() {
@@ -264,8 +265,8 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     List<Icon> iconStepper = [];
 
     for (int i = 0; i < widget.question!.length; i++) {
-      String aspect = AssesmentQuestionPageGlobals.answares[i]
-          .substring(AssesmentQuestionPageGlobals.answares[i].length - 1);
+      String aspect = AssessmentQuestions.answares[i]
+          .substring(AssessmentQuestions.answares[i].length - 1);
 
       switch (aspect) {
         //Must include all the aspect characters and specify an icon for that
@@ -360,9 +361,9 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   Widget doneButton(IsarService isar) {
     //once all quastion answare and the user is n any quastion it will be enabeld
     bool isAllQuastionAnswerd = true;
-    for (int i = 0; i < AssesmentQuestionPageGlobals.answares.length; i++) {
-      var result = double.parse(AssesmentQuestionPageGlobals.answares[i]
-          .substring(0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+    for (int i = 0; i < AssessmentQuestions.answares.length; i++) {
+      var result = double.parse(AssessmentQuestions.answares[i]
+          .substring(0, AssessmentQuestions.answares[i].length - 1));
       if (result == 0) {
         isAllQuastionAnswerd = false;
       }
@@ -396,69 +397,69 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     double CareerAspectPoints = 0;
     double funAndRecreationAspectPoints = 0;
 
-    for (int i = 0; i < AssesmentQuestionPageGlobals.answares.length; i++) {
+    for (int i = 0; i < AssessmentQuestions.answares.length; i++) {
       // i will sunm the point of each aspect ;
-      String aspectType = AssesmentQuestionPageGlobals.answares[i]
-          .substring(AssesmentQuestionPageGlobals.answares[i].length - 1);
+      String aspectType = AssessmentQuestions.answares[i]
+          .substring(AssessmentQuestions.answares[i].length - 1);
       double x = 0;
       switch (aspectType) {
         //Must include all the aspect characters and specify an icon for that
         case "H":
           {
-            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
-                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answares[i].substring(
+                0, AssessmentQuestions.answares[i].length - 1));
             healthAndWellbeingAspectPoints = healthAndWellbeingAspectPoints + x;
           }
           break;
 
         case "C":
           {
-            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
-                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answares[i].substring(
+                0, AssessmentQuestions.answares[i].length - 1));
             CareerAspectPoints = CareerAspectPoints + x;
           }
           break;
         case "F":
           {
-            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
-                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answares[i].substring(
+                0, AssessmentQuestions.answares[i].length - 1));
             familyAndFriendsAspectPoints = familyAndFriendsAspectPoints + x;
           }
           break;
 
         case "S":
           {
-            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
-                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answares[i].substring(
+                0, AssessmentQuestions.answares[i].length - 1));
             significantOtherAspectPoints = significantOtherAspectPoints + x;
           }
           break;
         case "E":
           {
-            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
-                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answares[i].substring(
+                0, AssessmentQuestions.answares[i].length - 1));
             physicalEnvironmentAspectPoints =
                 physicalEnvironmentAspectPoints + x;
           }
           break;
         case "M":
           {
-            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
-                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answares[i].substring(
+                0, AssessmentQuestions.answares[i].length - 1));
             moneyAspectPoints = moneyAspectPoints + x;
           }
           break;
         case "G":
           {
-            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
-                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answares[i].substring(
+                0, AssessmentQuestions.answares[i].length - 1));
             personalGrowthAspectPoints = personalGrowthAspectPoints + x;
           }
           break;
         case "R":
           {
-            x = double.parse(AssesmentQuestionPageGlobals.answares[i].substring(
-                0, AssesmentQuestionPageGlobals.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answares[i].substring(
+                0, AssessmentQuestions.answares[i].length - 1));
             funAndRecreationAspectPoints = funAndRecreationAspectPoints + x;
           }
           break;
