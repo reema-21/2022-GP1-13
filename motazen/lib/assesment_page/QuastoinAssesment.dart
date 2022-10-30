@@ -35,7 +35,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
 //------------------------------------------------------------
   // always the value of the sliderRange = answare if no answare then zero
   //Start of the slider Range  = the answares of the quastion //
-  Widget sliderRange() {
+  Widget setQuestionAnswer() {
     return Slider.adaptive(
       //it should be good in ios or we use Cupertino
       value: AssesmentQuestionPageGlobals
@@ -192,7 +192,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                                 children: [
                                   buildSlideLable(10),
                                   Expanded(
-                                    child: sliderRange(),
+                                    child: setQuestionAnswer(),
 
                                     /// it takes a widget as a child
                                   ),
