@@ -170,6 +170,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                   height: 20,
                 ),
                 Hero(
+                  ///can be added in a different page
                   tag: 'question-card',
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -192,6 +193,8 @@ class _IconStepperDemo extends State<IconStepperDemo> {
                                   buildSlideLable(10),
                                   Expanded(
                                     child: sliderRange(),
+
+                                    /// it takes a widget as a child
                                   ),
                                   buildSlideLable(0),
                                 ],
@@ -249,6 +252,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   // Returns the header text based on the AssesmentQuestionPageGlobals.activeStep.
 
   String headerText() {
+    ///can be added to a different page
     return widget.q?[AssesmentQuestionPageGlobals.activeStep];
   }
 
@@ -372,6 +376,7 @@ class _IconStepperDemo extends State<IconStepperDemo> {
   }
 
   Evaluate(IsarService isar) async {
+    ///can be added to a different page
     //calculate each aspect points ;
     /**
    * 1- i will seprate answers array into answareArrays for each aspect ; 
