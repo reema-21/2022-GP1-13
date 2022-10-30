@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import '/select_aspectPage/fetch_all_aspects.dart';
 import 'package:provider/provider.dart';
 
+import 'assesment_page/show.dart';
 import 'entities/goal.dart';
 import 'firebase_options.dart';
 
@@ -67,7 +68,11 @@ Future main() async {
       create: (_) => WheelData(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
+<<<<<<< Updated upstream
           home: fetchAspect(
+=======
+          home:AssessmentQuestionsList (
+>>>>>>> Stashed changes
               iser:
                   iser)))); // my widget // the one where i will create the quastion list .
 }

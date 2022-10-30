@@ -27,10 +27,14 @@ class _showsState extends State<AssessmentQuestionsList> {
             future: AssessmentQuestions().questionListCreationg(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                List? q = snapshot.data;
+                List? question = snapshot.data;
                 return WheelOfLifeAssessmentPage(
                     isr: widget.iser,
+<<<<<<< Updated upstream
                     question: q,
+=======
+                    question: question,
+>>>>>>> Stashed changes
                     fixedAspect: widget.fixedAspect,
                     chosenAspect: widget.chosenAspect);
               } else {

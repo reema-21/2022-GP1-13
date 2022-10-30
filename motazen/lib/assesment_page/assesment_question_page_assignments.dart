@@ -5,6 +5,12 @@ import 'assesmentQuestionPageGlobals.dart'; // for the global varible
 
 class AssessmentQuestions {
   IsarService iser = IsarService();
+  static int activeStep = 0;
+  static List<dynamic> quastionsList = [];
+  static Map answares = {};
+  static String currentvalue = "";
+  static List<dynamic> tempquastionsList = [];
+  static double currentSliderValue = 0;
 
   Future<List<dynamic>> aspectsFetching() async {
     //for Select Aspect Page
@@ -47,10 +53,10 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-                if (AssesmentQuestionPageGlobals.answares[countr] == null) {
-                  AssesmentQuestionPageGlobals.answares[countr] = "0M";
+                if (AssessmentQuestions.answares[countr] == null) {
+                  AssessmentQuestions.answares[countr] = "0M";
                 } else {
-                  AssesmentQuestionPageGlobals.answares[countr++] = "0M";
+                  AssessmentQuestions.answares[countr++] = "0M";
                 }
 
           }
@@ -70,7 +76,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0R";
+            AssessmentQuestions.answares[countr] = "0R";
           }
 
           endpoint = countr;
@@ -88,7 +94,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0C";
+            AssessmentQuestions.answares[countr] = "0C";
           }
 
           endpoint = countr;
@@ -106,7 +112,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0S";
+            AssessmentQuestions.answares[countr] = "0S";
           }
 
           endpoint = countr;
@@ -124,7 +130,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0E";
+            AssessmentQuestions.answares[countr] = "0E";
           }
 
           endpoint = countr;
@@ -142,7 +148,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0G";
+            AssessmentQuestions.answares[countr] = "0G";
           }
           endpoint = countr;
           break;
@@ -159,7 +165,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0H";
+            AssessmentQuestions.answares[countr] = "0H";
           }
           endpoint = countr;
           break;
@@ -175,7 +181,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0F";
+            AssessmentQuestions.answares[countr] = "0F";
               }
               endpoint = countr;
 
@@ -198,55 +204,55 @@ class AssessmentQuestions {
         // include all the aspect make sure the index is write//
         case "money and finances":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0M";
+            AssessmentQuestions.answares[countr] = "0M";
           }
 
           endpoint = countr;
           break;
         case "Fun and Recreation":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0R";
+            AssessmentQuestions.answares[countr] = "0R";
           }
 
           endpoint = countr;
           break;
         case "career":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0C";
+            AssessmentQuestions.answares[countr] = "0C";
           }
 
           endpoint = countr;
           break;
         case "Significant Other":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0S";
+            AssessmentQuestions.answares[countr] = "0S";
           }
 
           endpoint = countr;
           break;
         case "Physical Environment":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0E";
+            AssessmentQuestions.answares[countr] = "0E";
           }
 
           endpoint = countr;
           break;
         case "Personal Growth":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0G";
+            AssessmentQuestions.answares[countr] = "0G";
           }
           endpoint = countr;
           break;
 
         case "Health and Wellbeing":
           for (countr; countr < 5 + endpoint; countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0H";
+            AssessmentQuestions.answares[countr] = "0H";
           }
           endpoint = countr;
           break;
         case "Family and Friends":
           for (countr; countr < 9 + endpoint; countr++) {
-            AssesmentQuestionPageGlobals.answares[countr] = "0F";
+            AssessmentQuestions.answares[countr] = "0F";
           }
           endpoint = countr;
           break;
