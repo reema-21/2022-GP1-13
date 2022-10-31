@@ -30,12 +30,12 @@ Future main() async {
   iser.openIsar();
   Aspect career = Aspect();
   career.name = "career";
-  career.percentagePoints = 0;
+  career.percentagePoints = 89;
   iser.createAspect(career);
 
   Aspect health = Aspect();
   health.name = "Health and Wellbeing";
-  health.percentagePoints = 0;
+  health.percentagePoints = 99;
   iser.createAspect(health);
 
   Goal x = Goal();
@@ -68,11 +68,6 @@ Future main() async {
       create: (_) => WheelData(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-<<<<<<< Updated upstream
-          home: fetchAspect(
-=======
-          home:AssessmentQuestionsList (
->>>>>>> Stashed changes
-              iser:
-                  iser)))); // my widget // the one where i will create the quastion list .
+          home: Goals_habit(isr: iser,
+              )))); // my widget // the one where i will create the quastion list .
 }

@@ -30,11 +30,7 @@ class _showsState extends State<AssessmentQuestionsList> {
                 List? question = snapshot.data;
                 return WheelOfLifeAssessmentPage(
                     isr: widget.iser,
-<<<<<<< Updated upstream
-                    question: q,
-=======
                     question: question,
->>>>>>> Stashed changes
                     fixedAspect: widget.fixedAspect,
                     chosenAspect: widget.chosenAspect);
               } else {
