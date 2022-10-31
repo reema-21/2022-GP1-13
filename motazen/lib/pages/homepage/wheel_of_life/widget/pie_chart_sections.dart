@@ -1,4 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 import 'package:motazen/data/models.dart';
 
 List<PieChartSectionData> getSections(int touchedIndex, List<Data> data) =>
@@ -12,7 +13,7 @@ List<PieChartSectionData> getSections(int touchedIndex, List<Data> data) =>
           if (isTouched) {}
 
           final value = PieChartSectionData(
-            color: data.color,
+            color: Color(data.color),
             value: 22.5,
             title: '',
             radius: points,

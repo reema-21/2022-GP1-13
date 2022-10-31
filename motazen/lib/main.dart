@@ -32,14 +32,14 @@ Future main() async {
   Aspect career = Aspect();
   career.name = "career";
   career.percentagePoints = 89;
-  career.color = 0 ; 
+  career.color = 0;
   career.isSelected = false;
   iser.createAspect(career);
 
   Aspect health = Aspect();
   health.name = "Health and Wellbeing";
   health.percentagePoints = 99;
-  health.color = 0 ; 
+  health.color = 0;
   health.isSelected = false;
   iser.createAspect(health);
 
@@ -73,12 +73,7 @@ Future main() async {
       create: (_) => WheelData(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-<<<<<<< Updated upstream
           home: fetchAspect(
               iser:
                   iser)))); // my widget // the one where i will create the quastion list .
-=======
-          home: AddGoal(isr: iser,chosenAspectNames:const ["health","mony","coloe"]
-              )))); // my widget // the one where i will create the quastion list .
->>>>>>> Stashed changes
 }
