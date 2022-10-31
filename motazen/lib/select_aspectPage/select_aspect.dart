@@ -1,12 +1,15 @@
 // ignore_for_file: camel_case_types
 
-import "package:motazen/assesment_page/alert_dialog.dart";
 import 'package:flutter/material.dart';
-import 'package:motazen/assesment_page/show.dart';
-import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/isar_service.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:provider/provider.dart';
 
+import "/assesment_page/alert_dialog.dart";
+import 'handle_aspect_data.dart';
+import '/assesment_page/show.dart';
+import '/entities/aspect.dart';
+import '/isar_service.dart';
+import '../data/data.dart';
 import '../theme.dart';
 
 class AspectSelection extends StatefulWidget {
@@ -19,39 +22,18 @@ class AspectSelection extends StatefulWidget {
 }
 
 class _selectAspectState extends State<AspectSelection> {
-  var indexs =
-      []; //must have the selected aspct // change it to have all aspects
-  //make sure to always empty data before a new use
-  int? selectedIndex;
-
-  bool isSelected(String selectedaaspect) {
-    //already implemented in isar
-    if (indexs.contains(selectedaaspect)) {
-      return true;
-    }
-    return false;
-  }
-
-  saveChosenAspect(IsarService isar) async {
-    for (int i = 0; i < indexs.length; i++) {
-      Aspect x = Aspect();
-      x.name = indexs[i];
-      x.percentagePoints = 0;
-      isar.createAspect(x);
-    }
-
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return AssessmentQuestionsList(
-          iser: widget.isr, fixedAspect: widget.aspects, chosenAspect: indexs);
-    }));
-  }
-
   @override
   Widget build(BuildContext context) {
+    //list of all aspects
+    var aspectList = Provider.of<WheelData>(context);
+
+    //local list of selected variables
+    List<Aspect> selectedAspects = [];
+
     Widget doneButton(IsarService isar) {
       //once all quastion answare and the user is n any quastion it will be enabeld
       bool isAllQuastionAnswerd = true;
-      if (indexs.isEmpty) {
+      if (selectedAspects.isEmpty) {
         isAllQuastionAnswerd = false;
       }
 
@@ -59,7 +41,7 @@ class _selectAspectState extends State<AspectSelection> {
         onPressed: isAllQuastionAnswerd
             ? () {
 //call a method that add the index to the local and go to assignment page .
-                saveChosenAspect(widget.isr);
+                selectedAspects = handle_aspect().getSelectedAspects();
               }
             : null,
         child: const Text("التالي"),
@@ -159,12 +141,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       width: 182,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(24),
-                                        color: isSelected("Family and Friends")
-                                            ? const Color(0xFFff9100)
-
-                                            ///get colors from db
-                                            : const Color.fromARGB(
-                                                101, 255, 145, 0),
+                                        color: handle_aspect().getAspectColor(
+                                            'Family and Friends'),
                                         border: Border.all(
                                             color: Colors.white, width: 10),
                                         boxShadow: [
@@ -195,14 +173,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       ),
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        (indexs.contains("Family and Friends")
-
-                                            ///use set isSelectes instead and set it to  true
-                                            ? indexs
-                                                .remove("Family and Friends")
-                                            : indexs.add("Family and Friends"));
-                                      });
+                                      handle_aspect()
+                                          .updateStatus('Family and Friends');
                                     },
                                   ),
                                   const SizedBox(
@@ -215,11 +187,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       width: 182,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(24),
-                                        color:
-                                            isSelected("Health and Wellbeing")
-                                                ? const Color(0xFFffd400)
-                                                : const Color.fromARGB(
-                                                    99, 255, 213, 0),
+                                        color: handle_aspect().getAspectColor(
+                                            'Health and Wellbeing'),
                                         border: Border.all(
                                             color: Colors.white, width: 10),
                                         boxShadow: [
@@ -253,13 +222,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       ),
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        (indexs.contains("Health and Wellbeing")
-                                            ? indexs
-                                                .remove("Health and Wellbeing")
-                                            : indexs
-                                                .add("Health and Wellbeing"));
-                                      });
+                                      handle_aspect()
+                                          .updateStatus('Health and Wellbeing');
                                     },
                                   ),
                                 ]),
@@ -277,10 +241,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       width: 182,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(24),
-                                        color: isSelected("Personal Growth")
-                                            ? const Color(0xFF2CDDCB)
-                                            : const Color.fromARGB(
-                                                92, 44, 221, 203),
+                                        color: handle_aspect()
+                                            .getAspectColor('Personal Growth'),
                                         border: Border.all(
                                             color: Colors.white, width: 10),
                                         boxShadow: [
@@ -314,11 +276,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       ),
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        (indexs.contains("Personal Growth")
-                                            ? indexs.remove("Personal Growth")
-                                            : indexs.add("Personal Growth"));
-                                      });
+                                      handle_aspect()
+                                          .updateStatus('Personal Growth');
                                     },
                                   ),
                                   const SizedBox(
@@ -331,13 +290,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       width: 182,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(24),
-                                        color:
-                                            isSelected("Physical Environment")
-                                                ? const Color(0xFF9E19F0)
-                                                : const Color.fromARGB(
-                                                    92, 158, 25, 240),
-                                        border: Border.all(
-                                            color: Colors.white, width: 10),
+                                        color: handle_aspect().getAspectColor(
+                                            'Physical Environment'),
                                         boxShadow: [
                                           BoxShadow(
                                               blurRadius: 50,
@@ -369,13 +323,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       ),
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        (indexs.contains("Physical Environment")
-                                            ? indexs
-                                                .remove("Physical Environment")
-                                            : indexs
-                                                .add("Physical Environment"));
-                                      });
+                                      handle_aspect()
+                                          .updateStatus('Physical Environment');
                                     },
                                   ),
                                 ]),
@@ -393,10 +342,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       width: 182,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(24),
-                                        color: isSelected("Significant Other")
-                                            ? const Color(0xffff4949)
-                                            : const Color.fromARGB(
-                                                103, 255, 73, 73),
+                                        color: handle_aspect().getAspectColor(
+                                            'Significant Other'),
                                         border: Border.all(
                                             color: Colors.white, width: 10),
                                         boxShadow: [
@@ -430,11 +377,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       ),
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        (indexs.contains("Significant Other")
-                                            ? indexs.remove("Significant Other")
-                                            : indexs.add("Significant Other"));
-                                      });
+                                      handle_aspect()
+                                          .updateStatus('Significant Other');
                                     },
                                   ),
                                   const SizedBox(
@@ -447,10 +391,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       width: 182,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(24),
-                                        color: isSelected("career")
-                                            ? const Color(0xff0065A3)
-                                            : const Color.fromARGB(
-                                                103, 0, 100, 163),
+                                        color: handle_aspect()
+                                            .getAspectColor('career'),
                                         border: Border.all(
                                             color: Colors.white, width: 10),
                                         boxShadow: [
@@ -484,11 +426,7 @@ class _selectAspectState extends State<AspectSelection> {
                                       ),
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        (indexs.contains("career")
-                                            ? indexs.remove("career")
-                                            : indexs.add("career"));
-                                      });
+                                      handle_aspect().updateStatus('career');
                                     },
                                   ),
                                 ]),
@@ -506,10 +444,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       width: 182,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(24),
-                                        color: isSelected("Fun and Recreation")
-                                            ? const Color(0xff008adf)
-                                            : const Color.fromARGB(
-                                                106, 90, 112, 124),
+                                        color: handle_aspect().getAspectColor(
+                                            'Fun and Recreation'),
                                         border: Border.all(
                                             color: Colors.white, width: 10),
                                         boxShadow: [
@@ -543,12 +479,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       ),
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        (indexs.contains("Fun and Recreation")
-                                            ? indexs
-                                                .remove("Fun and Recreation")
-                                            : indexs.add("Fun and Recreation"));
-                                      });
+                                      handle_aspect()
+                                          .updateStatus('Fun and Recreation');
                                     },
                                   ),
                                   const SizedBox(
@@ -561,10 +493,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       width: 182,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(24),
-                                        color: isSelected("money and finances")
-                                            ? const Color(0xff54e360)
-                                            : const Color.fromARGB(
-                                                90, 84, 227, 96),
+                                        color: handle_aspect().getAspectColor(
+                                            'money and finances'),
                                         border: Border.all(
                                             color: Colors.white, width: 10),
                                         boxShadow: [
@@ -598,12 +528,8 @@ class _selectAspectState extends State<AspectSelection> {
                                       ),
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        (indexs.contains("money and finances")
-                                            ? indexs
-                                                .remove("money and finances")
-                                            : indexs.add("money and finances"));
-                                      });
+                                      handle_aspect()
+                                          .updateStatus('money and finances');
                                     },
                                   ),
                                 ]),

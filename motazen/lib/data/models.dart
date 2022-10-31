@@ -59,13 +59,13 @@ class Data {
 
   final double points;
 
-  final Color color;
+  final int color;
 
-  final Widget icon;
+  final IconData icon;
 
   Data(
       {required this.name,
-      required this.points,
+      this.points = 0.0,
       required this.color,
       required this.icon});
 }

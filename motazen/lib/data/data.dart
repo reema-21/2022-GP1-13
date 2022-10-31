@@ -53,52 +53,43 @@ final fakeData = Todo(id: 'todo-tag-1', description: 'مهام اليوم', item
   ),
 ]);
 
+////////////////////////////////////////Aspect Data\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 class WheelData with ChangeNotifier {
-  List<Data> data = [];
+  List<Data> data = [
+    //add friends and family aspect
+    Data(name: 'Family and Friends', color: 4294938880, icon: Icons.person),
+    //add Health and Wellbeing aspect
+    Data(name: 'Health and Wellbeing', color: 4294956032, icon: Icons.spa),
+    //add Personal Growth aspect
+    Data(name: 'Personal Growth', color: 4281130443, icon: Icons.psychology),
+    //add Physical Environment aspect
+    Data(name: 'Physical Environment', color: 4288551408, icon: Icons.home),
+    //add Significant Other aspect
+    Data(name: 'Significant Other', color: 4294920521, icon: Icons.favorite),
+    //add career aspect
+    Data(name: 'career', color: 4278216099, icon: Icons.work),
+    //add Fun and Recreation aspect
+    Data(name: 'Fun and Recreation', color: 4278225631, icon: Icons.games),
+    //add money and finances aspect
+    Data(
+        name: 'money and finances',
+        color: 4283753312,
+        icon: Icons.attach_money),
+  ];
+
   Future<void> copyList(List<Data> list) async {
     data = await list;
     notifyListeners();
   }
+
+  contains(String s) {
+    for (var i = 0; i < data.length + 1; i++) {
+      if (data[i].name == s) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
 }
-// class WheelData {
-//   static List<Data> data = [
-    // Data(
-    //     name: 'career',
-    //     points: 80,
-    //     color: const Color(0xff0065A3),
-    //     icon: const Icon(Icons.work)),
-    // Data(
-    //     name: 'relationships',
-    //     points: 40,
-    //     color: const Color(0xffff4949),
-    //     icon: const Icon(Icons.work)),
-    // Data(
-    //     name: 'enviroment',
-    //     points: 95,
-    //     color: const Color(0xFF9E19F0),
-    //     icon: const Icon(Icons.work)),
-    // Data(
-    //     name: 'finance',
-    //     points: 50,
-    //     color: const Color(0xff54e360),
-    //     icon: const Icon(Icons.attach_money)),
-    // Data(
-    //     name: 'entertainment',
-    //     points: 70,
-    //     color: const Color(0xff008adf),
-    //     icon: const Icon(Icons.games)),
-    // Data(
-    //     name: 'personal development',
-    //     points: 80,
-    //     color: const Color(0xFF2CDDCB),
-    //     icon: const Icon(Icons.work)),
-    // Data(
-    //     name: 'health',
-    //     points: 60,
-    //     color: const Color(0xFFffd400),
-    //     icon: const Icon(Icons.health_and_safety)),
-    // Data(
-    //     name: 'friends and family',
-    //     points: 95,
-    //     color: const Color(0xFFff9100),
-  
