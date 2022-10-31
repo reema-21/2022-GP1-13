@@ -48,7 +48,7 @@ class Life_wheelState extends State<life_wheel> {
                 ),
                 sectionsSpace: 0,
                 centerSpaceRadius: 0,
-                sections: getSections(touchedIndex, aspctData.data),
+                sections: Sections().getSections(touchedIndex, aspctData.data),
 
                 ///
               ),
