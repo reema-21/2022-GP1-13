@@ -17,13 +17,23 @@ const AspectSchema = CollectionSchema(
   name: r'Aspect',
   id: -736734253211991172,
   properties: {
-    r'name': PropertySchema(
+    r'color': PropertySchema(
       id: 0,
+      name: r'color',
+      type: IsarType.long,
+    ),
+    r'isSelected': PropertySchema(
+      id: 1,
+      name: r'isSelected',
+      type: IsarType.bool,
+    ),
+    r'name': PropertySchema(
+      id: 2,
       name: r'name',
       type: IsarType.string,
     ),
     r'percentagePoints': PropertySchema(
-      id: 1,
+      id: 3,
       name: r'percentagePoints',
       type: IsarType.double,
     )
@@ -58,8 +68,10 @@ void _aspectSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
-  writer.writeDouble(offsets[1], object.percentagePoints);
+  writer.writeLong(offsets[0], object.color);
+  writer.writeBool(offsets[1], object.isSelected);
+  writer.writeString(offsets[2], object.name);
+  writer.writeDouble(offsets[3], object.percentagePoints);
 }
 
 Aspect _aspectDeserialize(
@@ -69,9 +81,11 @@ Aspect _aspectDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Aspect();
+  object.color = reader.readLong(offsets[0]);
   object.id = id;
-  object.name = reader.readString(offsets[0]);
-  object.percentagePoints = reader.readDouble(offsets[1]);
+  object.isSelected = reader.readBool(offsets[1]);
+  object.name = reader.readString(offsets[2]);
+  object.percentagePoints = reader.readDouble(offsets[3]);
   return object;
 }
 
@@ -83,8 +97,12 @@ P _aspectDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 1:
+      return (reader.readBool(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -179,6 +197,58 @@ extension AspectQueryWhere on QueryBuilder<Aspect, Aspect, QWhereClause> {
 }
 
 extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> colorEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'color',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> colorGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'color',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> colorLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'color',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> colorBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'color',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Aspect, Aspect, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -227,6 +297,16 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> isSelectedEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isSelected',
+        value: value,
       ));
     });
   }
@@ -429,6 +509,30 @@ extension AspectQueryObject on QueryBuilder<Aspect, Aspect, QFilterCondition> {}
 extension AspectQueryLinks on QueryBuilder<Aspect, Aspect, QFilterCondition> {}
 
 extension AspectQuerySortBy on QueryBuilder<Aspect, Aspect, QSortBy> {
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByColor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'color', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByColorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'color', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIsSelected() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSelected', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIsSelectedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSelected', Sort.desc);
+    });
+  }
+
   QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -455,6 +559,18 @@ extension AspectQuerySortBy on QueryBuilder<Aspect, Aspect, QSortBy> {
 }
 
 extension AspectQuerySortThenBy on QueryBuilder<Aspect, Aspect, QSortThenBy> {
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByColor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'color', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByColorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'color', Sort.desc);
+    });
+  }
+
   QueryBuilder<Aspect, Aspect, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -464,6 +580,18 @@ extension AspectQuerySortThenBy on QueryBuilder<Aspect, Aspect, QSortThenBy> {
   QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIsSelected() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSelected', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIsSelectedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isSelected', Sort.desc);
     });
   }
 
@@ -493,6 +621,18 @@ extension AspectQuerySortThenBy on QueryBuilder<Aspect, Aspect, QSortThenBy> {
 }
 
 extension AspectQueryWhereDistinct on QueryBuilder<Aspect, Aspect, QDistinct> {
+  QueryBuilder<Aspect, Aspect, QDistinct> distinctByColor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'color');
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QDistinct> distinctByIsSelected() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isSelected');
+    });
+  }
+
   QueryBuilder<Aspect, Aspect, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -511,6 +651,18 @@ extension AspectQueryProperty on QueryBuilder<Aspect, Aspect, QQueryProperty> {
   QueryBuilder<Aspect, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Aspect, int, QQueryOperations> colorProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'color');
+    });
+  }
+
+  QueryBuilder<Aspect, bool, QQueryOperations> isSelectedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isSelected');
     });
   }
 

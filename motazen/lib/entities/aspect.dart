@@ -2,9 +2,11 @@ import 'package:isar/isar.dart';
 part 'aspect.g.dart';
 
 @collection
-class Aspect{
+class Aspect {
   Id id = Isar.autoIncrement;
   late bool isSelected;
-  late String name  ; 
-  late double percentagePoints ;//
+  late String name;
+  late double percentagePoints;
+  late int color;
+  //add icon later
 }

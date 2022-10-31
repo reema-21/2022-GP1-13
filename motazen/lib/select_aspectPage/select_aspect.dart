@@ -9,7 +9,7 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 import '../theme.dart';
 
-class AspectSelection  extends StatefulWidget {
+class AspectSelection extends StatefulWidget {
   final IsarService isr;
   final List<dynamic>? aspects;
   const AspectSelection({super.key, required this.isr, this.aspects});
@@ -19,10 +19,13 @@ class AspectSelection  extends StatefulWidget {
 }
 
 class _selectAspectState extends State<AspectSelection> {
-  var indexs = []; //must have the selected aspct
+  var indexs =
+      []; //must have the selected aspct // change it to have all aspects
+  //make sure to always empty data before a new use
   int? selectedIndex;
 
   bool isSelected(String selectedaaspect) {
+    //already implemented in isar
     if (indexs.contains(selectedaaspect)) {
       return true;
     }
@@ -158,6 +161,8 @@ class _selectAspectState extends State<AspectSelection> {
                                         borderRadius: BorderRadius.circular(24),
                                         color: isSelected("Family and Friends")
                                             ? const Color(0xFFff9100)
+
+                                            ///get colors from db
                                             : const Color.fromARGB(
                                                 101, 255, 145, 0),
                                         border: Border.all(
@@ -192,6 +197,8 @@ class _selectAspectState extends State<AspectSelection> {
                                     onTap: () {
                                       setState(() {
                                         (indexs.contains("Family and Friends")
+
+                                            ///use set isSelectes instead and set it to  true
                                             ? indexs
                                                 .remove("Family and Friends")
                                             : indexs.add("Family and Friends"));
