@@ -2,7 +2,6 @@ import '/entities/aspect.dart';
 import '/entities/goal.dart';
 import '/entities/task.dart';
 import '/entities/habit.dart';
-import '/entities/point.dart';
 
 import 'package:isar/isar.dart';
 
@@ -21,7 +20,6 @@ class IsarService {
             GoalSchema,
             TaskSchema,
             HabitSchema,
-            PointSchema
           ] //still the habit schema
           ,
           inspector: true);
@@ -54,11 +52,7 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.aspects.putSync(newAspect));
   }
 
-  Future<void> createPoint(Point newPoint) async {
-    //Add point .
-    final isar = await db;
-    isar.writeTxnSync<int>(() => isar.points.putSync(newPoint));
-  }
+  
 
   /// ******************** */
   //we are listiening for data not just getting //
@@ -83,11 +77,6 @@ class IsarService {
     yield* isar.habits.where().watch(fireImmediately: true);
   }
 
-  Stream<List<Point>> getAllPoints() async* {
-    final isar = await db;
-    yield* isar.points.where().watch(fireImmediately: true);
-  }
-
   // THER IS ANOTHE WAY IF YOU DON'T NEED IT AS STREAM .
   //just get the apsect --> i will use get because it is not sth that is changed or add frequenctly .
 
@@ -96,10 +85,7 @@ class IsarService {
     return isar.aspects.where().findAll();
   }
 
-  Future<List<Point>> getpointsFirstTime() async {
-    final isar = await db;
-    return isar.points.where().findAll();
-  }
+  
 
   Future<Map<String, double>> getpointsAspects(List<Aspect> aspects) async {
     //get a list of aspect/points
@@ -130,13 +116,6 @@ class IsarService {
   //get habits for a specific aspect
 
 //NOTE!!!!!!! I am taking based on the name not the id !!!!!!!!!!!!!!!!/
-  Future<List<Point>> getAspectPoints(Aspect aspect) async {
-    final isar = await db;
-    return await isar.points
-        .filter()
-        .aspect((q) => q.nameContains(aspect.name))
-        .findAll();
-  }
 
   Future<List<Goal>> getAspectGoals(Aspect aspect) async {
     final isar = await db;
