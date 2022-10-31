@@ -30,7 +30,7 @@ class IsarService {
   }
 
   /// ADD GOALS , ADD TASKS , ADD ASPECT  */
-  Future<void> createGoal(Goal newgoal ) async {
+  Future<void> createGoal(Goal newgoal) async {
     //Add goals
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
@@ -154,18 +154,32 @@ class IsarService {
         .findAll();
   }
 
- 
-
-  Future<Aspect?> findSepecificAspect (String name)async{
+  Future<Aspect?> findSepecificAspect(String name) async {
     final isar = await db;
-    return await isar.aspects.where()
-  .filter()
-  .nameEqualTo(name)
-  .findFirst();
+    return await isar.aspects.where().filter().nameEqualTo(name).findFirst();
+  }
+
+  //update the value of isSelected
+  void selectAspect(String name) async {
+    final isar = await db;
+    Aspect? selectedAspect =
+        await isar.aspects.filter().nameEqualTo(name).findFirst();
+    selectedAspect!.isSelected = true;
+    isar.writeTxnSync<int>(
+        () => isar.aspects.putSync(selectedAspect)); // update that object
+  }
+
+  void deselectAspect(String name) async {
+    final isar = await db;
+    Aspect? selectedAspect =
+        await isar.aspects.filter().nameEqualTo(name).findFirst();
+    selectedAspect!.isSelected = false;
+    isar.writeTxnSync<int>(
+        () => isar.aspects.putSync(selectedAspect)); // update that object
   }
 
 //Delete //
- void deleteAllAspects(List<dynamic>? aspectsChosen) async {
+  void deleteAllAspects(List<dynamic>? aspectsChosen) async {
     final isar = await db;
     for (int i = 0; i < aspectsChosen!.length; i++) {
       Aspect x = aspectsChosen[i];
@@ -176,26 +190,17 @@ class IsarService {
     }
   }
 
-
-   void deleteGoal(Goal goal) async {
+  void deleteGoal(Goal goal) async {
     final isar = await db;
-      await isar.writeTxn(() async {
-        await isar.goals.delete(goal.id);
-      });
-    }
-  
-
-   void deleteHabit(Habit habit) async {
-    final isar = await db;
-      await isar.writeTxn(() async {
-        await isar.habits.delete(habit.id);
-      });
-    }
+    await isar.writeTxn(() async {
+      await isar.goals.delete(goal.id);
+    });
   }
-  // Future <void> LinkPoinToAspect(String name ,Aspect aspect ) async{
-  //   final isar = await db ;
-  //   await isar.points.where().filter().findFirst();
 
-  // }
-
-
+  void deleteHabit(Habit habit) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.habits.delete(habit.id);
+    });
+  }
+}
