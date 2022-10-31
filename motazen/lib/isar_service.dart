@@ -153,6 +153,12 @@ class IsarService {
         .aspect((q) => q.nameContains(aspect.name))
         .findAll();
   }
+   Future<List<Aspect>> getchoseAspect() async {
+    final isar = await db;
+    return await isar.aspects.filter().percentagePointsGreaterThan(0).findAll();
+
+        }
+
 
   Future<Aspect?> findSepecificAspect(String name) async {
     final isar = await db;

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:motazen/add_goal_page/add_goal_screen.dart';
 import 'package:motazen/entities/goal.dart';
 import "package:motazen/isar_service.dart";
 import 'package:motazen/pages/homepage/homepage.dart';
 
+import '../add_goal_page/get_chosen_aspect.dart';
 import '../assesment_page/alert_dialog.dart';
 
 class GoalListScreen extends StatefulWidget {
@@ -110,7 +112,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return const Homepage(); // must be the
+                      return  getChosenAspect(iser: widget.isr); // must be the
                     }));
                   },
                 )

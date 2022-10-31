@@ -30,12 +30,12 @@ Future main() async {
   iser.openIsar();
   Aspect career = Aspect();
   career.name = "career";
-  career.percentagePoints = 0;
+  career.percentagePoints = 89;
   iser.createAspect(career);
 
   Aspect health = Aspect();
   health.name = "Health and Wellbeing";
-  health.percentagePoints = 0;
+  health.percentagePoints = 99;
   iser.createAspect(health);
 
   Goal x = Goal();

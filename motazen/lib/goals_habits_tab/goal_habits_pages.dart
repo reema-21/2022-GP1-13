@@ -4,6 +4,8 @@ import 'package:motazen/goals_habits_tab/goal_list_screen.dart';
 import 'package:motazen/isar_service.dart';
 import "package:motazen/pages/homepage/homepage.dart";
 import '../Sidebar_and_navigation/navigation-bar.dart';
+import '../add_goal_page/add_goal_screen.dart';
+import '../add_goal_page/get_chosen_aspect.dart';
 import 'habit_list_screen.dart';
 
 // ignore: camel_case_types
