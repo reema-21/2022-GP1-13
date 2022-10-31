@@ -10,10 +10,10 @@ class life_wheel extends StatefulWidget {
   const life_wheel({super.key});
 
   @override
-  State<life_wheel> createState() => PieChart2State();
+  State<life_wheel> createState() => Life_wheelState();
 }
 
-class PieChart2State extends State<life_wheel> {
+class Life_wheelState extends State<life_wheel> {
   int touchedIndex = -1;
 
   @override
@@ -48,7 +48,7 @@ class PieChart2State extends State<life_wheel> {
                 ),
                 sectionsSpace: 0,
                 centerSpaceRadius: 0,
-                sections: getSections(touchedIndex, aspctData.data),
+                sections: Sections().getSections(touchedIndex, aspctData.data),
 
                 ///
               ),

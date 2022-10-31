@@ -132,19 +132,19 @@ class IsarService {
         .aspect((q) => q.nameContains(aspect.name))
         .findAll();
   }
-   Future<List<Aspect>> getchoseAspect() async {
+
+  Future<List<Aspect>> getchoseAspect() async {
+    ///remove if my implementation works
     final isar = await db;
     return await isar.aspects.filter().percentagePointsGreaterThan(0).findAll();
-
-        }
-
+  }
 
   Future<Aspect?> findSepecificAspect(String name) async {
     final isar = await db;
     return await isar.aspects.where().filter().nameEqualTo(name).findFirst();
   }
 
-  //update the value of isSelected
+  //updates the value of isSelected to true
   void selectAspect(String name) async {
     final isar = await db;
     Aspect? selectedAspect =
@@ -154,6 +154,7 @@ class IsarService {
         () => isar.aspects.putSync(selectedAspect)); // update that object
   }
 
+//updates isSelected value to false for a single aspect
   void deselectAspect(String name) async {
     final isar = await db;
     Aspect? selectedAspect =
@@ -163,7 +164,32 @@ class IsarService {
         () => isar.aspects.putSync(selectedAspect)); // update that object
   }
 
+//return the isSelected value of a single aspect
+  Future<bool> checkSelectionStatus(String name) async {
+    final isar = await db;
+    Aspect? aspect = await isar.aspects.filter().nameEqualTo(name).findFirst();
+    return aspect!.isSelected;
+  }
+
+//returns a list of selected aspects
+  Future<List<Aspect>> getSelectedAspects() async {
+    final isar = await db;
+    return await isar.aspects.filter().isSelectedEqualTo(true).findAll();
+  }
+
+  Future<int?> getAspectColor(String name) async {
+    final isar = await db;
+    Aspect? aspect =
+        await isar.aspects.where().filter().nameEqualTo(name).findFirst();
+    return aspect!.color;
+  }
+
 //Delete //
+  Future<void> cleanAspects() async {
+    final isar = await db;
+    await isar.aspects.clear();
+  }
+
   void deleteAllAspects(List<dynamic>? aspectsChosen) async {
     final isar = await db;
     for (int i = 0; i < aspectsChosen!.length; i++) {

@@ -78,8 +78,18 @@ int _aspectEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.iconFontFamily.length * 3;
-  bytesCount += 3 + object.iconFontPackage.length * 3;
+  {
+    final value = object.iconFontFamily;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.iconFontPackage;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
@@ -110,8 +120,8 @@ Aspect _aspectDeserialize(
   object.color = reader.readLong(offsets[0]);
   object.iconCodePoint = reader.readLong(offsets[1]);
   object.iconDirection = reader.readBool(offsets[2]);
-  object.iconFontFamily = reader.readString(offsets[3]);
-  object.iconFontPackage = reader.readString(offsets[4]);
+  object.iconFontFamily = reader.readStringOrNull(offsets[3]);
+  object.iconFontPackage = reader.readStringOrNull(offsets[4]);
   object.id = id;
   object.isSelected = reader.readBool(offsets[5]);
   object.name = reader.readString(offsets[6]);
@@ -133,9 +143,9 @@ P _aspectDeserializeProp<P>(
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 5:
       return (reader.readBool(offset)) as P;
     case 6:
@@ -350,8 +360,25 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'iconFontFamily',
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition>
+      iconFontFamilyIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'iconFontFamily',
+      ));
+    });
+  }
+
   QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -364,7 +391,7 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
   }
 
   QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -379,7 +406,7 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
   }
 
   QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -394,8 +421,8 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
   }
 
   QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -481,8 +508,25 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'iconFontPackage',
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition>
+      iconFontPackageIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'iconFontPackage',
+      ));
+    });
+  }
+
   QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -496,7 +540,7 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
 
   QueryBuilder<Aspect, Aspect, QAfterFilterCondition>
       iconFontPackageGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -511,7 +555,7 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
   }
 
   QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -526,8 +570,8 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
   }
 
   QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1160,13 +1204,13 @@ extension AspectQueryProperty on QueryBuilder<Aspect, Aspect, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Aspect, String, QQueryOperations> iconFontFamilyProperty() {
+  QueryBuilder<Aspect, String?, QQueryOperations> iconFontFamilyProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'iconFontFamily');
     });
   }
 
-  QueryBuilder<Aspect, String, QQueryOperations> iconFontPackageProperty() {
+  QueryBuilder<Aspect, String?, QQueryOperations> iconFontPackageProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'iconFontPackage');
     });
