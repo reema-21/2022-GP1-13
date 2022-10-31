@@ -68,11 +68,7 @@ Future main() async {
       create: (_) => WheelData(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-<<<<<<< Updated upstream
-          home: fetchAspect(
-=======
-          home:AssessmentQuestionsList (
->>>>>>> Stashed changes
+          home: Goals_habit(
               iser:
                   iser)))); // my widget // the one where i will create the quastion list .
 }
