@@ -8,5 +8,8 @@ class Aspect {
   late String name;
   late double percentagePoints;
   late int color;
-  //add icon later
+  late int iconCodePoint;
+  late String iconFontFamily;
+  late String iconFontPackage;
+  late bool iconDirection;
 }

@@ -22,18 +22,38 @@ const AspectSchema = CollectionSchema(
       name: r'color',
       type: IsarType.long,
     ),
-    r'isSelected': PropertySchema(
+    r'iconCodePoint': PropertySchema(
       id: 1,
+      name: r'iconCodePoint',
+      type: IsarType.long,
+    ),
+    r'iconDirection': PropertySchema(
+      id: 2,
+      name: r'iconDirection',
+      type: IsarType.bool,
+    ),
+    r'iconFontFamily': PropertySchema(
+      id: 3,
+      name: r'iconFontFamily',
+      type: IsarType.string,
+    ),
+    r'iconFontPackage': PropertySchema(
+      id: 4,
+      name: r'iconFontPackage',
+      type: IsarType.string,
+    ),
+    r'isSelected': PropertySchema(
+      id: 5,
       name: r'isSelected',
       type: IsarType.bool,
     ),
     r'name': PropertySchema(
-      id: 2,
+      id: 6,
       name: r'name',
       type: IsarType.string,
     ),
     r'percentagePoints': PropertySchema(
-      id: 3,
+      id: 7,
       name: r'percentagePoints',
       type: IsarType.double,
     )
@@ -58,6 +78,8 @@ int _aspectEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.iconFontFamily.length * 3;
+  bytesCount += 3 + object.iconFontPackage.length * 3;
   bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
@@ -69,9 +91,13 @@ void _aspectSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.color);
-  writer.writeBool(offsets[1], object.isSelected);
-  writer.writeString(offsets[2], object.name);
-  writer.writeDouble(offsets[3], object.percentagePoints);
+  writer.writeLong(offsets[1], object.iconCodePoint);
+  writer.writeBool(offsets[2], object.iconDirection);
+  writer.writeString(offsets[3], object.iconFontFamily);
+  writer.writeString(offsets[4], object.iconFontPackage);
+  writer.writeBool(offsets[5], object.isSelected);
+  writer.writeString(offsets[6], object.name);
+  writer.writeDouble(offsets[7], object.percentagePoints);
 }
 
 Aspect _aspectDeserialize(
@@ -82,10 +108,14 @@ Aspect _aspectDeserialize(
 ) {
   final object = Aspect();
   object.color = reader.readLong(offsets[0]);
+  object.iconCodePoint = reader.readLong(offsets[1]);
+  object.iconDirection = reader.readBool(offsets[2]);
+  object.iconFontFamily = reader.readString(offsets[3]);
+  object.iconFontPackage = reader.readString(offsets[4]);
   object.id = id;
-  object.isSelected = reader.readBool(offsets[1]);
-  object.name = reader.readString(offsets[2]);
-  object.percentagePoints = reader.readDouble(offsets[3]);
+  object.isSelected = reader.readBool(offsets[5]);
+  object.name = reader.readString(offsets[6]);
+  object.percentagePoints = reader.readDouble(offsets[7]);
   return object;
 }
 
@@ -99,10 +129,18 @@ P _aspectDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readBool(offset)) as P;
+    case 6:
+      return (reader.readString(offset)) as P;
+    case 7:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -245,6 +283,332 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconCodePointEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconCodePoint',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconCodePointGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'iconCodePoint',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconCodePointLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'iconCodePoint',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconCodePointBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'iconCodePoint',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconDirectionEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconDirection',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconFontFamily',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'iconFontFamily',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'iconFontFamily',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'iconFontFamily',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'iconFontFamily',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'iconFontFamily',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'iconFontFamily',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'iconFontFamily',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontFamilyIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconFontFamily',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition>
+      iconFontFamilyIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'iconFontFamily',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconFontPackage',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition>
+      iconFontPackageGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'iconFontPackage',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'iconFontPackage',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'iconFontPackage',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'iconFontPackage',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'iconFontPackage',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'iconFontPackage',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'iconFontPackage',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> iconFontPackageIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconFontPackage',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition>
+      iconFontPackageIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'iconFontPackage',
+        value: '',
       ));
     });
   }
@@ -521,6 +885,54 @@ extension AspectQuerySortBy on QueryBuilder<Aspect, Aspect, QSortBy> {
     });
   }
 
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIconCodePoint() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconCodePoint', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIconCodePointDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconCodePoint', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIconDirection() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconDirection', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIconDirectionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconDirection', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIconFontFamily() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconFontFamily', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIconFontFamilyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconFontFamily', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIconFontPackage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconFontPackage', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIconFontPackageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconFontPackage', Sort.desc);
+    });
+  }
+
   QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByIsSelected() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isSelected', Sort.asc);
@@ -568,6 +980,54 @@ extension AspectQuerySortThenBy on QueryBuilder<Aspect, Aspect, QSortThenBy> {
   QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByColorDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'color', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIconCodePoint() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconCodePoint', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIconCodePointDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconCodePoint', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIconDirection() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconDirection', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIconDirectionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconDirection', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIconFontFamily() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconFontFamily', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIconFontFamilyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconFontFamily', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIconFontPackage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconFontPackage', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByIconFontPackageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconFontPackage', Sort.desc);
     });
   }
 
@@ -627,6 +1087,34 @@ extension AspectQueryWhereDistinct on QueryBuilder<Aspect, Aspect, QDistinct> {
     });
   }
 
+  QueryBuilder<Aspect, Aspect, QDistinct> distinctByIconCodePoint() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'iconCodePoint');
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QDistinct> distinctByIconDirection() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'iconDirection');
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QDistinct> distinctByIconFontFamily(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'iconFontFamily',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QDistinct> distinctByIconFontPackage(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'iconFontPackage',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Aspect, Aspect, QDistinct> distinctByIsSelected() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isSelected');
@@ -657,6 +1145,30 @@ extension AspectQueryProperty on QueryBuilder<Aspect, Aspect, QQueryProperty> {
   QueryBuilder<Aspect, int, QQueryOperations> colorProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'color');
+    });
+  }
+
+  QueryBuilder<Aspect, int, QQueryOperations> iconCodePointProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'iconCodePoint');
+    });
+  }
+
+  QueryBuilder<Aspect, bool, QQueryOperations> iconDirectionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'iconDirection');
+    });
+  }
+
+  QueryBuilder<Aspect, String, QQueryOperations> iconFontFamilyProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'iconFontFamily');
+    });
+  }
+
+  QueryBuilder<Aspect, String, QQueryOperations> iconFontPackageProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'iconFontPackage');
     });
   }
 
