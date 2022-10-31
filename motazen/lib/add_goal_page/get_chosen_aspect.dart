@@ -28,6 +28,7 @@ class _showsState extends State<getChosenAspect> {
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 List? aspects = snapshot.data;
+<<<<<<< Updated upstream
                 List<String> chosenAspectNames = [];
                 print("here is the aspects ");
                 print(aspects);
@@ -41,6 +42,18 @@ class _showsState extends State<getChosenAspect> {
                   isr: widget.iser,
                   aspects: aspects,
                 );
+=======
+                List<String> chosenAspectNames =[];
+                for (int i = 0 ; i<aspects!.length ; i++ ){
+                  Aspect x = aspects[i];
+                  chosenAspectNames.add(x.name);
+                }
+
+                return AddGoal(
+                    isr: widget.iser,
+                    chosenAspectNames:chosenAspectNames,
+                    );
+>>>>>>> Stashed changes
               } else {
                 return const CircularProgressIndicator();
               }
