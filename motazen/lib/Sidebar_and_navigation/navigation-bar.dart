@@ -1,13 +1,11 @@
 // ignore_for_file: file_names
 
-import 'package:isar/isar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/homepage/homepage.dart';
-import 'package:motazen/select_aspectPage/select_aspect.dart';
 
 ///add page redirection later
 ///

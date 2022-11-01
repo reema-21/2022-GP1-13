@@ -129,7 +129,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
                 final habit = habits[index];
                 final startData = habits[index].frequency;
                 final aspectName = habit.aspect.value?.name ;
-                print(habit.aspect);
                 return Container(
                   decoration:BoxDecoration(borderRadius: BorderRadius.circular(10)),
                   margin: const EdgeInsets.only(bottom:4),
@@ -138,7 +137,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                     // here is the code of each item you have
                     child: ListTile(
                       
-                      trailing:TextButton(child: Icon(Icons.delete ), onPressed: () async {
+                      trailing:TextButton(child: const Icon(Icons.delete ), onPressed: () async {
                         final action = await AlertDialogs.yesCancelDialog(
                       context,
                       ' هل انت متاكد من حذف هذه العادة  ',
@@ -152,7 +151,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
 
 
                       },),
-                      tileColor: (index % 2 == 0) ? Colors.white :  Color.fromARGB(33, 102, 191, 118),
+                      tileColor: (index % 2 == 0) ? Colors.white :  const Color.fromARGB(33, 102, 191, 118),
                leading: chooseIcon(aspectName),
                       subtitle: Text("Frequency : $startData"), // if not null added 
                       title: Padding(

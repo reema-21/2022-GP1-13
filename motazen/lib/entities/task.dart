@@ -10,8 +10,6 @@ class Task {
   Id id = Isar.autoIncrement;
   late String content;
   final goal = IsarLink<Goal>(); //each task belong to one goal
-  final aspect =
-      IsarLink<Aspect>(); // has a relation each task  belong to one aspect
-  late String duration;
-  late String taskDuration;
+   // has a relation each task  belong to one aspect
+ 
 }

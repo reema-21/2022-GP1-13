@@ -22,23 +22,18 @@ const GoalSchema = CollectionSchema(
       name: r'dueDate',
       type: IsarType.dateTime,
     ),
-    r'duration': PropertySchema(
-      id: 1,
-      name: r'duration',
-      type: IsarType.string,
-    ),
     r'goalDuration': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'goalDuration',
-      type: IsarType.string,
+      type: IsarType.long,
     ),
     r'importance': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'importance',
       type: IsarType.long,
     ),
     r'titel': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'titel',
       type: IsarType.string,
     )
@@ -64,6 +59,12 @@ const GoalSchema = CollectionSchema(
     )
   },
   links: {
+    r'task': LinkSchema(
+      id: 1307600547408402184,
+      name: r'task',
+      target: r'Task',
+      single: true,
+    ),
     r'goalDependency': LinkSchema(
       id: 3154268426504510286,
       name: r'goalDependency',
@@ -90,8 +91,6 @@ int _goalEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.duration.length * 3;
-  bytesCount += 3 + object.goalDuration.length * 3;
   bytesCount += 3 + object.titel.length * 3;
   return bytesCount;
 }
@@ -103,10 +102,9 @@ void _goalSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.dueDate);
-  writer.writeString(offsets[1], object.duration);
-  writer.writeString(offsets[2], object.goalDuration);
-  writer.writeLong(offsets[3], object.importance);
-  writer.writeString(offsets[4], object.titel);
+  writer.writeLong(offsets[1], object.goalDuration);
+  writer.writeLong(offsets[2], object.importance);
+  writer.writeString(offsets[3], object.titel);
 }
 
 Goal _goalDeserialize(
@@ -117,11 +115,10 @@ Goal _goalDeserialize(
 ) {
   final object = Goal();
   object.dueDate = reader.readDateTime(offsets[0]);
-  object.duration = reader.readString(offsets[1]);
-  object.goalDuration = reader.readString(offsets[2]);
+  object.goalDuration = reader.readLong(offsets[1]);
   object.id = id;
-  object.importance = reader.readLong(offsets[3]);
-  object.titel = reader.readString(offsets[4]);
+  object.importance = reader.readLong(offsets[2]);
+  object.titel = reader.readString(offsets[3]);
   return object;
 }
 
@@ -135,12 +132,10 @@ P _goalDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
-    case 2:
-      return (reader.readString(offset)) as P;
-    case 3:
       return (reader.readLong(offset)) as P;
-    case 4:
+    case 2:
+      return (reader.readLong(offset)) as P;
+    case 3:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -152,11 +147,12 @@ Id _goalGetId(Goal object) {
 }
 
 List<IsarLinkBase<dynamic>> _goalGetLinks(Goal object) {
-  return [object.goalDependency, object.aspect];
+  return [object.task, object.goalDependency, object.aspect];
 }
 
 void _goalAttach(IsarCollection<dynamic> col, Id id, Goal object) {
   object.id = id;
+  object.task.attach(col, col.isar.collection<Task>(), r'task', id);
   object.goalDependency
       .attach(col, col.isar.collection<Goal>(), r'goalDependency', id);
   object.aspect.attach(col, col.isar.collection<Aspect>(), r'aspect', id);
@@ -389,184 +385,47 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> durationEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'duration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> durationGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'duration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> durationLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'duration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> durationBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'duration',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> durationStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'duration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> durationEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'duration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> durationContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'duration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> durationMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'duration',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> durationIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'duration',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> durationIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'duration',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDurationEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'goalDuration',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDurationGreaterThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'goalDuration',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDurationLessThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'goalDuration',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDurationBetween(
-    String lower,
-    String upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -575,75 +434,6 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDurationStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'goalDuration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDurationEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'goalDuration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDurationContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'goalDuration',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDurationMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'goalDuration',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDurationIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'goalDuration',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDurationIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'goalDuration',
-        value: '',
       ));
     });
   }
@@ -884,6 +674,18 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
 extension GoalQueryObject on QueryBuilder<Goal, Goal, QFilterCondition> {}
 
 extension GoalQueryLinks on QueryBuilder<Goal, Goal, QFilterCondition> {
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> task(FilterQuery<Task> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'task');
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> taskIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'task', 0, true, 0, true);
+    });
+  }
+
   QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDependency(
       FilterQuery<Goal> q) {
     return QueryBuilder.apply(this, (query) {
@@ -921,18 +723,6 @@ extension GoalQuerySortBy on QueryBuilder<Goal, Goal, QSortBy> {
   QueryBuilder<Goal, Goal, QAfterSortBy> sortByDueDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dueDate', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterSortBy> sortByDuration() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'duration', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterSortBy> sortByDurationDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'duration', Sort.desc);
     });
   }
 
@@ -983,18 +773,6 @@ extension GoalQuerySortThenBy on QueryBuilder<Goal, Goal, QSortThenBy> {
   QueryBuilder<Goal, Goal, QAfterSortBy> thenByDueDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dueDate', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterSortBy> thenByDuration() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'duration', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterSortBy> thenByDurationDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'duration', Sort.desc);
     });
   }
 
@@ -1054,17 +832,9 @@ extension GoalQueryWhereDistinct on QueryBuilder<Goal, Goal, QDistinct> {
     });
   }
 
-  QueryBuilder<Goal, Goal, QDistinct> distinctByDuration(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Goal, Goal, QDistinct> distinctByGoalDuration() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'duration', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QDistinct> distinctByGoalDuration(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'goalDuration', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'goalDuration');
     });
   }
 
@@ -1095,13 +865,7 @@ extension GoalQueryProperty on QueryBuilder<Goal, Goal, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Goal, String, QQueryOperations> durationProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'duration');
-    });
-  }
-
-  QueryBuilder<Goal, String, QQueryOperations> goalDurationProperty() {
+  QueryBuilder<Goal, int, QQueryOperations> goalDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'goalDuration');
     });

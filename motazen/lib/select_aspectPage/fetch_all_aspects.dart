@@ -19,7 +19,7 @@ class _fetchAspect extends State<fetchAspect> {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-            future: AssessmentQuestions().aspectsFetching(),
+            future: AssessmentQuestions().fetchAllAspect(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 List? allAspects = snapshot.data;

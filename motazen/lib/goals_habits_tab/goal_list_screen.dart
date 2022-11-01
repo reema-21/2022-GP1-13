@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:motazen/add_goal_page/add_goal_screen.dart';
 import 'package:motazen/entities/goal.dart';
 import "package:motazen/isar_service.dart";
 import 'package:motazen/pages/homepage/homepage.dart';
@@ -112,7 +111,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return  getChosenAspect(iser: widget.isr); // must be the
+                      return  getChosenAspect(iser: widget.isr ); // must be the
                     }));
                   },
                 )
@@ -128,13 +127,13 @@ class _GoalListScreenState extends State<GoalListScreen> {
                 final aspectName = goal.aspect.value?.name;
                 return Container(
                   decoration:BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                  margin: EdgeInsets.only(bottom:4),
+                  margin: const EdgeInsets.only(bottom:4),
                   child: Card(
                     elevation: 3,
                     // here is the code of each item you have
                     child: ListTile(
                       
-                      trailing:TextButton(child: Icon(Icons.delete ), onPressed: () async {
+                      trailing:TextButton(child: const Icon(Icons.delete ), onPressed: () async {
                         final action = await AlertDialogs.yesCancelDialog(
                       context,
                       ' هل انت متاكد من حذف هذا الهدف  ',
@@ -148,14 +147,14 @@ class _GoalListScreenState extends State<GoalListScreen> {
 
 
                       },),
-                      tileColor: (index % 2 == 0) ? Colors.white :   Color.fromARGB(33, 102, 191, 118),
+                      tileColor: (index % 2 == 0) ? Colors.white :   const Color.fromARGB(33, 102, 191, 118),
                leading: chooseIcon(aspectName) ,
                       subtitle: Text("Due Date : $startData"), // if not null added 
                       title: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Text(goal.titel),
                       ),
-                      contentPadding: EdgeInsets.all(7),
+                      contentPadding: const EdgeInsets.all(7),
                       onTap:(){ // should return me to the page with add field 
                         Navigator.push(context,
                           MaterialPageRoute(builder: (context) {

@@ -1,18 +1,17 @@
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'assesmentQuestionPageGlobals.dart'; // for the global varible
 
 class AssessmentQuestions {
   IsarService iser = IsarService();
   static int activeStep = 0;
   static List<dynamic> quastionsList = [];
-  static Map answares = {};
+  static Map answers = {};
   static String currentvalue = "";
   static List<dynamic> tempquastionsList = [];
-  static double currentSliderValue = 0;
+  static double currentChosenAnswer = 0;
 
-  Future<List<dynamic>> aspectsFetching() async {
+  Future<List<dynamic>> fetchAllAspect() async {
     //for Select Aspect Page
     List<dynamic> allAspects = [];
     for (int i = 0; i <= 7; i++) {
@@ -27,7 +26,7 @@ class AssessmentQuestions {
   }
   
 
-  Future<List<dynamic>> questionListCreationg() async {
+  Future<List<dynamic>> createQuestionList() async {
     List<Aspect> tempAspect =
         []; //store the fetched chosen aspect from the user
     List<dynamic> tempQuestionList = []; //temporary store one aspect quastion
@@ -53,10 +52,10 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-                if (AssessmentQuestions.answares[countr] == null) {
-                  AssessmentQuestions.answares[countr] = "0M";
+                if (AssessmentQuestions.answers[countr] == null) {
+                  AssessmentQuestions.answers[countr] = "0M";
                 } else {
-                  AssessmentQuestions.answares[countr++] = "0M";
+                  AssessmentQuestions.answers[countr++] = "0M";
                 }
 
           }
@@ -76,7 +75,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssessmentQuestions.answares[countr] = "0R";
+            AssessmentQuestions.answers[countr] = "0R";
           }
 
           endpoint = countr;
@@ -94,7 +93,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssessmentQuestions.answares[countr] = "0C";
+            AssessmentQuestions.answers[countr] = "0C";
           }
 
           endpoint = countr;
@@ -112,7 +111,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssessmentQuestions.answares[countr] = "0S";
+            AssessmentQuestions.answers[countr] = "0S";
           }
 
           endpoint = countr;
@@ -130,7 +129,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssessmentQuestions.answares[countr] = "0E";
+            AssessmentQuestions.answers[countr] = "0E";
           }
 
           endpoint = countr;
@@ -148,7 +147,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssessmentQuestions.answares[countr] = "0G";
+            AssessmentQuestions.answers[countr] = "0G";
           }
           endpoint = countr;
           break;
@@ -165,7 +164,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssessmentQuestions.answares[countr] = "0H";
+            AssessmentQuestions.answers[countr] = "0H";
           }
           endpoint = countr;
           break;
@@ -181,7 +180,7 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-            AssessmentQuestions.answares[countr] = "0F";
+            AssessmentQuestions.answers[countr] = "0F";
               }
               endpoint = countr;
 
@@ -204,55 +203,55 @@ class AssessmentQuestions {
         // include all the aspect make sure the index is write//
         case "money and finances":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssessmentQuestions.answares[countr] = "0M";
+            AssessmentQuestions.answers[countr] = "0M";
           }
 
           endpoint = countr;
           break;
         case "Fun and Recreation":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssessmentQuestions.answares[countr] = "0R";
+            AssessmentQuestions.answers[countr] = "0R";
           }
 
           endpoint = countr;
           break;
         case "career":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssessmentQuestions.answares[countr] = "0C";
+            AssessmentQuestions.answers[countr] = "0C";
           }
 
           endpoint = countr;
           break;
         case "Significant Other":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssessmentQuestions.answares[countr] = "0S";
+            AssessmentQuestions.answers[countr] = "0S";
           }
 
           endpoint = countr;
           break;
         case "Physical Environment":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssessmentQuestions.answares[countr] = "0E";
+            AssessmentQuestions.answers[countr] = "0E";
           }
 
           endpoint = countr;
           break;
         case "Personal Growth":
           for (countr; countr < 4 + endpoint; countr++) {
-            AssessmentQuestions.answares[countr] = "0G";
+            AssessmentQuestions.answers[countr] = "0G";
           }
           endpoint = countr;
           break;
 
         case "Health and Wellbeing":
           for (countr; countr < 5 + endpoint; countr++) {
-            AssessmentQuestions.answares[countr] = "0H";
+            AssessmentQuestions.answers[countr] = "0H";
           }
           endpoint = countr;
           break;
         case "Family and Friends":
           for (countr; countr < 9 + endpoint; countr++) {
-            AssessmentQuestions.answares[countr] = "0F";
+            AssessmentQuestions.answers[countr] = "0F";
           }
           endpoint = countr;
           break;

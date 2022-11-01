@@ -28,10 +28,11 @@ class IsarService {
   }
 
   /// ADD GOALS , ADD TASKS , ADD ASPECT  */
-  Future<void> createGoal(Goal newgoal) async {
+  Future<bool> createGoal(Goal newgoal) async {
     //Add goals
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
+    return true ; 
   } //<int> because we want to get the id of the  ceated thing
 
   Future<void> createHabit(Habit newHabit) async {

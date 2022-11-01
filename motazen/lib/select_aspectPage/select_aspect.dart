@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import "/assesment_page/alert_dialog.dart";
 import 'handle_aspect_data.dart';
-import '/assesment_page/show.dart';
 import '/entities/aspect.dart';
 import '/isar_service.dart';
 import '../data/data.dart';

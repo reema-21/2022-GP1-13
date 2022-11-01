@@ -28,32 +28,46 @@ class _showsState extends State<getChosenAspect> {
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 List? aspects = snapshot.data;
-<<<<<<< Updated upstream
-                List<String> chosenAspectNames = [];
-                print("here is the aspects ");
-                print(aspects);
-                for (int i = 0; i < aspects!.length; i++) {
-                  Aspect x = aspects[i];
-                  chosenAspectNames.add(x.name);
-                  print(chosenAspectNames);
-                }
-
-                return AddGoal(
-                  isr: widget.iser,
-                  aspects: aspects,
-                );
-=======
                 List<String> chosenAspectNames =[];
                 for (int i = 0 ; i<aspects!.length ; i++ ){
                   Aspect x = aspects[i];
-                  chosenAspectNames.add(x.name);
-                }
+                  String nameInArabic ="";
+                  switch(x.name){
+        case "money and finances":
+          nameInArabic ="أموالي";
+          break;
+        case "Fun and Recreation":
+         nameInArabic ="متعتي";
+          break;
+        case "career":
+          nameInArabic ="مهنتي";
+          break;
+        case "Significant Other":
+         nameInArabic ="علاقاتي";
+          break;
+        case "Physical Environment":
+         nameInArabic ="بيئتي";
+          break;
+        case "Personal Growth":
+          nameInArabic ="ذاتي";
+          break;
 
+        case "Health and Wellbeing":
+        nameInArabic ="صحتي";
+          break;
+        case "Family and Friends":
+         nameInArabic ="عائلتي وأصدقائي";
+          break;
+      }
+                  
+                  chosenAspectNames.add(nameInArabic);
+                
+                }
+                print(chosenAspectNames);
                 return AddGoal(
                     isr: widget.iser,
                     chosenAspectNames:chosenAspectNames,
                     );
->>>>>>> Stashed changes
               } else {
                 return const CircularProgressIndicator();
               }
