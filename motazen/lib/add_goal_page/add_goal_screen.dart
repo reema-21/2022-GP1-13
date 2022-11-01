@@ -34,6 +34,7 @@ class _AddGoalState extends State<AddGoal> {
   String? isSelected;
   @override
   void initState() {
+    importance = 0;
     super.initState();
     _goalNmaeController.addListener(_updateText);
     _dueDateController.addListener(_updateText);
@@ -61,7 +62,7 @@ class _AddGoalState extends State<AddGoal> {
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
     newgoal.aspect.value = selected;
     widget.isr.createGoal(newgoal);
-    print("object");
+    
   }
 
   Widget build(BuildContext context) {
@@ -380,7 +381,10 @@ class _AddGoalState extends State<AddGoal> {
                 child: const Text("إضافة"),
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    final snackBar = SnackBar(content: Text("تمت إضافة الهدف"));
+
+ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(content: Row(children: [Icon(Icons.thumb_down_sharp),SizedBox(width: 20),Expanded(child: Text("تمت اضافة الهدف "),)],))
+);
 
                     _Addgoal();
                   }

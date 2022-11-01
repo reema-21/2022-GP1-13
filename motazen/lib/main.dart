@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'add_goal_page/add_goal_screen.dart';
 import 'entities/goal.dart';
 import 'firebase_options.dart';
+import 'goals_habits_tab/goal_habits_pages.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +52,7 @@ Future main() async {
   iser.createAspect(health);
 
   // Goal x = Goal();
-  // Aspect? y = await iser.findSepecificAspect("career");
+   Aspect? y = await iser.findSepecificAspect("career");
   // x.aspect.value = y;
   // x.dueDate = DateTime.utc(1989, 11, 9);
   // x.duration = "3 days";
@@ -63,23 +64,23 @@ Future main() async {
 
   // iser.createGoal(x);
 
-  // Habit yi = Habit();
-  // yi.aspect.value = y;
-  // yi.titel = "صحتي هي حياتي ";
-  // yi.frequency = "3 times a day ";
-  // iser.createHabit(yi);
-  // Habit ji = Habit();
-  // Aspect? k = await iser.findSepecificAspect("Health and Wellbeing");
+  Habit yi = Habit();
+  yi.aspect.value = y;
+  yi.titel = "صحتي هي حياتي ";
+  yi.frequency = "3 times a day ";
+  iser.createHabit(yi);
+  Habit ji = Habit();
+  Aspect? k = await iser.findSepecificAspect("Health and Wellbeing");
 
-  // ji.aspect.value = k;
-  // ji.titel = "صحتي هي rgfd حياتي ";
-  // ji.frequency = "3 times a day ";
-  // iser.createHabit(ji);
+  ji.aspect.value = k;
+  ji.titel = "صحتي هي rgfd حياتي ";
+  ji.frequency = "3 times a day ";
+  iser.createHabit(ji);
 
   runApp(ChangeNotifierProvider<WheelData>(
       create: (_) => WheelData(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: getChosenAspect(iser: iser,
+          home: Goals_habit(iser: iser,
               )))); // my widget // the one where i will create the quastion list .
 }
