@@ -54,11 +54,11 @@ Future main() async {
   Goal x = Goal();
   Aspect? y = await iser.findSepecificAspect("career");
   x.aspect.value = y;
-  x.dueDate = DateTime.utc(1999, 11, 9);
-  x.DescriptiveGoalDuration = "3يوما";
-  x.goalDuration = 89;
+  x.dueDate = DateTime.utc(1989, 11, 9);
+  x.DescriptiveGoalDuration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
+  x.goalDuration = 0;
   x.titel = "اركض ";
-  x.importance = 1;
+  x.importance = 0;
   x.goalDependency.value = x;
   
 
