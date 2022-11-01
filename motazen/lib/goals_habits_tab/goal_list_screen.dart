@@ -128,42 +128,47 @@ class _GoalListScreenState extends State<GoalListScreen> {
                 return Container(
                   decoration:BoxDecoration(borderRadius: BorderRadius.circular(10)),
                   margin: const EdgeInsets.only(bottom:4),
-                  child: Card(
-                    elevation: 3,
-                    // here is the code of each item you have
-                    child: ListTile(
+                  child: GestureDetector(
+                    onTap: () {
                       
-                      trailing:TextButton(child: const Icon(Icons.delete ), onPressed: () async {
-                        final action = await AlertDialogs.yesCancelDialog(
-                      context,
-                      ' هل انت متاكد من حذف هذا الهدف  ',
-                'بالنقر على "تاكيد"لن تتمكن من استرجاع الهدف ا  ');
-                  if (action == DialogsAction.yes) {
-                    widget.isr.deleteGoal(goal);
-                  } else {}
-
-
-
-
-
-                      },),
-                      tileColor: (index % 2 == 0) ? Colors.white :   const Color.fromARGB(33, 102, 191, 118),
-               leading: chooseIcon(aspectName) ,
-                      subtitle: Text("Due Date : $startData"), // if not null added 
-                      title: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(goal.titel),
-                      ),
-                      contentPadding: const EdgeInsets.all(7),
-                      onTap:(){ // should return me to the page with add field 
-                        Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const Homepage(); // must be the
-                      }));
-                      } ,
-
-                      ),
-                      
+                    },
+                    child: Card(
+                      elevation: 3,
+                      // here is the code of each item you have
+                      child: ListTile(
+                        
+                        trailing:TextButton(child: const Icon(Icons.delete ), onPressed: () async {
+                          final action = await AlertDialogs.yesCancelDialog(
+                        context,
+                        ' هل انت متاكد من حذف هذا الهدف  ',
+                                  'بالنقر على "تاكيد"لن تتمكن من استرجاع الهدف ا  ');
+                    if (action == DialogsAction.yes) {
+                      widget.isr.deleteGoal(goal);
+                    } else {}
+                  
+                  
+                  
+                  
+                  
+                        },),
+                        tileColor: (index % 2 == 0) ? Colors.white :   const Color.fromARGB(33, 102, 191, 118),
+                                 leading: chooseIcon(aspectName) ,
+                        subtitle: Text("Due Date : $startData"), // if not null added 
+                        title: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(goal.titel),
+                        ),
+                        contentPadding: const EdgeInsets.all(7),
+                        onTap:(){ // should return me to the page with add field 
+                          Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const Homepage(); // must be the
+                        }));
+                        } ,
+                  
+                        ),
+                        
+                    ),
                   ),
                 );
               });

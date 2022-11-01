@@ -145,6 +145,12 @@ class IsarService {
     return await isar.aspects.where().filter().nameEqualTo(name).findFirst();
   }
 
+   Future<Goal?> getSepecificGoal(int id ) async {
+    final isar = await db;
+    return await isar.goals.where().filter().idEqualTo(id).findFirst();
+  }
+
+
   //updates the value of isSelected to true
   void selectAspect(String name) async {
     final isar = await db;

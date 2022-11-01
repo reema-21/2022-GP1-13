@@ -18,6 +18,7 @@ class Goal {
   late int importance;
   late DateTime dueDate;
   late int goalDuration;
+  late String DescriptiveGoalDuration ; 
 
 
 }

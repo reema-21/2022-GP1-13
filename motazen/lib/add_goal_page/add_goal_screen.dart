@@ -22,12 +22,13 @@ class _AddGoalState extends State<AddGoal> {
   final formKey = GlobalKey<FormState>();
   late String _goalName;
   DateTime? selectedDate;
-
+int goalDuration= 0 ; 
   String duration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
   int importance = 0;
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   final _goalNmaeController = TextEditingController();
   final _dueDateController = TextEditingController();
+  bool isDataSelected = false;
   bool? _checkBox = false;
   bool? _ListtileCheckBox = false;
 
@@ -61,8 +62,14 @@ class _AddGoalState extends State<AddGoal> {
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
     newgoal.aspect.value = selected;
+if (!isDataSelected){
+newgoal.dueDate = DateTime.utc(1989, 11, 9);
+}
+newgoal.DescriptiveGoalDuration=duration; 
+newgoal.goalDuration=goalDuration; 
     widget.isr.createGoal(newgoal);
     
+  
   }
 
   Widget build(BuildContext context) {
@@ -211,6 +218,8 @@ class _AddGoalState extends State<AddGoal> {
                         onDateSelected: (DateTime value) {
                           selectedDate = value;
                           newgoal.dueDate = value;
+                          isDataSelected = true;
+
                         },
                       ),
                       SizedBox(
@@ -258,7 +267,7 @@ class _AddGoalState extends State<AddGoal> {
                                             .inDays +
                                         1;
                                     duration = durationInNumber.toString();
-                                    newgoal.goalDuration = durationInNumber;
+                                    goalDuration=durationInNumber;
                                     _ListtileCheckBox = false;
                                   }
                                 });
@@ -286,7 +295,7 @@ class _AddGoalState extends State<AddGoal> {
                                             .difference(DateTime.now())
                                             .inDays +
                                         1;
-                                    newgoal.goalDuration = durationInNumber;
+                                    goalDuration=durationInNumber;
 
                                     double numberOfWork =
                                         (durationInNumber / 7);
