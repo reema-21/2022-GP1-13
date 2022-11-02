@@ -21,12 +21,20 @@ class AspectSelection extends StatefulWidget {
 }
 
 class _selectAspectState extends State<AspectSelection> {
-  bool _isSelected = false;
+  final List<bool> _isSelected = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ];
   @override
   Widget build(BuildContext context) {
     //list of all aspects
     var aspectList = Provider.of<WheelData>(context);
-
     //a temporary list that holds the selected aspect names (remove when the get color bug is fixed)
     List<String> selectedAspects = [];
 
@@ -55,8 +63,6 @@ class _selectAspectState extends State<AspectSelection> {
       );
     }
 
-//initialize aspects to DB
-    handle_aspect().initializeAspects(aspectList.data);
     Size size = MediaQuery.of(context).size;
 
     return FutureBuilder(
@@ -158,7 +164,7 @@ class _selectAspectState extends State<AspectSelection> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(24),
-                                            color: _isSelected
+                                            color: _isSelected[0]
                                                 ? Color(aspectList
                                                         .data[0].color)
                                                     .withOpacity(1)
@@ -201,13 +207,13 @@ class _selectAspectState extends State<AspectSelection> {
                                             selectedAspects
                                                 .remove('Family and Friends');
                                             setState(() {
-                                              _isSelected = false;
+                                              _isSelected[0] = false;
                                             });
                                           } else {
                                             selectedAspects
                                                 .add('Family and Friends');
                                             setState(() {
-                                              _isSelected = true;
+                                              _isSelected[0] = true;
                                             });
                                           }
                                         },
@@ -223,8 +229,7 @@ class _selectAspectState extends State<AspectSelection> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(24),
-                                            color: selectedAspects.contains(
-                                                    'Health and Wellbeing')
+                                            color: _isSelected[1]
                                                 ? Color(aspectList
                                                         .data[1].color)
                                                     .withOpacity(1)
@@ -264,6 +269,21 @@ class _selectAspectState extends State<AspectSelection> {
                                         onTap: () {
                                           handle_aspect().updateStatus(
                                               'Health and Wellbeing');
+                                          //temp solution
+                                          if (selectedAspects
+                                              .contains('Family and Friends')) {
+                                            selectedAspects
+                                                .remove('Family and Friends');
+                                            setState(() {
+                                              _isSelected[1] = false;
+                                            });
+                                          } else {
+                                            selectedAspects
+                                                .add('Family and Friends');
+                                            setState(() {
+                                              _isSelected[1] = true;
+                                            });
+                                          }
                                         },
                                       ),
                                     ]),
@@ -283,8 +303,7 @@ class _selectAspectState extends State<AspectSelection> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(24),
-                                            color: selectedAspects
-                                                    .contains('Personal Growth')
+                                            color: _isSelected[2]
                                                 ? Color(aspectList
                                                         .data[2].color)
                                                     .withOpacity(1)
@@ -329,9 +348,11 @@ class _selectAspectState extends State<AspectSelection> {
                                               .contains('Personal Growth')) {
                                             selectedAspects
                                                 .remove('Personal Growth');
+                                            _isSelected[2] = false;
                                           } else {
                                             selectedAspects
                                                 .add('Personal Growth');
+                                            _isSelected[2] = true;
                                           }
                                         },
                                       ),
@@ -346,13 +367,12 @@ class _selectAspectState extends State<AspectSelection> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(24),
-                                            color: selectedAspects
-                                                    .contains('Personal Growth')
+                                            color: _isSelected[3]
                                                 ? Color(aspectList
-                                                        .data[2].color)
+                                                        .data[3].color)
                                                     .withOpacity(1)
                                                 : Color(aspectList
-                                                        .data[2].color)
+                                                        .data[3].color)
                                                     .withOpacity(0.18),
                                             boxShadow: [
                                               BoxShadow(
@@ -392,9 +412,11 @@ class _selectAspectState extends State<AspectSelection> {
                                               'Physical Environment')) {
                                             selectedAspects
                                                 .remove('Physical Environment');
+                                            _isSelected[3] = false;
                                           } else {
                                             selectedAspects
                                                 .add('Physical Environment');
+                                            _isSelected[3] = true;
                                           }
                                         },
                                       ),
@@ -415,8 +437,7 @@ class _selectAspectState extends State<AspectSelection> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(24),
-                                            color: selectedAspects.contains(
-                                                    'Significant Other')
+                                            color: _isSelected[4]
                                                 ? Color(aspectList
                                                         .data[4].color)
                                                     .withOpacity(1)
@@ -459,11 +480,17 @@ class _selectAspectState extends State<AspectSelection> {
                                           //temp solution
                                           if (selectedAspects
                                               .contains('Significant Other')) {
-                                            selectedAspects
-                                                .remove('Significant Other');
+                                            setState(() {
+                                              _isSelected[4] = false;
+                                              selectedAspects
+                                                  .remove('Significant Other');
+                                            });
                                           } else {
-                                            selectedAspects
-                                                .add('Significant Other');
+                                            setState(() {
+                                              _isSelected[4] = true;
+                                              selectedAspects
+                                                  .add('Significant Other');
+                                            });
                                           }
                                         },
                                       ),
@@ -478,8 +505,7 @@ class _selectAspectState extends State<AspectSelection> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(24),
-                                            color: selectedAspects
-                                                    .contains('career')
+                                            color: _isSelected[5]
                                                 ? Color(aspectList
                                                         .data[5].color)
                                                     .withOpacity(1)
@@ -522,9 +548,15 @@ class _selectAspectState extends State<AspectSelection> {
                                           //temp solution
                                           if (selectedAspects
                                               .contains('career')) {
-                                            selectedAspects.remove('career');
+                                            setState(() {
+                                              _isSelected[5] = false;
+                                              selectedAspects.remove('career');
+                                            });
                                           } else {
-                                            selectedAspects.add('career');
+                                            setState(() {
+                                              _isSelected[5] = true;
+                                              selectedAspects.add('career');
+                                            });
                                           }
                                         },
                                       ),
@@ -545,8 +577,7 @@ class _selectAspectState extends State<AspectSelection> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(24),
-                                            color: selectedAspects.contains(
-                                                    'Fun and Recreation')
+                                            color: _isSelected[6]
                                                 ? Color(aspectList
                                                         .data[6].color)
                                                     .withOpacity(1)
@@ -589,11 +620,17 @@ class _selectAspectState extends State<AspectSelection> {
                                           //temp solution
                                           if (selectedAspects
                                               .contains('Fun and Recreation')) {
-                                            selectedAspects
-                                                .remove('Fun and Recreation');
+                                            setState(() {
+                                              selectedAspects
+                                                  .remove('Fun and Recreation');
+                                              _isSelected[6] = false;
+                                            });
                                           } else {
-                                            selectedAspects
-                                                .add('Fun and Recreation');
+                                            setState(() {
+                                              selectedAspects
+                                                  .add('Fun and Recreation');
+                                              _isSelected[6] = true;
+                                            });
                                           }
                                         },
                                       ),
@@ -608,8 +645,7 @@ class _selectAspectState extends State<AspectSelection> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(24),
-                                            color: selectedAspects.contains(
-                                                    'money and finances')
+                                            color: _isSelected[7]
                                                 ? Color(aspectList
                                                         .data[7].color)
                                                     .withOpacity(1)
@@ -652,11 +688,17 @@ class _selectAspectState extends State<AspectSelection> {
                                           //temp solution
                                           if (selectedAspects.contains(
                                               'money and financesn')) {
-                                            selectedAspects
-                                                .remove('money and finances');
+                                            setState(() {
+                                              _isSelected[7] = false;
+                                              selectedAspects
+                                                  .remove('money and finances');
+                                            });
                                           } else {
-                                            selectedAspects
-                                                .add('money and finances');
+                                            setState(() {
+                                              _isSelected[7] = true;
+                                              selectedAspects
+                                                  .add('money and finances');
+                                            });
                                           }
                                         },
                                       ),

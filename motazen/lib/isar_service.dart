@@ -226,7 +226,9 @@ class IsarService {
 //Delete //
   Future<void> cleanAspects() async {
     final isar = await db;
-    await isar.writeTxnSync(() => isar.aspects.clear());
+    await isar.writeTxn(() async {
+      await isar.aspects.clear();
+    });
   }
 
   void deleteAllAspects(List<dynamic>? aspectsChosen) async {

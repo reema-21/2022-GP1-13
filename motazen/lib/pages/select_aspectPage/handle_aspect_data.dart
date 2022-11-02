@@ -10,7 +10,7 @@ class handle_aspect {
 
 //initialize all aspects in local storage
   Future<void> initializeAspects(List<Data> list) async {
-    // await isar.cleanAspects();
+    await isar.cleanAspects();
 
     for (var i = 0; i < list.length; i++) {
       var newAspect = Aspect();

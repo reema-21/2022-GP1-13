@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:provider/provider.dart';
+import '../data/data.dart';
 import '../widget/build_images.dart';
 import '/pages/signup/signup.dart';
+import 'select_aspectPage/handle_aspect_data.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var aspectList = Provider.of<WheelData>(context);
+    //initialize aspects to DB
+    handle_aspect().initializeAspects(aspectList.data);
     return Scaffold(
       body: IntroductionScreen(
         pages: [

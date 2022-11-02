@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:motazen/pages/onboarding_page.dart';
+
 import '/data/data.dart';
 import '/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
-import 'pages/assesment_page/show.dart';
 import 'firebase_options.dart';
 
 Future main() async {
@@ -70,22 +71,10 @@ Future main() async {
   // ji.titel = "صحتي هي rgfd حياتي ";
   // ji.frequency = "3 times a day ";
   // iser.createHabit(ji);
-
   runApp(ChangeNotifierProvider<WheelData>(
       create: (_) => WheelData(),
-      child: MaterialApp(
+      child: const MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: AssessmentQuestionsList(iser: iser, fixedAspect: const [
-            'عائلتي و أصدقائي',
-            'صحتي',
-            'ذاتي',
-            'بيئتي',
-            'علاقاتي',
-            'مهنتي',
-            'متعتي',
-            'أموالي'
-          ], chosenAspect: const [
-            'Family and Friends',
-            'career'
-          ])))); // my widget // the one where i will create the quastion list .
+          home:
+              OnboardingPage()))); // my widget // the one where i will create the quastion list .
 }

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../pages/add_goal_page/get_chosen_aspect.dart';
+import '../pages/select_aspectPage/select_aspect.dart';
 import '/entities/aspect.dart';
 import '/isar_service.dart';
 import 'package:provider/provider.dart';
@@ -141,10 +142,9 @@ class _getAllAspectsState extends State<getAllAspects> {
               if (snapshot.connectionState == ConnectionState.done) {
                 aspectList.allAspects = snapshot.data!;
 
-                return getChosenAspect(
-                  iser: isar,
+                return AspectSelection(
+                  isr: isar,
                   aspects: aspectList.allAspects,
-                  page: 'Home',
                 );
               } else {
                 return const CircularProgressIndicator();

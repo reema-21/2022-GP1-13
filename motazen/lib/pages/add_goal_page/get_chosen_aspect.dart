@@ -33,7 +33,6 @@ class _showsState extends State<getChosenAspect> {
         child: FutureBuilder(
             future: handle_aspect().getSelectedAspects(),
             builder: ((context, snapshot) {
-              print('inside builder');
               if (snapshot.connectionState == ConnectionState.done) {
                 List<String> chosenAspectNames = [];
                 List<Aspect>? selectedAspects = snapshot.data;
@@ -48,10 +47,8 @@ class _showsState extends State<getChosenAspect> {
                 }
                 WheelData().copyAspectList(widget.aspects);
 
-                print('reached the getCAspect page');
                 switch (widget.page) {
                   case 'Home':
-                    print('inside case home');
                     return const Homepage();
                   case 'Goal':
                     return AddGoal(

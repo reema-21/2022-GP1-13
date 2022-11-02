@@ -1,5 +1,8 @@
-import '/widget/select_aspect.dart';
 import 'package:flutter/material.dart';
+import 'package:motazen/isar_service.dart';
+import 'package:provider/provider.dart';
+import '../../data/data.dart';
+import '../select_aspectPage/select_aspect.dart';
 import '/pages/login/login.dart';
 import '/theme.dart';
 import '/primary_button.dart';
@@ -10,6 +13,9 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isar = IsarService();
+    var aspectList = Provider.of<WheelData>(context);
+
     return Scaffold(
       body: Directionality(
         textDirection: TextDirection.rtl,
@@ -81,7 +87,10 @@ class SignUpScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const QuestionsPage(),
+                        builder: (context) => AspectSelection(
+                          isr: isar,
+                          aspects: aspectList.aspectsArabic,
+                        ),
                       ),
                     );
                   },
