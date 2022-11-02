@@ -154,11 +154,10 @@ class IsarService {
   }
   Future<Goal?> getSepecificGoall(int id ) async {
     final isar = await db;
-    Goal x = Goal();
-      isar.writeTxn(() async {
-       return await isar.goals..where().filter().idEqualTo(id).findFirstSync();
+      
+       return await isar.goals.where().filter().idEqualTo(id).findFirstSync();
 
-});
+
   }
 
 

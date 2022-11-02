@@ -29,7 +29,7 @@ Future main() async {
 
   iser.openIsar();
   Aspect career = Aspect();
-  career.name = "career";
+  career.name = "Health and Wellbeing";
   career.percentagePoints = 89;
   career.color = 0 ; 
   career.isSelected = false;

@@ -8,6 +8,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../entities/aspect.dart';
+import 'goal_habits_pages.dart';
 
 //alertof completion //tasks // getbeck to the list page // goal dependency 
 class goalDetails extends StatefulWidget {
@@ -91,7 +92,7 @@ int goalDuration= 0 ;
   String aspectnameInEnglish = "";
   Goal? goal = Goal();
   Addgoal() async {
-        goal = await widget.isr.getSepecificGoal(widget.id);
+        goal = await widget.isr.getSepecificGoall(widget.id);
 
     goal?.titel = _goalName;
     goal?.importance = importance;
@@ -104,6 +105,9 @@ goal?.dueDate = DateTime.utc(1989, 11, 9);
 goal?.DescriptiveGoalDuration=duration; 
 goal?.goalDuration; 
     widget.isr.UpdateGoal(goal!);
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+     return Goals_habit(iser: widget.isr);
+   }));
     
   
   }
@@ -423,17 +427,25 @@ goal?.goalDuration;
                 ),
               ),
             ]),
-            bottomSheet: TextButton(
-                child: const Text("حفظ التغييرات"),
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
+           bottomSheet:
+               ElevatedButton(
+                  child: const Text("حفظ التغييرات"),
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
 
 ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(content: Row(children: [Icon(Icons.thumb_up_sharp),SizedBox(width: 20),Expanded(child: Text("تم حفظ التغييرات بنجاح "),)],))
+  SnackBar(content: Row(children: [Icon(Icons.thumb_up_sharp),SizedBox(width: 20),Expanded(child: Text("تمت حفظ اتلغييرات"),)],))
 );
-                  }
-                })),
-      ),
+
+                      Addgoal();
+                    }
+                  })
+        )
+      )
     );
+      
+                  
+             
+    
   }
 }
