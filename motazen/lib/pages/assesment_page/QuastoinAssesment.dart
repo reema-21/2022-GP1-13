@@ -370,6 +370,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
       onPressed: isAllQuastionAnswerd
           ? () {
               Evaluate(widget.isr, allAspects);
+              print('finished button');
 //the nevigator is downs
             }
           : null,
@@ -386,6 +387,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
    * 3- if the arrays is null then the aspect is not choosed . 
    * 4- if the arrays hass value then sum and devide and save into the points collection .
    */
+    print('evaluate fun');
     double moneyAspectPoints = 0;
     double familyAndFriendsAspectPoints = 0;
     double healthAndWellbeingAspectPoints = 0;
@@ -502,11 +504,13 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     }
 //store the fetched chosen aspect from the user
     //delete the aspects you have create a new one with the values you have
-
-    getChosenAspect(
-      aspects: list,
-      iser: isar,
-      page: 'Home',
-    );
+    print('reached end of eval');
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return getChosenAspect(
+        aspects: list,
+        iser: isar,
+        page: 'Home',
+      );
+    }));
   }
 }

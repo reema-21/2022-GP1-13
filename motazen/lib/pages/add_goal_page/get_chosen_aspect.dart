@@ -33,6 +33,7 @@ class _showsState extends State<getChosenAspect> {
         child: FutureBuilder(
             future: handle_aspect().getSelectedAspects(),
             builder: ((context, snapshot) {
+              print('inside builder');
               if (snapshot.connectionState == ConnectionState.done) {
                 List<String> chosenAspectNames = [];
                 List<Aspect>? selectedAspects = snapshot.data;
@@ -46,13 +47,19 @@ class _showsState extends State<getChosenAspect> {
                   }
                 }
                 WheelData().copyAspectList(widget.aspects);
-                if (widget.page.contains('Home')) {
-                  return const Homepage();
-                } else {
-                  return AddGoal(
-                    isr: widget.iser,
-                    chosenAspectNames: chosenAspectNames,
-                  );
+
+                print('reached the getCAspect page');
+                switch (widget.page) {
+                  case 'Home':
+                    print('inside case home');
+                    return const Homepage();
+                  case 'Goal':
+                    return AddGoal(
+                      isr: widget.iser,
+                      chosenAspectNames: chosenAspectNames,
+                    );
+                  default:
+                    throw 'Error404: page not found';
                 }
               } else {
                 return const CircularProgressIndicator();
