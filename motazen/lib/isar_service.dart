@@ -147,7 +147,18 @@ class IsarService {
 
    Future<Goal?> getSepecificGoal(int id ) async {
     final isar = await db;
-    return await isar.goals.where().filter().idEqualTo(id).findFirst();
+     await isar.writeTxn(() async {
+         return  await isar.goals.get(id);
+
+});
+  }
+  Future<Goal?> getSepecificGoall(int id ) async {
+    final isar = await db;
+    Goal x = Goal();
+      isar.writeTxn(() async {
+       return await isar.goals..where().filter().idEqualTo(id).findFirstSync();
+
+});
   }
 
 
@@ -220,5 +231,15 @@ class IsarService {
     await isar.writeTxn(() async {
       await isar.habits.delete(habit.id);
     });
+  }
+
+  void UpdateGoal (Goal tem  ) async{
+    final isar = await db;
+    
+   await isar.writeTxn(() async {
+  await isar.goals.put(tem);
+});
+
+
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
+import 'package:motazen/goals_habits_tab/goal_edit.dart';
 import "package:motazen/isar_service.dart";
 import 'package:motazen/pages/homepage/homepage.dart';
 
@@ -162,7 +163,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
                         onTap:(){ // should return me to the page with add field 
                           Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const Homepage(); // must be the
+                          return EditGoal(isr: widget.isr,goalId: goal.id,); // must be the
                         }));
                         } ,
                   

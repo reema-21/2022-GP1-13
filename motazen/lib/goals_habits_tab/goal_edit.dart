@@ -27,7 +27,7 @@ class _EditGoalState extends State<EditGoal> {
   String goalImportanceDescription = "-";
   DateTime temGoalDataTime = DateTime.utc(1989, 11, 9);
   String dueDataDescription = "";
-  Goal? goal = Goal();
+  Goal? goal ;
   bool isLoading = false;
   bool weekisSelected = false;
   bool daysisSelected = false;
@@ -40,7 +40,9 @@ class _EditGoalState extends State<EditGoal> {
   }
 
   getGoalInformation() async {
-    goal = await widget.isr.getSepecificGoal(widget.goalId);
+    print(widget.goalId);
+    goal = await widget.isr.getSepecificGoall(widget.goalId);
+    print(goal);
 
     setState(() {
       displayGoalNameControlller.text = goal!.titel;
@@ -282,6 +284,7 @@ class _EditGoalState extends State<EditGoal> {
                         goalName: displayGoalNameControlller.text,
                         goalDuration: goalDuration,
                         weekisSelected: weekisSelected,
+                        id :widget.goalId,
                       ); ; // must be the
                     }));
                     

@@ -1,4 +1,5 @@
 import 'package:motazen/add_goal_page/add_goal_screen.dart';
+import 'package:motazen/entities/goal.dart';
 import 'package:motazen/goals_habits_tab/goal_details.dart';
 import 'package:motazen/isar_service.dart';
 
@@ -19,6 +20,7 @@ class getChosenAspectE extends StatefulWidget {
   final String dueDataDescription;
   final bool weekisSelected;
   final bool daysisSelected;
+  final int id;
   const getChosenAspectE({
     super.key,
     required this.isr,
@@ -32,7 +34,7 @@ class getChosenAspectE extends StatefulWidget {
     required this.temGoalDataTime,
     required this.dueDataDescription,
     required this.weekisSelected,
-    required this.daysisSelected,
+    required this.daysisSelected, required this.id,
   });
 
   @override
@@ -98,6 +100,7 @@ class _showsState extends State<getChosenAspectE> {
                   goalDurationDescription: widget.goalDurationDescription,
                   weekisSelected: widget.weekisSelected,
                   goalAspect: widget.goalAspect,
+                  id:widget.id,
                 );
               } else {
                 return const CircularProgressIndicator();

@@ -40,29 +40,29 @@ Future main() async {
 
   iser.createAspect(career);
 
-  Aspect health = Aspect();
-  health.name = "Health and Wellbeing";
-  health.percentagePoints = 99;
-  health.color = 0 ; 
-  health.isSelected = false;
-  health.iconFontFamily="sdf";
-  health.iconFontPackage="sfasdfa";
-  health.iconCodePoint=0;
-  health.iconDirection=false;
-  iser.createAspect(health);
+  // Aspect health = Aspect();
+  // health.name = "Health and Wellbeing";
+  // health.percentagePoints = 99;
+  // health.color = 0 ; 
+  // health.isSelected = false;
+  // health.iconFontFamily="sdf";
+  // health.iconFontPackage="sfasdfa";
+  // health.iconCodePoint=0;
+  // health.iconDirection=false;
+  // iser.createAspect(health);
 
-  Goal x = Goal();
-  Aspect? y = await iser.findSepecificAspect("career");
-  x.aspect.value = y;
-  x.dueDate = DateTime.utc(1989, 11, 9);
-  x.DescriptiveGoalDuration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
-  x.goalDuration = 0;
-  x.titel = "اركض ";
-  x.importance = 0;
-  x.goalDependency.value = x;
+  // Goal x = Goal();
+  // Aspect? y = await iser.findSepecificAspect("career");
+  // x.aspect.value = y;
+  // x.dueDate = DateTime.utc(1989, 11, 9);
+  // x.DescriptiveGoalDuration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
+  // x.goalDuration = 0;
+  // x.titel = "اركض ";
+  // x.importance = 0;
+  // x.goalDependency.value = x;
   
 
-  iser.createGoal(x);
+  // iser.createGoal(x);
 
   // Habit yi = Habit();
   // yi.aspect.value = y;
@@ -81,6 +81,6 @@ Future main() async {
       create: (_) => WheelData(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: EditGoal(isr: iser,goalId: 1,
+          home: getChosenAspect(iser: iser,
               )))); // my widget // the one where i will create the quastion list .
 }

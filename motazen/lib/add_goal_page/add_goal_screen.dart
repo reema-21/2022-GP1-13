@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
+import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
 import 'package:motazen/isar_service.dart';
 import '../assesment_page/alert_dialog.dart';
 import 'package:date_field/date_field.dart';
@@ -32,7 +33,7 @@ int goalDuration= 0 ;
   bool? _checkBox = false;
   bool? _ListtileCheckBox = false;
 
-  String? isSelected;
+  String? isSelected ;
   @override
   void initState() {
     importance = 0;
@@ -68,7 +69,9 @@ newgoal.dueDate = DateTime.utc(1989, 11, 9);
 newgoal.DescriptiveGoalDuration=duration; 
 newgoal.goalDuration=goalDuration; 
     widget.isr.createGoal(newgoal);
-    
+     Navigator.push(context, MaterialPageRoute(builder: (context) {
+     return Goals_habit(iser: widget.isr);
+   }));
   
   }
 
@@ -181,7 +184,6 @@ newgoal.goalDuration=goalDuration;
                           Icons.arrow_drop_down_circle,
                           color: const Color(0xFF66BF77),
                         ),
-                        isDense: true,
                         validator: (value) => value == null
                             ? 'من فضلك اختر جانب الحياة المناسب للهدف'
                             : null,
@@ -386,19 +388,20 @@ newgoal.goalDuration=goalDuration;
                 ),
               ),
             ]),
-            bottomSheet: TextButton(
-                child: const Text("إضافة"),
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
+            bottomSheet:
+               ElevatedButton(
+                  child: const Text("إضافة"),
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
 
 ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(content: Row(children: [Icon(Icons.thumb_down_sharp),SizedBox(width: 20),Expanded(child: Text("تمت اضافة الهدف "),)],))
+  SnackBar(content: Row(children: [Icon(Icons.thumb_up_sharp),SizedBox(width: 20),Expanded(child: Text("تمت اضافة الهدف "),)],))
 );
 
-                    _Addgoal();
-                  }
-                })),
-      ),
-    );
+                      _Addgoal();
+                    }
+                  }),
+            )),
+      );
   }
 }

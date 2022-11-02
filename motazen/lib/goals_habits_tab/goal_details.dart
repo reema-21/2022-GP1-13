@@ -23,8 +23,8 @@ class goalDetails extends StatefulWidget {
   final String dueDataDescription ;
   final bool weekisSelected ;
   final  bool daysisSelected ;
-
-   goalDetails({super.key, required this.isr, required this.goalName, required this.goalAspect, required this.importance, required this.goalDuration, required this.goalDurationDescription, required this.goalImportanceDescription, required this.temGoalDataTime, required this.dueDataDescription, required this.weekisSelected, required this.daysisSelected, this.chosenAspectNames,});
+final int id ;
+   goalDetails({super.key, required this.isr, required this.goalName, required this.goalAspect, required this.importance, required this.goalDuration, required this.goalDurationDescription, required this.goalImportanceDescription, required this.temGoalDataTime, required this.dueDataDescription, required this.weekisSelected, required this.daysisSelected, this.chosenAspectNames, required this.id,});
 
   @override
   State<goalDetails> createState() => _goalDetailsState();
@@ -89,6 +89,24 @@ int goalDuration= 0 ;
 
  
   String aspectnameInEnglish = "";
+  Goal? goal = Goal();
+  Addgoal() async {
+        goal = await widget.isr.getSepecificGoal(widget.id);
+
+    goal?.titel = _goalName;
+    goal?.importance = importance;
+    Aspect? selected =
+        await widget.isr.findSepecificAspect(aspectnameInEnglish);
+    goal?.aspect.value = selected;
+if (!isDataSelected){
+goal?.dueDate = DateTime.utc(1989, 11, 9);
+}
+goal?.DescriptiveGoalDuration=duration; 
+goal?.goalDuration; 
+    widget.isr.UpdateGoal(goal!);
+    
+  
+  }
   
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
