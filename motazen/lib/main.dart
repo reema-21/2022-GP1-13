@@ -31,17 +31,17 @@ Future main() async {
   IsarService iser = IsarService(); // inislize the local storage
 
   iser.openIsar();
-  // Aspect career = Aspect();
-  // career.name = "Health and Wellbeing";
-  // career.percentagePoints = 89;
-  // career.color = 0 ; 
-  // career.isSelected = false;
-  //   career .iconFontFamily="sdf";
-  //   career.iconFontPackage="jjj";
-  //     career.iconCodePoint=0;
-  // career.iconDirection=false;
+  Aspect career = Aspect();
+  career.name = "career";
+  career.percentagePoints = 89;
+  career.color = 0 ; 
+  career.isSelected = false;
+    career .iconFontFamily="sdf";
+    career.iconFontPackage="jjj";
+      career.iconCodePoint=0;
+  career.iconDirection=false;
 
-  // iser.createAspect(career);
+  iser.createAspect(career);
 
   // Aspect health = Aspect();
   // health.name = "Health and Wellbeing";

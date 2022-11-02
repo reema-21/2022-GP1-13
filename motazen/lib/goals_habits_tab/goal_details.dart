@@ -96,7 +96,7 @@ int goalDuration= 0 ;
   Addgoal() async {
         goal = await widget.isr.getSepecificGoall(widget.id);
 
-    goal?.titel = _goalName;
+    goal?.titel = _goalNmaeController.text;;
     goal?.importance = importance;
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);

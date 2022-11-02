@@ -34,7 +34,7 @@ class Goals_habitState extends State<Goals_habit> {
               actions:  [
             IconButton(
                 // ignore: prefer_const_constructors
-                icon: Icon(Icons.plus_one,
+                icon: Icon(Icons.add,
                     color: const Color.fromARGB(255, 245, 241, 241)),
                 onPressed: () async {
                   final action = await AlertDialogs.yesCancelDialog(
@@ -51,7 +51,7 @@ class Goals_habitState extends State<Goals_habit> {
                 }),
           ],
               backgroundColor: Colors.white,
-              iconTheme: const IconThemeData(color: Colors.black),
+              
               elevation: 0.0,
               bottom: const TabBar(
                   isScrollable: true,
