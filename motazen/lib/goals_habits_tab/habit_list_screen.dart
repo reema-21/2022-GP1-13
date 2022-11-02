@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:motazen/add_habit_page/get_chosed_aspect.dart';
 import 'package:motazen/entities/habit.dart';
+import 'package:motazen/goals_habits_tab/habit_edit.dart';
 import"package:motazen/isar_service.dart";
 
 import '../assesment_page/alert_dialog.dart';
@@ -163,7 +164,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                       onTap:(){ // should return me to the page with add field 
                         Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return const Homepage(); // must be the
+                        return EditHbit(isr: widget.isr, HabitId: habit.id); // must be the
                       }));
                       } ,
 

@@ -31,28 +31,28 @@ Future main() async {
   IsarService iser = IsarService(); // inislize the local storage
 
   iser.openIsar();
-  Aspect career = Aspect();
-  career.name = "Health and Wellbeing";
-  career.percentagePoints = 89;
-  career.color = 0 ; 
-  career.isSelected = false;
-    career .iconFontFamily="sdf";
-    career.iconFontPackage="jjj";
-      career.iconCodePoint=0;
-  career.iconDirection=false;
+  // Aspect career = Aspect();
+  // career.name = "Health and Wellbeing";
+  // career.percentagePoints = 89;
+  // career.color = 0 ; 
+  // career.isSelected = false;
+  //   career .iconFontFamily="sdf";
+  //   career.iconFontPackage="jjj";
+  //     career.iconCodePoint=0;
+  // career.iconDirection=false;
 
-  iser.createAspect(career);
+  // iser.createAspect(career);
 
-  // Aspect health = Aspect();
-  // health.name = "Health and Wellbeing";
-  // health.percentagePoints = 99;
-  // health.color = 0 ; 
-  // health.isSelected = false;
-  // health.iconFontFamily="sdf";
-  // health.iconFontPackage="sfasdfa";
-  // health.iconCodePoint=0;
-  // health.iconDirection=false;
-  // iser.createAspect(health);
+  Aspect health = Aspect();
+  health.name = "Health and Wellbeing";
+  health.percentagePoints = 99;
+  health.color = 0 ; 
+  health.isSelected = false;
+  health.iconFontFamily="sdf";
+  health.iconFontPackage="sfasdfa";
+  health.iconCodePoint=0;
+  health.iconDirection=false;
+  iser.createAspect(health);
 
   // Goal x = Goal();
   // Aspect? y = await iser.findSepecificAspect("career");
@@ -84,6 +84,6 @@ Future main() async {
       create: (_) => WheelData(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home:getChosenAspectH(iser: iser, 
+          home:Goals_habit(iser: iser, 
               )))); // my widget // the one where i will create the quastion list .
 }

@@ -124,7 +124,7 @@ goal?.goalDuration;
             appBar: AppBar(
               backgroundColor: const Color(0xFF66BF77),
               title: const Text(
-                "إضافة هدف جديد",
+                "تعديل معلومات الهدف",
                 style: TextStyle(color: Colors.white),
               ),
               actions: [
@@ -135,10 +135,9 @@ goal?.goalDuration;
                       final action = await AlertDialogs.yesCancelDialog(
                           context,
                           ' هل انت متاكد من الرجوع ',
-                          'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
+                          'بالنقر على "تاكيد"لن يتم حفظ اي تغييرات قمت بها ');
                       if (action == DialogsAction.yes) {
-                        //return to the previouse page different code for the ios .
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
+                         Navigator.push(context, MaterialPageRoute(builder: (context) {return Goals_habit(iser: widget.isr);}));
                       } else {}
                     }),
               ],

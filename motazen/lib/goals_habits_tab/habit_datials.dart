@@ -5,27 +5,31 @@ import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
 import 'package:motazen/isar_service.dart';
 import '../assesment_page/alert_dialog.dart';
 
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 
 import '../entities/aspect.dart';
-import '../entities/task.dart';
+
 //TODO
 //alertof completion //tasks // getbeck to the list page // goal dependency 
-class AddHabit extends StatefulWidget {
+class HabitDetails extends StatefulWidget {
   final IsarService isr;
   final List<String>? chosenAspectNames;
-  const AddHabit({super.key, required this.isr, this.chosenAspectNames});
+   final String  HabitName;
+    final String  habitFrequency;
+     final String  habitAspect;
+     final int  id;
+
+  const HabitDetails({super.key, required this.isr, this.chosenAspectNames, required this.HabitName, required this.habitFrequency, required this.habitAspect, required this.id});
 
   @override
-  State<AddHabit> createState() => _AddHabitState();
+  State<HabitDetails> createState() => _AddHabitState();
 }
 
-class _AddHabitState extends State<AddHabit> {
+class _AddHabitState extends State<HabitDetails> {
   final formKey = GlobalKey<FormState>();
   late String _habitName;
   late String _habitFrequecy;
-  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+  
   final _goalNmaeController = TextEditingController();
   final _habitFrequencyController = TextEditingController();
 
@@ -33,9 +37,19 @@ class _AddHabitState extends State<AddHabit> {
   String? isSelected ;
   @override
   void initState() {
+
     super.initState();
-    _goalNmaeController.addListener(_updateText);
-    _habitFrequencyController.addListener(_updateText);
+   _goalNmaeController.text = widget.HabitName;
+                 _habitName = _goalNmaeController.text;
+
+  _habitFrequencyController.text = widget.habitFrequency;
+  _habitFrequecy=_habitFrequencyController.text;
+  for (int i = 0 ; i<widget.chosenAspectNames!.length ; i++){
+      String name =widget.chosenAspectNames![i];
+      if (name.contains(widget.habitAspect)){
+    isSelected = widget.chosenAspectNames![i] ; 
+  }
+  }
   }
 
   void _updateText() {
@@ -45,21 +59,23 @@ class _AddHabitState extends State<AddHabit> {
     });
   }
 
-
-  Habit newhabit = Habit();
-  String aspectnameInEnglish = "";
+String aspectnameInEnglish = "";
+  Habit? habit = Habit();
   _AddHabit() async {
-    newhabit.titel = _habitName;
-    newhabit.frequency = _habitFrequecy;
+   
+   habit = await widget.isr.getSepecificHabit(widget.id);
+
+    habit?.titel = _goalNmaeController.text;
+    habit?.frequency = _habitFrequencyController.text;
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
-    newhabit.aspect.value = selected;
-
-    widget.isr.createHabit(newhabit);
-     Navigator.push(context, MaterialPageRoute(builder: (context) {
+    habit?.aspect.value = selected;
+ 
+    widget.isr.UpdateHabit(habit!);
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
      return Goals_habit(iser: widget.isr);
    }));
-  
+    
   }
 
   Widget build(BuildContext context) {
@@ -68,11 +84,10 @@ class _AddHabitState extends State<AddHabit> {
       home: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-            key: _scaffoldkey,
             appBar: AppBar(
               backgroundColor: const Color(0xFF66BF77),
               title: const Text(
-                "إضافة عادة جديدة",
+                "تعديل معلومات العادة",
                 style: TextStyle(color: Colors.white),
               ),
               actions: [
@@ -83,7 +98,7 @@ class _AddHabitState extends State<AddHabit> {
                       final action = await AlertDialogs.yesCancelDialog(
                           context,
                           ' هل انت متاكد من الرجوع ',
-                          'بالنقر على "تاكيد"لن يتم حفظ معلومات العادة  ');
+                          'بالنقر على "تاكيد"لن يتم حفظ التغييرات التي قمت بها');
                       if (action == DialogsAction.yes) {
                          Navigator.push(context, MaterialPageRoute(builder: (context) {return Goals_habit(iser: widget.isr,);}));
                       } else {}
@@ -220,12 +235,12 @@ class _AddHabitState extends State<AddHabit> {
             ]),
             bottomSheet:
                ElevatedButton(
-                  child: const Text("إضافة"),
+                  child: const Text("تعديل"),
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
 
 ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(content: Row(children: [Icon(Icons.thumb_up_sharp),SizedBox(width: 20),Expanded(child: Text("تمت اضافة العادة بنجاح  "),)],))
+  SnackBar(content: Row(children: [Icon(Icons.thumb_up_sharp),SizedBox(width: 20),Expanded(child: Text("تم حفظ التغييرات بنجاح "),)],))
 );
 
  _AddHabit();                    }

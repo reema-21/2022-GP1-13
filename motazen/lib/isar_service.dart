@@ -179,6 +179,14 @@ class IsarService {
 
 
   }
+   Future<Habit?> getSepecificHabit(int id ) async {
+    final isar = await db;
+      
+       return await isar.habits.where().filter().idEqualTo(id).findFirstSync();
+
+
+  }
+
 
 
   //updates the value of isSelected to true
@@ -257,6 +265,15 @@ class IsarService {
     
    await isar.writeTxn(() async {
   await isar.goals.put(tem);
+});
+
+
+  }
+   void UpdateHabit (Habit tem  ) async{
+    final isar = await db;
+    
+   await isar.writeTxn(() async {
+  await isar.habits.put(tem);
 });
 
 
