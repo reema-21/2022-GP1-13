@@ -11,6 +11,8 @@ import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:motazen/pages/homepage/homepage.dart';
+import 'package:motazen/select_aspectPage/select_aspect.dart';
 import 'package:provider/provider.dart';
 
 import 'add_goal_page/add_goal_screen.dart';
@@ -34,7 +36,7 @@ Future main() async {
   // Aspect career = Aspect();
   // career.name = "Health and Wellbeing";
   // career.percentagePoints = 89;
-  // career.color = 0 ; 
+  // career.color = 0 ;
   // career.isSelected = false;
   //   career .iconFontFamily="sdf";
   //   career.iconFontPackage="jjj";
@@ -46,12 +48,12 @@ Future main() async {
   Aspect health = Aspect();
   health.name = "Health and Wellbeing";
   health.percentagePoints = 99;
-  health.color = 0 ; 
+  health.color = 0;
   health.isSelected = false;
-  health.iconFontFamily="sdf";
-  health.iconFontPackage="sfasdfa";
-  health.iconCodePoint=0;
-  health.iconDirection=false;
+  health.iconFontFamily = "sdf";
+  health.iconFontPackage = "sfasdfa";
+  health.iconCodePoint = 0;
+  health.iconDirection = false;
   iser.createAspect(health);
 
   // Goal x = Goal();
@@ -63,7 +65,6 @@ Future main() async {
   // x.titel = "اركض ";
   // x.importance = 0;
   // x.goalDependency.value = x;
-  
 
   // iser.createGoal(x);
 
@@ -84,6 +85,17 @@ Future main() async {
       create: (_) => WheelData(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home:Goals_habit(iser: iser, 
-              )))); // my widget // the one where i will create the quastion list .
+          home: AssessmentQuestionsList(iser: iser, fixedAspect: const [
+            'عائلتي و أصدقائي',
+            'صحتي',
+            'ذاتي',
+            'بيئتي',
+            'علاقاتي',
+            'مهنتي',
+            'متعتي',
+            'أموالي'
+          ], chosenAspect: const [
+            'Family and Friends',
+            'career'
+          ])))); // my widget // the one where i will create the quastion list .
 }

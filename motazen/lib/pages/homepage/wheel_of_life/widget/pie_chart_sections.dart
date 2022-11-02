@@ -1,20 +1,22 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '/data/models.dart';
+import 'package:motazen/entities/aspect.dart';
 
-
-  List<PieChartSectionData> getSections(int touchedIndex, List<Data> data) =>
+class PieChartSections {
+  List<PieChartSectionData> getSections(int touchedIndex, List<Aspect>? data) =>
       // if not worikng check the old one an d start over form there
-      data
+      data!
           .asMap()
           .map<int, PieChartSectionData>((index, data) {
-            double points = data.points;
+            double points = data.percentagePoints;
 
             final isTouched = index == touchedIndex;
-            if (isTouched) {}
+            if (isTouched) {
+              //add code to move to info page
+            }
 
             final value = PieChartSectionData(
-              color: Color(data.color),
+              color: Color(data.color).withOpacity(1),
               value: 22.5,
               title: '',
               radius: points,
@@ -24,4 +26,4 @@ import '/data/models.dart';
           })
           .values
           .toList();
-
+}

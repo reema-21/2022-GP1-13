@@ -6,12 +6,13 @@ import '../assesment_page/alert_dialog.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import"add_task.dart";
+import "add_task.dart";
 
 import '../entities/aspect.dart';
 import '../entities/task.dart';
+
 //TODO
-//alertof completion //tasks // getbeck to the list page // goal dependency 
+//alertof completion //tasks // getbeck to the list page // goal dependency
 class AddGoal extends StatefulWidget {
   final IsarService isr;
   final List<String>? chosenAspectNames;
@@ -25,7 +26,7 @@ class _AddGoalState extends State<AddGoal> {
   final formKey = GlobalKey<FormState>();
   late String _goalName;
   DateTime? selectedDate;
-int goalDuration= 0 ; 
+  int goalDuration = 0;
   String duration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
   int importance = 0;
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
@@ -35,14 +36,14 @@ int goalDuration= 0 ;
   bool? _checkBox = false;
   bool? _ListtileCheckBox = false;
 
-  String? isSelected ;
+  String? isSelected;
   @override
   void initState() {
     importance = 0;
     super.initState();
     _goalNmaeController.addListener(_updateText);
     _dueDateController.addListener(_updateText);
-  } 
+  }
 
   void _updateText() {
     setState(() {
@@ -73,24 +74,23 @@ int goalDuration= 0 ;
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
     newgoal.aspect.value = selected;
-if (!isDataSelected){
-newgoal.dueDate = DateTime.utc(1989, 11, 9);
-}
-newgoal.DescriptiveGoalDuration=duration; 
-newgoal.goalDuration=goalDuration; 
+    if (!isDataSelected) {
+      newgoal.dueDate = DateTime.utc(1989, 11, 9);
+    }
+    newgoal.DescriptiveGoalDuration = duration;
+    newgoal.goalDuration = goalDuration;
     widget.isr.createGoal(newgoal);
-     Navigator.push(context, MaterialPageRoute(builder: (context) {
-     return Goals_habit(iser: widget.isr);
-   }));
-  
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Goals_habit(iser: widget.isr);
+    }));
   }
 
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
     return MaterialApp(
       home: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Scaffold(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
             key: _scaffoldkey,
             appBar: AppBar(
               backgroundColor: const Color(0xFF66BF77),
@@ -108,7 +108,12 @@ newgoal.goalDuration=goalDuration;
                           ' هل انت متاكد من الرجوع ',
                           'بالنقر على "تاكيد"لن يتم حفظ معلومات الهدف  ');
                       if (action == DialogsAction.yes) {
-                         Navigator.push(context, MaterialPageRoute(builder: (context) {return Goals_habit(iser: widget.isr,);}));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Goals_habit(
+                            iser: widget.isr,
+                          );
+                        }));
                       } else {}
                     }),
               ],
@@ -128,7 +133,7 @@ newgoal.goalDuration=goalDuration;
                             return "من فضلك ادخل اسم الهدف";
                           // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
                           //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
-                          // } 
+                          // }
                           else {
                             print("hi");
                             return null;
@@ -231,7 +236,6 @@ newgoal.goalDuration=goalDuration;
                           selectedDate = value;
                           newgoal.dueDate = value;
                           isDataSelected = true;
-
                         },
                       ),
                       SizedBox(
@@ -239,7 +243,10 @@ newgoal.goalDuration=goalDuration;
                       ),
                       Row(
                         children: [
-                          Text("الفترة  :",style: TextStyle(color: Colors.black38),),
+                          Text(
+                            "الفترة  :",
+                            style: TextStyle(color: Colors.black38),
+                          ),
                           SizedBox(
                             width: 5,
                           ),
@@ -279,7 +286,7 @@ newgoal.goalDuration=goalDuration;
                                             .inDays +
                                         1;
                                     duration = durationInNumber.toString();
-                                    goalDuration=durationInNumber;
+                                    goalDuration = durationInNumber;
                                     _ListtileCheckBox = false;
                                   }
                                 });
@@ -307,7 +314,7 @@ newgoal.goalDuration=goalDuration;
                                             .difference(DateTime.now())
                                             .inDays +
                                         1;
-                                    goalDuration=durationInNumber;
+                                    goalDuration = durationInNumber;
 
                                     double numberOfWork =
                                         (durationInNumber / 7);
@@ -474,20 +481,25 @@ newgoal.goalDuration=goalDuration;
                 ),
               ),
             ]),
-            bottomSheet:
-               ElevatedButton(
-                  child: const Text("إضافة"),
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
+            bottomSheet: ElevatedButton(
+                child: const Text("إضافة"),
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Row(
+                      children: [
+                        Icon(Icons.thumb_up_sharp),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: Text("تمت اضافة الهدف "),
+                        )
+                      ],
+                    )));
 
-ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(content: Row(children: [Icon(Icons.thumb_up_sharp),SizedBox(width: 20),Expanded(child: Text("تمت اضافة الهدف "),)],))
-);
-
-                      _Addgoal();
-                    }
-                  }),
-            )),
-      );
+                    _Addgoal();
+                  }
+                }),
+          )),
+    );
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:motazen/goals_habits_tab/goal_habits_add.dart';
@@ -7,7 +9,6 @@ import '../Sidebar_and_navigation/navigation-bar.dart';
 import '../add_goal_page/get_chosen_aspect.dart';
 import 'habit_list_screen.dart';
 
-// ignore: camel_case_types
 class Goals_habit extends StatefulWidget {
   final IsarService iser;
 
@@ -27,16 +28,17 @@ class Goals_habitState extends State<Goals_habit> {
         child: SafeArea(
           child: Scaffold(
             appBar: AppBar(
-          
-              actions: [GestureDetector(
+              actions: [
+                GestureDetector(
                   child: const Icon(Icons.add, color: Colors.black12, size: 30),
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return  Goals_habit_add(iser: widget.iser); // must be the
+                      return Goals_habit_add(iser: widget.iser); // must be the
                     }));
                   },
-                )],
+                )
+              ],
               backgroundColor: Colors.white,
               iconTheme: const IconThemeData(color: Colors.black),
               elevation: 0.0,

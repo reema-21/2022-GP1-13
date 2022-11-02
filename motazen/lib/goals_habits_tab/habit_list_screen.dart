@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:motazen/add_habit_page/get_chosed_aspect.dart';
 import 'package:motazen/entities/habit.dart';
 import 'package:motazen/goals_habits_tab/habit_edit.dart';
-import"package:motazen/isar_service.dart";
+import "package:motazen/isar_service.dart";
 
 import '../assesment_page/alert_dialog.dart';
 import '../pages/homepage/homepage.dart';
@@ -16,85 +16,80 @@ class HabitListScreen extends StatefulWidget {
 }
 
 class _HabitListScreenState extends State<HabitListScreen> {
-  
-  
- Icon chooseIcon(String ? x ){
-  Icon rightIcon = const Icon(Icons.abc ); 
-  switch (x) {
-        //Must include all the aspect characters and specify an icon for that
-        case "Health and Wellbeing":
-          {
-            // statements;
-            rightIcon=const Icon(Icons.spa, color: Color(0xFFffd400));
-          }
-          break;
+  Icon chooseIcon(String? x) {
+    Icon rightIcon = const Icon(Icons.abc);
+    switch (x) {
+      //Must include all the aspect characters and specify an icon for that
+      case "Health and Wellbeing":
+        {
+          // statements;
+          rightIcon = const Icon(Icons.spa, color: Color(0xFFffd400));
+        }
+        break;
 
-        case "career":
-          {
-            //statements;
-            rightIcon=const Icon(Icons.work, color: Color(0xff0065A3));
-          }
-          break;
-        case "Family and Friends":
-          {
-            //statements;
-            rightIcon=const Icon(Icons.person, color: Color(0xFFff9100));
-          }
-          break;
-      
-        case "Significant Other":
-          {
-            //statements;
-            rightIcon=const Icon(
-              Icons.favorite,
-              color: Color(0xffff4949),
-            );
-          }
-          break;
-        case "Physical Environment":
-          {
-            //statements;
-            rightIcon=const Icon(
-              Icons.home,
-              color: Color(0xFF9E19F0),
-            );
-          }
-          break;
-        case "money and finances":
-          {
-            //statements;
-            rightIcon=const Icon(
-              Icons.attach_money,
-              color: Color(0xff54e360),
-            );
-          }
-          break;
-        case "Personal Growth":
-          {
-            //statements;
-           rightIcon=const Icon(
-              Icons.psychology,
-              color: Color(0xFF2CDDCB),
-            );
-          }
-          break;
-        case "Fun and Recreation":
-          {
-            //statements;
-            rightIcon=const Icon(
-              Icons.games,
-              color: Color(0xff008adf),
-            );
-          }
-          break;
-      }
-    
+      case "career":
+        {
+          //statements;
+          rightIcon = const Icon(Icons.work, color: Color(0xff0065A3));
+        }
+        break;
+      case "Family and Friends":
+        {
+          //statements;
+          rightIcon = const Icon(Icons.person, color: Color(0xFFff9100));
+        }
+        break;
+
+      case "Significant Other":
+        {
+          //statements;
+          rightIcon = const Icon(
+            Icons.favorite,
+            color: Color(0xffff4949),
+          );
+        }
+        break;
+      case "Physical Environment":
+        {
+          //statements;
+          rightIcon = const Icon(
+            Icons.home,
+            color: Color(0xFF9E19F0),
+          );
+        }
+        break;
+      case "money and finances":
+        {
+          //statements;
+          rightIcon = const Icon(
+            Icons.attach_money,
+            color: Color(0xff54e360),
+          );
+        }
+        break;
+      case "Personal Growth":
+        {
+          //statements;
+          rightIcon = const Icon(
+            Icons.psychology,
+            color: Color(0xFF2CDDCB),
+          );
+        }
+        break;
+      case "Fun and Recreation":
+        {
+          //statements;
+          rightIcon = const Icon(
+            Icons.games,
+            color: Color(0xff008adf),
+          );
+        }
+        break;
+    }
 
     return rightIcon;
   }
 
- 
- 
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -117,7 +112,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return  getChosenAspectH(iser: widget.isr );// must be the
+                      return getChosenAspectH(iser: widget.isr); // must be the
                     }));
                   },
                 )
@@ -125,51 +120,52 @@ class _HabitListScreenState extends State<HabitListScreen> {
             )); // here add a plust button to add
           }
           return ListView.builder(
-            
               itemCount: habits.length,
               itemBuilder: (context, index) {
                 final habit = habits[index];
                 final startData = habits[index].frequency;
-                final aspectName = habit.aspect.value?.name ;
+                final aspectName = habit.aspect.value?.name;
                 return Container(
-                  decoration:BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                  margin: const EdgeInsets.only(bottom:4),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                  margin: const EdgeInsets.only(bottom: 4),
                   child: Card(
                     elevation: 3,
                     // here is the code of each item you have
                     child: ListTile(
-                      
-                      trailing:TextButton(child: const Icon(Icons.delete ), onPressed: () async {
-                        final action = await AlertDialogs.yesCancelDialog(
-                      context,
-                      ' هل انت متاكد من حذف هذه العادة  ',
-                      'بالنقر على تأكيد لن تتمكن من استرجاع تلك العادة ');
-                  if (action == DialogsAction.yes) {
-                    widget.isr.deleteHabit(habit);
-                  } else {}
-
-
-
-
-
-                      },),
-                      tileColor: (index % 2 == 0) ? Colors.white :  const Color.fromARGB(33, 102, 191, 118),
-               leading: chooseIcon(aspectName),
-                      subtitle: Text("Frequency : $startData"), // if not null added 
+                      trailing: TextButton(
+                        child: const Icon(Icons.delete),
+                        onPressed: () async {
+                          final action = await AlertDialogs.yesCancelDialog(
+                              context,
+                              ' هل انت متاكد من حذف هذه العادة  ',
+                              'بالنقر على تأكيد لن تتمكن من استرجاع تلك العادة ');
+                          if (action == DialogsAction.yes) {
+                            widget.isr.deleteHabit(habit);
+                          } else {}
+                        },
+                      ),
+                      tileColor: (index % 2 == 0)
+                          ? Colors.white
+                          : const Color.fromARGB(33, 102, 191, 118),
+                      leading: chooseIcon(aspectName),
+                      subtitle:
+                          Text("Frequency : $startData"), // if not null added
                       title: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Text(habit.titel),
                       ),
-                      contentPadding: EdgeInsets.all(7),
-                      onTap:(){ // should return me to the page with add field 
+                      contentPadding: const EdgeInsets.all(7),
+                      onTap: () {
+                        // should return me to the page with add field
                         Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return EditHbit(isr: widget.isr, HabitId: habit.id); // must be the
-                      }));
-                      } ,
-
-                      ),
-                      
+                            MaterialPageRoute(builder: (context) {
+                          return EditHbit(
+                              isr: widget.isr,
+                              HabitId: habit.id); // must be the
+                        }));
+                      },
+                    ),
                   ),
                 );
               });
@@ -179,12 +175,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
           );
         }
       },
-    )
-    );
-
-
-}
-
-
-
+    ));
+  }
 }

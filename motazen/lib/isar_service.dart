@@ -53,8 +53,6 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.aspects.putSync(newAspect));
   }
 
-  
-
   /// ******************** */
   //we are listiening for data not just getting //
   Stream<List<Goal>> getAllGoals() async* {
@@ -85,8 +83,6 @@ class IsarService {
     final isar = await db;
     return isar.aspects.where().findAll();
   }
-
-  
 
   Future<Map<String, double>> getpointsAspects(List<Aspect> aspects) async {
     //get a list of aspect/points
@@ -232,7 +228,7 @@ class IsarService {
 //Delete //
   Future<void> cleanAspects() async {
     final isar = await db;
-    await isar.aspects.clear();
+    await isar.writeTxnSync(() => isar.aspects.clear());
   }
 
   void deleteAllAspects(List<dynamic>? aspectsChosen) async {

@@ -4,13 +4,14 @@ import 'package:motazen/isar_service.dart';
 import '../data/models.dart';
 
 class handle_aspect {
-  late IsarService isar;
+  final IsarService isar = IsarService();
 
 //initialize all aspects in local storage
-  void initializeAspects(List<Data> list) {
-    isar.cleanAspects();
-    final newAspect = Aspect();
-    for (var i = 0; i < list.length + 1; i++) {
+  Future<void> initializeAspects(List<Data> list) async {
+    // await isar.cleanAspects();
+
+    for (var i = 0; i < list.length; i++) {
+      var newAspect = Aspect();
       newAspect
         ..name = list[i].name
         ..isSelected = false
@@ -20,14 +21,14 @@ class handle_aspect {
         ..iconFontFamily = list[i].icon.fontFamily
         ..iconFontPackage = list[i].icon.fontPackage
         ..iconDirection = list[i].icon.matchTextDirection;
+      await isar.createAspect(newAspect);
     }
-    isar.createAspect(newAspect);
   }
 
   //update aspect status
-  void updateStatus(String name) {
+  Future<void> updateStatus(String name) async {
     //check status
-    bool status = isar.checkSelectionStatus(name) as bool;
+    bool status = await isar.checkSelectionStatus(name);
     switch (status) {
       case false:
         isar.selectAspect(name);
@@ -39,22 +40,28 @@ class handle_aspect {
   }
 
   //return aspect color
-  Color getAspectColor(String name) {
-    bool aspectStatus = isar.checkSelectionStatus(name) as bool;
-    int aspectColor = isar.getAspectColor(name) as int;
+  Future<Color> getAspectColor(String name) async {
+    bool aspectStatus = await isar.checkSelectionStatus(name);
+    int? aspectColor = await isar.getAspectColor(name);
 
     if (aspectStatus) {
       //for selected aspects
-      return Color(aspectColor).withOpacity(1);
+      return Color(aspectColor!).withOpacity(1);
     } else {
       // for deselected aspects
-      return Color(aspectColor).withOpacity(0.18);
+      return Color(aspectColor!).withOpacity(0.18);
     }
   }
 
 //return a list of all selected aspects
-  List<Aspect> getSelectedAspects() {
-    List<Aspect> selectedList = isar.getSelectedAspects() as List<Aspect>;
+  Future<List<Aspect>> getSelectedAspects() async {
+    List<Aspect> selectedList = await isar.getSelectedAspects();
+    return selectedList;
+  }
+
+  //return a list of all selected aspects
+  Future<List<Aspect>> getAspects() async {
+    List<Aspect> selectedList = await isar.getAspectFirstTime();
     return selectedList;
   }
 }

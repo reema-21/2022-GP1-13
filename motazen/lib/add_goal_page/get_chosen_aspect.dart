@@ -4,14 +4,20 @@ import 'package:motazen/add_goal_page/add_goal_screen.dart';
 import 'package:motazen/isar_service.dart';
 
 import 'package:flutter/material.dart';
+import 'package:motazen/pages/homepage/homepage.dart';
+import 'package:motazen/select_aspectPage/handle_aspect_data.dart';
+import 'package:provider/provider.dart';
 
+import '../data/data.dart';
 import '../entities/aspect.dart';
 
 class getChosenAspect extends StatefulWidget {
   final IsarService iser;
+  final List<Aspect>? aspects;
   const getChosenAspect({
     super.key,
     required this.iser,
+    required this.aspects,
   });
 
   @override
@@ -24,50 +30,27 @@ class _showsState extends State<getChosenAspect> {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-            future: widget.iser.getchoseAspect(),
+            future: handle_aspect().getSelectedAspects(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                List? aspects = snapshot.data;
-                List<String> chosenAspectNames =[];
-                for (int i = 0 ; i<aspects!.length ; i++ ){
-                  Aspect x = aspects[i];
-                  String nameInArabic ="";
-                  switch(x.name){
-        case "money and finances":
-          nameInArabic ="أموالي";
-          break;
-        case "Fun and Recreation":
-         nameInArabic ="متعتي";
-          break;
-        case "career":
-          nameInArabic ="مهنتي";
-          break;
-        case "Significant Other":
-         nameInArabic ="علاقاتي";
-          break;
-        case "Physical Environment":
-         nameInArabic ="بيئتي";
-          break;
-        case "Personal Growth":
-          nameInArabic ="ذاتي";
-          break;
-
-        case "Health and Wellbeing":
-        nameInArabic ="صحتي";
-          break;
-        case "Family and Friends":
-         nameInArabic ="عائلتي وأصدقائي";
-          break;
-      }
-                  
-                  chosenAspectNames.add(nameInArabic);
-                
+                List<String> chosenAspectNames = [];
+                List<Aspect>? selectedAspects = snapshot.data;
+                for (int i = 0; i < selectedAspects!.length; i++) {
+                  chosenAspectNames.add(selectedAspects[i].name);
+                  for (int j = 0; j < widget.aspects!.length; j++) {
+                    if (widget.aspects![j].name == selectedAspects[i].name) {
+                      widget.aspects![j].percentagePoints =
+                          selectedAspects[i].percentagePoints;
+                    }
+                  }
                 }
-                print(chosenAspectNames);
-                return AddGoal(
-                    isr: widget.iser,
-                    chosenAspectNames:chosenAspectNames,
-                    );
+                WheelData().copyAspectList(widget.aspects);
+
+                return Homepage();
+                // return AddGoal(
+                //   isr: widget.iser,
+                //   chosenAspectNames: chosenAspectNames,
+                // );
               } else {
                 return const CircularProgressIndicator();
               }

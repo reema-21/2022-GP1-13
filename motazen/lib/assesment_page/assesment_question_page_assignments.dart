@@ -1,6 +1,7 @@
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:motazen/select_aspectPage/handle_aspect_data.dart';
 
 class AssessmentQuestions {
   IsarService iser = IsarService();
@@ -24,13 +25,13 @@ class AssessmentQuestions {
     }
     return allAspects;
   }
-  
 
   Future<List<dynamic>> createQuestionList() async {
     List<Aspect> tempAspect =
         []; //store the fetched chosen aspect from the user
     List<dynamic> tempQuestionList = []; //temporary store one aspect quastion
-    tempAspect = await iser.getAspectFirstTime(); //fetch the chosen aspect
+    tempAspect =
+        await handle_aspect().getSelectedAspects(); //fetch the chosen aspect
     List<dynamic> quastionsList = []; //the list of all chosen aspect quastion
     int countr = 0; //to fill in the answer list
     int endpoint = 0; // to know where to stop in creating the answers list ;
@@ -52,12 +53,11 @@ class AssessmentQuestions {
           for (countr;
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
-                if (AssessmentQuestions.answers[countr] == null) {
-                  AssessmentQuestions.answers[countr] = "0M";
-                } else {
-                  AssessmentQuestions.answers[countr++] = "0M";
-                }
-
+            if (AssessmentQuestions.answers[countr] == null) {
+              AssessmentQuestions.answers[countr] = "0M";
+            } else {
+              AssessmentQuestions.answers[countr++] = "0M";
+            }
           }
 
           endpoint = countr;
@@ -181,8 +181,8 @@ class AssessmentQuestions {
               countr <= tempQuestionList.length - 1 + endpoint;
               countr++) {
             AssessmentQuestions.answers[countr] = "0F";
-              }
-              endpoint = countr;
+          }
+          endpoint = countr;
 
           break;
       }

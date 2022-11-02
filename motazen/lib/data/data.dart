@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:motazen/add_goal_page/get_chosen_aspect.dart';
+import 'package:motazen/entities/aspect.dart';
+import 'package:motazen/isar_service.dart';
+import 'package:provider/provider.dart';
+import '../select_aspectPage/handle_aspect_data.dart';
 import 'models.dart';
 
 /// Fake data used to demo the application.
@@ -77,19 +82,72 @@ class WheelData with ChangeNotifier {
         color: 4283753312,
         icon: Icons.attach_money),
   ];
+  final List<String> aspectsArabic = [
+    'عائلتي و أصدقائي',
+    'صحتي',
+    'ذاتي',
+    'بيئتي',
+    'علاقاتي',
+    'مهنتي',
+    'متعتي',
+    'أموالي'
+  ];
 
-  Future<void> copyList(List<Data> list) async {
+  List<Aspect> selected = [];
+  List<Aspect>? listWPoints = [];
+
+  Future<void> copyDataList(List<Data> list) async {
     data = await list;
     notifyListeners();
   }
 
+  Future<void> copyAspectList(List<Aspect>? list) async {
+    listWPoints = await list;
+    notifyListeners();
+  }
+
   contains(String s) {
-    for (var i = 0; i < data.length + 1; i++) {
+    for (var i = 0; i < data.length; i++) {
       if (data[i].name == s) {
         return true;
       } else {
         return false;
       }
     }
+  }
+}
+
+class getAllAspects extends StatefulWidget {
+  const getAllAspects({
+    super.key,
+  });
+
+  @override
+  State<getAllAspects> createState() => _getAllAspectsState();
+}
+
+class _getAllAspectsState extends State<getAllAspects> {
+  final IsarService isar = IsarService();
+  @override
+  Widget build(BuildContext context) {
+    var aspectList = Provider.of<WheelData>(context);
+    return Scaffold(
+      body: Center(
+        child: FutureBuilder(
+            future: handle_aspect().getAspects(),
+            builder: ((context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                List<Aspect>? aspects = snapshot.data;
+
+                return getChosenAspect(
+                  iser: isar,
+                  aspects: aspects,
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            })),
+      ),
+    );
   }
 }
