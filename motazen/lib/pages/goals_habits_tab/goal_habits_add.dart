@@ -1,14 +1,13 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:motazen/add_habit_page/get_chosed_aspect.dart';
-import 'package:motazen/goals_habits_tab/goal_list_screen.dart';
-import 'package:motazen/isar_service.dart';
-import '../Sidebar_and_navigation/navigation-bar.dart';
+import '../add_habit_page/get_chosed_aspect.dart';
+import '/isar_service.dart';
+import '../../Sidebar_and_navigation/navigation-bar.dart';
 import '../add_goal_page/get_chosen_aspect.dart';
 import 'goal_habits_pages.dart';
-import 'habit_list_screen.dart';
 
-// ignore: camel_case_types
 class Goals_habit_add extends StatefulWidget {
   final IsarService iser;
 
@@ -28,19 +27,17 @@ class Goals_habitState extends State<Goals_habit_add> {
         child: SafeArea(
           child: Scaffold(
             appBar: AppBar(
-          
               actions: [
-                    IconButton(
-                        // ignore: prefer_const_constructors
-                        icon:
-                            Icon(Icons.arrow_back_ios_new, color: Colors.white),
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return Goals_habit(iser: widget.iser);
-                          }));
-                        })
-                  ],
+                IconButton(
+                    // ignore: prefer_const_constructors
+                    icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return Goals_habit(iser: widget.iser);
+                      }));
+                    })
+              ],
               backgroundColor: Colors.white,
               iconTheme: const IconThemeData(color: Colors.black),
               elevation: 0.0,
@@ -78,7 +75,11 @@ class Goals_habitState extends State<Goals_habit_add> {
                 Expanded(
                   child: TabBarView(children: [
                     //firstTap
-                    getChosenAspect(iser: widget.iser),
+                    getChosenAspect(
+                      iser: widget.iser,
+                      aspects: const [],
+                      page: 'Goal',
+                    ),
                     //second
                     getChosenAspectH(iser: widget.iser)
                   ]),

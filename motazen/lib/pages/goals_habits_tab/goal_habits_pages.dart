@@ -1,14 +1,12 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:motazen/add_goal_page/add_goal_screen.dart';
-import 'package:motazen/add_habit_page/add_habit.dart';
-import 'package:motazen/goals_habits_tab/goal_habits_add.dart';
-import 'package:motazen/goals_habits_tab/goal_list_screen.dart';
-import 'package:motazen/isar_service.dart';
-import '../Sidebar_and_navigation/navigation-bar.dart';
-import '../add_goal_page/get_chosen_aspect.dart';
+import '../add_goal_page/add_goal_screen.dart';
+import '../add_habit_page/add_habit.dart';
+import '/pages/goals_habits_tab/goal_list_screen.dart';
+import '/isar_service.dart';
+import '../../Sidebar_and_navigation/navigation-bar.dart';
 import '../assesment_page/aler2.dart';
 import 'habit_list_screen.dart';
 

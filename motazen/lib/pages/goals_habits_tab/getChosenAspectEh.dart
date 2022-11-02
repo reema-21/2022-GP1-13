@@ -1,11 +1,10 @@
-import 'package:motazen/add_goal_page/add_goal_screen.dart';
-import 'package:motazen/entities/goal.dart';
-import 'package:motazen/goals_habits_tab/goal_details.dart';
-import 'package:motazen/isar_service.dart';
+// ignore_for_file: file_names, camel_case_types, non_constant_identifier_names
+
+import '/isar_service.dart';
 
 import 'package:flutter/material.dart';
 
-import '../entities/aspect.dart';
+import '../../entities/aspect.dart';
 import 'habit_datials.dart';
 
 class getChosenAspectEh extends StatefulWidget {
@@ -19,9 +18,11 @@ class getChosenAspectEh extends StatefulWidget {
   const getChosenAspectEh({
     super.key,
     required this.isr,
-    this.chosenAspectNames, required this.HabitName, required this.habitAspect, required this.habitFrequency, required this.id,
-    
-    
+    this.chosenAspectNames,
+    required this.HabitName,
+    required this.habitAspect,
+    required this.habitFrequency,
+    required this.id,
   });
 
   @override
@@ -73,15 +74,14 @@ class _showsState extends State<getChosenAspectEh> {
                   chosenAspectNames.add(nameInArabic);
                 }
                 print(chosenAspectNames);
-                
+
                 return HabitDetails(
                   isr: widget.isr,
                   chosenAspectNames: chosenAspectNames,
-                   
                   HabitName: widget.HabitName,
-                 habitFrequency:widget.habitFrequency,
+                  habitFrequency: widget.habitFrequency,
                   habitAspect: widget.habitAspect,
-                  id:widget.id,
+                  id: widget.id,
                 );
               } else {
                 return const CircularProgressIndicator();

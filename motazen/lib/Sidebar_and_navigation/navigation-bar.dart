@@ -3,9 +3,9 @@
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
-import 'package:motazen/isar_service.dart';
-import 'package:motazen/pages/homepage/homepage.dart';
+import '/pages/goals_habits_tab/goal_habits_pages.dart';
+import '/isar_service.dart';
+import '/pages/homepage/homepage.dart';
 
 ///add page redirection later
 ///

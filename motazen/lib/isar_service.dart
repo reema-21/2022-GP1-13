@@ -1,3 +1,5 @@
+// ignore_for_file: await_only_futures, non_constant_identifier_names
+
 import '/entities/aspect.dart';
 import '/entities/goal.dart';
 import '/entities/task.dart';
@@ -32,7 +34,7 @@ class IsarService {
     //Add goals
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
-    return true ; 
+    return true;
   } //<int> because we want to get the id of the  ceated thing
 
   Future<void> createHabit(Habit newHabit) async {
@@ -141,7 +143,6 @@ class IsarService {
     return await isar.aspects.where().filter().nameEqualTo(name).findFirst();
   }
 
-
   Future<void> saveTask(Task task) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.tasks.putSync(task));
@@ -161,29 +162,26 @@ class IsarService {
     final isar = await db;
     yield* isar.tasks.where().watch(fireImmediately: true);
   }
-   Future<Goal?> getSepecificGoal(int id ) async {
+
+  Future<Goal?> getSepecificGoal(int id) async {
     final isar = await db;
-     await isar.writeTxn(() async {
-         return  await isar.goals.get(id);
-
-});
-  }
-  Future<Goal?> getSepecificGoall(int id ) async {
-    final isar = await db;
-      
-       return await isar.goals.where().filter().idEqualTo(id).findFirstSync();
-
-
-  }
-   Future<Habit?> getSepecificHabit(int id ) async {
-    final isar = await db;
-      
-       return await isar.habits.where().filter().idEqualTo(id).findFirstSync();
-
-
+    await isar.writeTxn(() async {
+      return await isar.goals.get(id);
+    });
+    return null;
   }
 
+  Future<Goal?> getSepecificGoall(int id) async {
+    final isar = await db;
 
+    return await isar.goals.where().filter().idEqualTo(id).findFirstSync();
+  }
+
+  Future<Habit?> getSepecificHabit(int id) async {
+    final isar = await db;
+
+    return await isar.habits.where().filter().idEqualTo(id).findFirstSync();
+  }
 
   //updates the value of isSelected to true
   void selectAspect(String name) async {
@@ -256,22 +254,19 @@ class IsarService {
     });
   }
 
-  void UpdateGoal (Goal tem  ) async{
+  void UpdateGoal(Goal tem) async {
     final isar = await db;
-    
-   await isar.writeTxn(() async {
-  await isar.goals.put(tem);
-});
 
-
+    await isar.writeTxn(() async {
+      await isar.goals.put(tem);
+    });
   }
-   void UpdateHabit (Habit tem  ) async{
+
+  void UpdateHabit(Habit tem) async {
     final isar = await db;
-    
-   await isar.writeTxn(() async {
-  await isar.habits.put(tem);
-});
 
-
+    await isar.writeTxn(() async {
+      await isar.habits.put(tem);
+    });
   }
 }

@@ -1,13 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:motazen/add_goal_page/get_chosen_aspect.dart';
-import 'package:motazen/entities/goal.dart';
-import 'package:motazen/entities/habit.dart';
-import 'package:motazen/goals_habits_tab/getchosenAspect_editing.dart';
-import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
-import 'package:motazen/goals_habits_tab/goal_list_screen.dart';
-import 'package:motazen/isar_service.dart';
+// ignore_for_file: non_constant_identifier_names, avoid_print
 
-import 'package:intl/intl.dart' as intl;
+import 'package:flutter/material.dart';
+import '/entities/habit.dart';
+import '/pages/goals_habits_tab/goal_habits_pages.dart';
+import '/isar_service.dart';
 
 import 'getChosenAspectEh.dart';
 
@@ -24,14 +20,14 @@ class EditHbit extends StatefulWidget {
 
 class _EditGoalState extends State<EditHbit> {
   TextEditingController displayHabitNameControlller = TextEditingController();
-    TextEditingController displayHabitfrequencyControlller = TextEditingController();
+  TextEditingController displayHabitfrequencyControlller =
+      TextEditingController();
 
   String habitAspect = ""; //for the dropMenu A must
   String frequency = ""; //for the importance if any
- 
-  Habit? habit ;
+
+  Habit? habit;
   bool isLoading = false;
- 
 
   @override
   void initState() {
@@ -41,7 +37,6 @@ class _EditGoalState extends State<EditHbit> {
   }
 
   getHabitInformation() async {
-   
     habit = await widget.isr.getSepecificHabit(widget.HabitId);
 
     setState(() {
@@ -76,9 +71,9 @@ class _EditGoalState extends State<EditHbit> {
         case "Family and Friends":
           habitAspect = "عائلتي وأصدقائي";
           break;
-      }});}
-    
-  
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,8 +91,8 @@ class _EditGoalState extends State<EditHbit> {
                   actions: [
                     IconButton(
                         // ignore: prefer_const_constructors
-                        icon:
-                            Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                        icon: const Icon(Icons.arrow_back_ios_new,
+                            color: Colors.white),
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
@@ -111,93 +106,76 @@ class _EditGoalState extends State<EditHbit> {
                     padding: const EdgeInsets.all(20),
                     child: ListView(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
                         Row(
                           children: [
-                            Container(
-                              child: Text(
-                                "اسم العادة:",
-                                style: TextStyle(fontSize: 23),
-                              ),
+                            const Text(
+                              "اسم العادة:",
+                              style: TextStyle(fontSize: 23),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Container(
-                              child: Text(
-                                displayHabitNameControlller.text,
-                                style: TextStyle(
-                                    fontSize: 22, color: Colors.black54),
-                              ),
+                            Text(
+                              displayHabitNameControlller.text,
+                              style: const TextStyle(
+                                  fontSize: 22, color: Colors.black54),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Row(
                           children: [
-                            Container(
-                              child: Text(
-                                "جانب الحياة:",
-                                style: TextStyle(fontSize: 23),
-                              ),
+                            const Text(
+                              "جانب الحياة:",
+                              style: TextStyle(fontSize: 23),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Container(
-                              child: Text(
-                                habitAspect,
-                                style: TextStyle(
-                                    fontSize: 22, color: Colors.black54),
-                              ),
+                            Text(
+                              habitAspect,
+                              style: const TextStyle(
+                                  fontSize: 22, color: Colors.black54),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
-                         Container(
-                              child: Text(
-                                "عدد مرات تكرار العادة العادة:",
-                                style: TextStyle(fontSize: 23),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              child: Text(
-                                displayHabitfrequencyControlller.text,
-                                style: TextStyle(
-                                    fontSize: 22, color: Colors.black54),
-                              ),
-                            )
-                          ],
+                        const Text(
+                          "عدد مرات تكرار العادة العادة:",
+                          style: TextStyle(fontSize: 23),
                         ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          displayHabitfrequencyControlller.text,
+                          style: const TextStyle(
+                              fontSize: 22, color: Colors.black54),
+                        )
+                      ],
+                    ),
                   ),
-                ]
-                ),
+                ]),
                 bottomSheet: TextButton(
                     child: const Text("تعديل"),
                     onPressed: () {
-                     
                       Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return   getChosenAspectEh(
-                        isr: widget.isr,
-                        
-                        habitAspect: habitAspect,
-                        habitFrequency: displayHabitfrequencyControlller.text,
-                        HabitName: displayHabitNameControlller.text,
-                    
-                        id :widget.HabitId,
-                      ); ; // must be the
-                    }));
-                    
+                          MaterialPageRoute(builder: (context) {
+                        return getChosenAspectEh(
+                          isr: widget.isr,
+                          habitAspect: habitAspect,
+                          habitFrequency: displayHabitfrequencyControlller.text,
+                          HabitName: displayHabitNameControlller.text,
+                          id: widget.HabitId,
+                        ); // must be the
+                      }));
                     }))));
   }
 

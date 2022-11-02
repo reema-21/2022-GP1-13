@@ -1,18 +1,16 @@
-import 'package:motazen/isar_service.dart';
+import '/isar_service.dart';
 
-import '../entities/task.dart';
-import '../isar_service.dart';
+import '../../entities/task.dart';
 import 'add_goal_screen.dart';
 import "task_importance.dart";
 import 'package:flutter/material.dart';
 
-
 class TaskScreen extends StatefulWidget {
   static Route route() {
-    return MaterialPageRoute(builder: ((context) => TaskScreen()));
+    return MaterialPageRoute(builder: ((context) => const TaskScreen()));
   }
 
-  TaskScreen({super.key});
+  const TaskScreen({super.key});
 
   @override
   State<TaskScreen> createState() => _TaskScreenState();
@@ -20,7 +18,7 @@ class TaskScreen extends StatefulWidget {
 
 class _TaskScreenState extends State<TaskScreen> {
   TextEditingController _textEditingController = TextEditingController();
-    final IsarService isr = IsarService();
+  final IsarService isr = IsarService();
 
   final String selectImportance = '';
   List<Task>? tasks;
@@ -28,7 +26,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add new Task"),
+        title: const Text("Add new Task"),
       ),
       body: Column(
         children: [
@@ -36,16 +34,16 @@ class _TaskScreenState extends State<TaskScreen> {
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 24, left: 12, right: 12),
-                  padding: EdgeInsets.all(5),
+                  margin: const EdgeInsets.only(top: 24, left: 12, right: 12),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: Colors.lightBlue.shade50,
                       borderRadius: BorderRadius.circular(8)),
                   child: TextField(
                     controller: _textEditingController,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Task Name',
                       contentPadding: EdgeInsets.symmetric(horizontal: 12),
                       border: InputBorder.none,
@@ -55,13 +53,13 @@ class _TaskScreenState extends State<TaskScreen> {
                 Container(
                   height: 60,
                   width: double.infinity,
-                  margin: EdgeInsets.only(top: 24, left: 12, right: 12),
+                  margin: const EdgeInsets.only(top: 24, left: 12, right: 12),
                   decoration: BoxDecoration(
                       color: Colors.lightBlue.shade50,
                       borderRadius: BorderRadius.circular(8)),
                   child: ListView.separated(
                     separatorBuilder: (context, index) =>
-                    const SizedBox(width: 6),
+                        const SizedBox(width: 6),
                     scrollDirection: Axis.horizontal,
                     itemCount: _importanceList.length,
                     itemBuilder: (context, index) => ChoiceChip(

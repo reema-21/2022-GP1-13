@@ -1,7 +1,7 @@
-import 'package:motazen/isar_service.dart';
-import 'package:motazen/entities/aspect.dart';
+import '/isar_service.dart';
+import '/entities/aspect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:motazen/select_aspectPage/handle_aspect_data.dart';
+import '/pages/select_aspectPage/handle_aspect_data.dart';
 
 class AssessmentQuestions {
   IsarService iser = IsarService();

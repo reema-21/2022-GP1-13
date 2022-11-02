@@ -1,9 +1,11 @@
+// ignore_for_file: await_only_futures, camel_case_types
+
 import 'package:flutter/material.dart';
-import 'package:motazen/add_goal_page/get_chosen_aspect.dart';
-import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/isar_service.dart';
+import '../pages/add_goal_page/get_chosen_aspect.dart';
+import '/entities/aspect.dart';
+import '/isar_service.dart';
 import 'package:provider/provider.dart';
-import '../select_aspectPage/handle_aspect_data.dart';
+import '../pages/select_aspectPage/handle_aspect_data.dart';
 import 'models.dart';
 
 /// Fake data used to demo the application.
@@ -92,7 +94,7 @@ class WheelData with ChangeNotifier {
     'متعتي',
     'أموالي'
   ];
-
+  List<Aspect> allAspects = [];
   List<Aspect> selected = [];
   List<Aspect>? listWPoints = [];
 
@@ -137,11 +139,12 @@ class _getAllAspectsState extends State<getAllAspects> {
             future: handle_aspect().getAspects(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                List<Aspect>? aspects = snapshot.data;
+                aspectList.allAspects = snapshot.data!;
 
                 return getChosenAspect(
                   iser: isar,
-                  aspects: aspects,
+                  aspects: aspectList.allAspects,
+                  page: 'Home',
                 );
               } else {
                 return const CircularProgressIndicator();

@@ -5,13 +5,11 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:provider/provider.dart';
 
 import '../assesment_page/show.dart';
-import "/assesment_page/alert_dialog.dart";
+import '../assesment_page/alert_dialog.dart';
 import 'handle_aspect_data.dart';
-import '/entities/aspect.dart';
 import '/isar_service.dart';
-import '../data/data.dart';
-import '../theme.dart';
-import 'handle_aspect_data.dart';
+import '../../data/data.dart';
+import '../../theme.dart';
 
 class AspectSelection extends StatefulWidget {
   final IsarService isr;

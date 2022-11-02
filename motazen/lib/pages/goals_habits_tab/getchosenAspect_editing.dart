@@ -1,11 +1,11 @@
-import 'package:motazen/add_goal_page/add_goal_screen.dart';
-import 'package:motazen/entities/goal.dart';
-import 'package:motazen/goals_habits_tab/goal_details.dart';
-import 'package:motazen/isar_service.dart';
+// ignore_for_file: file_names, camel_case_types
+
+import '/pages/goals_habits_tab/goal_details.dart';
+import '/isar_service.dart';
 
 import 'package:flutter/material.dart';
 
-import '../entities/aspect.dart';
+import '../../entities/aspect.dart';
 
 class getChosenAspectE extends StatefulWidget {
   final IsarService isr;
@@ -34,7 +34,8 @@ class getChosenAspectE extends StatefulWidget {
     required this.temGoalDataTime,
     required this.dueDataDescription,
     required this.weekisSelected,
-    required this.daysisSelected, required this.id,
+    required this.daysisSelected,
+    required this.id,
   });
 
   @override
@@ -86,7 +87,7 @@ class _showsState extends State<getChosenAspectE> {
                   chosenAspectNames.add(nameInArabic);
                 }
                 print(chosenAspectNames);
-                
+
                 return goalDetails(
                   isr: widget.isr,
                   chosenAspectNames: chosenAspectNames,
@@ -100,7 +101,7 @@ class _showsState extends State<getChosenAspectE> {
                   goalDurationDescription: widget.goalDurationDescription,
                   weekisSelected: widget.weekisSelected,
                   goalAspect: widget.goalAspect,
-                  id:widget.id,
+                  id: widget.id,
                 );
               } else {
                 return const CircularProgressIndicator();

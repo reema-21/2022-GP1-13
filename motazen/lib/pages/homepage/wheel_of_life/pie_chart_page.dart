@@ -1,4 +1,6 @@
-import 'package:motazen/data/data.dart';
+// ignore_for_file: camel_case_types, duplicate_ignore
+
+import '/data/data.dart';
 import 'package:provider/provider.dart';
 
 import '/pages/homepage/wheel_of_life/widget/pie_chart_sections.dart';

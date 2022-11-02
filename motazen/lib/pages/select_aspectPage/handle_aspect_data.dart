@@ -1,7 +1,9 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
-import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/isar_service.dart';
-import '../data/models.dart';
+import '/entities/aspect.dart';
+import '/isar_service.dart';
+import '../../data/models.dart';
 
 class handle_aspect {
   final IsarService isar = IsarService();

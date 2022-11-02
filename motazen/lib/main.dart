@@ -1,22 +1,12 @@
 import 'dart:io';
 
-import 'package:motazen/add_goal_page/get_chosen_aspect.dart';
-import 'package:motazen/add_habit_page/add_habit.dart';
-import 'package:motazen/add_habit_page/get_chosed_aspect.dart';
-import 'package:motazen/data/data.dart';
-import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/entities/habit.dart';
-import 'package:motazen/goals_habits_tab/goal_edit.dart';
-import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
-import 'package:motazen/isar_service.dart';
+import '/data/data.dart';
+import '/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:motazen/pages/homepage/homepage.dart';
-import 'package:motazen/select_aspectPage/select_aspect.dart';
 import 'package:provider/provider.dart';
 
-import 'add_goal_page/add_goal_screen.dart';
-import 'entities/goal.dart';
+import 'pages/assesment_page/show.dart';
 import 'firebase_options.dart';
 
 Future main() async {
@@ -43,7 +33,7 @@ Future main() async {
   //     career.iconCodePoint=0;
   // career.iconDirection=false;
 
-  iser.createAspect(career);
+  // iser.createAspect(career);
 
   // Aspect health = Aspect();
   // health.name = "Health and Wellbeing";

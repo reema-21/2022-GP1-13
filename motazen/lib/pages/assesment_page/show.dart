@@ -1,9 +1,9 @@
 // ignore_for_file: camel_case_types
 
-import 'package:motazen/isar_service.dart';
+import '/isar_service.dart';
 
 import 'package:flutter/material.dart';
-import 'package:motazen/assesment_page/assesment_question_page_assignments.dart';
+import 'assesment_question_page_assignments.dart';
 
 import 'QuastoinAssesment.dart';
 

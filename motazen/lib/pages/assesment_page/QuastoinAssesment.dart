@@ -1,14 +1,16 @@
-// ignore_for_file: file_names, non_constant_identifier_names, prefer_interpolation_to_compose_strings
+// ignore_for_file: file_names, non_constant_identifier_names, prefer_interpolation_to_compose_strings, use_build_context_synchronously
 
-import 'package:motazen/theme.dart';
+import '/theme.dart';
+import 'package:provider/provider.dart';
 
-import '../get_points.dart';
+import '../add_goal_page/get_chosen_aspect.dart';
+import '../../data/data.dart';
 import '/isar_service.dart';
 import '/entities/aspect.dart';
 import 'package:flutter/material.dart';
 import 'package:im_stepper/stepper.dart';
 import 'alert_dialog.dart';
-import "package:motazen/select_aspectPage/select_aspect.dart";
+import '/pages/select_aspectPage/select_aspect.dart';
 import 'assesment_question_page_assignments.dart';
 
 class WheelOfLifeAssessmentPage extends StatefulWidget {
@@ -39,7 +41,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   double _currentValue = AssessmentQuestions.currentChosenAnswer;
   Widget setQuestionAnswer() {
     return SliderTheme(
-      data: SliderThemeData(),
+      data: const SliderThemeData(),
       child: Slider(
         //it should be good in ios or we use Cupertino
         value: _currentValue, //answare of that quastion
@@ -69,6 +71,8 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   /// End of the sliderRange  */
   @override
   Widget build(BuildContext context) {
+    var aspectList = Provider.of<WheelData>(context);
+
     return Directionality(
         // <-- Add this Directionality
         textDirection: TextDirection.rtl,
@@ -209,7 +213,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                       const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
                   child: Align(
                     alignment: Alignment.bottomRight,
-                    child: doneButton(widget.isr),
+                    child: doneButton(widget.isr, aspectList.allAspects),
                   ),
                 )
               ],
@@ -352,7 +356,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
         ),
       );
 
-  Widget doneButton(IsarService isar) {
+  Widget doneButton(IsarService isar, List<Aspect> allAspects) {
     //once all quastion answare and the user is n any quastion it will be enabeld
     bool isAllQuastionAnswerd = true;
     for (int i = 0; i < AssessmentQuestions.answers.length; i++) {
@@ -365,7 +369,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     return ElevatedButton(
       onPressed: isAllQuastionAnswerd
           ? () {
-              Evaluate(widget.isr);
+              Evaluate(widget.isr, allAspects);
 //the nevigator is downs
             }
           : null,
@@ -373,7 +377,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     );
   }
 
-  Evaluate(IsarService isar) async {
+  Evaluate(IsarService isar, List<Aspect> list) async {
     ///can be added to a different page
     //calculate each aspect points ;
     /**
@@ -496,13 +500,13 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
       double point = (CareerAspectPoints / 40) * 100;
       isar.assignPointAspect("career", point);
     }
-    List<Aspect> tempAspect =
-        []; //store the fetched chosen aspect from the user
-    tempAspect = await isar.getAspectFirstTime();
+//store the fetched chosen aspect from the user
     //delete the aspects you have create a new one with the values you have
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return AspectPoints(isr: widget.isr, aspects: tempAspect);
-    }));
+    getChosenAspect(
+      aspects: list,
+      iser: isar,
+      page: 'Home',
+    );
   }
 }

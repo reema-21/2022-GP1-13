@@ -1,10 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
-import 'package:motazen/add_goal_page/get_chosen_aspect.dart';
-import 'package:motazen/entities/goal.dart';
-import 'package:motazen/goals_habits_tab/getchosenAspect_editing.dart';
-import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
-import 'package:motazen/goals_habits_tab/goal_list_screen.dart';
-import 'package:motazen/isar_service.dart';
+import '/entities/goal.dart';
+import '/pages/goals_habits_tab/getchosenAspect_editing.dart';
+import '/pages/goals_habits_tab/goal_habits_pages.dart';
+import '/isar_service.dart';
 
 import 'package:intl/intl.dart' as intl;
 
@@ -28,7 +28,7 @@ class _EditGoalState extends State<EditGoal> {
   String goalImportanceDescription = "-";
   DateTime temGoalDataTime = DateTime.utc(1989, 11, 9);
   String dueDataDescription = "";
-  Goal? goal ;
+  Goal? goal;
   bool isLoading = false;
   bool weekisSelected = false;
   bool daysisSelected = false;
@@ -101,17 +101,17 @@ class _EditGoalState extends State<EditGoal> {
       }
 
       goalDuration = goal!.goalDuration;
-      if(goalDuration!= 0 )
-      goalDurationDescription = goal!.DescriptiveGoalDuration;
+      if (goalDuration != 0) {
+        goalDurationDescription = goal!.DescriptiveGoalDuration;
+      }
 
       if (goalDuration != 0) {
         if (goalDurationDescription.contains("أسبوع")) {
           weekisSelected = true;
-          print ("i am here");
-        } else  if (goalDurationDescription.contains("يوم")){
+          print("i am here");
+        } else if (goalDurationDescription.contains("يوم")) {
           daysisSelected = true;
-           print ("i am here");
-
+          print("i am here");
         }
       }
     });
@@ -133,8 +133,8 @@ class _EditGoalState extends State<EditGoal> {
                   actions: [
                     IconButton(
                         // ignore: prefer_const_constructors
-                        icon:
-                            Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                        icon: const Icon(Icons.arrow_back_ios_new,
+                            color: Colors.white),
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
@@ -148,118 +148,98 @@ class _EditGoalState extends State<EditGoal> {
                     padding: const EdgeInsets.all(20),
                     child: ListView(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
                         Row(
                           children: [
-                            Container(
-                              child: Text(
-                                "اسم الهدف:",
-                                style: TextStyle(fontSize: 23),
-                              ),
+                            const Text(
+                              "اسم الهدف:",
+                              style: TextStyle(fontSize: 23),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Container(
-                              child: Text(
-                                displayGoalNameControlller.text,
-                                style: TextStyle(
-                                    fontSize: 22, color: Colors.black54),
-                              ),
+                            Text(
+                              displayGoalNameControlller.text,
+                              style: const TextStyle(
+                                  fontSize: 22, color: Colors.black54),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Row(
                           children: [
-                            Container(
-                              child: Text(
-                                "جانب الحياة:",
-                                style: TextStyle(fontSize: 23),
-                              ),
+                            const Text(
+                              "جانب الحياة:",
+                              style: TextStyle(fontSize: 23),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Container(
-                              child: Text(
-                                goalAspect,
-                                style: TextStyle(
-                                    fontSize: 22, color: Colors.black54),
-                              ),
+                            Text(
+                              goalAspect,
+                              style: const TextStyle(
+                                  fontSize: 22, color: Colors.black54),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Row(
                           children: [
-                            Container(
-                              child: Text(
-                                "تاريخ الاستحقاق:",
-                                style: TextStyle(fontSize: 23),
-                              ),
+                            const Text(
+                              "تاريخ الاستحقاق:",
+                              style: TextStyle(fontSize: 23),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Container(
-                              child: Text(
-                                dueDataDescription,
-                                style: TextStyle(
-                                    fontSize: 22, color: Colors.black54),
-                              ),
+                            Text(
+                              dueDataDescription,
+                              style: const TextStyle(
+                                  fontSize: 22, color: Colors.black54),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Row(
                           children: [
-                            Container(
-                              child: Text(
-                                "الفترة:",
-                                style: TextStyle(fontSize: 23),
-                              ),
+                            const Text(
+                              "الفترة:",
+                              style: TextStyle(fontSize: 23),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Container(
-                              child: Text(
-                                goalDurationDescription,
-                                style: TextStyle(
-                                    fontSize: 22, color: Colors.black54),
-                              ),
+                            Text(
+                              goalDurationDescription,
+                              style: const TextStyle(
+                                  fontSize: 22, color: Colors.black54),
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Row(
                           children: [
-                            Container(
-                              child: Text(
-                                "الأهمية:",
-                                style: TextStyle(fontSize: 23),
-                              ),
+                            const Text(
+                              "الأهمية:",
+                              style: TextStyle(fontSize: 23),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
-                            Container(
-                              child: Text(
-                                goalImportanceDescription,
-                                style: TextStyle(
-                                    fontSize: 22, color: Colors.black54),
-                              ),
+                            Text(
+                              goalImportanceDescription,
+                              style: const TextStyle(
+                                  fontSize: 22, color: Colors.black54),
                             )
                           ],
                         ),
@@ -272,23 +252,22 @@ class _EditGoalState extends State<EditGoal> {
                     onPressed: () {
                       print(daysisSelected);
                       Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return   getChosenAspectE(
-                        isr: widget.isr,
-                        daysisSelected: daysisSelected,
-                        dueDataDescription: dueDataDescription,
-                        goalAspect: goalAspect,
-                        goalImportanceDescription: goalImportanceDescription,
-                        temGoalDataTime: temGoalDataTime,
-                        goalDurationDescription: goalDurationDescription,
-                        importance: importance,
-                        goalName: displayGoalNameControlller.text,
-                        goalDuration: goalDuration,
-                        weekisSelected: weekisSelected,
-                        id :widget.goalId,
-                      ); ; // must be the
-                    }));
-                    
+                          MaterialPageRoute(builder: (context) {
+                        return getChosenAspectE(
+                          isr: widget.isr,
+                          daysisSelected: daysisSelected,
+                          dueDataDescription: dueDataDescription,
+                          goalAspect: goalAspect,
+                          goalImportanceDescription: goalImportanceDescription,
+                          temGoalDataTime: temGoalDataTime,
+                          goalDurationDescription: goalDurationDescription,
+                          importance: importance,
+                          goalName: displayGoalNameControlller.text,
+                          goalDuration: goalDuration,
+                          weekisSelected: weekisSelected,
+                          id: widget.goalId,
+                        ); // must be the
+                      }));
                     }))));
   }
 
