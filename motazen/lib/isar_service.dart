@@ -41,11 +41,11 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.habits.putSync(newHabit));
   }
 
-  Future<void> createTask(Task newTask) async {
-    //Add task
-    final isar = await db;
-    isar.writeTxnSync<int>(() => isar.tasks.putSync(newTask));
-  }
+  // Future<void> createTask(Task newTask) async {
+  //   //Add task
+  //   final isar = await db;
+  //   isar.writeTxnSync<int>(() => isar.tasks.putSync(newTask));
+  // }
 
   Future<void> createAspect(Aspect newAspect) async {
     //Add aspect
@@ -68,10 +68,10 @@ class IsarService {
     yield* isar.aspects.where().watch(fireImmediately: true);
   }
 
-  Stream<List<Task>> getAllTasks() async* {
-    final isar = await db;
-    yield* isar.tasks.where().watch(fireImmediately: true);
-  }
+  // Stream<List<Task>> getAllTasks() async* {
+  //   final isar = await db;
+  //   yield* isar.tasks.where().watch(fireImmediately: true);
+  // }
 
   Stream<List<Habit>> getAllHabits() async* {
     final isar = await db;
@@ -145,6 +145,26 @@ class IsarService {
     return await isar.aspects.where().filter().nameEqualTo(name).findFirst();
   }
 
+
+  Future<void> saveTask(Task task) async {
+    final isar = await db;
+    isar.writeTxnSync<int>(() => isar.tasks.putSync(task));
+  }
+
+  Future<void> updateTask(Task task) async {
+    final isar = await db;
+    isar.writeTxnSync<int>(() => isar.tasks.putSync(task));
+  }
+
+  Future<void> deleteTask(int id) async {
+    final isar = await db;
+    isar.writeTxnSync<bool>(() => isar.tasks.deleteSync(id));
+  }
+
+  Stream<List<Task>> listenTasks() async* {
+    final isar = await db;
+    yield* isar.tasks.where().watch(fireImmediately: true);
+  }
    Future<Goal?> getSepecificGoal(int id ) async {
     final isar = await db;
      await isar.writeTxn(() async {

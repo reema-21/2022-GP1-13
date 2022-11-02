@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:motazen/goals_habits_tab/goal_habits_add.dart';
+import 'package:motazen/add_habit_page/get_chosed_aspect.dart';
 import 'package:motazen/goals_habits_tab/goal_list_screen.dart';
 import 'package:motazen/isar_service.dart';
 import '../Sidebar_and_navigation/navigation-bar.dart';
 import '../add_goal_page/get_chosen_aspect.dart';
+import 'goal_habits_pages.dart';
 import 'habit_list_screen.dart';
 
 // ignore: camel_case_types
-class Goals_habit extends StatefulWidget {
+class Goals_habit_add extends StatefulWidget {
   final IsarService iser;
 
-  const Goals_habit({super.key, required this.iser});
+  const Goals_habit_add({super.key, required this.iser});
 
   @override
-  State<Goals_habit> createState() => Goals_habitState();
+  State<Goals_habit_add> createState() => Goals_habitState();
 }
 
-class Goals_habitState extends State<Goals_habit> {
+class Goals_habitState extends State<Goals_habit_add> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -28,15 +29,18 @@ class Goals_habitState extends State<Goals_habit> {
           child: Scaffold(
             appBar: AppBar(
           
-              actions: [GestureDetector(
-                  child: const Icon(Icons.add, color: Colors.black12, size: 30),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return  Goals_habit_add(iser: widget.iser); // must be the
-                    }));
-                  },
-                )],
+              actions: [
+                    IconButton(
+                        // ignore: prefer_const_constructors
+                        icon:
+                            Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Goals_habit(iser: widget.iser);
+                          }));
+                        })
+                  ],
               backgroundColor: Colors.white,
               iconTheme: const IconThemeData(color: Colors.black),
               elevation: 0.0,
@@ -57,12 +61,12 @@ class Goals_habitState extends State<Goals_habit> {
                   tabs: [
                     // ignore: prefer_const_constructors
                     Tab(
-                        child: Text("أهدافي",
+                        child: Text("إضافة هدف",
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500))), //Goals page
                     Tab(
-                        child: Text("عاداتي",
+                        child: Text("إضافة عادة",
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500))) //habits page
@@ -74,9 +78,9 @@ class Goals_habitState extends State<Goals_habit> {
                 Expanded(
                   child: TabBarView(children: [
                     //firstTap
-                    GoalListScreen(isr: widget.iser),
+                    getChosenAspect(iser: widget.iser),
                     //second
-                    HabitListScreen(isr: widget.iser)
+                    getChosenAspectH(iser: widget.iser)
                   ]),
                 )
               ],

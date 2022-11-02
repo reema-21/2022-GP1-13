@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:motazen/add_goal_page/get_chosen_aspect.dart';
+import 'package:motazen/add_habit_page/add_habit.dart';
+import 'package:motazen/add_habit_page/get_chosed_aspect.dart';
 import 'package:motazen/data/data.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/entities/habit.dart';
 import 'package:motazen/goals_habits_tab/goal_edit.dart';
+import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -81,6 +84,6 @@ Future main() async {
       create: (_) => WheelData(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: getChosenAspect(iser: iser,
+          home:getChosenAspectH(iser: iser, 
               )))); // my widget // the one where i will create the quastion list .
 }

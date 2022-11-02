@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motazen/add_habit_page/get_chosed_aspect.dart';
 import 'package:motazen/entities/habit.dart';
 import"package:motazen/isar_service.dart";
 
@@ -115,7 +116,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return const Homepage(); // must be the
+                      return  getChosenAspectH(iser: widget.isr );// must be the
                     }));
                   },
                 )

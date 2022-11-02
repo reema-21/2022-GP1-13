@@ -50,6 +50,8 @@ int goalDuration= 0 ;
   String? isSelected;
   @override
   void initState() {
+          _goalName = _goalNmaeController.text;
+
     if (!(widget.goalDuration == 0 )){
       duration = widget.goalDurationDescription;
     }
@@ -154,9 +156,12 @@ goal?.goalDuration;
                         validator: (value) {
                           if (value == null || value.isEmpty)
                             return "من فضلك ادخل اسم الهدف";
-                          else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
-                            return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
-                          } else {
+                          // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
+                          //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
+                          // } 
+                          
+                          
+                          else {
                             print("hi");
                             return null;
                           }

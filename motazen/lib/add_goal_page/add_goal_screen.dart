@@ -6,8 +6,10 @@ import '../assesment_page/alert_dialog.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import"add_task.dart";
 
 import '../entities/aspect.dart';
+import '../entities/task.dart';
 //TODO
 //alertof completion //tasks // getbeck to the list page // goal dependency 
 class AddGoal extends StatefulWidget {
@@ -40,7 +42,7 @@ int goalDuration= 0 ;
     super.initState();
     _goalNmaeController.addListener(_updateText);
     _dueDateController.addListener(_updateText);
-  }
+  } 
 
   void _updateText() {
     setState(() {
@@ -49,10 +51,18 @@ int goalDuration= 0 ;
   }
 
   _onBasicWaitingAlertPressed(context) async {
-    await Alert(
-      context: context,
-      desc: "من فضلك اختر تاريخ الاستحقاق أولا",
-    ).show();
+    return AlertDialog(
+      title: new Text("تنبيه"),
+      content: new Text("من فضلك ادخل رقم الاستحقاق أولا "),
+      actions: <Widget>[
+        new ElevatedButton(
+          child: new Text("تم"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
   }
 
   Goal newgoal = Goal();
@@ -96,10 +106,9 @@ newgoal.goalDuration=goalDuration;
                       final action = await AlertDialogs.yesCancelDialog(
                           context,
                           ' هل انت متاكد من الرجوع ',
-                          'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
+                          'بالنقر على "تاكيد"لن يتم حفظ معلومات الهدف  ');
                       if (action == DialogsAction.yes) {
-                        //return to the previouse page different code for the ios .
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
+                         Navigator.push(context, MaterialPageRoute(builder: (context) {return Goals_habit(iser: widget.isr,);}));
                       } else {}
                     }),
               ],
@@ -117,9 +126,10 @@ newgoal.goalDuration=goalDuration;
                         validator: (value) {
                           if (value == null || value.isEmpty)
                             return "من فضلك ادخل اسم الهدف";
-                          else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
-                            return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
-                          } else {
+                          // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
+                          //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
+                          // } 
+                          else {
                             print("hi");
                             return null;
                           }
@@ -225,11 +235,11 @@ newgoal.goalDuration=goalDuration;
                         },
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 12,
                       ),
                       Row(
                         children: [
-                          Text("الفترة  :"),
+                          Text("الفترة  :",style: TextStyle(color: Colors.black38),),
                           SizedBox(
                             width: 5,
                           ),
@@ -381,8 +391,81 @@ newgoal.goalDuration=goalDuration;
                           )
                         ],
                       ),
-
-                      //here the tasks . 
+                      //here the tasks .
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.green.shade50,
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.push(context, TaskScreen.route());
+                              },
+                              icon: const Icon(Icons.add),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          const Text(
+                            "إضافة مهمة",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      StreamBuilder<List<Task>>(
+                        stream: widget.isr.listenTasks(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Text("حصل خطأ");
+                          }
+                          if (snapshot.hasData && snapshot.data!.isEmpty) {
+                            return const Text("ليس لديك مهام");
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Text("جاري التحميل");
+                          }
+                          return Expanded(
+                            child: ListView.separated(
+                              itemCount: snapshot.data!.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 6),
+                              itemBuilder: (context, index) {
+                                final task =
+                                    snapshot.data!.reversed.elementAt(index);
+                                return Container(
+                                  padding: EdgeInsets.fromLTRB(0, 6, 24, 12),
+                                  width: double.infinity,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.lightBlue.shade50,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(task.taskImportance!),
+                                      Text(
+                                        task.name!,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),

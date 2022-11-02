@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:motazen/add_goal_page/get_chosen_aspect.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:motazen/goals_habits_tab/getchosenAspect_editing.dart';
+import 'package:motazen/goals_habits_tab/goal_habits_pages.dart';
 import 'package:motazen/goals_habits_tab/goal_list_screen.dart';
 import 'package:motazen/isar_service.dart';
 
@@ -137,7 +138,7 @@ class _EditGoalState extends State<EditGoal> {
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return GoalListScreen(isr: widget.isr);
+                            return Goals_habit(iser: widget.isr);
                           }));
                         })
                   ],
