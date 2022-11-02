@@ -398,84 +398,86 @@ class _AddGoalState extends State<AddGoal> {
                           )
                         ],
                       ),
-                      //here the tasks .
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            height: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.green.shade50,
-                            ),
-                            child: IconButton(
-                              onPressed: () {
-                                Navigator.push(context, TaskScreen.route());
-                              },
-                              icon: const Icon(Icons.add),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          const Text(
-                            "إضافة مهمة",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Flexible(
-                        child: StreamBuilder<List<Task>>(
-                          stream: widget.isr.listenTasks(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return const Text("حصل خطأ");
-                            }
-                            if (snapshot.hasData && snapshot.data!.isEmpty) {
-                              return const Text("ليس لديك مهام");
-                            }
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Text("جاري التحميل");
-                            }
-                            return Expanded(
-                              child: ListView.separated(
-                                itemCount: snapshot.data!.length,
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 6),
-                                itemBuilder: (context, index) {
-                                  final task =
-                                      snapshot.data!.reversed.elementAt(index);
-                                  return Container(
-                                    padding: EdgeInsets.fromLTRB(0, 6, 24, 12),
-                                    width: double.infinity,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: Colors.lightBlue.shade50,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(task.taskImportance!),
-                                        Text(
-                                          task.name!,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                      // //here the tasks .
+                      // const SizedBox(height: 12),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     Container(
+                      //       height: 100,
+                      //       decoration: BoxDecoration(
+                      //         shape: BoxShape.circle,
+                      //         color: Colors.green.shade50,
+                      //       ),
+                      //       child: IconButton(
+                      //         onPressed: () {
+                      //           Navigator.push(context, TaskScreen.route());
+                      //         },
+                      //         icon: const Icon(Icons.add),
+                      //       ),
+                      //     ),
+                      //     const SizedBox(width: 12),
+                      //     const Text(
+                      //       "إضافة مهمة",
+                      //       style: TextStyle(fontSize: 20),
+                      //     ),
+                      //   ],
+                      // ),
+                      // const SizedBox(height: 12),
+                      // Flexible(
+                      //   child: StreamBuilder<List<Task>>(
+                      //     stream: widget.isr.listenTasks(),
+                      //     builder: (context, snapshot) {
+                      //       if (snapshot.hasError) {
+                      //         return const Text("حصل خطأ");
+                      //       }
+                      //       if (snapshot.hasData && snapshot.data!.isEmpty) {
+                      //         return const Text("ليس لديك مهام");
+                      //       }
+                      //       if (snapshot.connectionState ==
+                      //           ConnectionState.waiting) {
+                      //         return const Text("جاري التحميل");
+                      //       }
+                      //       return Expanded(
+                      //         child: Flexible(
+                      //           child: ListView.separated(
+                      //             itemCount: snapshot.data!.length,
+                      //             separatorBuilder: (context, index) =>
+                      //                 const SizedBox(height: 6),
+                      //             itemBuilder: (context, index) {
+                      //               final task =
+                      //                   snapshot.data!.reversed.elementAt(index);
+                      //               return Container(
+                      //                 padding: EdgeInsets.fromLTRB(0, 6, 24, 12),
+                      //                 width: double.infinity,
+                      //                 height: 60,
+                      //                 decoration: BoxDecoration(
+                      //                   borderRadius: BorderRadius.circular(12),
+                      //                   color: Colors.lightBlue.shade50,
+                      //                 ),
+                      //                 child: Row(
+                      //                   mainAxisAlignment:
+                      //                       MainAxisAlignment.spaceAround,
+                      //                   crossAxisAlignment:
+                      //                       CrossAxisAlignment.center,
+                      //                   children: [
+                      //                     Text(task.taskImportance!),
+                      //                     Text(
+                      //                       task.name!,
+                      //                       style: TextStyle(
+                      //                         fontSize: 16,
+                      //                       ),
+                      //                     ),
+                      //                   ],
+                      //                 ),
+                      //               );
+                      //             },
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

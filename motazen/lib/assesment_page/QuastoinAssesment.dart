@@ -1,10 +1,8 @@
-// ignore_for_file: file_names, non_constant_identifier_names, prefer_interpolation_to_compose_strings, use_build_context_synchronously
+// ignore_for_file: file_names, non_constant_identifier_names, prefer_interpolation_to_compose_strings
 
-import 'package:motazen/pages/homepage/homepage.dart';
 import 'package:motazen/theme.dart';
-import 'package:provider/provider.dart';
 
-import '../data/data.dart';
+import '../get_points.dart';
 import '/isar_service.dart';
 import '/entities/aspect.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +10,6 @@ import 'package:im_stepper/stepper.dart';
 import 'alert_dialog.dart';
 import "package:motazen/select_aspectPage/select_aspect.dart";
 import 'assesment_question_page_assignments.dart';
-import '/select_aspectPage/handle_aspect_data.dart';
-import "show.dart";
 
 class WheelOfLifeAssessmentPage extends StatefulWidget {
   final IsarService isr;
@@ -39,13 +35,11 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   // upperBound MUST BE total number of icons minus 1. // total numberofquastion-1 = AssessmentQuestions.activeSteps so that it start from the right
 //------------------------------------------------------------
   // always the value of the sliderRange = answare if no answare then zero
-  //Start of the slider Range  = the answares of the quastion //
-
-  double _currentValue = AssessmentQuestions.currentSliderValue;
-
+  //Start of the slider Range  = the answers of the quastion //
+  double _currentValue = AssessmentQuestions.currentChosenAnswer;
   Widget setQuestionAnswer() {
     return SliderTheme(
-      data: const SliderThemeData(),
+      data: SliderThemeData(),
       child: Slider(
         //it should be good in ios or we use Cupertino
         value: _currentValue, //answare of that quastion
@@ -59,12 +53,12 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
           setState(() {
             //save the value chosen by the user
             _currentValue = value;
-            AssessmentQuestions.answares[
+            AssessmentQuestions.answers[
                 AssessmentQuestions
                     .activeStep] = '$value' +
-                AssessmentQuestions.answares[AssessmentQuestions.activeStep]
+                AssessmentQuestions.answers[AssessmentQuestions.activeStep]
                     .substring(AssessmentQuestions
-                            .answares[AssessmentQuestions.activeStep].length -
+                            .answers[AssessmentQuestions.activeStep].length -
                         1); //take the answare chosen by the user for that quastion
           });
         },
@@ -75,15 +69,16 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   /// End of the sliderRange  */
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
     return Directionality(
+        // <-- Add this Directionality
         textDirection: TextDirection.rtl,
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
             actions: [
               IconButton(
-                icon: const Icon(Icons.arrow_forward_ios, color: kBlackColor),
+                // ignore: prefer_const_constructors
+                icon: Icon(Icons.arrow_forward_ios, color: kBlackColor),
                 onPressed: () async {
                   final action = await AlertDialogs.yesCancelDialog(
                       context,
@@ -105,6 +100,12 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                 },
               ),
             ],
+            title: const Text(
+              'اسئلة تقييم جوانب الحياة ',
+              style: TextStyle(
+                color: kBlackColor,
+              ),
+            ),
             elevation: 0,
             backgroundColor: kWhiteColor,
           ),
@@ -142,13 +143,13 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                     if not the value is 1 */
 
                           AssessmentQuestions.activeStep = index;
-                          AssessmentQuestions.currentSliderValue = double.parse(
-                              AssessmentQuestions
-                                  .answares[AssessmentQuestions.activeStep]
+                          AssessmentQuestions.currentChosenAnswer =
+                              double.parse(AssessmentQuestions
+                                  .answers[AssessmentQuestions.activeStep]
                                   .substring(
                                       0,
                                       AssessmentQuestions
-                                              .answares[AssessmentQuestions
+                                              .answers[AssessmentQuestions
                                                   .activeStep]
                                               .length -
                                           1)); // this is for reseting the slider for each quasion but the problem we want to save the value
@@ -208,7 +209,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                       const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
                   child: Align(
                     alignment: Alignment.bottomRight,
-                    child: doneButton(widget.isr, aspectList.selected),
+                    child: doneButton(widget.isr),
                   ),
                 )
               ],
@@ -254,7 +255,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   }
 
   List<Icon> createIcon() {
-    // create the icons and the length of the IconsList based on the answare map //change when there is time
+    // create the icons and the length of the IconsList based on the answare map
     List<Icon> iconStepper = [];
 
     for (int i = 0; i < widget.question!.length; i++) {
@@ -351,12 +352,12 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
         ),
       );
 
-  Widget doneButton(IsarService isar, List<Aspect> list) {
+  Widget doneButton(IsarService isar) {
     //once all quastion answare and the user is n any quastion it will be enabeld
     bool isAllQuastionAnswerd = true;
-    for (int i = 0; i < AssessmentQuestions.answares.length; i++) {
-      var result = double.parse(AssessmentQuestions.answares[i]
-          .substring(0, AssessmentQuestions.answares[i].length - 1));
+    for (int i = 0; i < AssessmentQuestions.answers.length; i++) {
+      var result = double.parse(AssessmentQuestions.answers[i]
+          .substring(0, AssessmentQuestions.answers[i].length - 1));
       if (result == 0) {
         isAllQuastionAnswerd = false;
       }
@@ -364,7 +365,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     return ElevatedButton(
       onPressed: isAllQuastionAnswerd
           ? () {
-              Evaluate(widget.isr, list);
+              Evaluate(widget.isr);
 //the nevigator is downs
             }
           : null,
@@ -372,7 +373,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     );
   }
 
-  Evaluate(IsarService isar, List<Aspect> list) async {
+  Evaluate(IsarService isar) async {
     ///can be added to a different page
     //calculate each aspect points ;
     /**
@@ -390,69 +391,69 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     double CareerAspectPoints = 0;
     double funAndRecreationAspectPoints = 0;
 
-    for (int i = 0; i < AssessmentQuestions.answares.length; i++) {
+    for (int i = 0; i < AssessmentQuestions.answers.length; i++) {
       // i will sunm the point of each aspect ;
-      String aspectType = AssessmentQuestions.answares[i]
-          .substring(AssessmentQuestions.answares[i].length - 1);
+      String aspectType = AssessmentQuestions.answers[i]
+          .substring(AssessmentQuestions.answers[i].length - 1);
       double x = 0;
       switch (aspectType) {
         //Must include all the aspect characters and specify an icon for that
         case "H":
           {
-            x = double.parse(AssessmentQuestions.answares[i]
-                .substring(0, AssessmentQuestions.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answers[i]
+                .substring(0, AssessmentQuestions.answers[i].length - 1));
             healthAndWellbeingAspectPoints = healthAndWellbeingAspectPoints + x;
           }
           break;
 
         case "C":
           {
-            x = double.parse(AssessmentQuestions.answares[i]
-                .substring(0, AssessmentQuestions.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answers[i]
+                .substring(0, AssessmentQuestions.answers[i].length - 1));
             CareerAspectPoints = CareerAspectPoints + x;
           }
           break;
         case "F":
           {
-            x = double.parse(AssessmentQuestions.answares[i]
-                .substring(0, AssessmentQuestions.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answers[i]
+                .substring(0, AssessmentQuestions.answers[i].length - 1));
             familyAndFriendsAspectPoints = familyAndFriendsAspectPoints + x;
           }
           break;
 
         case "S":
           {
-            x = double.parse(AssessmentQuestions.answares[i]
-                .substring(0, AssessmentQuestions.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answers[i]
+                .substring(0, AssessmentQuestions.answers[i].length - 1));
             significantOtherAspectPoints = significantOtherAspectPoints + x;
           }
           break;
         case "E":
           {
-            x = double.parse(AssessmentQuestions.answares[i]
-                .substring(0, AssessmentQuestions.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answers[i]
+                .substring(0, AssessmentQuestions.answers[i].length - 1));
             physicalEnvironmentAspectPoints =
                 physicalEnvironmentAspectPoints + x;
           }
           break;
         case "M":
           {
-            x = double.parse(AssessmentQuestions.answares[i]
-                .substring(0, AssessmentQuestions.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answers[i]
+                .substring(0, AssessmentQuestions.answers[i].length - 1));
             moneyAspectPoints = moneyAspectPoints + x;
           }
           break;
         case "G":
           {
-            x = double.parse(AssessmentQuestions.answares[i]
-                .substring(0, AssessmentQuestions.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answers[i]
+                .substring(0, AssessmentQuestions.answers[i].length - 1));
             personalGrowthAspectPoints = personalGrowthAspectPoints + x;
           }
           break;
         case "R":
           {
-            x = double.parse(AssessmentQuestions.answares[i]
-                .substring(0, AssessmentQuestions.answares[i].length - 1));
+            x = double.parse(AssessmentQuestions.answers[i]
+                .substring(0, AssessmentQuestions.answers[i].length - 1));
             funAndRecreationAspectPoints = funAndRecreationAspectPoints + x;
           }
           break;
@@ -461,6 +462,9 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
 ////////////////////find the percentage for the points and save it in the local storage///////////////
     }
     if (moneyAspectPoints != 0) {
+      final Aspect aspect =
+          Aspect(); // this should be the same as the one created above ;
+      aspect.name = "money and finances";
       double point = (moneyAspectPoints / 50) * 100;
       isar.assignPointAspect("money and finances", point);
     }
@@ -492,11 +496,13 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
       double point = (CareerAspectPoints / 40) * 100;
       isar.assignPointAspect("career", point);
     }
-    list = await handle_aspect()
-        .getAspects(); //get all aspects(update list with new value)
+    List<Aspect> tempAspect =
+        []; //store the fetched chosen aspect from the user
+    tempAspect = await isar.getAspectFirstTime();
+    //delete the aspects you have create a new one with the values you have
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return const getAllAspects();
+      return AspectPoints(isr: widget.isr, aspects: tempAspect);
     }));
   }
 }

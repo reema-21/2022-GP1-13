@@ -2,11 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
+import 'package:motazen/add_goal_page/add_goal_screen.dart';
+import 'package:motazen/add_habit_page/add_habit.dart';
 import 'package:motazen/goals_habits_tab/goal_habits_add.dart';
 import 'package:motazen/goals_habits_tab/goal_list_screen.dart';
 import 'package:motazen/isar_service.dart';
 import '../Sidebar_and_navigation/navigation-bar.dart';
 import '../add_goal_page/get_chosen_aspect.dart';
+import '../assesment_page/aler2.dart';
 import 'habit_list_screen.dart';
 
 class Goals_habit extends StatefulWidget {
@@ -29,18 +32,32 @@ class Goals_habitState extends State<Goals_habit> {
           child: Scaffold(
             appBar: AppBar(
               actions: [
-                GestureDetector(
-                  child: const Icon(Icons.add, color: Colors.black12, size: 30),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return Goals_habit_add(iser: widget.iser); // must be the
-                    }));
-                  },
-                )
+                IconButton(
+                    // ignore: prefer_const_constructors
+                    icon: Icon(Icons.add,
+                        color: const Color.fromARGB(255, 245, 241, 241)),
+                    onPressed: () async {
+                      final action = await AlertDialogs.yesCancelDialog(
+                          context, '', 'هل تريد اضافة :');
+                      if (action == DialogsAction.yes) {
+                        //return to the previouse page different code for the ios .
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return AddGoal(
+                            isr: widget.iser,
+                          );
+                        }));
+                      } else {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return AddHabit(
+                            isr: widget.iser,
+                          );
+                        }));
+                      }
+                    }),
               ],
               backgroundColor: Colors.white,
-              iconTheme: const IconThemeData(color: Colors.black),
               elevation: 0.0,
               bottom: const TabBar(
                   isScrollable: true,
