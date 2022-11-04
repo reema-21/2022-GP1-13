@@ -1,14 +1,17 @@
 import 'package:isar/isar.dart';
+import 'package:motazen/entities/goal.dart';
 
 part 'task.g.dart';
 
 @collection
 class Task {
-  Id id = Isar.autoIncrement; // you can also use id = null to auto increment
 
+  Id id = Isar.autoIncrement; // you can also use id = null to auto increment
+final TaskDependency = IsarLinks<Task>();
   @Index(type: IndexType.value)
   String? name;
+final goal = IsarLink<Goal>();
 
   @Index(type: IndexType.value)
-  String? taskImportance;
+  int? duration;
 }

@@ -34,8 +34,23 @@ class IsarService {
     //Add goals
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
+<<<<<<< Updated upstream
     return true;
   } //<int> because we want to get the id of the  ceated thing
+=======
+    return true ; 
+  } 
+  
+   Future<int> createGoalGiveId(Goal newgoal) async {
+    //Add goals
+    final isar = await db;
+    isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
+    return newgoal.id ; 
+  }
+  
+  
+  //<int> because we want to get the id of the  ceated thing
+>>>>>>> Stashed changes
 
   Future<void> createHabit(Habit newHabit) async {
     //Add habits
@@ -137,11 +152,23 @@ class IsarService {
     final isar = await db;
     return await isar.aspects.filter().percentagePointsGreaterThan(0).findAll();
   }
+  
 
   Future<Aspect?> findSepecificAspect(String name) async {
     final isar = await db;
     return await isar.aspects.where().filter().nameEqualTo(name).findFirst();
   }
+<<<<<<< Updated upstream
+=======
+  Future<Task?> findSepecificTask(String name) async {
+    final isar = await db;
+    return await isar.tasks.where().filter().nameEqualTo(name).findFirst();
+  }
+Future<Goal?> findSepecificgoal(String name) async {
+    final isar = await db;
+    return await isar.goals.where().filter().titelContains(name).findFirst();
+  }
+>>>>>>> Stashed changes
 
   Future<void> saveTask(Task task) async {
     final isar = await db;
@@ -162,6 +189,7 @@ class IsarService {
     final isar = await db;
     yield* isar.tasks.where().watch(fireImmediately: true);
   }
+<<<<<<< Updated upstream
 
   Future<Goal?> getSepecificGoal(int id) async {
     final isar = await db;
@@ -169,6 +197,30 @@ class IsarService {
       return await isar.goals.get(id);
     });
     return null;
+=======
+
+
+   Future<Goal?> getSepecificGoal(int id ) async {
+    final isar = await db;
+     await isar.writeTxn(() async {
+         return  await isar.goals.get(id);
+
+});
+  }
+   Future<List<Task>> getGoalTask(int id ) async {
+    final isar = await db;
+  return  isar.tasks.filter()
+        .goal((q) => q.idEqualTo(id))
+        .findAll();
+  }
+  Future<Goal?> getSepecificGoall(int id ) async {
+    print("here i am at the sync");
+    print (id);
+    final isar = await db;
+    return await isar.goals.where().filter().idEqualTo(id).findFirst();
+
+
+>>>>>>> Stashed changes
   }
 
   Future<Goal?> getSepecificGoall(int id) async {
@@ -271,4 +323,8 @@ class IsarService {
       await isar.habits.put(tem);
     });
   }
+
+ 
+
+
 }
