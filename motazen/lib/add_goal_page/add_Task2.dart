@@ -68,19 +68,25 @@ setState(() {
   
   
   
+  getnewlist(){
+    setState(() {
+    List<String>  y = TasksName;
+    });
+  }
   
   
   
-  
-  Widget TaskDepencenies(){
+  Widget TaskDepencenies(List<String> y ){
       
+
       return DropDownMultiSelect(
         onChanged: (List<String> x) {
           setState(() {
             selected =x;
+            getnewlist
           });
         },
-        options:TasksName ,
+        options:getnewlist() ,
         selectedValues: selected,
         whenEmpty: 'Select Something',
       );
@@ -247,12 +253,14 @@ floatingActionButton: FloatingActionButton(
                   
                            ),
                
-               TaskDepencenies(),
+               TaskDepencenies(TasksName),
                TextButton(
               onPressed: (){
                  if (formKey.currentState!.validate()){
                 setState(() {
+                  
                   TasksName.add(inputTaskName.text);
+                  
                    AddTheEnterdTask();
                                     // TasksName.add(inputTaskName.text);
                                     // print("i am at the prssed button after adding");

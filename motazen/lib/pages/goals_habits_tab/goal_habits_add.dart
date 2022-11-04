@@ -75,15 +75,12 @@ class Goals_habitState extends State<Goals_habit_add> {
                 Expanded(
                   child: TabBarView(children: [
                     //firstTap
-<<<<<<< Updated upstream:motazen/lib/pages/goals_habits_tab/goal_habits_add.dart
                     getChosenAspect(
                       iser: widget.iser,
                       aspects: const [],
                       page: 'Goal',
+                      
                     ),
-=======
-                    getChosenAspect(iser: widget.iser, goalsTasks: [],),
->>>>>>> Stashed changes:motazen/lib/goals_habits_tab/goal_habits_add.dart
                     //second
                     getChosenAspectH(iser: widget.iser)
                   ]),
