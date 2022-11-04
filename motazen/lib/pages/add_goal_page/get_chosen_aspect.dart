@@ -53,7 +53,7 @@ class _showsState extends State<getChosenAspect> {
                   case 'Goal':
                     return AddGoal(
                       isr: widget.iser,
-                      chosenAspectNames: chosenAspectNames,
+                      chosenAspectNames: chosenAspectNames, goalsTasks: [],
                     );
                   default:
                     throw 'Error404: page not found';

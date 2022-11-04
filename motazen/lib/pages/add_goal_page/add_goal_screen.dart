@@ -1,6 +1,8 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import '../../add_goal_page/add_Task2.dart';
+import '../../entities/task.dart';
 import '/entities/goal.dart';
 import '/pages/goals_habits_tab/goal_habits_pages.dart';
 import '/isar_service.dart';
@@ -8,12 +10,8 @@ import '../assesment_page/alert_dialog.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-<<<<<<< Updated upstream:motazen/lib/pages/add_goal_page/add_goal_screen.dart
-=======
 import '../goals_habits_tab/goal_list_screen.dart';
-import 'add_Task2.dart';
 
->>>>>>> Stashed changes:motazen/lib/add_goal_page/add_goal_screen.dart
 
 import '../../entities/aspect.dart';
 
@@ -51,12 +49,8 @@ class _AddGoalState extends State<AddGoal> {
     super.initState();
     _goalNmaeController.addListener(_updateText);
     _dueDateController.addListener(_updateText);
-<<<<<<< Updated upstream:motazen/lib/pages/add_goal_page/add_goal_screen.dart
-  }
-=======
 
   } 
->>>>>>> Stashed changes:motazen/lib/add_goal_page/add_goal_screen.dart
 
   void _updateText() {
     setState(() {
@@ -88,17 +82,6 @@ class _AddGoalState extends State<AddGoal> {
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
     newgoal.aspect.value = selected;
-<<<<<<< Updated upstream:motazen/lib/pages/add_goal_page/add_goal_screen.dart
-    if (!isDataSelected) {
-      newgoal.dueDate = DateTime.utc(1989, 11, 9);
-    }
-    newgoal.DescriptiveGoalDuration = duration;
-    newgoal.goalDuration = goalDuration;
-    widget.isr.createGoal(newgoal);
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Goals_habit(iser: widget.isr);
-    }));
-=======
 if (!isDataSelected){
 newgoal.dueDate = DateTime.utc(1989, 11, 9);
 }
@@ -134,7 +117,6 @@ var task =[];
      return Goals_habit(iser: widget.isr);
    }));
   
->>>>>>> Stashed changes:motazen/lib/add_goal_page/add_goal_screen.dart
   }
 
   @override

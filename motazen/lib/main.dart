@@ -1,28 +1,16 @@
 import 'dart:io';
 
-<<<<<<< Updated upstream
 import 'package:motazen/pages/onboarding_page.dart';
 
 import '/data/data.dart';
 import '/isar_service.dart';
-=======
-import 'package:motazen/add_goal_page/get_chosen_aspect.dart';
-
-import 'package:motazen/data/data.dart';
-import 'package:motazen/entities/aspect.dart';
-
-import 'package:motazen/isar_service.dart';
->>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
-<<<<<<< Updated upstream
-=======
-import 'add_goal_page/add_goal_screen.dart';
+import 'add_goal_page/get_chosen_aspect.dart';
+import 'entities/aspect.dart';
 import 'entities/goal.dart';
-import 'entities/task.dart';
->>>>>>> Stashed changes
 import 'firebase_options.dart';
 
 Future main() async {
@@ -39,17 +27,6 @@ Future main() async {
   IsarService iser = IsarService(); // inislize the local storage
 
   iser.openIsar();
-<<<<<<< Updated upstream
-  // Aspect career = Aspect();
-  // career.name = "Health and Wellbeing";
-  // career.percentagePoints = 89;
-  // career.color = 0 ;
-  // career.isSelected = false;
-  //   career .iconFontFamily="sdf";
-  //   career.iconFontPackage="jjj";
-  //     career.iconCodePoint=0;
-  // career.iconDirection=false;
-=======
   Aspect career = Aspect();
   career.name = "Health and Wellbeing";
   career.percentagePoints = 89;
@@ -59,7 +36,6 @@ Future main() async {
     career.iconFontPackage="jjj";
       career.iconCodePoint=0;
   career.iconDirection=false;
->>>>>>> Stashed changes
 
   // iser.createAspect(career);
 
@@ -108,13 +84,8 @@ Future main() async {
   // iser.createHabit(ji);
   runApp(ChangeNotifierProvider<WheelData>(
       create: (_) => WheelData(),
-      child: const MaterialApp(
+      child:  MaterialApp(
           debugShowCheckedModeBanner: false,
-<<<<<<< Updated upstream
-          home:
-              OnboardingPage()))); // my widget // the one where i will create the quastion list .
-=======
           home:getChosenAspect(iser: iser, goalsTasks: [], 
               )))); // my widget // the one where i will create the quastion list .
->>>>>>> Stashed changes
 }

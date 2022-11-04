@@ -30,32 +30,18 @@ class IsarService {
   }
 
   /// ADD GOALS , ADD TASKS , ADD ASPECT  */
-  Future<bool> createGoal(Goal newgoal) async {
-    //Add goals
+  Future<void> createGoal(Goal newgoal) async {
+    //Add aspect
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
-<<<<<<< Updated upstream
-    return true;
-  } //<int> because we want to get the id of the  ceated thing
-=======
-    return true ; 
-  } 
-  
-   Future<int> createGoalGiveId(Goal newgoal) async {
-    //Add goals
-    final isar = await db;
-    isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
-    return newgoal.id ; 
   }
   
   
   //<int> because we want to get the id of the  ceated thing
->>>>>>> Stashed changes
 
   Future<void> createHabit(Habit newHabit) async {
     //Add habits
     final isar = await db;
-    isar.writeTxnSync<int>(() => isar.habits.putSync(newHabit));
   }
 
   // Future<void> createTask(Task newTask) async {
@@ -158,8 +144,6 @@ class IsarService {
     final isar = await db;
     return await isar.aspects.where().filter().nameEqualTo(name).findFirst();
   }
-<<<<<<< Updated upstream
-=======
   Future<Task?> findSepecificTask(String name) async {
     final isar = await db;
     return await isar.tasks.where().filter().nameEqualTo(name).findFirst();
@@ -168,7 +152,6 @@ Future<Goal?> findSepecificgoal(String name) async {
     final isar = await db;
     return await isar.goals.where().filter().titelContains(name).findFirst();
   }
->>>>>>> Stashed changes
 
   Future<void> saveTask(Task task) async {
     final isar = await db;
@@ -189,15 +172,6 @@ Future<Goal?> findSepecificgoal(String name) async {
     final isar = await db;
     yield* isar.tasks.where().watch(fireImmediately: true);
   }
-<<<<<<< Updated upstream
-
-  Future<Goal?> getSepecificGoal(int id) async {
-    final isar = await db;
-    await isar.writeTxn(() async {
-      return await isar.goals.get(id);
-    });
-    return null;
-=======
 
 
    Future<Goal?> getSepecificGoal(int id ) async {
@@ -220,14 +194,9 @@ Future<Goal?> findSepecificgoal(String name) async {
     return await isar.goals.where().filter().idEqualTo(id).findFirst();
 
 
->>>>>>> Stashed changes
   }
 
-  Future<Goal?> getSepecificGoall(int id) async {
-    final isar = await db;
-
-    return await isar.goals.where().filter().idEqualTo(id).findFirstSync();
-  }
+ 
 
   Future<Habit?> getSepecificHabit(int id) async {
     final isar = await db;
