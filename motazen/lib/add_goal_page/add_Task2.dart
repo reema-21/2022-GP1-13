@@ -230,70 +230,7 @@ floatingActionButton: FloatingActionButton(
                           ),
                           border: OutlineInputBorder(),
                         ),
-                  // onChanged: (String value){
-                  //   input=value  ;
-                  //   setState(() {
-                  //      if(input != "")
-                  //    TasksName.add(input);
-                  //   });
-                   
-                  
-                           ),
-                           SizedBox(
-                            height: 20,
-                           ),
-                        
-                      //           DropdownButtonFormField(
-                      //             icon: const Icon(
-                      //     Icons.arrow_drop_down_circle,
-                      //     color: const Color(0xFF66BF77),
-                      //   ),
-                      //   value: isSelected,
-                      //   items:durationName
-                      //           ?.map((e) => DropdownMenuItem(
-                      //                 value: e,
-                      //                 child: Text(e),
-                      //               ))
-                      //           .toList(),
-                      //   onChanged: (val) {
-                      //     setState(() {
-                      //           isSelected = val as String;
-                      //           go = true ; 
-                      //           print (isSelected);
-
-                      //     });
-                      //     }
-                      //      ,
-
-                      //   validator: (value) => value == null
-                      //           ? 'من فضلك اخترالفترة المناسبة للمهام'
-                      //           : null,
-                      //   decoration: InputDecoration(
-                      //     labelText: 'الفترة',
-                          
-                      //     border: UnderlineInputBorder(),
-                      //   ),
-                      // ),
-                      //  SizedBox(
-                      //       height:30,
-                      //      ),
-                      
-                       
-//                       SpinBox(
-                        
-//                           canChange: (value) {
-//                             if (value>9)
-//                             return false;
-//                             else return true;
-//                           }
-//                            ,
-//                         min: 1,
-//                         max: double.infinity,
-// onChanged: (value) => print(value),
-
-
-
-//                        ),
+                  ),
                            SizedBox(
                             height: 30,
                            )  , 

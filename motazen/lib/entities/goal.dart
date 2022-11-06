@@ -11,10 +11,10 @@ part 'goal.g.dart';
 class Goal {
   Id id = Isar.autoIncrement;
   late String titel;
-  final task = IsarLink<Task>();
   final goalDependency = IsarLink<Goal>(); //if goal depends on onther gaol
-  final aspect =
-      IsarLink<Aspect>(); // has a relation each goal belong to one aspect
+  final aspect =IsarLink<Aspect>();
+    final task = IsarLinks<Task>();
+ // has a relation each goal belong to one aspect
   @Index() // to be always arranged based on the importance
   late int importance;
   late DateTime dueDate;

@@ -111,7 +111,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return getChosenAspect(iser: widget.isr,goalsTasks: [], aspects: [], page: 'Goal',); // must be the
+                      return getChosenAspect(iser: widget.isr,goalsTasks: [], page: 'Goal',); // must be the
                     }));
                   },
                 )

@@ -64,12 +64,6 @@ const GoalSchema = CollectionSchema(
     )
   },
   links: {
-    r'task': LinkSchema(
-      id: 1307600547408402184,
-      name: r'task',
-      target: r'Task',
-      single: true,
-    ),
     r'goalDependency': LinkSchema(
       id: 3154268426504510286,
       name: r'goalDependency',
@@ -81,6 +75,12 @@ const GoalSchema = CollectionSchema(
       name: r'aspect',
       target: r'Aspect',
       single: true,
+    ),
+    r'task': LinkSchema(
+      id: 1307600547408402184,
+      name: r'task',
+      target: r'Task',
+      single: false,
     )
   },
   embeddedSchemas: {},
@@ -157,15 +157,15 @@ Id _goalGetId(Goal object) {
 }
 
 List<IsarLinkBase<dynamic>> _goalGetLinks(Goal object) {
-  return [object.task, object.goalDependency, object.aspect];
+  return [object.goalDependency, object.aspect, object.task];
 }
 
 void _goalAttach(IsarCollection<dynamic> col, Id id, Goal object) {
   object.id = id;
-  object.task.attach(col, col.isar.collection<Task>(), r'task', id);
   object.goalDependency
       .attach(col, col.isar.collection<Goal>(), r'goalDependency', id);
   object.aspect.attach(col, col.isar.collection<Aspect>(), r'aspect', id);
+  object.task.attach(col, col.isar.collection<Task>(), r'task', id);
 }
 
 extension GoalQueryWhereSort on QueryBuilder<Goal, Goal, QWhere> {
@@ -822,18 +822,6 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
 extension GoalQueryObject on QueryBuilder<Goal, Goal, QFilterCondition> {}
 
 extension GoalQueryLinks on QueryBuilder<Goal, Goal, QFilterCondition> {
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> task(FilterQuery<Task> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'task');
-    });
-  }
-
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> taskIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'task', 0, true, 0, true);
-    });
-  }
-
   QueryBuilder<Goal, Goal, QAfterFilterCondition> goalDependency(
       FilterQuery<Goal> q) {
     return QueryBuilder.apply(this, (query) {
@@ -857,6 +845,61 @@ extension GoalQueryLinks on QueryBuilder<Goal, Goal, QFilterCondition> {
   QueryBuilder<Goal, Goal, QAfterFilterCondition> aspectIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'aspect', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> task(FilterQuery<Task> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'task');
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> taskLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'task', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> taskIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'task', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> taskIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'task', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> taskLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'task', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> taskLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'task', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> taskLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'task', lower, includeLower, upper, includeUpper);
     });
   }
 }

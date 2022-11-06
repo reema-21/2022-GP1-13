@@ -54,6 +54,7 @@ class _goalDetailsState extends State<goalDetails> {
   final formKey = GlobalKey<FormState>();
   DateTime? selectedDate;
   int goalDuration = 0;
+   late String _goalName;
    List<Task> goalTasks =[];
   String duration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
   int importance = 0;

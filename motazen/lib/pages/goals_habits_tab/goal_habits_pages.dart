@@ -1,9 +1,11 @@
 // ignore_for_file: camel_case_types, use_build_context_synchronously
-import 'package:getwidget/getwidget.dart';
 
+import '';
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
+import '../add_goal_page/get_chosen_aspect.dart';
 import '../add_habit_page/add_habit.dart';
+import '../add_habit_page/get_chosed_aspect.dart';
 import '/pages/goals_habits_tab/goal_list_screen.dart';
 import '/isar_service.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
@@ -29,53 +31,54 @@ class Goals_habitState extends State<Goals_habit> {
         child: SafeArea(
           child: Scaffold(
             appBar: AppBar(
-          
-              actions:  [
-            IconButton(
-                // ignore: prefer_const_constructors
-                icon: Icon(Icons.add,
-                    color: const Color(0xFF66BF77)),
-                    iconSize: 40,
-                onPressed: () async {
-                   showDialog(context: context,
-     builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("أود إضافة ",textDirection: TextDirection.rtl,),
-        content: 
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Row (children: [
-              TextButton(
-                child: Text("هدف"),
-                onPressed: (){                    Navigator.push(context, MaterialPageRoute(builder: (context) {return getChosenAspect(iser: widget.iser,goalsTasks: [],);}));
-},),
-
-                SizedBox(width: 20,),
-
-TextButton(
-                child: Text("عادة"),
-                onPressed: (){
-                                                          Navigator.push(context, MaterialPageRoute(builder: (context) {return getChosenAspectH(iser: widget.iser,);}));
-
-                },),
-
-            ]),
-          )
-      );
-  }
-  );},
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-            ),
-
+              actions: [
+                IconButton(
+                  // ignore: prefer_const_constructors
+                  icon: Icon(Icons.add, color: const Color(0xFF66BF77)),
+                  iconSize: 40,
+                  onPressed: () async {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                              title: Text(
+                                "أود إضافة ",
+                                textDirection: TextDirection.rtl,
+                              ),
+                              content: Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: Row(children: [
+                                  TextButton(
+                                    child: Text("هدف"),
+                                    onPressed: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return getChosenAspect(
+                                          iser: widget.iser,
+                                          goalsTasks: [], page: 'Goal',
+                                        );
+                                      }));
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  TextButton(
+                                    child: Text("عادة"),
+                                    onPressed: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return getChosenAspectH(
+                                          iser: widget.iser,
+                                        );
+                                      }));
+                                    },
+                                  ),
+                                ]),
+                              ));
+                        });
+                  },
+                ),
               ],
               backgroundColor: Colors.white,
               elevation: 0.0,

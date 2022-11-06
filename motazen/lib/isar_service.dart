@@ -81,6 +81,11 @@ class IsarService {
     yield* isar.habits.where().watch(fireImmediately: true);
   }
 
+   Future<Task?> findSepecificTask(String name) async {
+    final isar = await db;
+    return await isar.tasks.where().filter().nameEqualTo(name).findFirst();
+  }
+
   // THER IS ANOTHE WAY IF YOU DON'T NEED IT AS STREAM .
   //just get the apsect --> i will use get because it is not sth that is changed or add frequenctly .
 

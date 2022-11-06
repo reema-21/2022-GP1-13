@@ -4,7 +4,6 @@ import 'package:motazen/isar_service.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import '../goals_habits_tab/goal_list_screen.dart';
 import '../pages/assesment_page/alert_dialog.dart';
 import '../pages/goals_habits_tab/goal_habits_pages.dart';
 import 'add_Task2.dart';
