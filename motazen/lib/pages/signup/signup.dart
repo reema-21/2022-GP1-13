@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:motazen/isar_service.dart';
-import 'package:provider/provider.dart';
-import '../../data/data.dart';
-import '../select_aspectPage/select_aspect.dart';
-import '/pages/login/login.dart';
-import '/theme.dart';
-import '/primary_button.dart';
-import '/pages/signup/signup_form.dart';
+import 'package:motazen/pages/login/login.dart';
+import 'package:motazen/pages/signup/signup_form.dart';
+import 'package:motazen/theme.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isar = IsarService();
-    var aspectList = Provider.of<WheelData>(context);
-
     return Scaffold(
       body: Directionality(
         textDirection: TextDirection.rtl,
@@ -70,41 +62,11 @@ class SignUpScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
+              //=========form starts here
               const Padding(
                 padding: kDefaultPadding,
                 child: SignUpForm(),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: kDefaultPadding,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AspectSelection(
-                          isr: isar,
-                          aspects: aspectList.aspectsArabic,
-                        ),
-                      ),
-                    );
-                  },
-                  child: const PrimaryButton(
-                    buttonText: 'التالي',
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+              )
             ],
           ),
         ),

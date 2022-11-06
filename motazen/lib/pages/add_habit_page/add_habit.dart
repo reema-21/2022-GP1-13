@@ -7,11 +7,8 @@ import '/pages/goals_habits_tab/goal_habits_pages.dart';
 import '/isar_service.dart';
 import '../assesment_page/alert_dialog.dart';
 
-import 'package:rflutter_alert/rflutter_alert.dart';
-
 import '../../entities/aspect.dart';
 
-//TODO
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class AddHabit extends StatefulWidget {
   final IsarService isr;
@@ -107,7 +104,6 @@ class _AddHabitState extends State<AddHabit> {
                         if (value == null || value.isEmpty) {
                           return "من فضلك ادخل اسم العادة";
                         } else {
-                          print("hi");
                           return null;
                         }
                       },
@@ -194,7 +190,6 @@ class _AddHabitState extends State<AddHabit> {
                         if (value == null || value.isEmpty) {
                           return "من فضلك ادخل عدد مرات تكرار العادة";
                         } else {
-                          print("hi");
                           return null;
                         }
                       },

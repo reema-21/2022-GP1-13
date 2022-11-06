@@ -42,6 +42,7 @@ class _MyHomepageState extends State<Homepage> {
             //displays the visualization (wheel of life)
             Stack(
               children: [
+                //display's the wheel's background image
                 Positioned(
                   top: -55.8,
                   left: 20,
@@ -57,6 +58,7 @@ class _MyHomepageState extends State<Homepage> {
                     ),
                   ),
                 ),
+                //displays the wheel's sections from user data
                 const life_wheel(),
               ],
             ),

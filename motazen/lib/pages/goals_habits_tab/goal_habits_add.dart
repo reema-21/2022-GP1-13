@@ -77,9 +77,7 @@ class Goals_habitState extends State<Goals_habit_add> {
                     //firstTap
                     getChosenAspect(
                       iser: widget.iser,
-                      aspects: const [],
                       page: 'Goal',
-                      
                     ),
                     //second
                     getChosenAspectH(iser: widget.iser)

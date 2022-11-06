@@ -2,10 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import '../../add_goal_page/get_chosen_aspect.dart';
 import '../add_goal_page/add_goal_screen.dart';
 import '../add_habit_page/add_habit.dart';
-import '../add_habit_page/get_chosed_aspect.dart';
 import '/pages/goals_habits_tab/goal_list_screen.dart';
 import '/isar_service.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
@@ -31,26 +29,32 @@ class Goals_habitState extends State<Goals_habit> {
         child: SafeArea(
           child: Scaffold(
             appBar: AppBar(
-          
-              actions:  [
-            IconButton(
-                // ignore: prefer_const_constructors
-                icon: Icon(Icons.add,
-                    color: const Color.fromARGB(255, 245, 241, 241)),
-                onPressed: () async {
-                  final action = await AlertDialogs.yesCancelDialog(
-                      context,
-               '',
-                   'هل تريد اضافة :');
-                  if (action == DialogsAction.yes) {
-                    //return to the previouse page different code for the ios .
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {return getChosenAspect(iser: widget.iser,goalsTasks: [],);}));
-                  } else {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) {return getChosenAspectH(iser: widget.iser,);}));
-
-                  }
-                }),
-          ],
+              actions: [
+                IconButton(
+                    // ignore: prefer_const_constructors
+                    icon: Icon(Icons.add,
+                        color: const Color.fromARGB(255, 245, 241, 241)),
+                    onPressed: () async {
+                      final action = await AlertDialogs.yesCancelDialog(
+                          context, '', 'هل تريد اضافة :');
+                      if (action == DialogsAction.yes) {
+                        //return to the previouse page different code for the ios .
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return AddGoal(
+                            isr: widget.iser,
+                          );
+                        }));
+                      } else {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return AddHabit(
+                            isr: widget.iser,
+                          );
+                        }));
+                      }
+                    }),
+              ],
               backgroundColor: Colors.white,
               elevation: 0.0,
               bottom: const TabBar(

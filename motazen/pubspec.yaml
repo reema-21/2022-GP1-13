@@ -32,7 +32,10 @@ dependencies:
   rflutter_alert: ^2.0.4
   intl: ^0.17.0
   multiselect: ^0.0.7
-
+  get: ^4.6.1
+  fluttertoast: ^8.1.1
+  email_auth: ^1.0.0
+  is_first_run: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -58,3 +61,7 @@ flutter:
           weight: 600
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700
+    - family: Frutiger
+      fonts:
+        - asset: assets/fonts/Frutiger-LT-Arabic-45-Light.ttf
+          weight: 300      

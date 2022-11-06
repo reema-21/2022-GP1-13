@@ -8,7 +8,6 @@ import '/isar_service.dart';
 
 import 'package:intl/intl.dart' as intl;
 
-//TODO
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class EditGoal extends StatefulWidget {
   final IsarService isr;
@@ -119,7 +118,6 @@ class _EditGoalState extends State<EditGoal> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(
         home: Directionality(
             textDirection: TextDirection.rtl,

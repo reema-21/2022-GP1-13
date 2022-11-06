@@ -1,34 +1,26 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import '../../add_goal_page/add_Task2.dart';
-import '../../entities/task.dart';
 import '/entities/goal.dart';
 import '/pages/goals_habits_tab/goal_habits_pages.dart';
 import '/isar_service.dart';
 import '../assesment_page/alert_dialog.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-import '../goals_habits_tab/goal_list_screen.dart';
-
 
 import '../../entities/aspect.dart';
 
-//TODO
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class AddGoal extends StatefulWidget {
-  final List<Task> goalsTasks;
   final IsarService isr;
   final List<String>? chosenAspectNames;
-  const AddGoal({super.key, required this.isr, this.chosenAspectNames,  required this.goalsTasks});
+  const AddGoal({super.key, required this.isr, this.chosenAspectNames});
 
   @override
   State<AddGoal> createState() => _AddGoalState();
 }
 
 class _AddGoalState extends State<AddGoal> {
-  
   final formKey = GlobalKey<FormState>();
   late String _goalName;
   DateTime? selectedDate;
@@ -49,8 +41,7 @@ class _AddGoalState extends State<AddGoal> {
     super.initState();
     _goalNmaeController.addListener(_updateText);
     _dueDateController.addListener(_updateText);
-
-  } 
+  }
 
   void _updateText() {
     setState(() {
@@ -77,46 +68,19 @@ class _AddGoalState extends State<AddGoal> {
   String aspectnameInEnglish = "";
   _Addgoal() async {
     newgoal.titel = _goalName;
-    print ("here1");
     newgoal.importance = importance;
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
     newgoal.aspect.value = selected;
-if (!isDataSelected){
-newgoal.dueDate = DateTime.utc(1989, 11, 9);
-}
-    print ("here2");
-
-newgoal.DescriptiveGoalDuration=duration; 
-newgoal.goalDuration=goalDuration; 
-
-  if (widget.goalsTasks !=null){
-var task =[];
-       task = widget.goalsTasks;
-  
-  if (widget.goalsTasks != null){
-  for(int i = 0 ; i<widget.goalsTasks!.length ; i++){
-    Task? y = Task() ; 
-    String name ="";
-    print ("here3");
-
-   name = task[i].name;
-   print(name);
- 
-     y = await widget.isr.findSepecificTask(name);
-     print (y!.name);
-   newgoal.task.add(y!) ;
-
-  }
-  }
-  }
+    if (!isDataSelected) {
+      newgoal.dueDate = DateTime.utc(1989, 11, 9);
+    }
+    newgoal.DescriptiveGoalDuration = duration;
+    newgoal.goalDuration = goalDuration;
     widget.isr.createGoal(newgoal);
-        print ("here4");
-
-     Navigator.push(context, MaterialPageRoute(builder: (context) {
-     return Goals_habit(iser: widget.isr);
-   }));
-  
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Goals_habit(iser: widget.isr);
+    }));
   }
 
   @override
@@ -167,7 +131,6 @@ var task =[];
                           if (value == null || value.isEmpty) {
                             return "من فضلك ادخل اسم الهدف";
                           } else {
-                            print("hi");
                             return null;
                           }
                         },
@@ -421,20 +384,91 @@ var task =[];
                               setState(() {
                                 importance = rating.toInt();
                               });
-                              print(importance);
                             },
                           )
                         ],
                       ),
-                      ElevatedButton(
-                  child: const Text("مهمة إضافة"),
-                  onPressed: () {
-                                             Navigator.push(context, MaterialPageRoute(builder: (context) {return                     AddTask(isr: widget.isr,goalDurtion: goalDuration,goalId:1);
-;}));
-
-                    }
-                      )
-                    ]
+                      // //here the tasks .
+                      // const SizedBox(height: 12),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     Container(
+                      //       height: 100,
+                      //       decoration: BoxDecoration(
+                      //         shape: BoxShape.circle,
+                      //         color: Colors.green.shade50,
+                      //       ),
+                      //       child: IconButton(
+                      //         onPressed: () {
+                      //           Navigator.push(context, TaskScreen.route());
+                      //         },
+                      //         icon: const Icon(Icons.add),
+                      //       ),
+                      //     ),
+                      //     const SizedBox(width: 12),
+                      //     const Text(
+                      //       "إضافة مهمة",
+                      //       style: TextStyle(fontSize: 20),
+                      //     ),
+                      //   ],
+                      // ),
+                      // const SizedBox(height: 12),
+                      // Flexible(
+                      //   child: StreamBuilder<List<Task>>(
+                      //     stream: widget.isr.listenTasks(),
+                      //     builder: (context, snapshot) {
+                      //       if (snapshot.hasError) {
+                      //         return const Text("حصل خطأ");
+                      //       }
+                      //       if (snapshot.hasData && snapshot.data!.isEmpty) {
+                      //         return const Text("ليس لديك مهام");
+                      //       }
+                      //       if (snapshot.connectionState ==
+                      //           ConnectionState.waiting) {
+                      //         return const Text("جاري التحميل");
+                      //       }
+                      //       return Expanded(
+                      //         child: Flexible(
+                      //           child: ListView.separated(
+                      //             itemCount: snapshot.data!.length,
+                      //             separatorBuilder: (context, index) =>
+                      //                 const SizedBox(height: 6),
+                      //             itemBuilder: (context, index) {
+                      //               final task =
+                      //                   snapshot.data!.reversed.elementAt(index);
+                      //               return Container(
+                      //                 padding: EdgeInsets.fromLTRB(0, 6, 24, 12),
+                      //                 width: double.infinity,
+                      //                 height: 60,
+                      //                 decoration: BoxDecoration(
+                      //                   borderRadius: BorderRadius.circular(12),
+                      //                   color: Colors.lightBlue.shade50,
+                      //                 ),
+                      //                 child: Row(
+                      //                   mainAxisAlignment:
+                      //                       MainAxisAlignment.spaceAround,
+                      //                   crossAxisAlignment:
+                      //                       CrossAxisAlignment.center,
+                      //                   children: [
+                      //                     Text(task.taskImportance!),
+                      //                     Text(
+                      //                       task.name!,
+                      //                       style: TextStyle(
+                      //                         fontSize: 16,
+                      //                       ),
+                      //                     ),
+                      //                   ],
+                      //                 ),
+                      //               );
+                      //             },
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
+                    ],
                   ),
                 ),
               ),

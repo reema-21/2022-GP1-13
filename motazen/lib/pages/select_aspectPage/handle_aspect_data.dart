@@ -1,6 +1,5 @@
 // ignore_for_file: camel_case_types
 
-import 'package:flutter/material.dart';
 import '/entities/aspect.dart';
 import '/isar_service.dart';
 import '../../data/models.dart';
@@ -41,20 +40,6 @@ class handle_aspect {
     }
   }
 
-  //return aspect color
-  Future<Color> getAspectColor(String name) async {
-    bool aspectStatus = await isar.checkSelectionStatus(name);
-    int? aspectColor = await isar.getAspectColor(name);
-
-    if (aspectStatus) {
-      //for selected aspects
-      return Color(aspectColor!).withOpacity(1);
-    } else {
-      // for deselected aspects
-      return Color(aspectColor!).withOpacity(0.18);
-    }
-  }
-
 //return a list of all selected aspects
   Future<List<Aspect>> getSelectedAspects() async {
     List<Aspect> selectedList = await isar.getSelectedAspects();
@@ -65,5 +50,10 @@ class handle_aspect {
   Future<List<Aspect>> getAspects() async {
     List<Aspect> selectedList = await isar.getAspectFirstTime();
     return selectedList;
+  }
+
+  //return a list of all selected aspects
+  Future<void> setAspectpoints(String name, double point) async {
+    isar.assignPointAspect(name, point);
   }
 }

@@ -73,7 +73,6 @@ class _showsState extends State<getChosenAspectEh> {
 
                   chosenAspectNames.add(nameInArabic);
                 }
-                print(chosenAspectNames);
 
                 return HabitDetails(
                   isr: widget.isr,

@@ -113,7 +113,6 @@ class _GoalListScreenState extends State<GoalListScreen> {
                         MaterialPageRoute(builder: (context) {
                       return getChosenAspect(
                         iser: widget.isr,
-                        aspects: const [],
                         page: 'Goal',
                       ); // must be the
                     }));

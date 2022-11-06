@@ -49,7 +49,6 @@ class goalDetails extends StatefulWidget {
 
 class _goalDetailsState extends State<goalDetails> {
   final formKey = GlobalKey<FormState>();
-  late String _goalName;
   DateTime? selectedDate;
   int goalDuration = 0;
 
@@ -66,8 +65,6 @@ class _goalDetailsState extends State<goalDetails> {
   String? isSelected;
   @override
   void initState() {
-    _goalName = _goalNmaeController.text;
-
     if (!(widget.goalDuration == 0)) {
       duration = widget.goalDurationDescription;
     }
@@ -91,9 +88,7 @@ class _goalDetailsState extends State<goalDetails> {
   }
 
   void _updateText() {
-    setState(() {
-      _goalName = _goalNmaeController.text;
-    });
+    setState(() {});
   }
 
   _onBasicWaitingAlertPressed(context) async {
@@ -141,8 +136,8 @@ class _goalDetailsState extends State<goalDetails> {
                   actions: [
                     IconButton(
                         // ignore: prefer_const_constructors
-                        icon:
-                            Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                        icon: const Icon(Icons.arrow_back_ios_new,
+                            color: Colors.white),
                         onPressed: () async {
                           final action = await AlertDialogs.yesCancelDialog(
                               context,
@@ -171,7 +166,6 @@ class _goalDetailsState extends State<goalDetails> {
                               if (value == null || value.isEmpty) {
                                 return "من فضلك ادخل اسم الهدف";
                               } else {
-                                print("hi");
                                 return null;
                               }
                             },
@@ -429,7 +423,6 @@ class _goalDetailsState extends State<goalDetails> {
                                   setState(() {
                                     importance = rating.toInt();
                                   });
-                                  print(importance);
                                 },
                               )
                             ],

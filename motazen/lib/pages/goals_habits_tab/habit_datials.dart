@@ -9,7 +9,6 @@ import '../assesment_page/alert_dialog.dart';
 
 import '../../entities/aspect.dart';
 
-//TODO
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class HabitDetails extends StatefulWidget {
   final IsarService isr;
@@ -34,8 +33,6 @@ class HabitDetails extends StatefulWidget {
 
 class _AddHabitState extends State<HabitDetails> {
   final formKey = GlobalKey<FormState>();
-  late String _habitName;
-  late String _habitFrequecy;
 
   final _goalNmaeController = TextEditingController();
   final _habitFrequencyController = TextEditingController();
@@ -45,23 +42,14 @@ class _AddHabitState extends State<HabitDetails> {
   void initState() {
     super.initState();
     _goalNmaeController.text = widget.HabitName;
-    _habitName = _goalNmaeController.text;
 
     _habitFrequencyController.text = widget.habitFrequency;
-    _habitFrequecy = _habitFrequencyController.text;
     for (int i = 0; i < widget.chosenAspectNames!.length; i++) {
       String name = widget.chosenAspectNames![i];
       if (name.contains(widget.habitAspect)) {
         isSelected = widget.chosenAspectNames![i];
       }
     }
-  }
-
-  void _updateText() {
-    setState(() {
-      _habitName = _goalNmaeController.text;
-      _habitFrequecy = _habitFrequencyController.text;
-    });
   }
 
   String aspectnameInEnglish = "";

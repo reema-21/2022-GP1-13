@@ -86,7 +86,6 @@ class _showsState extends State<getChosenAspectE> {
 
                   chosenAspectNames.add(nameInArabic);
                 }
-                print(chosenAspectNames);
 
                 return goalDetails(
                   isr: widget.isr,

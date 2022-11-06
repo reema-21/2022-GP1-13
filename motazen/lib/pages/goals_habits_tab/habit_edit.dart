@@ -7,7 +7,6 @@ import '/isar_service.dart';
 
 import 'getChosenAspectEh.dart';
 
-//TODO
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class EditHbit extends StatefulWidget {
   final IsarService isr;
@@ -77,7 +76,6 @@ class _EditGoalState extends State<EditHbit> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(
         home: Directionality(
             textDirection: TextDirection.rtl,
