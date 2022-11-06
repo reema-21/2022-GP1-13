@@ -37,6 +37,7 @@ the application is built using [Dart](https://dart.dev/) alongside the [flutter]
 ---add later---
 
 ## Authors
+- [Reema](https://github.com/reema-21)
 - [Manar](https://github.com/itsmanar)
 - [Reem](https://github.com/pseudoreem)
 - [Randa](https://github.com/Misfar-G2)
