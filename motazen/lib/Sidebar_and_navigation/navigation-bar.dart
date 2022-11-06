@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, camel_case_types
 
+import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -18,13 +19,22 @@ class navBar extends StatefulWidget {
 }
 
 class _MynavBar extends State<navBar> {
+  int _selectedIndex = 0;
+  final List<Widget> _pages = [
+    const Homepage(),
+    Goals_habit(iser: IsarService()),
+    const Homepage(), //placehloder
+    const Homepage(), //placehloder
+  ];
   navigate(int index) {
-    setState(() {});
+    setState(() {
+      _selectedIndex = index;
+      Get.to(_pages[index]);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    IsarService isar = IsarService();
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Container(
@@ -43,37 +53,26 @@ class _MynavBar extends State<navBar> {
             iconSize: 24, // tab button icon size
             tabBackgroundColor: kPrimaryColor, // selected tab background color
             padding: const EdgeInsets.all(16.0), // navigation bar padding
-            tabs: [
+            tabs: const [
               GButton(
                 icon: LineIcons.home,
                 text: 'الرئسية',
-                onPressed: () {
-                  const Homepage();
-                },
               ),
               GButton(
                 icon: LineIcons.check, //click here move me to a page
                 text: 'عاداتي وأهدافي',
-                onPressed: () {
-                  Goals_habit(
-                    iser: isar,
-                  );
-                },
               ),
               GButton(
-                  icon: LineIcons.peopleCarry,
-                  text: 'مجتمعاتي',
-                  onPressed: () {
-                    null;
-                  }),
+                icon: LineIcons.peopleCarry,
+                text: 'مجتمعاتي',
+              ),
               GButton(
-                  icon: LineIcons.book,
-                  text: 'مذكرتي',
-                  onPressed: () {
-                    null;
-                  }),
+                icon: LineIcons.book,
+                text: 'مذكرتي',
+              ),
             ],
             onTabChange: navigate,
+            selectedIndex: _selectedIndex,
           ),
         ),
       ),

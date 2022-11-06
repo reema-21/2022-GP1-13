@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, unused_local_variable
+// ignore_for_file: avoid_print,
 
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -366,9 +366,7 @@ class _EditGoalState extends State<EditGoal> {
             shrinkWrap: true,
             itemCount: goalTasks.length,
             itemBuilder: (context, index) {
-              final task = goalTasks[index];
               final name = goalTasks[index].name;
-              final duration = goalTasks[index].duration;
               return Card(
                   // here is the code of each item you have
                   child: ListTile(

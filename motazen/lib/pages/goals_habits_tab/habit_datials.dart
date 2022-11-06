@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, avoid_print, unused_field, unused_element
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously,
 
 import 'package:flutter/material.dart';
 import '../add_habit_page/editMy_controller.dart';
@@ -39,8 +39,6 @@ class HabitDetails extends StatefulWidget {
 
 class _AddHabitState extends State<HabitDetails> {
   final formKey2 = GlobalKey<FormState>();
-  late String _habitName;
-  late String _habitFrequecy;
   late int durationIndString;
   late int durationInInt;
   final _goalNmaeController = TextEditingController();
@@ -56,15 +54,8 @@ class _AddHabitState extends State<HabitDetails> {
   void initState() {
     super.initState();
     _goalNmaeController.text = widget.HabitName;
-    _habitName = _goalNmaeController.text;
     freq.setvalue(widget.durationInInt);
     isDuration = durations[widget.duraioninString];
-  }
-
-  void _updateText() {
-    setState(() {
-      _habitName = _goalNmaeController.text;
-    });
   }
 
   String aspectnameInEnglish = "";

@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, file_names, unused_local_variable
+// ignore_for_file: non_constant_identifier_names, file_names,
 
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/task.dart';
@@ -112,9 +112,7 @@ class _AddTaskState extends State<AddTask> {
               child: ListView.builder(
                   itemCount: widget.goalTask.length,
                   itemBuilder: (context, index) {
-                    final goal = widget.goalTask[index];
                     final name = widget.goalTask[index].name;
-                    final impo = widget.goalTask[index].duration;
                     if (name != null) {
                       TasksNamedropmenue.add(name);
                     }

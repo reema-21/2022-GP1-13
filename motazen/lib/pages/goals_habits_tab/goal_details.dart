@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types, non_constant_identifier_names, use_build_context_synchronously, unused_field
+// ignore_for_file: camel_case_types, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import '../../add_goal_page/add_Task2.dart';
@@ -55,7 +55,6 @@ class _goalDetailsState extends State<goalDetails> {
   final formKey = GlobalKey<FormState>();
   DateTime? selectedDate;
   int goalDuration = 0;
-  late String _goalName;
   List<Task> goalTasks = [];
   String duration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
   int importance = 0;
@@ -70,8 +69,6 @@ class _goalDetailsState extends State<goalDetails> {
   String? isSelected;
   @override
   void initState() {
-    _goalName = _goalNmaeController.text;
-
     goalTasks = widget.goalTasks;
     if (!(widget.goalDuration == 0)) {
       duration = widget.goalDurationDescription;

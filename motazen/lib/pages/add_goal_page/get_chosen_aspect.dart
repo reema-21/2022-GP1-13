@@ -46,7 +46,9 @@ class _showsState extends State<getChosenAspect> {
                   if (updatedAspects[i].isSelected) {
                     chosenAspectNames.add(updatedAspects[i].name);
                   }
-                  updatedAspects[i].percentagePoints = widget.pointsList![i];
+                  if (widget.page == 'Home') {
+                    updatedAspects[i].percentagePoints = widget.pointsList![i];
+                  }
                 }
 
                 aspectList.allAspects = updatedAspects;

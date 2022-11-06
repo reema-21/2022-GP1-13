@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, unused_element, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
@@ -53,21 +53,6 @@ class _AddGoalState extends State<AddGoal> {
     setState(() {
       _goalName = _goalNmaeController.text;
     });
-  }
-
-  _onBasicWaitingAlertPressed(context) async {
-    return AlertDialog(
-      title: const Text("تنبيه"),
-      content: const Text("من فضلك ادخل رقم الاستحقاق أولا "),
-      actions: <Widget>[
-        ElevatedButton(
-          child: const Text("تم"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    );
   }
 
   Goal newgoal = Goal();
