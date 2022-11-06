@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none' 
 version: 1.0.0+1
-
+isar_version: ^3.0.2
 environment:
   sdk: '>=2.18.2 <3.0.0'
 dependencies:
@@ -13,7 +13,7 @@ dependencies:
   firebase_core: ^1.24.0
   cloud_firestore: ^3.5.1
   im_stepper: ^1.0.1+1
-  isar: ^3.0.0-dev.8
+  isar: ^3.0.2
   path_provider: ^2.0.11
   introduction_screen: ^3.0.2
   isar_flutter_libs: ^3.0.2
@@ -35,7 +35,6 @@ dependencies:
   number_inc_dec: ^0.8.0
   flutter_spinbox: ^0.10.0
   get: ^4.6.5
-  keyboard_visibility: ^0.5.6
   fluttertoast: ^8.1.1
   email_auth: ^1.0.0
   is_first_run: ^1.0.0
@@ -43,7 +42,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  isar_generator: ^3.0.0-dev.8
+  isar_generator: ^3.0.2
   build_runner: ^2.1.11
   flutter_lints: ^2.0.0
 

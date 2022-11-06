@@ -19,7 +19,7 @@ class PieChartSections {
               color: Color(data.color).withOpacity(1),
               value: 22.5,
               title: '',
-              radius: points,
+              radius: points * 1.33, //scale the data to the size of the wheel
             );
 
             return MapEntry(index, value);
