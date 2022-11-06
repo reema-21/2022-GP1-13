@@ -14,12 +14,19 @@ const kDefaultPadding = EdgeInsets.symmetric(horizontal: 30);
 const kButtonMargin = EdgeInsets.all(30.0);
 
 TextStyle titleText = const TextStyle(
-    color: kPrimaryColor, fontSize: 32, fontWeight: FontWeight.w700);
+    color: kPrimaryColor,
+    fontSize: 32,
+    fontFamily: 'Frutiger',
+    fontWeight: FontWeight.w700);
 TextStyle subTitle = const TextStyle(
-    color: kSecondaryColor, fontSize: 18, fontWeight: FontWeight.w500);
+    color: kSecondaryColor,
+    fontSize: 18,
+    fontFamily: 'Frutiger',
+    fontWeight: FontWeight.w500);
 TextStyle textButton = const TextStyle(
   color: kPrimaryColor,
   fontSize: 18,
+  fontFamily: 'Frutiger',
   fontWeight: FontWeight.w700,
 );
 

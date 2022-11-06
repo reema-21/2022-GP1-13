@@ -1,7 +1,6 @@
 // ignore_for_file: await_only_futures, camel_case_types
 
 import 'package:flutter/material.dart';
-import '../pages/add_goal_page/get_chosen_aspect.dart';
 import '../pages/select_aspectPage/select_aspect.dart';
 import '/entities/aspect.dart';
 import '/isar_service.dart';

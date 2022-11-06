@@ -30,14 +30,12 @@ class IsarService {
   }
 
   /// ADD GOALS , ADD TASKS , ADD ASPECT  */
-  Future<void> createGoal(Goal newgoal) async {
-    //Add aspect
+  Future<bool> createGoal(Goal newgoal) async {
+    //Add goals
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
-  }
-  
-  
-  //<int> because we want to get the id of the  ceated thing
+    return true;
+  } //<int> because we want to get the id of the  ceated thing
 
   Future<void> createHabit(Habit newHabit) async {
     //Add habits
@@ -45,6 +43,7 @@ class IsarService {
         isar.writeTxnSync<int>(() => isar.habits.putSync(newHabit));
 
 
+    isar.writeTxnSync<int>(() => isar.habits.putSync(newHabit));
   }
 
   // Future<void> createTask(Task newTask) async {
@@ -141,19 +140,10 @@ class IsarService {
     final isar = await db;
     return await isar.aspects.filter().percentagePointsGreaterThan(0).findAll();
   }
-  
 
   Future<Aspect?> findSepecificAspect(String name) async {
     final isar = await db;
     return await isar.aspects.where().filter().nameEqualTo(name).findFirst();
-  }
-  Future<Task?> findSepecificTask(String name) async {
-    final isar = await db;
-    return await isar.tasks.where().filter().nameEqualTo(name).findFirst();
-  }
-Future<Goal?> findSepecificgoal(String name) async {
-    final isar = await db;
-    return await isar.goals.where().filter().titelContains(name).findFirst();
   }
 
   Future<void> saveTask(Task task) async {
@@ -176,30 +166,19 @@ Future<Goal?> findSepecificgoal(String name) async {
     yield* isar.tasks.where().watch(fireImmediately: true);
   }
  
-
-   Future<Goal?> getSepecificGoal(int id ) async {
+  Future<Goal?> getSepecificGoal(int id) async {
     final isar = await db;
-     await isar.writeTxn(() async {
-         return  await isar.goals.get(id);
-
-});
-  }
-   Future<List<Task>> getGoalTask(int id ) async {
-    final isar = await db;
-  return  isar.tasks.filter()
-        .goal((q) => q.idEqualTo(id))
-        .findAll();
-  }
-  Future<Goal?> getSepecificGoall(int id ) async {
-    print("here i am at the sync");
-    print (id);
-    final isar = await db;
-    return await isar.goals.where().filter().idEqualTo(id).findFirst();
-
-
+    await isar.writeTxn(() async {
+      return await isar.goals.get(id);
+    });
+    return null;
   }
 
- 
+  Future<Goal?> getSepecificGoall(int id) async {
+    final isar = await db;
+
+    return await isar.goals.where().filter().idEqualTo(id).findFirstSync();
+  }
 
   Future<Habit?> getSepecificHabit(int id) async {
     final isar = await db;
@@ -238,13 +217,6 @@ Future<Goal?> findSepecificgoal(String name) async {
   Future<List<Aspect>> getSelectedAspects() async {
     final isar = await db;
     return await isar.aspects.filter().isSelectedEqualTo(true).findAll();
-  }
-
-  Future<int?> getAspectColor(String name) async {
-    final isar = await db;
-    Aspect? aspect =
-        await isar.aspects.where().filter().nameEqualTo(name).findFirst();
-    return aspect!.color;
   }
 
 //Delete //
@@ -302,8 +274,4 @@ Future<Goal?> findSepecificgoal(String name) async {
       await isar.habits.put(tem);
     });
   }
-
- 
-
-
 }

@@ -1,25 +1,23 @@
-// ignore_for_file: camel_case_types, use_build_context_synchronously
-import 'package:getwidget/getwidget.dart';
+// ignore_for_file: camel_case_types
 
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import '../add_habit_page/add_habit.dart';
-import '/pages/goals_habits_tab/goal_list_screen.dart';
+import '../add_habit_page/get_chosed_aspect.dart';
 import '/isar_service.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
-import '../assesment_page/aler2.dart';
-import 'habit_list_screen.dart';
+import '../add_goal_page/get_chosen_aspect.dart';
+import 'goal_habits_pages.dart';
 
-class Goals_habit extends StatefulWidget {
+class Goals_habit_add extends StatefulWidget {
   final IsarService iser;
 
-  const Goals_habit({super.key, required this.iser});
+  const Goals_habit_add({super.key, required this.iser});
 
   @override
-  State<Goals_habit> createState() => Goals_habitState();
+  State<Goals_habit_add> createState() => Goals_habitState();
 }
 
-class Goals_habitState extends State<Goals_habit> {
+class Goals_habitState extends State<Goals_habit_add> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -29,55 +27,19 @@ class Goals_habitState extends State<Goals_habit> {
         child: SafeArea(
           child: Scaffold(
             appBar: AppBar(
-          
-              actions:  [
-            IconButton(
-                // ignore: prefer_const_constructors
-                icon: Icon(Icons.add,
-                    color: const Color(0xFF66BF77)),
-                    iconSize: 40,
-                onPressed: () async {
-                   showDialog(context: context,
-     builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("أود إضافة ",textDirection: TextDirection.rtl,),
-        content: 
-          Directionality(
-            textDirection: TextDirection.rtl,
-            child: Row (children: [
-              TextButton(
-                child: Text("هدف"),
-                onPressed: (){                    Navigator.push(context, MaterialPageRoute(builder: (context) {return getChosenAspect(iser: widget.iser,goalsTasks: [],);}));
-},),
-
-                SizedBox(width: 20,),
-
-TextButton(
-                child: Text("عادة"),
-                onPressed: (){
-                                                          Navigator.push(context, MaterialPageRoute(builder: (context) {return getChosenAspectH(iser: widget.iser,);}));
-
-                },),
-
-            ]),
-          )
-      );
-  }
-  );},
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-            ),
-
+              actions: [
+                IconButton(
+                    // ignore: prefer_const_constructors
+                    icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return Goals_habit(iser: widget.iser);
+                      }));
+                    })
               ],
               backgroundColor: Colors.white,
+              iconTheme: const IconThemeData(color: Colors.black),
               elevation: 0.0,
               bottom: const TabBar(
                   isScrollable: true,
@@ -96,12 +58,12 @@ TextButton(
                   tabs: [
                     // ignore: prefer_const_constructors
                     Tab(
-                        child: Text("أهدافي",
+                        child: Text("إضافة هدف",
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500))), //Goals page
                     Tab(
-                        child: Text("عاداتي",
+                        child: Text("إضافة عادة",
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500))) //habits page
@@ -113,9 +75,14 @@ TextButton(
                 Expanded(
                   child: TabBarView(children: [
                     //firstTap
-                    GoalListScreen(isr: widget.iser),
+                    getChosenAspect(
+                      iser: widget.iser,
+                      aspects: const [],
+                      page: 'Goal',
+                      
+                    ),
                     //second
-                    HabitListScreen(isr: widget.iser)
+                    getChosenAspectH(iser: widget.iser)
                   ]),
                 )
               ],

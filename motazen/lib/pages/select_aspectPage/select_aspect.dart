@@ -1,7 +1,6 @@
 // ignore_for_file: camel_case_types, iterable_contains_unrelated_type, list_remove_unrelated_type
 
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:provider/provider.dart';
 
 import '../assesment_page/show.dart';
@@ -21,7 +20,7 @@ class AspectSelection extends StatefulWidget {
 }
 
 class _selectAspectState extends State<AspectSelection> {
-  final List<bool> _isSelected = [
+  final List<bool> __isSelected = [
     false,
     false,
     false,
@@ -31,22 +30,15 @@ class _selectAspectState extends State<AspectSelection> {
     false,
     false,
   ];
+  List<String> selectedAspects = [];
   @override
   Widget build(BuildContext context) {
     //list of all aspects
     var aspectList = Provider.of<WheelData>(context);
-    //a temporary list that holds the selected aspect names (remove when the get color bug is fixed)
-    List<String> selectedAspects = [];
 
     Widget doneButton(IsarService isar) {
-      //once all quastion answare and the user is n any quastion it will be enabeld
-      bool isAllQuastionAnswerd = true;
-      if (selectedAspects.isEmpty) {
-        isAllQuastionAnswerd = false;
-      }
-
       return ElevatedButton(
-        onPressed: isAllQuastionAnswerd
+        onPressed: __isSelected.contains(true)
             ? () {
 //call a method that add the index to the local and go to assignment page .
                 Navigator.push(context, MaterialPageRoute(
@@ -65,659 +57,153 @@ class _selectAspectState extends State<AspectSelection> {
 
     Size size = MediaQuery.of(context).size;
 
-    return FutureBuilder(
-      builder: (context, snapshot) {
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: Scaffold(
-            backgroundColor: kWhiteColor,
-            appBar: AppBar(
-              title: const Text(
-                'هل أنت مستعد لإنشاء عجلة الحياة الخاصة بك ؟',
-                textDirection: TextDirection.rtl,
-                style: TextStyle(
-                    fontSize: 23,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white),
-              ),
-              backgroundColor: const Color(0xFF86BE90),
-              elevation: 0.0,
-              actions: [
-                IconButton(
-                    // ignore: prefer_const_constructors
-                    icon: Icon(Icons.arrow_back_ios_new,
-                        color: const Color.fromARGB(255, 245, 241, 241)),
-                    onPressed: () async {
-                      final action = await AlertDialogs.yesCancelDialog(
-                          context,
-                          ' هل انت متاكد من الرجوع ',
-                          'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
-                      if (action == DialogsAction.yes) {
-                        //return to the previouse page different code for the ios .
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
-                      }
-                    }),
-              ],
-            ),
-            body: SafeArea(
-              child: Stack(
-                children: [
-                  Opacity(
-                    opacity: 0.5,
-                    child: ClipPath(
-                      clipper: OvalBottomBorderClipper(),
-                      child: Container(
-                          height: 100,
-                          decoration:
-                              const BoxDecoration(color: Color(0xFF86BE90))),
-                    ),
-                  ),
-                  ClipPath(
-                    clipper: OvalBottomBorderClipper(),
-                    child: Container(
-                      padding: const EdgeInsets.only(right: 35),
-                      height: 90,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: kWhiteColor,
+        appBar: AppBar(
+          title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'هل أنت مستعد لإنشاء عجلة الحياة الخاصة بك ؟',
+                  textDirection: TextDirection.rtl,
+                  style: titleText,
+                ),
+                Text("اختر الجوانب اللي تريد اضافتها للعجلة", style: subTitle),
+              ]),
+          backgroundColor: kWhiteColor,
+          iconTheme: const IconThemeData(color: kBlackColor),
+          elevation: 0.0,
+          actions: [
+            IconButton(
+                // ignore: prefer_const_constructors
+                icon: Icon(Icons.arrow_back_ios_new, color: kBlackColor),
+                onPressed: () async {
+                  final action = await AlertDialogs.yesCancelDialog(
+                      context,
+                      ' هل انت متاكد من الرجوع ',
+                      'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
+                  if (action == DialogsAction.yes) {
+                    //return to the previouse page different code for the ios .
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
+                  }
+                }),
+          ],
+        ),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              //align the aspect buttons
+              Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                      height: size.height - (size.height / 3),
+                      width: size.width,
                       decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 134, 190, 144)),
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                "اختر الجوانب اللي تريد اضافتها للعجلة",
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.white),
-                              ),
-                            ]),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
                       ),
-                    ),
-                  ),
-                  //align the aspect buttons
-                  Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                          height: size.height - (size.height / 3),
-                          width: size.width,
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 42,
                             ),
-                          ),
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        child: Container(
-                                          height: 92,
-                                          width: 170,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            color: _isSelected[0]
-                                                ? Color(aspectList
-                                                        .data[0].color)
-                                                    .withOpacity(1)
-                                                : Color(aspectList
-                                                        .data[0].color)
-                                                    .withOpacity(0.18),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 50,
-                                                  color: const Color(0xFF0B0C2A)
-                                                      .withOpacity(0.09),
-                                                  offset: const Offset(10, 10))
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(
-                                                Icons.person,
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                              Text(
-                                                widget.aspects?[0],
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 20),
-                                              )
-                                            ],
-                                          ),
+                            Wrap(
+                              children: List<Widget>.generate(
+                                  8,
+                                  (int i) => Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 20, horizontal: 20),
+                                          child: TextButton(
+                                              style: ButtonStyle(
+                                                  splashFactory:
+                                                      NoSplash.splashFactory,
+                                                  fixedSize:
+                                                      MaterialStateProperty.all(
+                                                          const Size(150, 90)),
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          __isSelected[i]
+                                                              ? Color(aspectList
+                                                                      .data[i]
+                                                                      .color)
+                                                                  .withOpacity(
+                                                                      0.8)
+                                                              : kDisabled),
+                                                  elevation:
+                                                      MaterialStateProperty.all(
+                                                          10)),
+                                              onPressed: () {
+                                                setState(() {
+                                                  //update status in local storage
+                                                  handle_aspect().updateStatus(
+                                                      aspectList.data[i].name);
+                                                  //change selected value
+                                                  __isSelected[i]
+                                                      ? __isSelected[i] = false
+                                                      : __isSelected[i] = true;
+                                                  //save selected aspect name
+                                                  __isSelected[i]
+                                                      ? selectedAspects.add(
+                                                          aspectList
+                                                              .data[i].name)
+                                                      : selectedAspects.remove(
+                                                          aspectList
+                                                              .data[i].name);
+                                                });
+                                              },
+                                              child: ListTile(
+                                                title: Text(
+                                                  aspectList.aspectsArabic[i],
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: __isSelected[i]
+                                                          ? kWhiteColor
+                                                          : kBlackColor),
+                                                ),
+                                                trailing: Icon(
+                                                  IconData(
+                                                    aspectList.allAspects[i]
+                                                        .iconCodePoint,
+                                                    fontFamily: aspectList
+                                                        .allAspects[i]
+                                                        .iconFontFamily,
+                                                    fontPackage: aspectList
+                                                        .allAspects[i]
+                                                        .iconFontPackage,
+                                                    matchTextDirection:
+                                                        aspectList.allAspects[i]
+                                                            .iconDirection,
+                                                  ),
+                                                  color: __isSelected[i]
+                                                      ? kWhiteColor
+                                                      : kDarkGreyColor,
+                                                  size: 27,
+                                                ),
+                                              )),
                                         ),
-                                        onTap: () {
-                                          handle_aspect().updateStatus(
-                                              'Family and Friends');
-                                          //temp solution
-                                          if (selectedAspects
-                                              .contains('Family and Friends')) {
-                                            selectedAspects
-                                                .remove('Family and Friends');
-                                            setState(() {
-                                              _isSelected[0] = false;
-                                            });
-                                          } else {
-                                            selectedAspects
-                                                .add('Family and Friends');
-                                            setState(() {
-                                              _isSelected[0] = true;
-                                            });
-                                          }
-                                        },
                                       ),
-                                      const SizedBox(
-                                        height: 10,
-                                        width: 18,
-                                      ),
-                                      GestureDetector(
-                                        child: Container(
-                                          height: 92,
-                                          width: 170,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            color: _isSelected[1]
-                                                ? Color(aspectList
-                                                        .data[1].color)
-                                                    .withOpacity(1)
-                                                : Color(aspectList
-                                                        .data[1].color)
-                                                    .withOpacity(0.18),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 50,
-                                                  color: const Color(0xFF0B0C2A)
-                                                      .withOpacity(0.09),
-                                                  offset: const Offset(10, 10))
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(
-                                                Icons.spa,
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                widget.aspects?[1],
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 20),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          handle_aspect().updateStatus(
-                                              'Health and Wellbeing');
-                                          //temp solution
-                                          if (selectedAspects
-                                              .contains('Family and Friends')) {
-                                            selectedAspects
-                                                .remove('Family and Friends');
-                                            setState(() {
-                                              _isSelected[1] = false;
-                                            });
-                                          } else {
-                                            selectedAspects
-                                                .add('Family and Friends');
-                                            setState(() {
-                                              _isSelected[1] = true;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                    ]),
-                                const SizedBox(
-                                  height: 15,
-                                  width: 10,
-                                ),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        child: Container(
-                                          height: 92,
-                                          width: 170,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            color: _isSelected[2]
-                                                ? Color(aspectList
-                                                        .data[2].color)
-                                                    .withOpacity(1)
-                                                : Color(aspectList
-                                                        .data[2].color)
-                                                    .withOpacity(0.18),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 50,
-                                                  color: const Color(0xFF0B0C2A)
-                                                      .withOpacity(0.09),
-                                                  offset: const Offset(10, 10))
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(
-                                                Icons.psychology,
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                widget.aspects?[2],
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 20),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          handle_aspect()
-                                              .updateStatus('Personal Growth');
-                                          //temp solution
-                                          if (selectedAspects
-                                              .contains('Personal Growth')) {
-                                            selectedAspects
-                                                .remove('Personal Growth');
-                                            _isSelected[2] = false;
-                                          } else {
-                                            selectedAspects
-                                                .add('Personal Growth');
-                                            _isSelected[2] = true;
-                                          }
-                                        },
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                        width: 18,
-                                      ),
-                                      GestureDetector(
-                                        child: Container(
-                                          height: 92,
-                                          width: 170,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            color: _isSelected[3]
-                                                ? Color(aspectList
-                                                        .data[3].color)
-                                                    .withOpacity(1)
-                                                : Color(aspectList
-                                                        .data[3].color)
-                                                    .withOpacity(0.18),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 50,
-                                                  color: const Color(0xFF0B0C2A)
-                                                      .withOpacity(0.09),
-                                                  offset: const Offset(10, 10))
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(
-                                                Icons.home,
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                widget.aspects?[3],
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 18),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          handle_aspect().updateStatus(
-                                              'Physical Environment');
-                                          //temp solution
-                                          if (selectedAspects.contains(
-                                              'Physical Environment')) {
-                                            selectedAspects
-                                                .remove('Physical Environment');
-                                            _isSelected[3] = false;
-                                          } else {
-                                            selectedAspects
-                                                .add('Physical Environment');
-                                            _isSelected[3] = true;
-                                          }
-                                        },
-                                      ),
-                                    ]),
-                                const SizedBox(
-                                  height: 15,
-                                  width: 10,
-                                ),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        child: Container(
-                                          height: 92,
-                                          width: 170,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            color: _isSelected[4]
-                                                ? Color(aspectList
-                                                        .data[4].color)
-                                                    .withOpacity(1)
-                                                : Color(aspectList
-                                                        .data[4].color)
-                                                    .withOpacity(0.18),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 50,
-                                                  color: const Color(0xFF0B0C2A)
-                                                      .withOpacity(0.09),
-                                                  offset: const Offset(10, 10))
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(
-                                                Icons.favorite,
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                widget.aspects?[4],
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 20),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          handle_aspect().updateStatus(
-                                              'Significant Other');
-                                          //temp solution
-                                          if (selectedAspects
-                                              .contains('Significant Other')) {
-                                            setState(() {
-                                              _isSelected[4] = false;
-                                              selectedAspects
-                                                  .remove('Significant Other');
-                                            });
-                                          } else {
-                                            setState(() {
-                                              _isSelected[4] = true;
-                                              selectedAspects
-                                                  .add('Significant Other');
-                                            });
-                                          }
-                                        },
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                        width: 18,
-                                      ),
-                                      GestureDetector(
-                                        child: Container(
-                                          height: 92,
-                                          width: 170,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            color: _isSelected[5]
-                                                ? Color(aspectList
-                                                        .data[5].color)
-                                                    .withOpacity(1)
-                                                : Color(aspectList
-                                                        .data[5].color)
-                                                    .withOpacity(0.18),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 50,
-                                                  color: const Color(0xFF0B0C2A)
-                                                      .withOpacity(0.09),
-                                                  offset: const Offset(10, 10))
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(
-                                                Icons.work,
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                widget.aspects?[5],
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 20),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          handle_aspect()
-                                              .updateStatus('career');
-                                          //temp solution
-                                          if (selectedAspects
-                                              .contains('career')) {
-                                            setState(() {
-                                              _isSelected[5] = false;
-                                              selectedAspects.remove('career');
-                                            });
-                                          } else {
-                                            setState(() {
-                                              _isSelected[5] = true;
-                                              selectedAspects.add('career');
-                                            });
-                                          }
-                                        },
-                                      ),
-                                    ]),
-                                const SizedBox(
-                                  height: 15,
-                                  width: 10,
-                                ),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        child: Container(
-                                          height: 92,
-                                          width: 170,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            color: _isSelected[6]
-                                                ? Color(aspectList
-                                                        .data[6].color)
-                                                    .withOpacity(1)
-                                                : Color(aspectList
-                                                        .data[6].color)
-                                                    .withOpacity(0.18),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 50,
-                                                  color: const Color(0xFF0B0C2A)
-                                                      .withOpacity(0.09),
-                                                  offset: const Offset(8, 8))
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(
-                                                Icons.games,
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                widget.aspects?[6],
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 20),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          handle_aspect().updateStatus(
-                                              'Fun and Recreation');
-                                          //temp solution
-                                          if (selectedAspects
-                                              .contains('Fun and Recreation')) {
-                                            setState(() {
-                                              selectedAspects
-                                                  .remove('Fun and Recreation');
-                                              _isSelected[6] = false;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              selectedAspects
-                                                  .add('Fun and Recreation');
-                                              _isSelected[6] = true;
-                                            });
-                                          }
-                                        },
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                        width: 18,
-                                      ),
-                                      GestureDetector(
-                                        child: Container(
-                                          height: 92,
-                                          width: 170,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(24),
-                                            color: _isSelected[7]
-                                                ? Color(aspectList
-                                                        .data[7].color)
-                                                    .withOpacity(1)
-                                                : Color(aspectList
-                                                        .data[7].color)
-                                                    .withOpacity(0.18),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 50,
-                                                  color: const Color(0xFF0B0C2A)
-                                                      .withOpacity(0.09),
-                                                  offset: const Offset(10, 10))
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Icon(
-                                                Icons.attach_money,
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Text(
-                                                widget.aspects?[7],
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 20),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          handle_aspect().updateStatus(
-                                              'money and finances');
-                                          //temp solution
-                                          if (selectedAspects.contains(
-                                              'money and financesn')) {
-                                            setState(() {
-                                              _isSelected[7] = false;
-                                              selectedAspects
-                                                  .remove('money and finances');
-                                            });
-                                          } else {
-                                            setState(() {
-                                              _isSelected[7] = true;
-                                              selectedAspects
-                                                  .add('money and finances');
-                                            });
-                                          }
-                                        },
-                                      ),
-                                    ]),
-                              ]))),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 60, horizontal: 30),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: doneButton(widget.isr),
-                    ),
-                  )
-                ],
-              ),
-            ),
+                                  growable: false),
+                            ),
+                          ]))),
+              Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: doneButton(widget.isr),
+                ),
+              )
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

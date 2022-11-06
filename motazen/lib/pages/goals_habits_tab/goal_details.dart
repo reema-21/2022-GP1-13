@@ -52,7 +52,6 @@ class goalDetails extends StatefulWidget {
 
 class _goalDetailsState extends State<goalDetails> {
   final formKey = GlobalKey<FormState>();
-  late String _goalName;
   DateTime? selectedDate;
   int goalDuration = 0;
    List<Task> goalTasks =[];
@@ -95,9 +94,7 @@ goalTasks = widget.goalTasks;
   }
 
   void _updateText() {
-    setState(() {
-      _goalName = _goalNmaeController.text;
-    });
+    setState(() {});
   }
 
   _onBasicWaitingAlertPressed(context) async {
@@ -164,8 +161,8 @@ var task =[];
                   actions: [
                     IconButton(
                         // ignore: prefer_const_constructors
-                        icon:
-                            Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                        icon: const Icon(Icons.arrow_back_ios_new,
+                            color: Colors.white),
                         onPressed: () async {
                           final action = await AlertDialogs.yesCancelDialog(
                               context,
@@ -194,7 +191,6 @@ var task =[];
                               if (value == null || value.isEmpty) {
                                 return "من فضلك ادخل اسم الهدف";
                               } else {
-                                print("hi");
                                 return null;
                               }
                             },
@@ -452,7 +448,6 @@ var task =[];
                                   setState(() {
                                     importance = rating.toInt();
                                   });
-                                  print(importance);
                                 },
                               )
                             ],

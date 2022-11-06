@@ -51,7 +51,7 @@ class Life_wheelState extends State<life_wheel> {
                 sectionsSpace: 0,
                 centerSpaceRadius: 0,
                 sections: PieChartSections()
-                    .getSections(touchedIndex, aspctData.listWPoints),
+                    .getSections(touchedIndex, aspctData.allAspects),
 
                 ///
               ),

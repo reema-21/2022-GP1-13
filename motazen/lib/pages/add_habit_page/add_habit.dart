@@ -13,7 +13,6 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import"my_controller.dart";
 import '../../entities/aspect.dart';
 
-//TODO
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class AddHabit extends StatefulWidget {
   final IsarService isr;
@@ -138,7 +137,6 @@ resizeToAvoidBottomInset: false,
                         if (value == null || value.isEmpty) {
                           return "من فضلك ادخل اسم العادة";
                         } else {
-                          print("hi");
                           return null;
                         }
                       },

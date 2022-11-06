@@ -10,7 +10,6 @@ import '../assesment_page/alert_dialog.dart';
 import 'package:get/get.dart';
 import '../../entities/aspect.dart';
 
-//TODO
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class HabitDetails extends StatefulWidget {
   final IsarService isr;

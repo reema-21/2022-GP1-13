@@ -1,5 +1,7 @@
 // ignore_for_file: camel_case_types
 
+import 'package:provider/provider.dart';
+
 import '../../add_goal_page/add_goal_screen.dart';
 import '/isar_service.dart';
 
@@ -12,13 +14,13 @@ import '../../entities/aspect.dart';
 
 class getChosenAspect extends StatefulWidget {
   final IsarService iser;
-  final List<Aspect>? aspects;
   final String page;
+  final List<double>? pointsList;
   const getChosenAspect({
     super.key,
     required this.iser,
-    required this.aspects,
     required this.page, required List goalsTasks,
+    this.pointsList,
   });
 
   @override
@@ -31,21 +33,22 @@ class _showsState extends State<getChosenAspect> {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-            future: handle_aspect().getSelectedAspects(),
+            future: handle_aspect().getAspects(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
+                var aspectList = Provider.of<WheelData>(context);
+                //prepare the parameter of add goal
                 List<String> chosenAspectNames = [];
-                List<Aspect>? selectedAspects = snapshot.data;
-                for (int i = 0; i < selectedAspects!.length; i++) {
-                  chosenAspectNames.add(selectedAspects[i].name);
-                  for (int j = 0; j < widget.aspects!.length; j++) {
-                    if (widget.aspects![j].name == selectedAspects[i].name) {
-                      widget.aspects![j].percentagePoints =
-                          selectedAspects[i].percentagePoints;
-                    }
+                //a list of selected aspects
+                List<Aspect>? updatedAspects = snapshot.data;
+                for (int i = 0; i < updatedAspects!.length; i++) {
+                  if (updatedAspects[i].isSelected) {
+                    chosenAspectNames.add(updatedAspects[i].name);
                   }
+                  updatedAspects[i].percentagePoints = widget.pointsList![i];
                 }
-                WheelData().copyAspectList(widget.aspects);
+
+                aspectList.allAspects = updatedAspects;
 
                 switch (widget.page) {
                   case 'Home':

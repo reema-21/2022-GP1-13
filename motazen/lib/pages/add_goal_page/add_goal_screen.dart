@@ -1,46 +1,34 @@
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:motazen/entities/goal.dart';
-import 'package:motazen/isar_service.dart';
+import '/entities/goal.dart';
+import '/pages/goals_habits_tab/goal_habits_pages.dart';
+import '/isar_service.dart';
+import '../assesment_page/alert_dialog.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
-import '../entities/aspect.dart';
-import '../pages/assesment_page/alert_dialog.dart';
-import '../pages/goals_habits_tab/goal_habits_pages.dart';
+import '../../entities/aspect.dart';
 
-//alertof completion //tasks // getbeck to the list page // goal dependency 
-class goalDetails extends StatefulWidget {
+//alertof completion //tasks // getbeck to the list page // goal dependency
+class AddGoal extends StatefulWidget {
   final IsarService isr;
-    final List<String>? chosenAspectNames;
-  final  String goalName;
-   final String goalAspect;
-  final int importance ;//for the importance if any 
-  final int goalDuration; 
-  final String goalDurationDescription ;
-  final String goalImportanceDescription ;
-  final DateTime temGoalDataTime ;
-  final String dueDataDescription ;
-  final bool weekisSelected ;
-  final  bool daysisSelected ;
-final int id ;
-   goalDetails({super.key, required this.isr, required this.goalName, required this.goalAspect, required this.importance, required this.goalDuration, required this.goalDurationDescription, required this.goalImportanceDescription, required this.temGoalDataTime, required this.dueDataDescription, required this.weekisSelected, required this.daysisSelected, this.chosenAspectNames, required this.id,});
+  final List<String>? chosenAspectNames;
+  const AddGoal({super.key, required this.isr, this.chosenAspectNames});
 
   @override
-  State<goalDetails> createState() => _goalDetailsState();
+  State<AddGoal> createState() => _AddGoalState();
 }
 
-class _goalDetailsState extends State<goalDetails> {
+class _AddGoalState extends State<AddGoal> {
   final formKey = GlobalKey<FormState>();
   late String _goalName;
   DateTime? selectedDate;
-int goalDuration= 0 ; 
-
+  int goalDuration = 0;
   String duration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
   int importance = 0;
-  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   final _goalNmaeController = TextEditingController();
-
   final _dueDateController = TextEditingController();
   bool isDataSelected = false;
   bool? _checkBox = false;
@@ -49,28 +37,7 @@ int goalDuration= 0 ;
   String? isSelected;
   @override
   void initState() {
-          _goalName = _goalNmaeController.text;
-
-    if (!(widget.goalDuration == 0 )){
-      duration = widget.goalDurationDescription;
-    }
-    _goalNmaeController.text = widget.goalName;
-    importance = widget.importance;
-    for (int i = 0 ; i<widget.chosenAspectNames!.length ; i++){
-      String name =widget.chosenAspectNames![i];
-      if (name.contains(widget.goalAspect)){
-    isSelected = widget.chosenAspectNames![i] ; 
-
-      }
-    }
-     _checkBox = widget.daysisSelected;
-   _ListtileCheckBox = widget.weekisSelected;
-   if (!widget.dueDataDescription.contains("لايوجد تاريخ استحقاق")){
-    selectedDate=widget.temGoalDataTime;
-    
-   }
-   
-
+    importance = 0;
     super.initState();
     _goalNmaeController.addListener(_updateText);
     _dueDateController.addListener(_updateText);
@@ -83,47 +50,51 @@ int goalDuration= 0 ;
   }
 
   _onBasicWaitingAlertPressed(context) async {
-    await Alert(
-      context: context,
-      desc: "من فضلك اختر تاريخ الاستحقاق أولا",
-    ).show();
+    return AlertDialog(
+      title: const Text("تنبيه"),
+      content: const Text("من فضلك ادخل رقم الاستحقاق أولا "),
+      actions: <Widget>[
+        ElevatedButton(
+          child: const Text("تم"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
   }
 
- 
+  Goal newgoal = Goal();
   String aspectnameInEnglish = "";
-  Goal? goal = Goal();
-  UpdateGoal() async {
-        goal = await widget.isr.getSepecificGoall(widget.id);
-
-    goal?.titel = _goalNmaeController.text;;
-    goal?.importance = importance;
+  _Addgoal() async {
+    newgoal.titel = _goalName;
+    newgoal.importance = importance;
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
-    goal?.aspect.value = selected;
-if (!isDataSelected){
-goal?.dueDate = DateTime.utc(1989, 11, 9);
-}
-goal?.DescriptiveGoalDuration=duration; 
-goal?.goalDuration; 
-    widget.isr.UpdateGoal(goal!);
+    newgoal.aspect.value = selected;
+    if (!isDataSelected) {
+      newgoal.dueDate = DateTime.utc(1989, 11, 9);
+    }
+    newgoal.DescriptiveGoalDuration = duration;
+    newgoal.goalDuration = goalDuration;
+    widget.isr.createGoal(newgoal);
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-     return Goals_habit(iser: widget.isr);
-   }));
-    
-  
+      return Goals_habit(iser: widget.isr);
+    }));
   }
-  
+
+  @override
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
     return MaterialApp(
       home: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Scaffold(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
             key: _scaffoldkey,
             appBar: AppBar(
               backgroundColor: const Color(0xFF66BF77),
               title: const Text(
-                "تعديل معلومات الهدف",
+                "إضافة هدف جديد",
                 style: TextStyle(color: Colors.white),
               ),
               actions: [
@@ -134,9 +105,14 @@ goal?.goalDuration;
                       final action = await AlertDialogs.yesCancelDialog(
                           context,
                           ' هل انت متاكد من الرجوع ',
-                          'بالنقر على "تاكيد"لن يتم حفظ اي تغييرات قمت بها ');
+                          'بالنقر على "تاكيد"لن يتم حفظ معلومات الهدف  ');
                       if (action == DialogsAction.yes) {
-                         Navigator.push(context, MaterialPageRoute(builder: (context) {return Goals_habit(iser: widget.isr);}));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Goals_habit(
+                            iser: widget.isr,
+                          );
+                        }));
                       } else {}
                     }),
               ],
@@ -152,15 +128,9 @@ goal?.goalDuration;
                         controller: _goalNmaeController,
                         //take out the goal name //you might need to make sure it is eneterd before add and ot contian chracter.
                         validator: (value) {
-                          if (value == null || value.isEmpty)
+                          if (value == null || value.isEmpty) {
                             return "من فضلك ادخل اسم الهدف";
-                          // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
-                          //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
-                          // } 
-                          
-                          
-                          else {
-                            print("hi");
+                          } else {
                             return null;
                           }
                         },
@@ -174,7 +144,7 @@ goal?.goalDuration;
                           border: OutlineInputBorder(),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
 
@@ -222,28 +192,25 @@ goal?.goalDuration;
                         },
                         icon: const Icon(
                           Icons.arrow_drop_down_circle,
-                          color: const Color(0xFF66BF77),
+                          color: Color(0xFF66BF77),
                         ),
-                        isDense: true,
                         validator: (value) => value == null
                             ? 'من فضلك اختر جانب الحياة المناسب للهدف'
                             : null,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: "جوانب الحياة ",
                           prefixIcon: Icon(
                             Icons.pie_chart,
-                            color: const Color(0xFF66BF77),
+                            color: Color(0xFF66BF77),
                           ),
                           border: UnderlineInputBorder(),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 25,
                       ),
                       //due date .
                       DateTimeFormField(
-                        
-                        initialValue:selectedDate,
                         //make it with time write now there is a way for only date
                         decoration: const InputDecoration(
                           hintStyle: TextStyle(color: Colors.black45),
@@ -262,30 +229,33 @@ goal?.goalDuration;
                         //     (e?.day ?? 0) == 2 ? 'Please not the first day' : null,
                         onDateSelected: (DateTime value) {
                           selectedDate = value;
+                          newgoal.dueDate = value;
                           isDataSelected = true;
-
                         },
                       ),
-                      SizedBox(
-                        height: 10,
+                      const SizedBox(
+                        height: 12,
                       ),
                       Row(
                         children: [
-                          Text("الفترة  :"),
-                          SizedBox(
+                          const Text(
+                            "الفترة  :",
+                            style: TextStyle(color: Colors.black38),
+                          ),
+                          const SizedBox(
                             width: 5,
                           ),
                           Expanded(
                             child: Container(
                                 height: 35,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: const Color.fromARGB(
+                                            255, 124, 121, 121))),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(duration),
-                                ),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Color.fromARGB(
-                                            255, 124, 121, 121)))),
+                                )),
                           ),
                         ],
                       ),
@@ -296,7 +266,8 @@ goal?.goalDuration;
                             height: 50,
                             width: 150,
                             child: CheckboxListTile(
-                              checkColor: Color.fromARGB(255, 255, 250, 250),
+                              checkColor:
+                                  const Color.fromARGB(255, 255, 250, 250),
                               activeColor: const Color(0xFF66BF77),
                               value: _checkBox,
                               onChanged: (val) {
@@ -311,12 +282,12 @@ goal?.goalDuration;
                                             .inDays +
                                         1;
                                     duration = durationInNumber.toString();
-                                    goalDuration=durationInNumber;
+                                    goalDuration = durationInNumber;
                                     _ListtileCheckBox = false;
                                   }
                                 });
                               },
-                              title: Text(" بالأيام"),
+                              title: const Text(" بالأيام"),
                               controlAffinity: ListTileControlAffinity.leading,
                             ),
                           ),
@@ -324,7 +295,8 @@ goal?.goalDuration;
                             height: 50,
                             width: 150,
                             child: CheckboxListTile(
-                              checkColor: Color.fromARGB(255, 255, 250, 250),
+                              checkColor:
+                                  const Color.fromARGB(255, 255, 250, 250),
                               activeColor: const Color(0xFF66BF77),
                               value: _ListtileCheckBox,
                               onChanged: (val) {
@@ -333,48 +305,45 @@ goal?.goalDuration;
 
                                   if (selectedDate == null) {
                                     _onBasicWaitingAlertPressed(context);
-                                    _ListtileCheckBox = false;
+                                    _ListtileCheckBox = true;
                                   } else if (val == true) {
                                     int durationInNumber = selectedDate!
                                             .difference(DateTime.now())
                                             .inDays +
                                         1;
-                                    goalDuration=durationInNumber;
+                                    goalDuration = durationInNumber;
 
                                     double numberOfWork =
                                         (durationInNumber / 7);
                                     int numberOfWork2 = numberOfWork.floor();
                                     int numberofDyas = durationInNumber % 7;
-                                    duration =
-                                        numberOfWork2.toString() + " أسبوع";
+                                    duration = "$numberOfWork2 أسبوع";
                                     if (numberofDyas != 0) {
-                                      duration = duration +
-                                          " و " +
-                                          numberofDyas.toString() +
-                                          "يوماً ";
+                                      duration =
+                                          "$duration و $numberofDyasيوماً ";
                                     }
 
                                     _checkBox = false;
                                   }
                                 });
                               },
-                              title: Text(" بالأسابيع"),
+                              title: const Text(" بالأسابيع"),
                               controlAffinity: ListTileControlAffinity.leading,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(
                         children: [
-                          Text("الأهمية  :"),
-                          SizedBox(
+                          const Text("الأهمية  :"),
+                          const SizedBox(
                             width: 5,
                           ),
                           RatingBar.builder(
-                            initialRating: widget.importance.toDouble(),
+                            initialRating: 0,
                             itemCount: 3,
                             itemPadding: const EdgeInsets.all(9),
                             itemSize: 60,
@@ -388,7 +357,6 @@ goal?.goalDuration;
                                         color: Color(0xFF66BF77)),
                                   );
 
-                                  break;
                                 case 1:
                                   return const Padding(
                                     padding: EdgeInsets.all(8.0),
@@ -398,17 +366,15 @@ goal?.goalDuration;
                                       size: 100,
                                     ),
                                   );
-                                  break;
                                 case 2:
-                                  return Icon(
+                                  return const Icon(
                                     Icons.circle,
-                                    color: const Color(0xFF66BF77),
+                                    color: Color(0xFF66BF77),
                                     size: 10000,
                                   );
 
-                                  break;
                                 default:
-                                  return Icon(
+                                  return const Icon(
                                     Icons.sentiment_neutral,
                                     color: Colors.amber,
                                   );
@@ -418,37 +384,114 @@ goal?.goalDuration;
                               setState(() {
                                 importance = rating.toInt();
                               });
-                              print(importance);
                             },
                           )
                         ],
                       ),
-
-                      //here the tasks . 
+                      // //here the tasks .
+                      // const SizedBox(height: 12),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     Container(
+                      //       height: 100,
+                      //       decoration: BoxDecoration(
+                      //         shape: BoxShape.circle,
+                      //         color: Colors.green.shade50,
+                      //       ),
+                      //       child: IconButton(
+                      //         onPressed: () {
+                      //           Navigator.push(context, TaskScreen.route());
+                      //         },
+                      //         icon: const Icon(Icons.add),
+                      //       ),
+                      //     ),
+                      //     const SizedBox(width: 12),
+                      //     const Text(
+                      //       "إضافة مهمة",
+                      //       style: TextStyle(fontSize: 20),
+                      //     ),
+                      //   ],
+                      // ),
+                      // const SizedBox(height: 12),
+                      // Flexible(
+                      //   child: StreamBuilder<List<Task>>(
+                      //     stream: widget.isr.listenTasks(),
+                      //     builder: (context, snapshot) {
+                      //       if (snapshot.hasError) {
+                      //         return const Text("حصل خطأ");
+                      //       }
+                      //       if (snapshot.hasData && snapshot.data!.isEmpty) {
+                      //         return const Text("ليس لديك مهام");
+                      //       }
+                      //       if (snapshot.connectionState ==
+                      //           ConnectionState.waiting) {
+                      //         return const Text("جاري التحميل");
+                      //       }
+                      //       return Expanded(
+                      //         child: Flexible(
+                      //           child: ListView.separated(
+                      //             itemCount: snapshot.data!.length,
+                      //             separatorBuilder: (context, index) =>
+                      //                 const SizedBox(height: 6),
+                      //             itemBuilder: (context, index) {
+                      //               final task =
+                      //                   snapshot.data!.reversed.elementAt(index);
+                      //               return Container(
+                      //                 padding: EdgeInsets.fromLTRB(0, 6, 24, 12),
+                      //                 width: double.infinity,
+                      //                 height: 60,
+                      //                 decoration: BoxDecoration(
+                      //                   borderRadius: BorderRadius.circular(12),
+                      //                   color: Colors.lightBlue.shade50,
+                      //                 ),
+                      //                 child: Row(
+                      //                   mainAxisAlignment:
+                      //                       MainAxisAlignment.spaceAround,
+                      //                   crossAxisAlignment:
+                      //                       CrossAxisAlignment.center,
+                      //                   children: [
+                      //                     Text(task.taskImportance!),
+                      //                     Text(
+                      //                       task.name!,
+                      //                       style: TextStyle(
+                      //                         fontSize: 16,
+                      //                       ),
+                      //                     ),
+                      //                   ],
+                      //                 ),
+                      //               );
+                      //             },
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
               ),
             ]),
-           bottomSheet:
-               ElevatedButton(
-                  child: const Text("حفظ التغييرات"),
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
+            bottomSheet: ElevatedButton(
+                child: const Text("إضافة"),
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Row(
+                      children: const [
+                        Icon(Icons.thumb_up_sharp),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: Text("تمت اضافة الهدف "),
+                        )
+                      ],
+                    )));
 
-ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(content: Row(children: [Icon(Icons.thumb_up_sharp),SizedBox(width: 20),Expanded(child: Text("تمت حفظ اتلغييرات"),)],))
-);
-
-                      UpdateGoal()();
-                    }
-                  })
-        )
-      )
+                    _Addgoal();
+                  }
+                }),
+          )),
     );
-      
-                  
-             
-    
   }
 }

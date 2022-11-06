@@ -1,5 +1,7 @@
 // ignore_for_file: file_names, non_constant_identifier_names, prefer_interpolation_to_compose_strings, use_build_context_synchronously
 
+import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
+
 import '/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +43,9 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   double _currentValue = AssessmentQuestions.currentChosenAnswer;
   Widget setQuestionAnswer() {
     return SliderTheme(
-      data: const SliderThemeData(),
+      data: const SliderThemeData(
+        trackHeight: 13,
+      ),
       child: Slider(
         //it should be good in ios or we use Cupertino
         value: _currentValue, //answare of that quastion
@@ -369,7 +373,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     return ElevatedButton(
       onPressed: isAllQuastionAnswerd
           ? () {
-              Evaluate(widget.isr, allAspects);
+              Evaluate(widget.isr);
 //the nevigator is downs
             }
           : null,
@@ -377,7 +381,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     );
   }
 
-  Evaluate(IsarService isar, List<Aspect> list) async {
+  Evaluate(IsarService isar) async {
     ///can be added to a different page
     //calculate each aspect points ;
     /**
@@ -394,6 +398,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     double significantOtherAspectPoints = 0;
     double CareerAspectPoints = 0;
     double funAndRecreationAspectPoints = 0;
+    List<double> allpoints = [0, 0, 0, 0, 0, 0, 0, 0];
 
     for (int i = 0; i < AssessmentQuestions.answers.length; i++) {
       // i will sunm the point of each aspect ;
@@ -470,41 +475,49 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
           Aspect(); // this should be the same as the one created above ;
       aspect.name = "money and finances";
       double point = (moneyAspectPoints / 50) * 100;
-      isar.assignPointAspect("money and finances", point);
+      await handle_aspect().setAspectpoints("money and finances", point);
+      allpoints[7] = point;
     }
     if (funAndRecreationAspectPoints != 0) {
       double point = (funAndRecreationAspectPoints / 40) * 100;
-      isar.assignPointAspect("Fun and Recreation", point);
+      await handle_aspect().setAspectpoints("Fun and Recreation", point);
+      allpoints[6] = point;
     }
     if (healthAndWellbeingAspectPoints != 0) {
       double point = (healthAndWellbeingAspectPoints / 50) * 100;
-      isar.assignPointAspect("Health and Wellbeing", point);
+      await handle_aspect().setAspectpoints("Health and Wellbeing", point);
+      allpoints[1] = point;
     }
     if (significantOtherAspectPoints != 0) {
       double point = (significantOtherAspectPoints / 40) * 100;
-      isar.assignPointAspect("Significant Other", point);
+      await handle_aspect().setAspectpoints("Significant Other", point);
+      allpoints[4] = point;
     }
     if (physicalEnvironmentAspectPoints != 0) {
       double point = (physicalEnvironmentAspectPoints / 50) * 100;
-      isar.assignPointAspect("Physical Environment", point);
+      await handle_aspect().setAspectpoints("Physical Environment", point);
+      allpoints[3] = point;
     }
     if (personalGrowthAspectPoints != 0) {
       double point = (personalGrowthAspectPoints / 40) * 100;
-      isar.assignPointAspect("Personal Growth", point);
+      await handle_aspect().setAspectpoints("Personal Growth", point);
+      allpoints[2] = point;
     }
     if (familyAndFriendsAspectPoints != 0) {
       double point = (familyAndFriendsAspectPoints / 90) * 100;
-      isar.assignPointAspect("Family and Friends", point);
+      await handle_aspect().setAspectpoints("Family and Friends", point);
+      allpoints[0] = point;
     }
     if (CareerAspectPoints != 0) {
       double point = (CareerAspectPoints / 40) * 100;
-      isar.assignPointAspect("career", point);
+      await handle_aspect().setAspectpoints("career", point);
+      allpoints[5] = point;
     }
 //store the fetched chosen aspect from the user
     //delete the aspects you have create a new one with the values you have
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return getChosenAspect(
-        aspects: list,
+        pointsList: allpoints,
         iser: isar,
         page: 'Home', goalsTasks: [],
       );
