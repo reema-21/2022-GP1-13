@@ -21,7 +21,7 @@
 
 8.	Help the user organize their daily routine and make progress by ranking their daily tasks.
 
-the application is built using Dart alongside the flutter framework. 
+the application is built using [Dart](https://dart.dev/) alongside the [flutter](https://flutter.dev/) framework. For local storage, Motazen relies on [Isar](https://isar.dev/), and as for Database and user authentication, Motazen uses [firebase](https://firebase.google.com/). 
 
 ## Launching instructions
 
