@@ -111,11 +111,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return getChosenAspect(
-                        iser: widget.isr,
-                        aspects: const [],
-                        page: 'Goal',
-                      ); // must be the
+                      return getChosenAspect(iser: widget.isr,goalsTasks: [], aspects: [], page: 'Goal',); // must be the
                     }));
                   },
                 )
@@ -155,7 +151,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
                             : const Color.fromARGB(33, 102, 191, 118),
                         leading: chooseIcon(aspectName),
                         subtitle:
-                            Text("Due Date : $startData"), // if not null added
+                            Text("تاريخ الاستحقاق : $startData"), // if not null added
                         title: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Text(goal.titel),

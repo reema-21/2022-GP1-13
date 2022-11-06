@@ -17,13 +17,23 @@ const HabitSchema = CollectionSchema(
   name: r'Habit',
   id: 3896650575830519340,
   properties: {
-    r'frequency': PropertySchema(
+    r'durationInNumber': PropertySchema(
       id: 0,
+      name: r'durationInNumber',
+      type: IsarType.long,
+    ),
+    r'durationIndString': PropertySchema(
+      id: 1,
+      name: r'durationIndString',
+      type: IsarType.long,
+    ),
+    r'frequency': PropertySchema(
+      id: 2,
       name: r'frequency',
       type: IsarType.string,
     ),
     r'titel': PropertySchema(
-      id: 1,
+      id: 3,
       name: r'titel',
       type: IsarType.string,
     )
@@ -66,8 +76,10 @@ void _habitSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.frequency);
-  writer.writeString(offsets[1], object.titel);
+  writer.writeLong(offsets[0], object.durationInNumber);
+  writer.writeLong(offsets[1], object.durationIndString);
+  writer.writeString(offsets[2], object.frequency);
+  writer.writeString(offsets[3], object.titel);
 }
 
 Habit _habitDeserialize(
@@ -77,9 +89,11 @@ Habit _habitDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Habit();
-  object.frequency = reader.readString(offsets[0]);
+  object.durationInNumber = reader.readLong(offsets[0]);
+  object.durationIndString = reader.readLong(offsets[1]);
+  object.frequency = reader.readString(offsets[2]);
   object.id = id;
-  object.titel = reader.readString(offsets[1]);
+  object.titel = reader.readString(offsets[3]);
   return object;
 }
 
@@ -91,8 +105,12 @@ P _habitDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 1:
+      return (reader.readLong(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -188,6 +206,113 @@ extension HabitQueryWhere on QueryBuilder<Habit, Habit, QWhereClause> {
 }
 
 extension HabitQueryFilter on QueryBuilder<Habit, Habit, QFilterCondition> {
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> durationInNumberEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'durationInNumber',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> durationInNumberGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'durationInNumber',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> durationInNumberLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'durationInNumber',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> durationInNumberBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'durationInNumber',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> durationIndStringEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'durationIndString',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition>
+      durationIndStringGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'durationIndString',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> durationIndStringLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'durationIndString',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> durationIndStringBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'durationIndString',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Habit, Habit, QAfterFilterCondition> frequencyEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -517,6 +642,30 @@ extension HabitQueryLinks on QueryBuilder<Habit, Habit, QFilterCondition> {
 }
 
 extension HabitQuerySortBy on QueryBuilder<Habit, Habit, QSortBy> {
+  QueryBuilder<Habit, Habit, QAfterSortBy> sortByDurationInNumber() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationInNumber', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> sortByDurationInNumberDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationInNumber', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> sortByDurationIndString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationIndString', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> sortByDurationIndStringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationIndString', Sort.desc);
+    });
+  }
+
   QueryBuilder<Habit, Habit, QAfterSortBy> sortByFrequency() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frequency', Sort.asc);
@@ -543,6 +692,30 @@ extension HabitQuerySortBy on QueryBuilder<Habit, Habit, QSortBy> {
 }
 
 extension HabitQuerySortThenBy on QueryBuilder<Habit, Habit, QSortThenBy> {
+  QueryBuilder<Habit, Habit, QAfterSortBy> thenByDurationInNumber() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationInNumber', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> thenByDurationInNumberDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationInNumber', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> thenByDurationIndString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationIndString', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> thenByDurationIndStringDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationIndString', Sort.desc);
+    });
+  }
+
   QueryBuilder<Habit, Habit, QAfterSortBy> thenByFrequency() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'frequency', Sort.asc);
@@ -581,6 +754,18 @@ extension HabitQuerySortThenBy on QueryBuilder<Habit, Habit, QSortThenBy> {
 }
 
 extension HabitQueryWhereDistinct on QueryBuilder<Habit, Habit, QDistinct> {
+  QueryBuilder<Habit, Habit, QDistinct> distinctByDurationInNumber() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'durationInNumber');
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QDistinct> distinctByDurationIndString() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'durationIndString');
+    });
+  }
+
   QueryBuilder<Habit, Habit, QDistinct> distinctByFrequency(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -600,6 +785,18 @@ extension HabitQueryProperty on QueryBuilder<Habit, Habit, QQueryProperty> {
   QueryBuilder<Habit, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Habit, int, QQueryOperations> durationInNumberProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'durationInNumber');
+    });
+  }
+
+  QueryBuilder<Habit, int, QQueryOperations> durationIndStringProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'durationIndString');
     });
   }
 

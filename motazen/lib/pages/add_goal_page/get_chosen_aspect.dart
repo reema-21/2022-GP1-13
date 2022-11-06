@@ -1,6 +1,6 @@
 // ignore_for_file: camel_case_types
 
-import 'add_goal_screen.dart';
+import '../../add_goal_page/add_goal_screen.dart';
 import '/isar_service.dart';
 
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class getChosenAspect extends StatefulWidget {
     super.key,
     required this.iser,
     required this.aspects,
-    required this.page,
+    required this.page, required List goalsTasks,
   });
 
   @override

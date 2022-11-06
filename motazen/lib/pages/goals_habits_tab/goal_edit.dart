@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import '../../entities/task.dart';
 import '/entities/goal.dart';
 import '/pages/goals_habits_tab/getchosenAspect_editing.dart';
 import '/pages/goals_habits_tab/goal_habits_pages.dart';
@@ -28,6 +30,7 @@ class _EditGoalState extends State<EditGoal> {
   String goalImportanceDescription = "-";
   DateTime temGoalDataTime = DateTime.utc(1989, 11, 9);
   String dueDataDescription = "";
+  List<Task> goalTasks = [];
   Goal? goal;
   bool isLoading = false;
   bool weekisSelected = false;
@@ -99,7 +102,7 @@ class _EditGoalState extends State<EditGoal> {
 
           break;
       }
-
+    
       goalDuration = goal!.goalDuration;
       if (goalDuration != 0) {
         goalDurationDescription = goal!.DescriptiveGoalDuration;
@@ -114,37 +117,76 @@ class _EditGoalState extends State<EditGoal> {
           print("i am here");
         }
       }
+        goalTasks =goal!.task.toList();
+  print (goalTasks);
     });
   }
 
   @override
+   
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
         home: Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
-                appBar: AppBar(
-                  backgroundColor: const Color(0xFF66BF77),
-                  title: const Text(
-                    "معلومات الهدف",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  actions: [
-                    IconButton(
+              floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
+              floatingActionButton: FloatingActionButton(
+                onPressed:(){ getChosenAspectE(isr: widget.isr, goalName: displayGoalNameControlller.text, goalAspect: goalAspect, importance: importance, goalDuration: goalDuration, goalDurationDescription: goalDurationDescription, goalImportanceDescription: goalImportanceDescription, temGoalDataTime: temGoalDataTime, dueDataDescription: dueDataDescription, weekisSelected: weekisSelected, daysisSelected: daysisSelected, goalTasks: goalTasks, id: widget.goalId,) ; // must be the
+},
+                backgroundColor:  Color.fromARGB(255, 252, 252, 252),
+                child:Icon(Icons.edit, color:  Color(0xFF66BF77), ),
+                ),
+              backgroundColor:  Color.fromARGB(255, 255, 255, 255),
+                        
+ body:Container(
+  padding: const EdgeInsets.only(
+    top: 60,
+    left:20,
+    right: 20,
+    bottom: 40,
+  ),
+  child: Column(
+    children: [
+    
+    Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+                                Text("معلومات الهدف" ,style: TextStyle(color: Color.fromARGB(255, 0, 0, 0) ,fontSize: 30))
+ ,SizedBox(
+                          width: 170,
+                        ),
+      IconButton(
                         // ignore: prefer_const_constructors
                         icon: const Icon(Icons.arrow_back_ios_new,
-                            color: Colors.white),
+                            color: Color.fromARGB(255, 0, 0, 0)),
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return Goals_habit(iser: widget.isr);
                           }));
-                        })
+                        }),
+                       
                   ],
-                ),
-                body: Stack(children: [
-                  Container(
+    ),
+    SizedBox(
+       height: 20,
+    ),
+    Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color:  Color.fromARGB(66, 102, 191, 118),
+          borderRadius: BorderRadius.all(Radius.circular(20))
+        ),
+         child:Stack(children: [
+          ClipPath(
+clipper: WaveClipperTwo(),
+            child: Container(
+              height: 100,
+              color: Color.fromARGB(255, 255, 253, 254),
+            )
+          ),
+             Container(
                     padding: const EdgeInsets.all(20),
                     child: ListView(
                       children: [
@@ -243,33 +285,114 @@ class _EditGoalState extends State<EditGoal> {
                             )
                           ],
                         ),
+                         const SizedBox(
+                              width: 10,
+                            ),
+                         Row(
+                          children: [
+                            const Text(
+                              "المهام:",
+                              style: TextStyle(fontSize: 23),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            // Text(
+                            //  goalTasks.isEmpty?"لايوجد مهام":"",
+                            //   style: const TextStyle(
+                            //       fontSize: 22, color: Colors.black54),
+                            // )
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+            primary:  Color(0xFF66BF77),
+            
+                              ),
+      onPressed: goalTasks.isNotEmpty
+          ? () {
+            dialogBox(context);
+//the nevigator is downs
+            }
+          : null,
+      child: const Text("اعرض المهام"),
+    )
+                          ],
+                        ),
+                           
                       ],
+                      
                     ),
                   ),
-                ]),
-                bottomSheet: TextButton(
-                    child: const Text("تعديل"),
-                    onPressed: () {
-                      print(daysisSelected);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return getChosenAspectE(
-                          isr: widget.isr,
-                          daysisSelected: daysisSelected,
-                          dueDataDescription: dueDataDescription,
-                          goalAspect: goalAspect,
-                          goalImportanceDescription: goalImportanceDescription,
-                          temGoalDataTime: temGoalDataTime,
-                          goalDurationDescription: goalDurationDescription,
-                          importance: importance,
-                          goalName: displayGoalNameControlller.text,
-                          goalDuration: goalDuration,
-                          weekisSelected: weekisSelected,
-                          id: widget.goalId,
-                        ); // must be the
-                      }));
-                    }))));
+                 
+                
+                 
+                  ],),
+      ),
+     
+    )
+  ]),
+
+  ),
+ )
+ 
+ 
+ 
+ 
+ )
+ );
+ 
+ 
+  
   }
+
+
+dynamic dialogBox(BuildContext context){
+  showDialog(context: context, builder: (_){
+    return AlertDialog(
+      title: const Text("مهام الهدف" ,textAlign: TextAlign.right,),
+      content: buildView(context),
+    );
+  }
+  );
+  }
+  
+Widget buildView(BuildContext context){
+  return
+   Container(
+
+    width: double.maxFinite,
+     child: Directionality(
+      textDirection: TextDirection.rtl,
+       child: ListView.builder(
+        shrinkWrap: true,
+                      itemCount: 
+                      goalTasks.length,
+                      itemBuilder: (context, index) {
+
+
+
+                        final task = goalTasks[index];
+                        final name = goalTasks[index].name;
+                        final duration = goalTasks[index].duration;
+                        return Card(
+                            // here is the code of each item you have
+                            child: ListTile(
+                              leading: Icon(Icons.task , color:  const Color(0xFF66BF77)),
+                              title: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: Text("$name"),
+                              ),
+                             
+                            )
+                            );
+                            
+          
+                        
+                      }),
+     ),
+   );
+}
+
+
 
 //   Widget buildTextField(String labelText ,String placeholder){
 //     return Padding(padding: EdgeInsets.only(bottom: 30),

@@ -506,7 +506,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
       return getChosenAspect(
         aspects: list,
         iser: isar,
-        page: 'Home',
+        page: 'Home', goalsTasks: [],
       );
     }));
   }

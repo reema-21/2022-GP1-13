@@ -11,6 +11,11 @@ class Habit {
       frequency; // i think we must provide the user to chose a number and then whether this number is within a month or a week .
   //late DateTime endDate //  i thought we can make is fixed to be today date +21
   final aspect =
-      IsarLink<Aspect>(); // has a relation each goal belong to one aspect
+      IsarLink<Aspect>(); 
+      // has a relation each goal belong to one aspect
+
+
+      late int durationInNumber;
+      late int durationIndString ;  //for the dropdownmenue ; 
 
 }

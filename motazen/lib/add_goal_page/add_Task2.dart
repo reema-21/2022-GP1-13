@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:motazen/add_goal_page/get_chosen_aspect.dart';
 import 'package:motazen/entities/task.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:multiselect/multiselect.dart';
-
+import 'package:number_inc_dec/number_inc_dec.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 import '../pages/assesment_page/aler2.dart';
 
 
 class AddTask extends StatefulWidget {
   final IsarService isr;
-  final int goalId ;
   final int goalDurtion ;
-  const AddTask({super.key, required this.isr, required this.goalId, required this.goalDurtion});
+  final  List<Task> goalTask;
+   AddTask({super.key, required this.isr, required this.goalDurtion, required this.goalTask});
 
   @override
   State<AddTask> createState() => _AddTaskState();
 }
 
 class _AddTaskState extends State<AddTask> {
- List<String> TasksName=[] ;
+  //counter
+   num numberduration = 0 ;
+
+  //counter
+String? isSelected ;
+num totalTasksDuration = 0 ;
+num goalduration = 10 ; 
+ List<String> TasksNamedropmenue=[] ;
    List<String> selected = [];
     TextEditingController inputTaskName = TextEditingController();
-    List<Task >goalTask = [];
+        TextEditingController oneTaskduration = TextEditingController();
+
+    
 late String TaskName ;
    void initState() {
     super.initState();
@@ -37,17 +45,26 @@ late String TaskName ;
 
     });
   }
-
+List<String> durationName =['Days','Weeks','Months', 'Years'];
+int x = 1; 
 AddTheEnterdTask() async{
 Task newTak = Task();
 newTak.name=inputTaskName.text;
+x=1 ;
 newTak.duration=5;
 inputTaskName.text="";
+isSelected=null;
+
+totalTasksDuration = totalTasksDuration-numberduration;
+oneTaskduration.text=0.toString();
+
 widget.isr.saveTask(newTak);
 setState(() {
-  goalTask.add(newTak);
+  go = false; 
+  widget.goalTask.add(newTak);
   print("iam at the fits setstate and here is the task sleceted form the mwnu");
   print(selected);
+
 });
 
 
@@ -68,37 +85,30 @@ setState(() {
   
   
   
-  getnewlist(){
-    setState(() {
-    List<String>  y = TasksName;
-    });
-  }
   
   
-  
-  Widget TaskDepencenies(List<String> y ){
+  // Widget TaskDepencenies( ){
       
 
-      return DropDownMultiSelect(
-        onChanged: (List<String> x) {
-          setState(() {
-            selected =x;
-            getnewlist
-          });
-        },
-        options:getnewlist() ,
-        selectedValues: selected,
-        whenEmpty: 'Select Something',
-      );
-    }
+  //     return DropDownMultiSelect(
+  //       onChanged: (List<String> x) {
+  //         setState(() {
+  //           selected =x;
+            
+  //         });
+  //       },
+  //       options:TasksNamedropmenue,
+  //       selectedValues: selected,
+  //       whenEmpty: 'Select Something',
+  //     );
+  //   }
   
   
   
   @override
   // String input="";
   final formKey = GlobalKey<FormState>();
-  
- 
+ bool go = false ; 
 
   Widget build(BuildContext context) {
     return Directionality(
@@ -114,17 +124,8 @@ setState(() {
                 IconButton(
                     // ignore: prefer_const_constructors
                     icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
-                    onPressed: () async {
-                      final action = await AlertDialogs.yesCancelDialog(
-                          context,
-                          ' هل انت متاكد من الرجوع ',
-                          'بالنقر على "تاكيد"لن يتم حفظ معلومات الهدف  ');
-                      if (action == DialogsAction.yes) {
-                         Navigator.push(context, MaterialPageRoute(builder: (context) {return getChosenAspect(iser: widget.isr,goalsTasks: goalTask,);}));
-                      } else {
-                                                 Navigator.push(context, MaterialPageRoute(builder: (context) {return getChosenAspect(iser: widget.isr,goalsTasks: goalTask,);}));
-
-                      }
+                    onPressed: () {
+                       Navigator.of(context).pop();
                     }),
               ],
             ),
@@ -137,79 +138,57 @@ setState(() {
             padding: EdgeInsets.all(8.0),
             child: ListView.builder(
               
-                itemCount: goalTask.length,
+                itemCount: widget.goalTask.length,
                 itemBuilder: (context, index) {
-                  final goal = goalTask[index];
-                  final name = goalTask[index].name;
-                  final impo = goalTask[index].duration;
+                  final goal = widget.goalTask[index];
+                  final name = widget.goalTask[index].name;
+                  final impo = widget.goalTask[index].duration;
  if (name != null){
-                TasksName.add(name);
+                TasksNamedropmenue.add(name);
                   }
                     
                   
                   
                   
                   return Card(
-                    child: Text("$name"),
-                  )
-                  ;
+                     elevation: 3,
+                      // here is the code of each item you have
+                      child: ListTile(
+                        
+                        trailing:TextButton(child: const Icon(Icons.delete ), onPressed: () async {
+                          final action = await AlertDialogs.yesCancelDialog(
+                        context,
+                        ' هل انت متاكد من حذف هذه المهمة  ',
+                                  'بالنقر على "تاكيد"لن تتمكن من استرجاع المهمة ');
+                    if (action == DialogsAction.yes) {
+
+                      widget.isr.deleteTask2(widget.goalTask[index]);
+                      setState(() {
+                        widget.goalTask.remove(widget.goalTask[index]);
+                      });
+                    } else {}
+                  
+                  
+                  
+                  
+                  
+                        },),
+                         // if not null added 
+                        title: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Text("$name"),
+                        ),
+                       
+                      )
+                      );
+                      
+
+                  
                 }),
           )
           ),
         
         
-     
-
-
-          //the list view where the tasks will be displayed 
-
-// Container(
-//   //add the taskdependcy as a dropdownMenue , add the duration 
-//   padding: const EdgeInsets.symmetric(horizontal: 12.0 , vertical: 18.0),
-//   decoration: const BoxDecoration(color: Color(0xFF66BF77),
-                          
-//   borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0),topRight: Radius.circular(20) )),
-//   child: Row(children:  [
-//      Expanded(child: 
-//     TextField(
-//       controller: inputTaskName,
-//       decoration: InputDecoration(hintText: "أضف مهمة جديدة "),
-//     ),
-//     ),
-//     const SizedBox(
-//       width: 15,
-//     ),
-    
-//        TextButton(
-//       onPressed: (){
-
-//         AddTheEnterdTask();
-//         setState(() {
-//           isnotTheFirst = true ; 
-//         });
-//       },
-//        child: const Icon(Icons.add),
-      
-
-
-       
-       
-       
-//        ),
-
-   
-    
-//   ]),
-  
-// ),
-//     Center(
-//       child: Padding(
-//         padding: const EdgeInsets.all(20.0),
-//         child:  
-    
-//        TaskDepencenies(isnotTheFirst),
-//       ))   
-      
         ],
         
        
@@ -234,7 +213,7 @@ floatingActionButton: FloatingActionButton(
                   TextFormField(
                   validator: (value) {
                               if (value == null || value.isEmpty)
-                                return "من فضلك ادخل اسم العادة";
+                                return "من فضلك ادخل اسم المهمة";
                               // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
                               //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
                               // } 
@@ -243,6 +222,14 @@ floatingActionButton: FloatingActionButton(
                               }
                             },
                   controller: inputTaskName,
+                  decoration: const InputDecoration(
+                          labelText: "اسم المهمة",
+                          prefixIcon: Icon(
+                            Icons.verified_user_outlined,
+                            color: Color(0xFF66BF77),
+                          ),
+                          border: OutlineInputBorder(),
+                        ),
                   // onChanged: (String value){
                   //   input=value  ;
                   //   setState(() {
@@ -252,14 +239,73 @@ floatingActionButton: FloatingActionButton(
                    
                   
                            ),
+                           SizedBox(
+                            height: 20,
+                           ),
+                        
+                      //           DropdownButtonFormField(
+                      //             icon: const Icon(
+                      //     Icons.arrow_drop_down_circle,
+                      //     color: const Color(0xFF66BF77),
+                      //   ),
+                      //   value: isSelected,
+                      //   items:durationName
+                      //           ?.map((e) => DropdownMenuItem(
+                      //                 value: e,
+                      //                 child: Text(e),
+                      //               ))
+                      //           .toList(),
+                      //   onChanged: (val) {
+                      //     setState(() {
+                      //           isSelected = val as String;
+                      //           go = true ; 
+                      //           print (isSelected);
+
+                      //     });
+                      //     }
+                      //      ,
+
+                      //   validator: (value) => value == null
+                      //           ? 'من فضلك اخترالفترة المناسبة للمهام'
+                      //           : null,
+                      //   decoration: InputDecoration(
+                      //     labelText: 'الفترة',
+                          
+                      //     border: UnderlineInputBorder(),
+                      //   ),
+                      // ),
+                      //  SizedBox(
+                      //       height:30,
+                      //      ),
+                      
+                       
+//                       SpinBox(
+                        
+//                           canChange: (value) {
+//                             if (value>9)
+//                             return false;
+//                             else return true;
+//                           }
+//                            ,
+//                         min: 1,
+//                         max: double.infinity,
+// onChanged: (value) => print(value),
+
+
+
+//                        ),
+                           SizedBox(
+                            height: 30,
+                           )  , 
                
-               TaskDepencenies(TasksName),
-               TextButton(
+              //  TaskDepencenies(),
+               ElevatedButton(
               onPressed: (){
                  if (formKey.currentState!.validate()){
                 setState(() {
                   
-                  TasksName.add(inputTaskName.text);
+                  // TasksNamedropmenue.add(inputTaskName.text);
+
                   
                    AddTheEnterdTask();
                                     // TasksName.add(inputTaskName.text);
@@ -293,3 +339,9 @@ floatingActionButton: FloatingActionButton(
     
   }
 }
+
+
+
+
+
+

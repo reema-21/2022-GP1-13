@@ -1,6 +1,8 @@
 // ignore_for_file: camel_case_types, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import '../../add_goal_page/add_Task2.dart';
+import '../../entities/task.dart';
 import '/entities/goal.dart';
 import '/isar_service.dart';
 import '../assesment_page/alert_dialog.dart';
@@ -26,6 +28,7 @@ class goalDetails extends StatefulWidget {
   final bool weekisSelected;
   final bool daysisSelected;
   final int id;
+  final List<Task> goalTasks;
   const goalDetails({
     super.key,
     required this.isr,
@@ -40,7 +43,7 @@ class goalDetails extends StatefulWidget {
     required this.weekisSelected,
     required this.daysisSelected,
     this.chosenAspectNames,
-    required this.id,
+    required this.id, required this.goalTasks,
   });
 
   @override
@@ -52,7 +55,7 @@ class _goalDetailsState extends State<goalDetails> {
   late String _goalName;
   DateTime? selectedDate;
   int goalDuration = 0;
-
+   List<Task> goalTasks =[];
   String duration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
   int importance = 0;
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
@@ -68,6 +71,7 @@ class _goalDetailsState extends State<goalDetails> {
   void initState() {
     _goalName = _goalNmaeController.text;
 
+goalTasks = widget.goalTasks;
     if (!(widget.goalDuration == 0)) {
       duration = widget.goalDurationDescription;
     }
@@ -107,7 +111,6 @@ class _goalDetailsState extends State<goalDetails> {
   Goal? goal = Goal();
   Addgoal() async {
     goal = await widget.isr.getSepecificGoall(widget.id);
-
     goal?.titel = _goalNmaeController.text;
     goal?.importance = importance;
     Aspect? selected =
@@ -118,6 +121,26 @@ class _goalDetailsState extends State<goalDetails> {
     }
     goal?.DescriptiveGoalDuration = duration;
     goal?.goalDuration;
+    if (goalTasks !=null){
+var task =[];
+       task = widget.goalTasks;
+  
+  if (goalTasks != null){
+  for(int i = 0 ; i<widget.goalTasks.length ; i++){
+    Task? y = Task() ; 
+    String name ="";
+    print ("here3");
+
+   name = task[i].name;
+   print(name);
+ 
+     y = await widget.isr.findSepecificTask(name);
+     print (y!.name);
+   goal!.task.add(y!) ;
+
+  }
+  }
+  }
     widget.isr.UpdateGoal(goal!);
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return Goals_habit(iser: widget.isr);
@@ -434,7 +457,14 @@ class _goalDetailsState extends State<goalDetails> {
                               )
                             ],
                           ),
+ ElevatedButton(
+                  child: const Text("مهمة إضافة"),
+                  onPressed: () {
+                                             Navigator.push(context, MaterialPageRoute(builder: (context) {return                     AddTask(goalTask:goalTasks,isr: widget.isr,goalDurtion: goalDuration);
+;}));
 
+                    }
+                      )
                           //here the tasks .
                         ],
                       ),

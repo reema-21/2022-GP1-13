@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:motazen/add_goal_page/add_goal_screen.dart';
+import 'package:motazen/goals_habits_tab/goal_list_screen.dart';
 import 'package:motazen/pages/onboarding_page.dart';
 
 import '/data/data.dart';
@@ -37,7 +39,7 @@ Future main() async {
       career.iconCodePoint=0;
   career.iconDirection=false;
 
-  // iser.createAspect(career);
+   iser.createAspect(career);
 
   // Aspect health = Aspect();
   // health.name = "Health and Wellbeing";
@@ -86,6 +88,9 @@ Future main() async {
       create: (_) => WheelData(),
       child:  MaterialApp(
           debugShowCheckedModeBanner: false,
-          home:getChosenAspect(iser: iser, goalsTasks: [], 
+          home:getChosenAspect(iser: iser, goalsTasks: [
+
+
+          ],
               )))); // my widget // the one where i will create the quastion list .
 }

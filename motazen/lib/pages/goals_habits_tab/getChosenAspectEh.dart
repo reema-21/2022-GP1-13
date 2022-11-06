@@ -13,16 +13,14 @@ class getChosenAspectEh extends StatefulWidget {
   final String HabitName;
   final String habitAspect;
   final String habitFrequency;
+ final int durationIndString ; 
+final int durationInNumber ;
 
   final int id;
   const getChosenAspectEh({
-    super.key,
-    required this.isr,
-    this.chosenAspectNames,
-    required this.HabitName,
-    required this.habitAspect,
-    required this.habitFrequency,
-    required this.id,
+    super.key, required this.isr, this.chosenAspectNames, required this.HabitName, required this.habitAspect, required this.habitFrequency, required this.durationIndString, required this.durationInNumber, required this.id,
+    
+
   });
 
   @override
@@ -82,6 +80,8 @@ class _showsState extends State<getChosenAspectEh> {
                   habitFrequency: widget.habitFrequency,
                   habitAspect: widget.habitAspect,
                   id: widget.id,
+                  duraioninString: widget.durationIndString,
+                  durationInInt: widget.durationInNumber,
                 );
               } else {
                 return const CircularProgressIndicator();

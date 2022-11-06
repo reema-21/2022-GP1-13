@@ -149,7 +149,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                           : const Color.fromARGB(33, 102, 191, 118),
                       leading: chooseIcon(aspectName),
                       subtitle:
-                          Text("Frequency : $startData"), // if not null added
+                          Text("التكرار : $startData"), // if not null added
                       title: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Text(habit.titel),
