@@ -1,15 +1,12 @@
 // ignore_for_file: camel_case_types, use_build_context_synchronously
 
-import '';
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import '../add_goal_page/get_chosen_aspect.dart';
-import '../add_habit_page/add_habit.dart';
 import '../add_habit_page/get_chosed_aspect.dart';
 import '/pages/goals_habits_tab/goal_list_screen.dart';
 import '/isar_service.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
-import '../assesment_page/aler2.dart';
 import 'habit_list_screen.dart';
 
 class Goals_habit extends StatefulWidget {
@@ -41,7 +38,7 @@ class Goals_habitState extends State<Goals_habit> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                              title: Text(
+                              title: const Text(
                                 "أود إضافة ",
                                 textDirection: TextDirection.rtl,
                               ),
@@ -49,22 +46,23 @@ class Goals_habitState extends State<Goals_habit> {
                                 textDirection: TextDirection.rtl,
                                 child: Row(children: [
                                   TextButton(
-                                    child: Text("هدف"),
+                                    child: const Text("هدف"),
                                     onPressed: () {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {
                                         return getChosenAspect(
                                           iser: widget.iser,
-                                          goalsTasks: [], page: 'Goal',
+                                          goalsTasks: const [],
+                                          page: 'Goal',
                                         );
                                       }));
                                     },
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 20,
                                   ),
                                   TextButton(
-                                    child: Text("عادة"),
+                                    child: const Text("عادة"),
                                     onPressed: () {
                                       Navigator.push(context,
                                           MaterialPageRoute(builder: (context) {

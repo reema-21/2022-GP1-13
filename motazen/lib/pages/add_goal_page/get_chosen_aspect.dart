@@ -19,7 +19,8 @@ class getChosenAspect extends StatefulWidget {
   const getChosenAspect({
     super.key,
     required this.iser,
-    required this.page, required List goalsTasks,
+    required this.page,
+    required List goalsTasks,
     this.pointsList,
   });
 
@@ -56,7 +57,8 @@ class _showsState extends State<getChosenAspect> {
                   case 'Goal':
                     return AddGoal(
                       isr: widget.iser,
-                      chosenAspectNames: chosenAspectNames, goalsTasks: [],
+                      chosenAspectNames: chosenAspectNames,
+                      goalsTasks: const [],
                     );
                   default:
                     throw 'Error404: page not found';

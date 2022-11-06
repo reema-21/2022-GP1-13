@@ -5,7 +5,6 @@ import '/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:is_first_run/is_first_run.dart';
 import 'firebase_options.dart';
 
 Future main() async {

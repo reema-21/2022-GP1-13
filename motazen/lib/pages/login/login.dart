@@ -15,8 +15,8 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-  TextEditingController _emailcontroller = TextEditingController();
-  TextEditingController _passwordcontroler = TextEditingController();
+  final TextEditingController _emailcontroller = TextEditingController();
+  final TextEditingController _passwordcontroler = TextEditingController();
   bool obscureText = true;
   final _formKey = GlobalKey<FormState>();
 
@@ -199,9 +199,6 @@ signIn(email, pass) async {
     Fluttertoast.showToast(
         msg:
             "تم تسجيل الدخول بنجاح"); //name the second page بعد ما اشيك على الربط
-    /*
-        Add codes to execute, after user logged in
-    */
 
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {

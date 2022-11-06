@@ -40,8 +40,7 @@ class IsarService {
   Future<void> createHabit(Habit newHabit) async {
     //Add habits
     final isar = await db;
-        isar.writeTxnSync<int>(() => isar.habits.putSync(newHabit));
-
+    isar.writeTxnSync<int>(() => isar.habits.putSync(newHabit));
 
     isar.writeTxnSync<int>(() => isar.habits.putSync(newHabit));
   }
@@ -81,7 +80,7 @@ class IsarService {
     yield* isar.habits.where().watch(fireImmediately: true);
   }
 
-   Future<Task?> findSepecificTask(String name) async {
+  Future<Task?> findSepecificTask(String name) async {
     final isar = await db;
     return await isar.tasks.where().filter().nameEqualTo(name).findFirst();
   }
@@ -170,7 +169,7 @@ class IsarService {
     final isar = await db;
     yield* isar.tasks.where().watch(fireImmediately: true);
   }
- 
+
   Future<Goal?> getSepecificGoal(int id) async {
     final isar = await db;
     await isar.writeTxn(() async {
@@ -249,8 +248,8 @@ class IsarService {
       await isar.goals.delete(goal.id);
     });
   }
+
   void deleteTask2(Task task) async {
-    print (task.name);
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.tasks.delete(task.id);

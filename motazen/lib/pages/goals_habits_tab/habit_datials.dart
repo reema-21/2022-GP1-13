@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, avoid_print
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, avoid_print, unused_field, unused_element
 
 import 'package:flutter/material.dart';
 import '../add_habit_page/editMy_controller.dart';
@@ -41,16 +41,15 @@ class _AddHabitState extends State<HabitDetails> {
   final formKey2 = GlobalKey<FormState>();
   late String _habitName;
   late String _habitFrequecy;
- late int  durationIndString; 
- late int durationInInt; 
+  late int durationIndString;
+  late int durationInInt;
   final _goalNmaeController = TextEditingController();
   final EditMyControleer freq = Get.put(EditMyControleer());
-  final List<String> durations =['اليوم','الأسبوع','الشهر','السنة'];
-    String? isDuration ; 
-int durationIndexString = 0 ;  
+  final List<String> durations = ['اليوم', 'الأسبوع', 'الشهر', 'السنة'];
+  String? isDuration;
+  int durationIndexString = 0;
 
-  String duratioSelected ="";
-
+  String duratioSelected = "";
 
   String? isSelected;
   @override
@@ -74,28 +73,14 @@ int durationIndexString = 0 ;
     habit = await widget.isr.getSepecificHabit(widget.id);
     habit?.titel = _goalNmaeController.text;
 
-
-
-        habit?.durationIndString = durationIndexString ; 
-habit?.durationInNumber = freq.frequency.toInt();
-    duratioSelected=freq.frequency.string+duratioSelected;
+    habit?.durationIndString = durationIndexString;
+    habit?.durationInNumber = freq.frequency.toInt();
+    duratioSelected = freq.frequency.string + duratioSelected;
     habit?.frequency = duratioSelected;
-
-
-
-
-
-
-
 
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
     habit?.aspect.value = selected;
-
-
-
-
-
 
     widget.isr.UpdateHabit(habit!);
     Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -229,110 +214,107 @@ habit?.durationInNumber = freq.frequency.toInt();
                     ),
                     //Frequency .
 
-     Row(
-  children: [
-    Text("عدد مرات التكرار"),
-     const SizedBox(
-                      width: 15,
+                    Row(
+                      children: [
+                        const Text("عدد مرات التكرار"),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: const Color(0xFF66BF77),
+                          ),
+                          child: Center(
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 15,
+                              ),
+                              onPressed: () {
+                                freq.increment();
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Obx((() => Text(
+                              freq.frequency.toString(),
+                              style: const TextStyle(fontSize: 20),
+                            ))),
+                        const SizedBox(width: 10),
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: const Color(0xFF66BF77),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.remove,
+                                color: Colors.white, size: 15),
+                            onPressed: () {
+                              freq.dcrement();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-  Container(
-    width: 30,
-    height: 30,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(25)
-      , color: Color(0xFF66BF77),
-
-    ),
-    child: Center(
-      child: IconButton(
-        icon: Icon(Icons.add, color: Colors.white,size: 15, ),
-        onPressed: (){freq.increment();},
-      ),
-    ),
-  ),
-  SizedBox(width:10,),
-  Obx((() => Text("${freq.frequency.toString()}",
-  style: TextStyle(fontSize: 20),))),
-   
-   
-    SizedBox(width:10),
-
-  Container(
-    width: 30,
-    height: 30,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(25)
-      , color: Color(0xFF66BF77),
-
-    ),
-    child: IconButton(
-      icon: Icon(Icons.remove, color: Colors.white,size:15),
-      onPressed: (){freq.dcrement();},
-    ),
-  ),
-   
-],),
-  SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    
-  
 
-    DropdownButtonFormField(
-    
-                        value: isDuration,
-                        items: durations
-                            .map((e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(e),
-                                ))
-                            .toList(),
-                          onChanged: (val) {
+                    DropdownButtonFormField(
+                      value: isDuration,
+                      items: durations
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      onChanged: (val) {
                         setState(() {
                           isDuration = val as String;
                           switch (isDuration) {
                             case "اليوم":
                               duratioSelected = " مرات في اليوم ";
-                              durationIndexString=  0; 
+                              durationIndexString = 0;
                               break;
                             case "الأسبوع":
                               duratioSelected = " مرات في الأسبوع ";
-                              durationIndexString=1;
+                              durationIndexString = 1;
                               break;
                             case "الشهر":
                               duratioSelected = " مرات في الشهر ";
-                              durationIndexString=2;
+                              durationIndexString = 2;
                               break;
-                              case "السنة":
+                            case "السنة":
                               duratioSelected = " مرات في السنة  ";
-                              durationIndexString=3;
+                              durationIndexString = 3;
                               break;
-                            
                           }
                         });
                       },
-                        icon: const Icon(
-                          Icons.arrow_drop_down_circle,
+                      icon: const Icon(
+                        Icons.arrow_drop_down_circle,
+                        color: Color(0xFF66BF77),
+                      ),
+                      validator: (value) =>
+                          value == null ? 'من فضلك معدل التكرار' : null,
+                      decoration: const InputDecoration(
+                        labelText: "خلال ",
+                        prefixIcon: Icon(
+                          Icons.av_timer_outlined,
                           color: Color(0xFF66BF77),
                         ),
-                        validator: (value) => value == null
-                            ? 'من فضلك معدل التكرار'
-                            : null,
-                        decoration: const InputDecoration(
-                          labelText: "خلال ",
-                          prefixIcon: Icon(
-                            Icons.av_timer_outlined,
-                            color: Color(0xFF66BF77),
-                          ),
-                          border: UnderlineInputBorder(),
-                        ),
+                        border: UnderlineInputBorder(),
                       ),
-
-
-
-
-
-
+                    ),
 
                     //frequency.
                   ]),

@@ -1,9 +1,10 @@
+// ignore_for_file: non_constant_identifier_names, unused_element, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import '../pages/assesment_page/alert_dialog.dart';
 import '../pages/goals_habits_tab/goal_habits_pages.dart';
 import 'add_Task2.dart';
@@ -11,8 +12,6 @@ import 'add_Task2.dart';
 import '../entities/aspect.dart';
 import '../entities/task.dart';
 
-//TODO
-//alertof completion //tasks // getbeck to the list page // goal dependency
 class AddGoal extends StatefulWidget {
   final List<Task> goalsTasks;
   final IsarService isr;
@@ -34,7 +33,7 @@ class _AddGoalState extends State<AddGoal> {
   int goalDuration = 0;
   String duration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
   int importance = 0;
-  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   final _goalNmaeController = TextEditingController();
   final _dueDateController = TextEditingController();
   bool isDataSelected = false;
@@ -58,11 +57,11 @@ class _AddGoalState extends State<AddGoal> {
 
   _onBasicWaitingAlertPressed(context) async {
     return AlertDialog(
-      title: new Text("تنبيه"),
-      content: new Text("من فضلك ادخل رقم الاستحقاق أولا "),
+      title: const Text("تنبيه"),
+      content: const Text("من فضلك ادخل رقم الاستحقاق أولا "),
       actions: <Widget>[
-        new ElevatedButton(
-          child: new Text("تم"),
+        ElevatedButton(
+          child: const Text("تم"),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -75,7 +74,6 @@ class _AddGoalState extends State<AddGoal> {
   String aspectnameInEnglish = "";
   _Addgoal() async {
     newgoal.titel = _goalName;
-    print("here1");
     newgoal.importance = importance;
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
@@ -83,57 +81,46 @@ class _AddGoalState extends State<AddGoal> {
     if (!isDataSelected) {
       newgoal.dueDate = DateTime.utc(1989, 11, 9);
     }
-    print("here2");
 
     newgoal.DescriptiveGoalDuration = duration;
     newgoal.goalDuration = goalDuration;
 
-    if (widget.goalsTasks != null) {
-      var task = [];
-      task = widget.goalsTasks;
+    var task = [];
+    task = widget.goalsTasks;
 
-      if (widget.goalsTasks != null) {
-        for (int i = 0; i < widget.goalsTasks!.length; i++) {
-          Task? y = Task();
-          String name = "";
-          print("here3");
+    for (int i = 0; i < widget.goalsTasks.length; i++) {
+      Task? y = Task();
+      String name = "";
 
-          name = task[i].name;
-          print(name);
+      name = task[i].name;
 
-          y = await widget.isr.findSepecificTask(name);
-          print(y!.name);
-          newgoal.task.add(y!);
-        }
-      }
+      y = await widget.isr.findSepecificTask(name);
+      newgoal.task.add(y!);
     }
     widget.isr.createGoal(newgoal);
-    print("here4");
 
-    // ignore: use_build_context_synchronously
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return Goals_habit(iser: widget.isr);
     }));
   }
 
+  @override
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
     return MaterialApp(
       home: Directionality(
           textDirection: TextDirection.rtl,
           child: Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.miniStartFloat,
 
             floatingActionButton: FloatingActionButton(
-              
-              child: Icon(Icons.add),
-              
-              onPressed: () {
-
+                child: const Icon(Icons.add),
+                onPressed: () {
                   if (formKey.currentState!.validate()) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Row(
-                      children: [
+                      children: const [
                         Icon(Icons.thumb_up_sharp),
                         SizedBox(width: 20),
                         Expanded(
@@ -173,7 +160,6 @@ class _AddGoalState extends State<AddGoal> {
               ],
             ),
             body: Stack(children: [
-              
               Container(
                 padding: const EdgeInsets.all(20),
                 child: Form(
@@ -183,12 +169,13 @@ class _AddGoalState extends State<AddGoal> {
                       controller: _goalNmaeController,
                       //take out the goal name //you might need to make sure it is eneterd before add and ot contian chracter.
                       validator: (value) {
-                        if (value == null || value.isEmpty){
-                          return "من فضلك ادخل اسم الهدف";}
-                          // else if (!(RegExp(r'^[[\u0621-\u064A\040]]+$').hasMatch(value))){
-                          //   return "اسم الهدف يحتوي عى حروف فقط";
+                        if (value == null || value.isEmpty) {
+                          return "من فضلك ادخل اسم الهدف";
+                        }
+                        // else if (!(RegExp(r'^[[\u0621-\u064A\040]]+$').hasMatch(value))){
+                        //   return "اسم الهدف يحتوي عى حروف فقط";
 
-                          // }
+                        // }
                         // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
                         //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
                         // }
@@ -206,7 +193,7 @@ class _AddGoalState extends State<AddGoal> {
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
 
@@ -254,22 +241,22 @@ class _AddGoalState extends State<AddGoal> {
                       },
                       icon: const Icon(
                         Icons.arrow_drop_down_circle,
-                        color: const Color(0xFF66BF77),
+                        color: Color(0xFF66BF77),
                       ),
                       validator: (value) => value == null
                           ? 'من فضلك اختر جانب الحياة المناسب للهدف'
                           : null,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "جوانب الحياة ",
                         prefixIcon: Icon(
                           Icons.pie_chart,
-                          color: const Color(0xFF66BF77),
+                          color: Color(0xFF66BF77),
                         ),
                         border: UnderlineInputBorder(),
                       ),
                     ),
-                    SizedBox(
-                      height:30,
+                    const SizedBox(
+                      height: 30,
                     ),
                     //due date .
                     DateTimeFormField(
@@ -294,29 +281,30 @@ class _AddGoalState extends State<AddGoal> {
                         isDataSelected = true;
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           "الفترة  :",
-                          
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Expanded(
                           child: Container(
                               height: 35,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(duration ,style: TextStyle(color: Color.fromARGB(96, 0, 0, 0))),
-                              ),
                               decoration: BoxDecoration(
                                   border: Border.all(
-                                      color:
-                                          Color.fromARGB(255, 124, 121, 121)))),
+                                      color: const Color.fromARGB(
+                                          255, 124, 121, 121))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(duration,
+                                    style: const TextStyle(
+                                        color: Color.fromARGB(96, 0, 0, 0))),
+                              )),
                         ),
                       ],
                     ),
@@ -329,32 +317,39 @@ class _AddGoalState extends State<AddGoal> {
                           child: Padding(
                             padding: const EdgeInsets.only(right: 12.0),
                             child: CheckboxListTile(
-                              checkColor: Color.fromARGB(255, 255, 250, 250),
+                              checkColor:
+                                  const Color.fromARGB(255, 255, 250, 250),
                               activeColor: const Color(0xFF66BF77),
                               value: _checkBox,
                               onChanged: (val) {
                                 setState(() {
                                   _checkBox = val;
                                   if (selectedDate == null) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                          duration: Duration(seconds:1),
-                                          backgroundColor: Color.fromARGB(255, 196, 48, 37),
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            duration:
+                                                const Duration(seconds: 1),
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    255, 196, 48, 37),
                                             content: Row(
-                                      children: [
-                                        Icon(Icons.error , color: Colors.white,),
-                                        SizedBox(width: 20),
-                                        Expanded(
-                                          child:
-                                              Text("أدخل تاريخ الاستحقاق أولًا"),
-                                        )
-                                      ],
-                                    )));
+                                              children: const [
+                                                Icon(
+                                                  Icons.error,
+                                                  color: Colors.white,
+                                                ),
+                                                SizedBox(width: 20),
+                                                Expanded(
+                                                  child: Text(
+                                                      "أدخل تاريخ الاستحقاق أولًا"),
+                                                )
+                                              ],
+                                            )));
                                     _checkBox = false;
                                   } else if (val == true) {
                                     int durationInNumber = selectedDate!
                                             .difference(DateTime.now())
-                                            .inDays +   
+                                            .inDays +
                                         1;
                                     duration = durationInNumber.toString();
                                     goalDuration = durationInNumber;
@@ -362,8 +357,8 @@ class _AddGoalState extends State<AddGoal> {
                                   }
                                 });
                               },
-                              title: Padding(
-                                padding: const EdgeInsets.all(0),
+                              title: const Padding(
+                                padding: EdgeInsets.all(0),
                                 child: Text(" بالأيام"),
                               ),
                               controlAffinity: ListTileControlAffinity.leading,
@@ -374,9 +369,10 @@ class _AddGoalState extends State<AddGoal> {
                           height: 50,
                           width: 150,
                           child: Padding(
-                            padding: const EdgeInsets.only(right:0),
+                            padding: const EdgeInsets.only(right: 0),
                             child: CheckboxListTile(
-                              checkColor: Color.fromARGB(255, 255, 250, 250),
+                              checkColor:
+                                  const Color.fromARGB(255, 255, 250, 250),
                               activeColor: const Color(0xFF66BF77),
                               value: _ListtileCheckBox,
                               onChanged: (val) {
@@ -384,19 +380,22 @@ class _AddGoalState extends State<AddGoal> {
                                   _ListtileCheckBox = val;
 
                                   if (selectedDate == null) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                                                                  backgroundColor: Color.fromARGB(255, 196, 48, 37),
-
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    255, 196, 48, 37),
                                             content: Row(
-                                      children: [
-                                        const Icon(Icons.error, color:Colors.white),
-                                        SizedBox(width: 20),
-                                        Expanded(
-                                          child: Text("أدخل تاريخ الاستحقاق"),
-                                        )
-                                      ],
-                                    )));
+                                              children: const [
+                                                Icon(Icons.error,
+                                                    color: Colors.white),
+                                                SizedBox(width: 20),
+                                                Expanded(
+                                                  child: Text(
+                                                      "أدخل تاريخ الاستحقاق"),
+                                                )
+                                              ],
+                                            )));
                                     _ListtileCheckBox = false;
                                   } else if (val == true) {
                                     int durationInNumber = selectedDate!
@@ -405,36 +404,34 @@ class _AddGoalState extends State<AddGoal> {
                                         1;
                                     goalDuration = durationInNumber;
 
-                                    double numberOfWork = (durationInNumber / 7);
+                                    double numberOfWork =
+                                        (durationInNumber / 7);
                                     int numberOfWork2 = numberOfWork.floor();
                                     int numberofDyas = durationInNumber % 7;
-                                    duration =
-                                        numberOfWork2.toString() + " أسبوع";
+                                    duration = "$numberOfWork2 أسبوع";
                                     if (numberofDyas != 0) {
-                                      duration = duration +
-                                          " و " +
-                                          numberofDyas.toString() +
-                                          "يوماً ";
+                                      duration =
+                                          "$duration و $numberofDyasيوماً ";
                                     }
 
                                     _checkBox = false;
                                   }
                                 });
                               },
-                              title: Text(" بالأسابيع"),
+                              title: const Text(" بالأسابيع"),
                               controlAffinity: ListTileControlAffinity.leading,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
                       children: [
-                        Text("الأهمية  :"),
-                        SizedBox(
+                        const Text("الأهمية  :"),
+                        const SizedBox(
                           width: 5,
                         ),
                         RatingBar.builder(
@@ -452,7 +449,6 @@ class _AddGoalState extends State<AddGoal> {
                                       color: Color(0xFF66BF77)),
                                 );
 
-                                break;
                               case 1:
                                 return const Padding(
                                   padding: EdgeInsets.all(8.0),
@@ -462,17 +458,15 @@ class _AddGoalState extends State<AddGoal> {
                                     size: 100,
                                   ),
                                 );
-                                break;
                               case 2:
-                                return Icon(
+                                return const Icon(
                                   Icons.circle,
-                                  color: const Color(0xFF66BF77),
+                                  color: Color(0xFF66BF77),
                                   size: 10000,
                                 );
 
-                                break;
                               default:
-                                return Icon(
+                                return const Icon(
                                   Icons.sentiment_neutral,
                                   color: Colors.amber,
                                 );
@@ -482,34 +476,32 @@ class _AddGoalState extends State<AddGoal> {
                             setState(() {
                               importance = rating.toInt();
                             });
-                            print(importance);
                           },
                         )
                       ],
                     ),
-                    SizedBox(
-                          height: 30,
-                        ),
+                    const SizedBox(
+                      height: 30,
+                    ),
                     Row(
-                      
                       children: [
                         SizedBox(
                           height: 40,
                           width: 112,
                           child: ElevatedButton(
-                            style:ButtonStyle(
-backgroundColor: MaterialStateProperty.all( Color(0xFF66BF77)),
-                          elevation: MaterialStateProperty.all(7),
-
-),
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    const Color(0xFF66BF77)),
+                                elevation: MaterialStateProperty.all(7),
+                              ),
                               child: Padding(
                                 padding: const EdgeInsets.all(0.0),
                                 child: Row(
-                                  children: [
-                                    const Text("إضافة المهام"),
+                                  children: const [
+                                    Text("إضافة المهام"),
                                     Padding(
-                                      padding: const EdgeInsets.all(0.0),
-                                      child: const Icon(Icons.add),
+                                      padding: EdgeInsets.all(0.0),
+                                      child: Icon(Icons.add),
                                     )
                                   ],
                                 ),
@@ -521,7 +513,6 @@ backgroundColor: MaterialStateProperty.all( Color(0xFF66BF77)),
                                       goalTask: widget.goalsTasks,
                                       isr: widget.isr,
                                       goalDurtion: goalDuration);
-                                  ;
                                 }));
                               }),
                         ),
@@ -529,9 +520,7 @@ backgroundColor: MaterialStateProperty.all( Color(0xFF66BF77)),
                     )
                   ]),
                 ),
-                
               ),
-              
             ]),
             // bottomSheet: ElevatedButton(
             //     child: const Text("إضافة"),

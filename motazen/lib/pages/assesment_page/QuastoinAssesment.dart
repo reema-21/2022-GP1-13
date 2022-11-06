@@ -519,7 +519,8 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
       return getChosenAspect(
         pointsList: allpoints,
         iser: isar,
-        page: 'Home', goalsTasks: [],
+        page: 'Home',
+        goalsTasks: const [],
       );
     }));
   }
