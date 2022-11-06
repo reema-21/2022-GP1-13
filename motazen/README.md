@@ -25,8 +25,10 @@
 the application is built using [Dart](https://dart.dev/) alongside the [flutter](https://flutter.dev/) framework. For local storage, Motazen relies on [Isar](https://isar.dev/), and as for Database and user authentication, Motazen uses [firebase](https://firebase.google.com/). 
 
 ## Launching instructions
-
----add later---
+1. Download the apk file of code that attached with submission materials.
+2. Drag the downloaded apk into the emulator(simulator) in your IDE.
+3. It will show as an app in your emulator(simulator).
+4. Click on the app icon to launch it.
 
 ## visuals
 
