@@ -118,7 +118,7 @@ setvalue(String x ){
 // print ("here is the taskduraion value 2");
 // print (totalTasksDuration);
         if (tem>goalduration){
-                Get.snackbar("", "لا يمكن زيادة الفترة ،قيمة فjjترة المهام ستصبح أعلى من فترة الهدف  ",icon:Icon(Icons.alarm),barBlur: 20);
+                Get.snackbar("", "لا يمكن زيادة الفترة ، فترة المهام ستصبح أعلى من فترة الهدف ",icon:Icon(Icons.alarm),barBlur: 20);
        
        switch (isSelected.value) {
                             case "أيام":

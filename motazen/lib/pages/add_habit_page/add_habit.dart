@@ -64,8 +64,7 @@ class _AddHabitState extends State<AddHabit> {
   @override
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
-    return GetMaterialApp(
-      home: Directionality(
+    return  Directionality(
           textDirection: TextDirection.rtl,
           child: Scaffold(
             resizeToAvoidBottomInset: false,
@@ -342,7 +341,8 @@ class _AddHabitState extends State<AddHabit> {
                 ),
               ),
             ]),
-          )),
-    );
+          )
+          );
+    
   }
 }
