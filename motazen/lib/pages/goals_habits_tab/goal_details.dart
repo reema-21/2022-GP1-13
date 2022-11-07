@@ -168,298 +168,332 @@ class _goalDetailsState extends State<goalDetails> {
                         }),
                   ],
                 ),
-                body: Stack(children: [
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    child: Form(
-                      key: formKey,
-                      child: ListView(
-                        children: [
-                          TextFormField(
-                            controller: _goalNmaeController,
-                            //take out the goal name //you might need to make sure it is eneterd before add and ot contian chracter.
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "من فضلك ادخل اسم الهدف";
-                              } else {
-                                return null;
-                              }
-                            },
-
-                            decoration: const InputDecoration(
-                              labelText: "اسم الهدف",
-                              prefixIcon: Icon(
-                                Icons.verified_user_outlined,
-                                color: Color(0xFF66BF77),
-                              ),
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-
-                          /// Aspect selectio
-
-                          DropdownButtonFormField(
-                            value: isSelected,
-                            items: widget.chosenAspectNames
-                                ?.map((e) => DropdownMenuItem(
-                                      value: e,
-                                      child: Text(e),
-                                    ))
-                                .toList(),
-                            onChanged: (val) {
-                              setState(() {
-                                isSelected = val as String;
-                                switch (isSelected) {
-                                  case "أموالي":
-                                    aspectnameInEnglish = "money and finances";
-                                    break;
-                                  case "متعتي":
-                                    aspectnameInEnglish = "Fun and Recreation";
-                                    break;
-                                  case "مهنتي":
-                                    aspectnameInEnglish = "career";
-                                    break;
-                                  case "علاقاتي":
-                                    aspectnameInEnglish = "Significant Other";
-                                    break;
-                                  case "بيئتي":
-                                    aspectnameInEnglish =
-                                        "Physical Environment";
-                                    break;
-                                  case "ذاتي":
-                                    aspectnameInEnglish = "Personal Growth";
-                                    break;
-
-                                  case "صحتي":
-                                    aspectnameInEnglish =
-                                        "Health and Wellbeing";
-                                    break;
-                                  case "عائلتي وأصدقائي":
-                                    aspectnameInEnglish = "Family and Friends";
-                                    break;
-                                }
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.arrow_drop_down_circle,
-                              color: Color(0xFF66BF77),
-                            ),
-                            isDense: true,
-                            validator: (value) => value == null
-                                ? 'من فضلك اختر جانب الحياة المناسب للهدف'
-                                : null,
-                            decoration: const InputDecoration(
-                              labelText: "جوانب الحياة ",
-                              prefixIcon: Icon(
-                                Icons.pie_chart,
-                                color: Color(0xFF66BF77),
-                              ),
-                              border: UnderlineInputBorder(),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          //due date .
-                          DateTimeFormField(
-                            initialValue: selectedDate,
-                            //make it with time write now there is a way for only date
-                            decoration: const InputDecoration(
-                              hintStyle: TextStyle(color: Colors.black45),
-                              errorStyle: TextStyle(color: Colors.redAccent),
-                              border: OutlineInputBorder(),
-                              suffixIcon: Icon(Icons.event_note),
-                              labelText: 'تاريخ الاستحقاق',
-                            ),
-                            firstDate:
-                                DateTime.now().add(const Duration(days: 1)),
-                            lastDate: DateTime.now()
-                                .add(const Duration(days: 360)), //oneYear
-                            initialDate:
-                                DateTime.now().add(const Duration(days: 20)),
-                            autovalidateMode: AutovalidateMode.always,
-                            // validator: (DateTime? e) =>
-                            //     (e?.day ?? 0) == 2 ? 'Please not the first day' : null,
-                            onDateSelected: (DateTime value) {
-                              selectedDate = value;
-                              isDataSelected = true;
-                            },
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              const Text("الفترة  :"),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: Container(
-                                    height: 35,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: const Color.fromARGB(
-                                                255, 124, 121, 121))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(duration),
-                                    )),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 50,
-                                width: 150,
-                                child: CheckboxListTile(
-                                  checkColor:
-                                      const Color.fromARGB(255, 255, 250, 250),
-                                  activeColor: const Color(0xFF66BF77),
-                                  value: _checkBox,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _checkBox = val;
-                                      if (selectedDate == null) {
-                                        _onBasicWaitingAlertPressed(context);
-                                        _checkBox = false;
-                                      } else if (val == true) {
-                                        int durationInNumber = selectedDate!
-                                                .difference(DateTime.now())
-                                                .inDays +
-                                            1;
-                                        duration = durationInNumber.toString();
-                                        goalDuration = durationInNumber;
-                                        _ListtileCheckBox = false;
-                                      }
-                                    });
-                                  },
-                                  title: const Text(" بالأيام"),
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 50,
-                                width: 150,
-                                child: CheckboxListTile(
-                                  checkColor:
-                                      const Color.fromARGB(255, 255, 250, 250),
-                                  activeColor: const Color(0xFF66BF77),
-                                  value: _ListtileCheckBox,
-                                  onChanged: (val) {
-                                    setState(() {
-                                      _ListtileCheckBox = val;
-
-                                      if (selectedDate == null) {
-                                        _onBasicWaitingAlertPressed(context);
-                                        _ListtileCheckBox = false;
-                                      } else if (val == true) {
-                                        int durationInNumber = selectedDate!
-                                                .difference(DateTime.now())
-                                                .inDays +
-                                            1;
-                                        goalDuration = durationInNumber;
-
-                                        double numberOfWork =
-                                            (durationInNumber / 7);
-                                        int numberOfWork2 =
-                                            numberOfWork.floor();
-                                        int numberofDyas = durationInNumber % 7;
-                                        duration = "$numberOfWork2 أسبوع";
-                                        if (numberofDyas != 0) {
-                                          duration =
-                                              "$duration و $numberofDyasيوماً ";
-                                        }
-
-                                        _checkBox = false;
-                                      }
-                                    });
-                                  },
-                                  title: const Text(" بالأسابيع"),
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              const Text("الأهمية  :"),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              RatingBar.builder(
-                                initialRating: widget.importance.toDouble(),
-                                itemCount: 3,
-                                itemPadding: const EdgeInsets.all(9),
-                                itemSize: 60,
-                                tapOnlyMode: false,
-                                itemBuilder: (context, index) {
-                                  switch (index) {
-                                    case 0:
-                                      return const Padding(
-                                        padding: EdgeInsets.all(15.0),
-                                        child: Icon(Icons.circle,
-                                            color: Color(0xFF66BF77)),
-                                      );
-
-                                    case 1:
-                                      return const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Icon(
-                                          Icons.circle,
-                                          color: Color(0xFF66BF77),
-                                          size: 100,
-                                        ),
-                                      );
-                                    case 2:
-                                      return const Icon(
-                                        Icons.circle,
-                                        color: Color(0xFF66BF77),
-                                        size: 10000,
-                                      );
-
-                                    default:
-                                      return const Icon(
-                                        Icons.sentiment_neutral,
-                                        color: Colors.amber,
-                                      );
+                body: Stack(
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.all(20),
+                        child: Form(
+                            key: formKey,
+                            child: ListView(children: [
+                              TextFormField(
+                                controller: _goalNmaeController,
+                                //take out the goal name //you might need to make sure it is eneterd before add and ot contian chracter.
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "من فضلك ادخل اسم الهدف";
+                                  } else {
+                                    return null;
                                   }
                                 },
-                                onRatingUpdate: (rating) {
+
+                                decoration: const InputDecoration(
+                                  labelText: "اسم الهدف",
+                                  prefixIcon: Icon(
+                                    Icons.verified_user_outlined,
+                                    color: Color(0xFF66BF77),
+                                  ),
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+
+                              /// Aspect selectio
+
+                              DropdownButtonFormField(
+                                value: isSelected,
+                                items: widget.chosenAspectNames
+                                    ?.map((e) => DropdownMenuItem(
+                                          value: e,
+                                          child: Text(e),
+                                        ))
+                                    .toList(),
+                                onChanged: (val) {
                                   setState(() {
-                                    importance = rating.toInt();
+                                    isSelected = val as String;
+                                    switch (isSelected) {
+                                      case "أموالي":
+                                        aspectnameInEnglish =
+                                            "money and finances";
+                                        break;
+                                      case "متعتي":
+                                        aspectnameInEnglish =
+                                            "Fun and Recreation";
+                                        break;
+                                      case "مهنتي":
+                                        aspectnameInEnglish = "career";
+                                        break;
+                                      case "علاقاتي":
+                                        aspectnameInEnglish =
+                                            "Significant Other";
+                                        break;
+                                      case "بيئتي":
+                                        aspectnameInEnglish =
+                                            "Physical Environment";
+                                        break;
+                                      case "ذاتي":
+                                        aspectnameInEnglish = "Personal Growth";
+                                        break;
+
+                                      case "صحتي":
+                                        aspectnameInEnglish =
+                                            "Health and Wellbeing";
+                                        break;
+                                      case "عائلتي وأصدقائي":
+                                        aspectnameInEnglish =
+                                            "Family and Friends";
+                                        break;
+                                    }
                                   });
                                 },
-                              )
-                            ],
-                          ),
-                          ElevatedButton(
-                              child: const Text("مهمة إضافة"),
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return AddTask(
-                                      goalTask: goalTasks,
-                                      isr: widget.isr,
-                                      goalDurtion: goalDuration);
-                                }));
-                              })
-                          //here the tasks .
-                        ],
-                      ),
-                    ),
-                  ),
-                ]),
+                                icon: const Icon(
+                                  Icons.arrow_drop_down_circle,
+                                  color: Color(0xFF66BF77),
+                                ),
+                                isDense: true,
+                                validator: (value) => value == null
+                                    ? 'من فضلك اختر جانب الحياة المناسب للهدف'
+                                    : null,
+                                decoration: const InputDecoration(
+                                  labelText: "جوانب الحياة ",
+                                  prefixIcon: Icon(
+                                    Icons.pie_chart,
+                                    color: Color(0xFF66BF77),
+                                  ),
+                                  border: UnderlineInputBorder(),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 25,
+                              ),
+                              //due date .
+                              DateTimeFormField(
+                                initialValue: selectedDate,
+                                //make it with time write now there is a way for only date
+                                decoration: const InputDecoration(
+                                  hintStyle: TextStyle(color: Colors.black45),
+                                  errorStyle:
+                                      TextStyle(color: Colors.redAccent),
+                                  border: OutlineInputBorder(),
+                                  suffixIcon: Icon(Icons.event_note),
+                                  labelText: 'تاريخ الاستحقاق',
+                                ),
+                                firstDate:
+                                    DateTime.now().add(const Duration(days: 1)),
+                                lastDate: DateTime.now()
+                                    .add(const Duration(days: 360)), //oneYear
+                                initialDate: DateTime.now()
+                                    .add(const Duration(days: 20)),
+                                autovalidateMode: AutovalidateMode.always,
+                                // validator: (DateTime? e) =>
+                                //     (e?.day ?? 0) == 2 ? 'Please not the first day' : null,
+                                onDateSelected: (DateTime value) {
+                                  selectedDate = value;
+                                  isDataSelected = true;
+                                },
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  const Text("الفترة  :"),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                        height: 35,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: const Color.fromARGB(
+                                                    255, 124, 121, 121))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(duration),
+                                        )),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 50,
+                                    width: 150,
+                                    child: CheckboxListTile(
+                                      checkColor: const Color.fromARGB(
+                                          255, 255, 250, 250),
+                                      activeColor: const Color(0xFF66BF77),
+                                      value: _checkBox,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _checkBox = val;
+                                          if (selectedDate == null) {
+                                            _onBasicWaitingAlertPressed(
+                                                context);
+                                            _checkBox = false;
+                                          } else if (val == true) {
+                                            int durationInNumber = selectedDate!
+                                                    .difference(DateTime.now())
+                                                    .inDays +
+                                                1;
+                                            duration =
+                                                durationInNumber.toString();
+                                            goalDuration = durationInNumber;
+                                            _ListtileCheckBox = false;
+                                          }
+                                        });
+                                      },
+                                      title: const Text(" بالأيام"),
+                                      controlAffinity:
+                                          ListTileControlAffinity.leading,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                    width: 150,
+                                    child: CheckboxListTile(
+                                      checkColor: const Color.fromARGB(
+                                          255, 255, 250, 250),
+                                      activeColor: const Color(0xFF66BF77),
+                                      value: _ListtileCheckBox,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _ListtileCheckBox = val;
+
+                                          if (selectedDate == null) {
+                                            _onBasicWaitingAlertPressed(
+                                                context);
+                                            _ListtileCheckBox = false;
+                                          } else if (val == true) {
+                                            int durationInNumber = selectedDate!
+                                                    .difference(DateTime.now())
+                                                    .inDays +
+                                                1;
+                                            goalDuration = durationInNumber;
+
+                                            double numberOfWork =
+                                                (durationInNumber / 7);
+                                            int numberOfWork2 =
+                                                numberOfWork.floor();
+                                            int numberofDyas =
+                                                durationInNumber % 7;
+                                            duration = "$numberOfWork2 أسبوع";
+                                            if (numberofDyas != 0) {
+                                              duration =
+                                                  "$duration و $numberofDyasيوماً ";
+                                            }
+
+                                            _checkBox = false;
+                                          }
+                                        });
+                                      },
+                                      title: const Text(" بالأسابيع"),
+                                      controlAffinity:
+                                          ListTileControlAffinity.leading,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  const Text("الأهمية  :"),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  RatingBar.builder(
+                                    initialRating: widget.importance.toDouble(),
+                                    itemCount: 3,
+                                    itemPadding: const EdgeInsets.all(9),
+                                    itemSize: 60,
+                                    tapOnlyMode: false,
+                                    itemBuilder: (context, index) {
+                                      switch (index) {
+                                        case 0:
+                                          return const Padding(
+                                            padding: EdgeInsets.all(15.0),
+                                            child: Icon(Icons.circle,
+                                                color: Color(0xFF66BF77)),
+                                          );
+
+                                        case 1:
+                                          return const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.circle,
+                                              color: Color(0xFF66BF77),
+                                              size: 100,
+                                            ),
+                                          );
+                                        case 2:
+                                          return const Icon(
+                                            Icons.circle,
+                                            color: Color(0xFF66BF77),
+                                            size: 10000,
+                                          );
+
+                                        default:
+                                          return const Icon(
+                                            Icons.sentiment_neutral,
+                                            color: Colors.amber,
+                                          );
+                                      }
+                                    },
+                                    onRatingUpdate: (rating) {
+                                      setState(() {
+                                        importance = rating.toInt();
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                              Row(children: [
+                                SizedBox(
+                                    height: 40,
+                                    width: 112,
+                                    child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  const Color(0xFF66BF77)),
+                                          elevation:
+                                              MaterialStateProperty.all(7),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(0.0),
+                                          child: Row(
+                                            children: const [
+                                              Text("إضافة المهام"),
+                                              Padding(
+                                                padding: EdgeInsets.all(0.0),
+                                                child: Icon(Icons.add),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          print(widget.goalDuration);
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return AddTask(
+                                                goalTask: goalTasks,
+                                                isr: widget.isr,
+                                                goalDurtion:
+                                                    widget.goalDuration);
+                                          }));
+                                        })),
+                              ])
+                            ])))
+
+                    //here the tasks .
+                  ],
+                ),
                 bottomSheet: ElevatedButton(
                     child: const Text("حفظ التغييرات"),
                     onPressed: () {
