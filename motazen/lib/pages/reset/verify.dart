@@ -64,124 +64,127 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kWhiteColor,
-        actions: [
-          IconButton(
-              // ignore: prefer_const_constructors
-              icon: Icon(Icons.arrow_back_ios_new, color: kBlackColor),
-              onPressed: () async {
-                final action = await AlertDialogs.yesCancelDialog(
-                    context,
-                    ' هل انت متاكد من الرجوع ',
-                    'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
-                if (action == DialogsAction.yes) {
-                  Get.to(const SignUpScreen());
-                }
-              }),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Padding(
-            padding: kDefaultPadding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 120,
-                ),
-                Text(
-                  'التحقق من بريدك الإلكتروني',
-                  style: titleText.copyWith(
-                    fontSize: 30,
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: kWhiteColor,
+          actions: [
+            IconButton(
+                // ignore: prefer_const_constructors
+                icon: Icon(Icons.arrow_back_ios_new, color: kBlackColor),
+                onPressed: () async {
+                  final action = await AlertDialogs.yesCancelDialog(
+                      context,
+                      ' هل انت متاكد من الرجوع ',
+                      'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
+                  if (action == DialogsAction.yes) {
+                    Get.to(const SignUpScreen());
+                  }
+                }),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Padding(
+              padding: kDefaultPadding,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 120,
                   ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  '2) ادخل الرمز المرسل عبر بريدك:',
-                  style: subTitle.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const Text('رمز (OTP) قد تم ارساله عبر بريدك المسجل ',
-                    style: TextStyle(fontSize: 14)),
-                const SizedBox(
-                  height: 10,
-                ),
-                //=================otp field===============================
-                Form(
-                  key: otpformkey,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: TextFormField(
-                      controller: otpTextfield,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'فضلا ادخل الرمز المُرسل';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                          hintText: 'ادخل الرمز',
-                          hintStyle: TextStyle(color: kTextFieldColor),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: kPrimaryColor))),
+                  Text(
+                    'التحقق من بريدك الإلكتروني',
+                    style: titleText.copyWith(
+                      fontSize: 30,
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'ادخل الرمز خلال:',
-                      style: TextStyle(fontSize: 16, color: kBlackColor),
-                    ),
-                    Text(
-                      _counter.toString(),
-                      style: const TextStyle(
-                          fontSize: 20,
-                          color: kBlackColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    //==this button a verify otp function
-                    if (otpformkey.currentState!.validate()) {
-                      verifyEmail();
-                    } else {
-                      // Fluttertoast.showToast(msg: "Invalid OTP.");
-                    }
-                  },
-                  child: const PrimaryButton(
-                    buttonText: 'تأكيد',
+                  const SizedBox(
+                    height: 5,
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    AllDialogues.showDialogue(title: "يتم الآن إرسال الرمز");
-                    sendOtp();
-                  },
-                  child: const PrimaryButton(
-                    buttonText: 'إعادة إرسال الرمز',
+                  Text(
+                    '2) ادخل الرمز المرسل عبر بريدك:',
+                    style: subTitle.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                  const Text('رمز (OTP) قد تم ارساله عبر بريدك المسجل ',
+                      style: TextStyle(fontSize: 14)),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  //=================otp field===============================
+                  Form(
+                    key: otpformkey,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: TextFormField(
+                        controller: otpTextfield,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'فضلا ادخل الرمز المُرسل';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                            hintText: 'ادخل الرمز',
+                            hintStyle: TextStyle(color: kTextFieldColor),
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: kPrimaryColor))),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'ادخل الرمز خلال:',
+                        style: TextStyle(fontSize: 16, color: kBlackColor),
+                      ),
+                      Text(
+                        _counter.toString(),
+                        style: const TextStyle(
+                            fontSize: 20,
+                            color: kBlackColor,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      //==this button a verify otp function
+                      if (otpformkey.currentState!.validate()) {
+                        verifyEmail();
+                      } else {
+                        // Fluttertoast.showToast(msg: "Invalid OTP.");
+                      }
+                    },
+                    child: const PrimaryButton(
+                      buttonText: 'تأكيد',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      AllDialogues.showDialogue(title: "يتم الآن إرسال الرمز");
+                      sendOtp();
+                    },
+                    child: const PrimaryButton(
+                      buttonText: 'إعادة إرسال الرمز',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

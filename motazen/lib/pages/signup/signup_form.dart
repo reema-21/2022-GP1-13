@@ -120,7 +120,7 @@ class _SignUpFormState extends State<SignUpForm> {
                           return 'فضلًا ادخل بريدك الإلكتروني';
                         }
                         if (!RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z]+\.[a-zA-Z]+")
                             .hasMatch(value)) {
                           // [،-٩]+
                           return "البريد الإلكتروني غير صحيح";
