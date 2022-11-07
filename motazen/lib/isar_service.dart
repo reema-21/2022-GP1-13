@@ -36,7 +36,21 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
     return true;
   } //<int> because we want to get the id of the  ceated thing
+ void UpdateTask(Task tem) async {
+    final isar = await db;
 
+    await isar.writeTxn(() async {
+      await isar.tasks.put(tem);
+    });
+  }
+  Future<Task?> getSepecificTask(int id ) async {
+    print("here i am at the sync");
+    print (id);
+    final isar = await db;
+    return await isar.tasks.where().filter().idEqualTo(id).findFirst();
+
+
+  }
   Future<void> createHabit(Habit newHabit) async {
     //Add habits
     final isar = await db;

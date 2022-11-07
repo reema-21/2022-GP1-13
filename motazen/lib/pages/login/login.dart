@@ -1,11 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:motazen/isar_service.dart';
+import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
+import 'package:motazen/pages/homepage/homepage.dart';
 //import 'package:get/get.dart';
 import 'package:motazen/pages/reset/reset_password.dart';
 import 'package:motazen/pages/signup/signup.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
+
+import '../../entities/aspect.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -172,6 +178,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       //=============== call a function to sign in with email and pass.
                       //====uncomment the below function when app is connected to firebase.
                       signIn(_emailcontroller.text, _passwordcontroler.text);
+
                     }
                   },
                   child: const PrimaryButton(
@@ -198,8 +205,13 @@ signIn(email, pass) async {
 
     Fluttertoast.showToast(
         msg:
-            "تم تسجيل الدخول بنجاح"); //name the second page بعد ما اشيك على الربط
+            "تم تسجيل الدخول بنجاح");
+             IsarService iser = IsarService(); 
+  // iser.openIsar();
+  // List<Aspect> selected = Aspect();
+  // selected = await iser.getchoseAspect();
 
+        Get.to(Homepage());
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       //msg user-not-found

@@ -22,8 +22,13 @@ const TaskSchema = CollectionSchema(
       name: r'duration',
       type: IsarType.long,
     ),
-    r'name': PropertySchema(
+    r'durationDescribtion': PropertySchema(
       id: 1,
+      name: r'durationDescribtion',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 2,
       name: r'name',
       type: IsarType.string,
     )
@@ -33,34 +38,7 @@ const TaskSchema = CollectionSchema(
   deserialize: _taskDeserialize,
   deserializeProp: _taskDeserializeProp,
   idName: r'id',
-  indexes: {
-    r'name': IndexSchema(
-      id: 879695947855722453,
-      name: r'name',
-      unique: false,
-      replace: false,
-      properties: [
-        IndexPropertySchema(
-          name: r'name',
-          type: IndexType.value,
-          caseSensitive: true,
-        )
-      ],
-    ),
-    r'duration': IndexSchema(
-      id: 8840853660219221640,
-      name: r'duration',
-      unique: false,
-      replace: false,
-      properties: [
-        IndexPropertySchema(
-          name: r'duration',
-          type: IndexType.value,
-          caseSensitive: false,
-        )
-      ],
-    )
-  },
+  indexes: {},
   links: {
     r'TaskDependency': LinkSchema(
       id: -1098463849821095448,
@@ -88,12 +66,8 @@ int _taskEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  {
-    final value = object.name;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.durationDescribtion.length * 3;
+  bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
 
@@ -104,7 +78,8 @@ void _taskSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.duration);
-  writer.writeString(offsets[1], object.name);
+  writer.writeString(offsets[1], object.durationDescribtion);
+  writer.writeString(offsets[2], object.name);
 }
 
 Task _taskDeserialize(
@@ -114,9 +89,10 @@ Task _taskDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Task();
-  object.duration = reader.readLongOrNull(offsets[0]);
+  object.duration = reader.readLong(offsets[0]);
+  object.durationDescribtion = reader.readString(offsets[1]);
   object.id = id;
-  object.name = reader.readStringOrNull(offsets[1]);
+  object.name = reader.readString(offsets[2]);
   return object;
 }
 
@@ -128,9 +104,11 @@ P _taskDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -155,22 +133,6 @@ extension TaskQueryWhereSort on QueryBuilder<Task, Task, QWhere> {
   QueryBuilder<Task, Task, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhere> anyName() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'name'),
-      );
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhere> anyDuration() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        const IndexWhereClause.any(indexName: r'duration'),
-      );
     });
   }
 }
@@ -240,289 +202,10 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
       ));
     });
   }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> nameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'name',
-        value: [null],
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> nameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'name',
-        lower: [null],
-        includeLower: false,
-        upper: [],
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> nameEqualTo(String? name) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'name',
-        value: [name],
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> nameNotEqualTo(String? name) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'name',
-              lower: [],
-              upper: [name],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'name',
-              lower: [name],
-              includeLower: false,
-              upper: [],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'name',
-              lower: [name],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'name',
-              lower: [],
-              upper: [name],
-              includeUpper: false,
-            ));
-      }
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> nameGreaterThan(
-    String? name, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'name',
-        lower: [name],
-        includeLower: include,
-        upper: [],
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> nameLessThan(
-    String? name, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'name',
-        lower: [],
-        upper: [name],
-        includeUpper: include,
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> nameBetween(
-    String? lowerName,
-    String? upperName, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'name',
-        lower: [lowerName],
-        includeLower: includeLower,
-        upper: [upperName],
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> nameStartsWith(
-      String NamePrefix) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'name',
-        lower: [NamePrefix],
-        upper: ['$NamePrefix\u{FFFFF}'],
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> nameIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'name',
-        value: [''],
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> nameIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.lessThan(
-              indexName: r'name',
-              upper: [''],
-            ))
-            .addWhereClause(IndexWhereClause.greaterThan(
-              indexName: r'name',
-              lower: [''],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.greaterThan(
-              indexName: r'name',
-              lower: [''],
-            ))
-            .addWhereClause(IndexWhereClause.lessThan(
-              indexName: r'name',
-              upper: [''],
-            ));
-      }
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> durationIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'duration',
-        value: [null],
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> durationIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'duration',
-        lower: [null],
-        includeLower: false,
-        upper: [],
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> durationEqualTo(int? duration) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'duration',
-        value: [duration],
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> durationNotEqualTo(
-      int? duration) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'duration',
-              lower: [],
-              upper: [duration],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'duration',
-              lower: [duration],
-              includeLower: false,
-              upper: [],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'duration',
-              lower: [duration],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'duration',
-              lower: [],
-              upper: [duration],
-              includeUpper: false,
-            ));
-      }
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> durationGreaterThan(
-    int? duration, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'duration',
-        lower: [duration],
-        includeLower: include,
-        upper: [],
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> durationLessThan(
-    int? duration, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'duration',
-        lower: [],
-        upper: [duration],
-        includeUpper: include,
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> durationBetween(
-    int? lowerDuration,
-    int? upperDuration, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.between(
-        indexName: r'duration',
-        lower: [lowerDuration],
-        includeLower: includeLower,
-        upper: [upperDuration],
-        includeUpper: includeUpper,
-      ));
-    });
-  }
 }
 
 extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'duration',
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'duration',
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationEqualTo(int? value) {
+  QueryBuilder<Task, Task, QAfterFilterCondition> durationEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'duration',
@@ -532,7 +215,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> durationGreaterThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -545,7 +228,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> durationLessThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -558,8 +241,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> durationBetween(
-    int? lower,
-    int? upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -570,6 +253,138 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'durationDescribtion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition>
+      durationDescribtionGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'durationDescribtion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'durationDescribtion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'durationDescribtion',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'durationDescribtion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'durationDescribtion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'durationDescribtion',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'durationDescribtion',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'durationDescribtion',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition>
+      durationDescribtionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'durationDescribtion',
+        value: '',
       ));
     });
   }
@@ -626,24 +441,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'name',
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'name',
-      ));
-    });
-  }
-
   QueryBuilder<Task, Task, QAfterFilterCondition> nameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -656,7 +455,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> nameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -671,7 +470,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> nameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -686,8 +485,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> nameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -857,6 +656,18 @@ extension TaskQuerySortBy on QueryBuilder<Task, Task, QSortBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> sortByDurationDescribtion() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationDescribtion', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByDurationDescribtionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationDescribtion', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -880,6 +691,18 @@ extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
   QueryBuilder<Task, Task, QAfterSortBy> thenByDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'duration', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByDurationDescribtion() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationDescribtion', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByDurationDescribtionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'durationDescribtion', Sort.desc);
     });
   }
 
@@ -915,6 +738,14 @@ extension TaskQueryWhereDistinct on QueryBuilder<Task, Task, QDistinct> {
     });
   }
 
+  QueryBuilder<Task, Task, QDistinct> distinctByDurationDescribtion(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'durationDescribtion',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Task, Task, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -930,13 +761,19 @@ extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Task, int?, QQueryOperations> durationProperty() {
+  QueryBuilder<Task, int, QQueryOperations> durationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'duration');
     });
   }
 
-  QueryBuilder<Task, String?, QQueryOperations> nameProperty() {
+  QueryBuilder<Task, String, QQueryOperations> durationDescribtionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'durationDescribtion');
+    });
+  }
+
+  QueryBuilder<Task, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });
