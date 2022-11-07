@@ -30,69 +30,31 @@ class _AddTaskState extends State<AddTask> {
 
   List<String> TasksNamedropmenue = [];
   List<String> selected = [];
-  TextEditingController inputTaskName = TextEditingController();
-  TextEditingController oneTaskduration = TextEditingController();
   String? isSelected = "";
 
   late String TaskName;
   void initState() {
     super.initState();
 
-    inputTaskName.addListener(_updateText);
+    // inputTaskName.addListener(_updateText);
   }
 
   void _updateText() {
     setState(() {
-      TaskName = inputTaskName.text;
+      // TaskName = inputTaskName.text;
     });
   }
 
-  AddTheEnterdTask(int val, String duName) async {
-    Task newTak = Task();
-    newTak.name = inputTaskName.text;
-    String durationDescribtion = "";
-    switch (duName) {
-      case "أيام":
-        newTak.duration = val;
-        durationDescribtion = "أيام";
-        newTak.durationDescribtion = durationDescribtion;
-        break;
-      case "أسابيع":
-        newTak.duration = (val * 7);
-        durationDescribtion = "أسابيع";
-        newTak.durationDescribtion = durationDescribtion;
+  AddTheEnterdTask(Task newTask) async {
+  
+    widget.isr.saveTask(newTask);
 
-        break;
-      case "أشهر":
-        newTak.duration = (val * 30);
-        durationDescribtion = "أشهر";
-        newTak.durationDescribtion = durationDescribtion;
-
-        break;
-      case "سنوات":
-        newTak.duration = (val * 360);
-        durationDescribtion = "سنوات $val";
-        newTak.durationDescribtion = durationDescribtion;
-
-        break;
-    }
-
-    inputTaskName.text = "";
-
-    oneTaskduration.text = 0.toString();
-
-    widget.isr.saveTask(newTak);
-    setState(() {
-      widget.goalTask.add(newTak);
-    });
   }
-
   @override
   final formKey = GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      home: Directionality(
+    return  Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
           appBar: AppBar(
@@ -115,14 +77,14 @@ class _AddTaskState extends State<AddTask> {
               Expanded(
                   child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: ListView.builder(
-                    itemCount: widget.goalTask.length,
+                child: Obx(() => ListView.builder(
+                  itemCount: freq.itemCount.value,
                     itemBuilder: (context, index) {
-                      final goal = widget.goalTask[index];
-                      final name = widget.goalTask[index].name;
-                      final impo = widget.goalTask[index].duration;
+                      final goal = freq.goalTask.value[index];
+                      final name = freq.goalTask.value[index].name;
+                      final impo = freq.goalTask.value[index].duration;
                       final durationDescription =
-                          widget.goalTask[index].durationDescribtion;
+                          freq.goalTask.value[index].durationDescribtion;
                       if (name != null) {
                         TasksNamedropmenue.add(name);
                       }
@@ -188,13 +150,12 @@ class _AddTaskState extends State<AddTask> {
                                     ' هل انت متاكد من حذف هذه المهمة  ',
                                     'بالنقر على "تاكيد"لن تتمكن من استرجاع المهمة ');
                                 if (action == DialogsAction.yes) {
-                                  int x = widget.goalTask[index].duration;
+                                  int x = freq.goalTask.value[index].duration;
                                   freq.dcrementTaskDuration(x);
                                   widget.isr
-                                      .deleteTask2(widget.goalTask[index]);
+                                      .deleteTask2(freq.goalTask.value[index]);
                                   setState(() {
-                                    widget.goalTask
-                                        .remove(widget.goalTask[index]);
+                                    freq.removeTask(index);
                                   });
                                 } else {}
                               },
@@ -206,7 +167,7 @@ class _AddTaskState extends State<AddTask> {
                             ),
                             subtitle: Text(" الفترة :$diplayedduration"),
                           ));
-                    }),
+                    }),)
               )),
             ],
           ),
@@ -239,7 +200,7 @@ class _AddTaskState extends State<AddTask> {
                                         return null;
                                       }
                                     },
-                                    controller: inputTaskName,
+                                    controller: freq.inputTaskName,
                                     decoration: const InputDecoration(
                                       labelText: "اسم المهمة",
                                       prefixIcon: Icon(
@@ -392,13 +353,50 @@ class _AddTaskState extends State<AddTask> {
                                                     setState(() {
                                                       // TasksNamedropmenue.add(inputTaskName.text);
 
-                                                      AddTheEnterdTask(
-                                                          freq.TaskDuration
-                                                              .value,
-                                                          freq.isSelected
+                               Task newTak = Task();
+    newTak.name = freq.inputTaskName.value.text;
+    String durationDescribtion = "";
+    switch (freq.isSelected.value) {
+      case "أيام":
+        newTak.duration = freq.TaskDuration
+                                                              .value;
+        durationDescribtion = "أيام";
+        newTak.durationDescribtion = durationDescribtion;
+        break;
+      case "أسابيع":
+        newTak.duration = (freq.TaskDuration
+                                                              .value * 7);
+        durationDescribtion = "أسابيع";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+      case "أشهر":
+        newTak.duration = (freq.TaskDuration
+                                                              .value * 30);
+        durationDescribtion = "أشهر";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+      case "سنوات":
+        newTak.duration = (freq.TaskDuration
+                                                              .value * 360);
+        durationDescribtion = "سنوات ";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+    }   
+    AddTheEnterdTask(newTak);                 
+
+freq.addTask(freq.inputTaskName.value.text, freq.isSelected.value, freq.TaskDuration
                                                               .value);
+
+
+
+
                                                       freq.TaskDuration.value =
                                                           0;
+
+
 
                                                       freq.storeStatusOpen(
                                                           false);
@@ -421,9 +419,9 @@ class _AddTaskState extends State<AddTask> {
 
                     });
               }),
-        ),
-      ),
+        )
     );
+    
   }
 
   bool boolvalid = true;

@@ -154,9 +154,13 @@ class IsarService {
   }
 
   Future<List<Aspect>> getchoseAspect() async {
+    print("iam here-----------------------------------");
     ///remove if my implementation works
     final isar = await db;
+    print(    isar.aspects.count()
+);
     return await isar.aspects.filter().percentagePointsGreaterThan(0).findAll();
+
   }
 
   Future<Aspect?> findSepecificAspect(String name) async {

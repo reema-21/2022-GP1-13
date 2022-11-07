@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
+import '../entities/task.dart';
+
 class TaskControleer extends GetxController{
   var TaskDuration =0.obs;
   var currentTaskDuration = 0.obs;
@@ -8,6 +10,55 @@ class TaskControleer extends GetxController{
   var iscool = false.obs; 
   var tem = 0.obs;
   var isSelected = "أيام".obs;
+ Rx<List<Task>> goalTask = Rx<List<Task>> ([]);
+late Task task ; 
+var itemCount =0.obs;
+TextEditingController inputTaskName = TextEditingController();
+
+addTask(String name , String duName , int val){
+   Task newTak = Task();
+    newTak.name = name;
+    String durationDescribtion = "";
+    switch (duName) {
+      case "أيام":
+        newTak.duration = val;
+        durationDescribtion = "أيام";
+        newTak.durationDescribtion = durationDescribtion;
+        break;
+      case "أسابيع":
+        newTak.duration = (val * 7);
+        durationDescribtion = "أسابيع";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+      case "أشهر":
+        newTak.duration = (val * 30);
+        durationDescribtion = "أشهر";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+      case "سنوات":
+        newTak.duration = (val * 360);
+        durationDescribtion = "سنوات ";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+    }
+
+    goalTask.value.add(newTak);
+    itemCount.value = goalTask.value.length;
+    inputTaskName.clear();
+}
+
+removeTask(int index){
+  goalTask.value.removeAt(index);
+  itemCount.value = goalTask.value.length;
+}
+
+AssignTaks(List<Task> currentGoalTask){
+  goalTask.value.clear();
+  goalTask.value.addAll(currentGoalTask);
+}
 
   void setInitionals (int taskduration , int currentTaskduraions , int  totalDurtion , String selectedType){
     TaskDuration.value = taskduration; 

@@ -43,7 +43,7 @@ late String selectedtype ;
                               }
                                                              totalDurtion =totalSummation; 
 
-
+freq.AssignTaks(widget.goalTask);
 
   //values if the user wants to add task 
     inputTaskName.addListener(_updateText);
@@ -55,92 +55,25 @@ late String selectedtype ;
     });
   }
   Task? task = Task();
-  UpdateTask(int val , String duName , int id , int index ) async{
-     task = await widget.isr.getSepecificTask(id);
-
-    task!.name = inputTaskName.text;
-    String durationDescribtion ="";
-     switch (duName) {
-                                          case "أيام":
-                                            task!.duration = val;
-                                 durationDescribtion = "أيام";
-                                 task!.durationDescribtion= durationDescribtion;
-                                            break;
-                                          case "أسابيع":
-                                                                                       task!.duration = (val*7);
-  durationDescribtion = "أسابيع";
-                                 task!.durationDescribtion= durationDescribtion;
-
-                                            break;
-                                          case "أشهر":
-                                                                                       task!.duration = (val*30);
-  durationDescribtion = "أشهر";
-                                 task!.durationDescribtion= durationDescribtion;
-
-                                            break;
-                                          case "سنوات":
-                                                                                       task!.duration = (val*360);
-  durationDescribtion = "سنوات $val";
-                                 task!.durationDescribtion= durationDescribtion;
-
-                                            break;
-                                        }
-      
-     
-    inputTaskName.text = "";
-
-
+  UpdateTask(Task UpdateTask ) async{
+     task = await widget.isr.getSepecificTask(UpdateTask.id);
+task!.name = UpdateTask.name; 
+task!.duration= UpdateTask.duration; 
+task!.durationDescribtion = UpdateTask.durationDescribtion;
     widget.isr.saveTask(task!);
-    setState(() {
-      widget..goalTask[index]=task!;
-      
-    });
+   
   
   }
 
  
-  AddTheEnterdTask(int val , String duName) async {
-    Task newTak = Task();
-    newTak.name = inputTaskName.text;
-    String durationDescribtion ="";
-     switch (duName) {
-                                          case "أيام":
-                                            newTak.duration = val;
-                                 durationDescribtion = "أيام";
-                                 newTak.durationDescribtion= durationDescribtion;
-                                            break;
-                                          case "أسابيع":
-                                                                                       newTak.duration = (val*7);
-  durationDescribtion = "أسابيع";
-                                 newTak.durationDescribtion= durationDescribtion;
+  
+  AddTheEnterdTask(Task newTask) async {
+  
+    widget.isr.saveTask(newTask);
 
-                                            break;
-                                          case "أشهر":
-                                                                                       newTak.duration = (val*30);
-  durationDescribtion = "أشهر";
-                                 newTak.durationDescribtion= durationDescribtion;
-
-                                            break;
-                                          case "سنوات":
-                                                                                       newTak.duration = (val*360);
-  durationDescribtion = "سنوات $val";
-                                 newTak.durationDescribtion= durationDescribtion;
-
-                                            break;
-                                        }
-      
-     
-    inputTaskName.text = "";
-
-
-    widget.isr.saveTask(newTak);
-    setState(() {
-      widget.goalTask.add(newTak);
-    });
   }
   
 
- // updateTask();
  
   @override
   final formKey = GlobalKey<FormState>();
@@ -153,7 +86,7 @@ late String selectedtype ;
           appBar: AppBar(
             backgroundColor: const Color(0xFF66BF77),
             title: const Text(
-              "إضافة هدف جديد",
+              "تعديل معلومات الهدف",
               style: TextStyle(color: Colors.white),
             ),
             actions: [
@@ -170,90 +103,64 @@ late String selectedtype ;
               Expanded(
                   child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: ListView.builder(
-                    itemCount: widget.goalTask.length,
+                child: Obx(() => ListView.builder(
+                  itemCount: freq.itemCount.value,
                     itemBuilder: (context, index) {
-                      final goal = widget.goalTask[index];
-                      final name = widget.goalTask[index].name;
-                      final impo = widget.goalTask[index].duration;
-                      final durationDescription = widget.goalTask[index].durationDescribtion;
-                     
+                      final goal = freq.goalTask.value[index];
+                      final name = freq.goalTask.value[index].name;
+                      final impo = freq.goalTask.value[index].duration;
+                      final durationDescription =
+                          freq.goalTask.value[index].durationDescribtion;
+                    
                       String diplayedduration = "";
                       switch (durationDescription) {
-                                          case "أيام":
-                                            if (impo == 1){
-                                              
-                                              diplayedduration = " يوم  ";
-                                            }
-                                            else if ( impo == 2 ){
-                                              diplayedduration = " يومان";
+                        case "أيام":
+                          if (impo == 1) {
+                            diplayedduration = " يوم  ";
+                          } else if (impo == 2) {
+                            diplayedduration = " يومان";
+                          } else {
+                            diplayedduration = "$impo  $durationDescription";
+                          }
 
-                                            }
-                                            
-                                          else  {
-                                              diplayedduration = "$impo  $durationDescription";
-                                            }
+                          break;
+                        case "أسابيع":
+                          if (impo == 7) {
+                            diplayedduration = " إسبوع  ";
+                          } else if (impo == 14) {
+                            diplayedduration = "إسبوعان ";
+                          } else {
+                            double x = impo / 7;
+                            int y = x.toInt();
+                            diplayedduration = "$y $durationDescription";
+                          }
 
-                                            break;
-                                          case "أسابيع":
-                                            if (impo == 7){
-                                              
-                                              diplayedduration = " إسبوع  ";
-                                            }
-                                            else if ( impo == 14 ){
-                                              diplayedduration = "إسبوعان ";
+                          break;
+                        case "أشهر":
+                          if (impo == 30) {
+                            diplayedduration = " شهر  ";
+                          } else if (impo == 60) {
+                            diplayedduration = "شهران ";
+                          } else {
+                            double x = impo / 30;
+                            int y = x.toInt();
+                            diplayedduration = "$y $durationDescription";
+                          }
 
-                                            }
-                                            
-                                          else  {
-                                           double x = impo/7;
-                                           int y = x.toInt();
-                                              diplayedduration = "$y $durationDescription";
-                                            }
+                          break;
+                        case "سنوات":
+                          if (impo == 360) {
+                            diplayedduration = " سنة  ";
+                          } else if (impo == 720) {
+                            diplayedduration = "سنتان ";
+                          } else {
+                            double x = impo / 360;
+                            int y = x.toInt();
+                            diplayedduration = "$y $durationDescription";
+                          }
 
-
-                                            break;
-                                          case "أشهر":
-                                           
-                                           
-                                            if (impo == 30){
-                                              
-                                              diplayedduration = " شهر  ";
-                                            }
-                                            else if ( impo ==  60 ){
-                                              diplayedduration = "شهران ";
-
-                                            }
-                                            
-                                          else  {
-                                           double x = impo/30;
-                                           int y = x.toInt();
-                                              diplayedduration = "$y $durationDescription";
-                                            }
-
-
-
-                                            break;
-                                          case "سنوات":
-                                             if (impo == 360){
-                                              
-                                              diplayedduration = " سنة  ";
-                                            }
-                                            else if ( impo == 720 ){
-                                              diplayedduration = "سنتان ";
-
-                                            }
-                                            
-                                          else  {
-                                           double x = impo/360;
-                                           int y = x.toInt();
-                                              diplayedduration = "$y $durationDescription";
-                                            }
-
-
-
-                                            break;
-                                        }
+                          break;
+                      }
 
                       return Card(
                           elevation: 3,
@@ -262,31 +169,31 @@ late String selectedtype ;
                             leading :  IconButton(icon: Icon(Icons.edit) , onPressed: (){
                               int number = 1 ; 
                              
-                               selectedtype  = widget.goalTask[index].durationDescribtion;
-                               currentTaskduraions=widget.goalTask[index].duration;
+                               selectedtype  =  freq.goalTask.value[index].durationDescribtion;
+                               currentTaskduraions= freq.goalTask.value[index].duration;
                                 switch (selectedtype) {
                                           case "أيام":
-                                           taskduration = widget.goalTask[index].duration; 
-                                           print("here is the info");
-                                           print(currentTaskduraions);
-                                           print(selectedtype);
-                                           print(totalDurtion);
-                                           print(taskduration);
-                                           print ("end of the info ");
+                                           taskduration =  freq.goalTask.value[index].duration; 
+                                          //  print("here is the info");
+                                          //  print(currentTaskduraions);
+                                          //  print(selectedtype);
+                                          //  print(totalDurtion);
+                                          //  print(taskduration);
+                                          //  print ("end of the info ");
 
                                             break;
                                           case "أسابيع":
-                               taskduration =(widget.goalTask[index].duration/7).toInt(); 
-     print("here is the info");
-                                           print(currentTaskduraions);
-                                           print(selectedtype);
-                                           print(totalDurtion);
-                                           print(taskduration);
-                                           print ("end of the info ");
+                               taskduration =( freq.goalTask.value[index].duration/7).toInt(); 
+    //  print("here is the info");
+    //                                        print(currentTaskduraions);
+    //                                        print(selectedtype);
+    //                                        print(totalDurtion);
+    //                                        print(taskduration);
+    //                                        print ("end of the info ");
 
                                             break;
                                           case "أشهر":
-                             taskduration =(widget.goalTask[index].duration/30).toInt(); 
+                             taskduration =( freq.goalTask.value[index].duration/30).toInt(); 
 
      print("here is the info");
                                            print(currentTaskduraions);
@@ -297,7 +204,7 @@ late String selectedtype ;
                                             break;
                                           case "سنوات":
   
-taskduration =(widget.goalTask[index].duration/360).toInt(); 
+taskduration =( freq.goalTask.value[index].duration/360).toInt(); 
      print("here is the info");
                                            print(currentTaskduraions);
                                            print(selectedtype);
@@ -309,7 +216,7 @@ taskduration =(widget.goalTask[index].duration/360).toInt();
 
                 freq.setInitionals(taskduration, 0, totalDurtion, selectedtype); 
  setState(() {
-   inputTaskName.text = widget.goalTask[index].name; 
+   freq.inputTaskName.text =  freq.goalTask.value[index].name; 
  });
                                showDialog(
                                  barrierDismissible: false,
@@ -340,7 +247,7 @@ taskduration =(widget.goalTask[index].duration/360).toInt();
                                         return null;
                                       }
                                     },
-                                    controller: inputTaskName,
+                                    controller: freq.inputTaskName,
                                     decoration: const InputDecoration(
                                       labelText: "اسم المهمة",
                                       prefixIcon: Icon(
@@ -498,10 +405,41 @@ taskduration =(widget.goalTask[index].duration/360).toInt();
                                                   if (formKey.currentState!
                                                       .validate()) {
                                                     setState(() {
-                                                     
+                                                      Task newTak = Task();
+    newTak.name = freq.inputTaskName.value.text;
+    String durationDescribtion = "";
+    switch (freq.isSelected.value) {
+      case "أيام":
+        newTak.duration = freq.TaskDuration
+                                                              .value;
+        durationDescribtion = "أيام";
+        newTak.durationDescribtion = durationDescribtion;
+        break;
+      case "أسابيع":
+        newTak.duration = (freq.TaskDuration
+                                                              .value * 7);
+        durationDescribtion = "أسابيع";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+      case "أشهر":
+        newTak.duration = (freq.TaskDuration
+                                                              .value * 30);
+        durationDescribtion = "أشهر";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+      case "سنوات":
+        newTak.duration = (freq.TaskDuration
+                                                              .value * 360);
+        durationDescribtion = "سنوات ";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+    }   
 
                                                       // TasksNamedropmenue.add(inputTaskName.text);
-UpdateTask(freq.TaskDuration.value  , freq.isSelected.value, widget.goalTask[index].id , index);
+UpdateTask(newTak);
                                                       freq.TaskDuration.value =
                                                           0;
 
@@ -513,9 +451,7 @@ UpdateTask(freq.TaskDuration.value  , freq.isSelected.value, widget.goalTask[ind
 
                                                       freq.setvalue(
                                                           durationName[0]);
-                                                      // TasksName.add(inputTaskName.text);
-                                                      // print("i am at the prssed button after adding");
-                                                      // print (TasksName);
+                                                     
                                                     });
                                                   }
                                                     Navigator.of(context).pop(true);
@@ -552,10 +488,9 @@ UpdateTask(freq.TaskDuration.value  , freq.isSelected.value, widget.goalTask[ind
                                       int x = widget.goalTask[index].duration;
                                       freq.dcrementTaskDuration(x);
                                       widget.isr
-                                          .deleteTask2(widget.goalTask[index]);
+                                          .deleteTask2( freq.goalTask.value[index]);
                                       setState(() {
-                                        widget.goalTask
-                                            .remove(widget.goalTask[index]);
+                                        freq.removeTask(index);
                                       });
                                     } else {}
                                   },
@@ -570,7 +505,7 @@ UpdateTask(freq.TaskDuration.value  , freq.isSelected.value, widget.goalTask[ind
                             subtitle: Text(" الفترة :$diplayedduration"),
 
                           ));
-                    }),
+                    }),)
               )),
             ],
           ),
@@ -762,10 +697,44 @@ UpdateTask(freq.TaskDuration.value  , freq.isSelected.value, widget.goalTask[ind
                                                       .validate()) {
                                                     setState(() {
                                                      
+Task newTak = Task();
+    newTak.name = freq.inputTaskName.value.text;
+    String durationDescribtion = "";
+    switch (freq.isSelected.value) {
+      case "أيام":
+        newTak.duration = freq.TaskDuration
+                                                              .value;
+        durationDescribtion = "أيام";
+        newTak.durationDescribtion = durationDescribtion;
+        break;
+      case "أسابيع":
+        newTak.duration = (freq.TaskDuration
+                                                              .value * 7);
+        durationDescribtion = "أسابيع";
+        newTak.durationDescribtion = durationDescribtion;
 
+        break;
+      case "أشهر":
+        newTak.duration = (freq.TaskDuration
+                                                              .value * 30);
+        durationDescribtion = "أشهر";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+      case "سنوات":
+        newTak.duration = (freq.TaskDuration
+                                                              .value * 360);
+        durationDescribtion = "سنوات ";
+        newTak.durationDescribtion = durationDescribtion;
+
+        break;
+    }   
+    AddTheEnterdTask(newTak);                 
+
+freq.addTask(freq.inputTaskName.value.text, freq.isSelected.value, freq.TaskDuration
+                                                              .value);
                                                       // TasksNamedropmenue.add(inputTaskName.text);
 
-                                                      AddTheEnterdTask(freq.TaskDuration.value , freq.isSelected.value);
                                                       freq.TaskDuration.value =
                                                           0;
 

@@ -70,17 +70,24 @@ class _AddGoalState extends State<AddGoal> {
     newgoal.DescriptiveGoalDuration = duration;
     newgoal.goalDuration = goalDuration;
 
-    var task = [];
-    task = widget.goalsTasks;
+    if (widget.goalsTasks != null) {
+      var task = [];
+      task = widget.goalsTasks;
 
-    for (int i = 0; i < widget.goalsTasks.length; i++) {
-      Task? y = Task();
-      String name = "";
+      if (widget.goalsTasks != null) {
+        for (int i = 0; i < widget.goalsTasks!.length; i++) {
+          Task? y = Task();
+          String name = "";
+          print("here3");
 
-      name = task[i].name;
+          name = task[i].name;
+          print(name);
 
-      y = await widget.isr.findSepecificTask(name);
-      newgoal.task.add(y!);
+          y = await widget.isr.findSepecificTask(name);
+          print(y!.name);
+          newgoal.task.add(y!);
+        }
+      }
     }
     widget.isr.createGoal(newgoal);
 
@@ -491,41 +498,51 @@ class _AddGoalState extends State<AddGoal> {
                                   ],
                                 ),
                               ),
-                              onPressed: () {
+                              onPressed: isDataSelected
+                            ? () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return AddTask(
                                       goalTask: widget.goalsTasks,
                                       isr: widget.isr,
                                       goalDurtion: goalDuration);
+                                  ;
                                 }));
-                              }),
+                              }
+                            : () {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                        content: Row(
+                                  children: [
+                                    Icon(Icons.warning),
+                                    SizedBox(width: 20),
+                                    Expanded(
+                                      child: Text(
+                                          "لإضافة المهام يجب تحديد فترة الهدف أولا"),
+                                    )
+                                  ],
+                                )));
+                              } 
+                              
+                              
+                              
+                              
+                              
+                              
+                              )
+                              )
+                  ]
+
+                              
                         ),
                       ],
                     )
-                  ]),
                 ),
-              ),
-            ]),
-            // bottomSheet: ElevatedButton(
-            //     child: const Text("إضافة"),
-            //     onPressed: () {
-            //       if (formKey.currentState!.validate()) {
-            //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            //             content: Row(
-            //           children: [
-            //             Icon(Icons.thumb_up_sharp),
-            //             SizedBox(width: 20),
-            //             Expanded(
-            //               child: Text("تمت اضافة الهدف "),
-            //             )
-            //           ],
-            //         )));
-
-            //         _Addgoal();
-            //       }
-            //     }),
+                ),
+              ]
+            ,
+            
           )),
-    );
+    ));
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:motazen/pages/homepage/homepage.dart';
 //import 'package:get/get.dart';
 import 'package:motazen/pages/reset/reset_password.dart';
@@ -12,6 +11,9 @@ import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
 
 import '../../entities/aspect.dart';
+import '../assesment_page/QuastoinAssesment.dart';
+import '../assesment_page/show.dart';
+import '../select_aspectPage/select_aspect.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -208,10 +210,28 @@ signIn(email, pass) async {
             "تم تسجيل الدخول بنجاح");
              IsarService iser = IsarService(); 
   // iser.openIsar();
-  // List<Aspect> selected = Aspect();
+  // List<Aspect> selected = [];
   // selected = await iser.getchoseAspect();
+  // print("hi");
+  // if (selected.isEmpty){
+  //   print("hi");
+  //   Get.to(AspectSelection(isr:iser));
+  // }else if (!selected.isEmpty){
+  //   print("hi");
+  //   Map<String ,double> points = await iser.getpointsAspects(selected);
+  //   double? sum  = 0 ;
+  //   for(int i = 0 ; i<points.length ; i++){
+  //     sum = points[i];
+  //   }
+  //   if(sum == 0 ){
+  //         Get.to(AssessmentQuestionsList(iser:iser));
+  //   }else{
+  Get.to(Homepage());
+    
 
-        Get.to(Homepage());
+  
+
+      
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       //msg user-not-found
