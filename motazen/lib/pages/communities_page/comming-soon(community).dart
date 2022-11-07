@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
 import 'package:motazen/theme.dart';
 
 class Communities extends StatelessWidget {
@@ -8,11 +9,14 @@ class Communities extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'comming soon',
-        style: titleText,
+    return Scaffold(
+      body: Center(
+        child: Text(
+          'comming soon',
+          style: titleText,
+        ),
       ),
+      bottomNavigationBar: const navBar(),
     );
   }
 }

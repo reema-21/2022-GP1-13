@@ -20,7 +20,7 @@ class NavBar extends StatelessWidget {
           UserAccountsDrawerHeader(
             accountName: Text(userName!),
             accountEmail: Text(userEmail!),
-            currentAccountPicture: CircleAvatar(),
+            currentAccountPicture: const CircleAvatar(),
             decoration: BoxDecoration(
               color: kPrimaryColor.withOpacity(0.5),
             ),
@@ -45,7 +45,7 @@ class NavBar extends StatelessWidget {
               } else {}
               await FirebaseAuth.instance.signOut();
               //AllDialogues.hideloading();
-              Get.to(LogInScreen());
+              Get.to(const LogInScreen());
             },
           ),
         ],

@@ -1,8 +1,8 @@
 // ignore_for_file: camel_case_types
 
+import '/pages/add_goal_page/add_goal_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../add_goal_page/add_goal_screen.dart';
 import '/isar_service.dart';
 
 import 'package:flutter/material.dart';

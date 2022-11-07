@@ -110,11 +110,9 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                 },
               ),
             ],
-            title: const Text(
+            title: Text(
               'اسئلة تقييم جوانب الحياة ',
-              style: TextStyle(
-                color: kBlackColor,
-              ),
+              style: titleText,
             ),
             elevation: 0,
             backgroundColor: kWhiteColor,
@@ -358,7 +356,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
         child: Text(
           value.round().toString(),
           style: const TextStyle(
-              color: kBlackColor, fontSize: 18, fontWeight: FontWeight.bold),
+              color: kBlackColor, fontSize: 18, fontFamily: 'Frutiger'),
         ),
       );
 

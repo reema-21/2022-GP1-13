@@ -62,38 +62,61 @@ class _selectAspectState extends State<AspectSelection> {
       child: Scaffold(
         backgroundColor: kWhiteColor,
         appBar: AppBar(
-          toolbarHeight: 86,
-          automaticallyImplyLeading: false,
           title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'هل أنت مستعد لإنشاء عجلة الحياة الخاصة بك ؟',
+                  'هل أنت مستعد ؟',
                   textDirection: TextDirection.rtl,
-                  style: titleText2,
+                  style: titleText,
                 ),
                 Text("اختر الجوانب اللي تريد اضافتها للعجلة", style: subTitle),
               ]),
           backgroundColor: kWhiteColor,
           iconTheme: const IconThemeData(color: kBlackColor),
           elevation: 0.0,
+          toolbarHeight: 86,
+          actions: [
+            IconButton(
+                // ignore: prefer_const_constructors
+                icon: Icon(Icons.arrow_back_ios_new, color: kBlackColor),
+                onPressed: () async {
+                  final action = await AlertDialogs.yesCancelDialog(
+                      context,
+                      ' هل انت متاكد من الرجوع ',
+                      'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
+                  if (action == DialogsAction.yes) {
+                    //return to the previouse page different code for the ios .
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
+                  }
+                }),
+          ],
         ),
         body: SafeArea(
           child: Stack(
             children: [
               //align the aspect buttons
               Align(
-                  alignment: Alignment.center,
-                  child: SizedBox(
+                  alignment: Alignment.topCenter,
+                  child: Container(
                       height: size.height - (size.height / 3),
                       width: size.width,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            const SizedBox(
+                              height: 42,
+                            ),
                             Wrap(
-                              spacing: 35,
-                              runSpacing: 40,
+                              spacing: 40,
+                              runSpacing: 55,
                               children: List<Widget>.generate(
                                   8,
                                   (int i) => TextButton(
@@ -131,8 +154,7 @@ class _selectAspectState extends State<AspectSelection> {
                                         title: Text(
                                           aspectList.aspectsArabic[i],
                                           style: TextStyle(
-                                              fontFamily: 'Frutiger',
-                                              fontSize: 15,
+                                              fontSize: 18,
                                               color: __isSelected[i]
                                                   ? kWhiteColor
                                                   : kBlackColor),
@@ -158,7 +180,6 @@ class _selectAspectState extends State<AspectSelection> {
                             ),
                           ]))),
               Container(
-                color: kWhiteColor.withOpacity(0),
                 margin:
                     const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
                 child: Align(

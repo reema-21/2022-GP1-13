@@ -36,7 +36,7 @@ class VerifyScreen extends StatefulWidget {
 class _VerifyScreenState extends State<VerifyScreen> {
   final otpformkey = GlobalKey<FormState>();
   TextEditingController otpTextfield = TextEditingController();
-  EmailAuth emailAuth = EmailAuth(sessionName: "Test Session");
+  EmailAuth emailAuth = EmailAuth(sessionName: "motazen");
 
   //=====================timer
   int _counter = 60;
@@ -66,21 +66,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kWhiteColor,
-        actions: [
-          IconButton(
-              // ignore: prefer_const_constructors
-              icon: Icon(Icons.arrow_forward_ios, color: kBlackColor),
-              onPressed: () async {
-                final action = await AlertDialogs.yesCancelDialog(
-                    context,
-                    ' هل انت متاكد من الرجوع ',
-                    'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
-                if (action == DialogsAction.yes) {
-                  Get.to(const SignUpScreen());
-                }
-              }),
-        ],
+        backgroundColor: kWhiteColor.withOpacity(0),
+        iconTheme: const IconThemeData(
+          color: kBlackColor,
+        ),
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Directionality(

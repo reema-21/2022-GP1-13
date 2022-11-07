@@ -1,7 +1,7 @@
 // ignore_for_file: camel_case_types, non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import '../../add_goal_page/add_Task2.dart';
+import '../add_goal_page/add_Task2.dart';
 import '../../entities/task.dart';
 import '/entities/goal.dart';
 import '/isar_service.dart';

@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:motazen/pages/login/login.dart';
 import 'package:motazen/pages/signup/signup_form.dart';
 import 'package:motazen/theme.dart';
-import 'package:provider/provider.dart';
-
-import '../../data/data.dart';
-import '../select_aspectPage/handle_aspect_data.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
