@@ -44,8 +44,8 @@ class _MyHomepageState extends State<Homepage> {
               children: [
                 //display's the wheel's background image
                 Positioned(
-                  top: -55.8,
-                  left: 20,
+                  top: MediaQuery.of(context).size.height * -0.065,
+                  left: MediaQuery.of(context).size.width * 0.05,
                   child: Container(
                     margin: const EdgeInsets.all(0.0),
                     width: 350,

@@ -28,5 +28,5 @@ Future main() async {
             home: ifr
                 ? const OnboardingPage()
                 : const LogInScreen()), //add verification to check which page should be next (sign in/homepage)
-      ))); // my widget // the one where i will create the quastion list .
+      )));
 }

@@ -1,26 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:provider/provider.dart';
-import '../data/data.dart';
 import '../widget/build_images.dart';
 import '/pages/signup/signup.dart';
-import 'select_aspectPage/handle_aspect_data.dart';
 
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
-    //initialize aspects to DB
-    handle_aspect().initializeAspects(aspectList.data);
     return Scaffold(
       body: IntroductionScreen(
         pages: [
           PageViewModel(
             title: 'Wheel',
-            body:
-                'اهلا هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي ',
+            body: 'اصنع عجلة حياتك بالجوانب الي تهمك ',
             image: const BuildImages(
               image: 'assets/images/wheel.png',
             ),
@@ -28,8 +21,7 @@ class OnboardingPage extends StatelessWidget {
           ),
           PageViewModel(
             title: 'List',
-            body:
-                'اهلا هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي ',
+            body: 'حقق اهدافك و طموحاتك بالالتزام  بمهامك و عاداتك الجيدة ',
             image: const BuildImages(
               image: 'assets/images/todolist.png',
             ),
@@ -46,8 +38,7 @@ class OnboardingPage extends StatelessWidget {
           ),
           PageViewModel(
             title: 'Progress',
-            body:
-                'اهلا هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي ',
+            body: 'تابع تقدمك بكل اهدافك و عاداتك',
             image: const BuildImages(
               image: 'assets/images/progress.png',
             ),
@@ -55,7 +46,7 @@ class OnboardingPage extends StatelessWidget {
           ),
           PageViewModel(
             title: 'Motazen',
-            body: 'هنا بنحط الي ارسلته منار اول عن الباي',
+            body: 'تابع تقدمك بكل اهدافك و عاداتك',
             image: const BuildImages(
               image: 'assets/images/motazen.png',
             ),
@@ -71,8 +62,6 @@ class OnboardingPage extends StatelessWidget {
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
-                // elevation: 15,
-                // shadowColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                     side: const BorderSide(
@@ -88,7 +77,6 @@ class OnboardingPage extends StatelessWidget {
         onDone: () => goToHome(context),
         showSkipButton: true,
         skip: const Text('تخطي'),
-        //animationDuration: 350,
       ),
     );
   }

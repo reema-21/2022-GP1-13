@@ -62,6 +62,8 @@ class _selectAspectState extends State<AspectSelection> {
       child: Scaffold(
         backgroundColor: kWhiteColor,
         appBar: AppBar(
+          toolbarHeight: 86,
+          automaticallyImplyLeading: false,
           title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -69,130 +71,94 @@ class _selectAspectState extends State<AspectSelection> {
                 Text(
                   'هل أنت مستعد لإنشاء عجلة الحياة الخاصة بك ؟',
                   textDirection: TextDirection.rtl,
-                  style: titleText,
+                  style: titleText2,
                 ),
                 Text("اختر الجوانب اللي تريد اضافتها للعجلة", style: subTitle),
               ]),
           backgroundColor: kWhiteColor,
           iconTheme: const IconThemeData(color: kBlackColor),
           elevation: 0.0,
-          actions: [
-            IconButton(
-                // ignore: prefer_const_constructors
-                icon: Icon(Icons.arrow_back_ios_new, color: kBlackColor),
-                onPressed: () async {
-                  final action = await AlertDialogs.yesCancelDialog(
-                      context,
-                      ' هل انت متاكد من الرجوع ',
-                      'بالنقر على "تاكيد"لن يتم حفظ جوانب الحياة التي قمت باختيارها  ');
-                  if (action == DialogsAction.yes) {
-                    //return to the previouse page different code for the ios .
-                    // Navigator.push(context, MaterialPageRoute(builder: (context) {return homePag();}));
-                  }
-                }),
-          ],
         ),
         body: SafeArea(
           child: Stack(
             children: [
               //align the aspect buttons
               Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
+                  alignment: Alignment.center,
+                  child: SizedBox(
                       height: size.height - (size.height / 3),
                       width: size.width,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                      ),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const SizedBox(
-                              height: 42,
-                            ),
                             Wrap(
+                              spacing: 35,
+                              runSpacing: 40,
                               children: List<Widget>.generate(
                                   8,
-                                  (int i) => Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 20, horizontal: 20),
-                                          child: TextButton(
-                                              style: ButtonStyle(
-                                                  splashFactory:
-                                                      NoSplash.splashFactory,
-                                                  fixedSize:
-                                                      MaterialStateProperty.all(
-                                                          const Size(150, 90)),
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          __isSelected[i]
-                                                              ? Color(aspectList
-                                                                      .data[i]
-                                                                      .color)
-                                                                  .withOpacity(
-                                                                      0.8)
-                                                              : kDisabled),
-                                                  elevation:
-                                                      MaterialStateProperty.all(
-                                                          10)),
-                                              onPressed: () {
-                                                setState(() {
-                                                  //update status in local storage
-                                                  handle_aspect().updateStatus(
-                                                      aspectList.data[i].name);
-                                                  //change selected value
+                                  (int i) => TextButton(
+                                      style: ButtonStyle(
+                                          splashFactory: NoSplash.splashFactory,
+                                          fixedSize: MaterialStateProperty.all(
+                                              const Size(150, 90)),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
                                                   __isSelected[i]
-                                                      ? __isSelected[i] = false
-                                                      : __isSelected[i] = true;
-                                                  //save selected aspect name
-                                                  __isSelected[i]
-                                                      ? selectedAspects.add(
-                                                          aspectList
-                                                              .data[i].name)
-                                                      : selectedAspects.remove(
-                                                          aspectList
-                                                              .data[i].name);
-                                                });
-                                              },
-                                              child: ListTile(
-                                                title: Text(
-                                                  aspectList.aspectsArabic[i],
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: __isSelected[i]
-                                                          ? kWhiteColor
-                                                          : kBlackColor),
-                                                ),
-                                                trailing: Icon(
-                                                  IconData(
-                                                    aspectList.allAspects[i]
-                                                        .iconCodePoint,
-                                                    fontFamily: aspectList
-                                                        .allAspects[i]
-                                                        .iconFontFamily,
-                                                    fontPackage: aspectList
-                                                        .allAspects[i]
-                                                        .iconFontPackage,
-                                                    matchTextDirection:
-                                                        aspectList.allAspects[i]
-                                                            .iconDirection,
-                                                  ),
-                                                  color: __isSelected[i]
-                                                      ? kWhiteColor
-                                                      : kDarkGreyColor,
-                                                  size: 27,
-                                                ),
-                                              )),
+                                                      ? Color(aspectList
+                                                              .data[i].color)
+                                                          .withOpacity(0.8)
+                                                      : kDisabled),
+                                          elevation:
+                                              MaterialStateProperty.all(10)),
+                                      onPressed: () {
+                                        setState(() {
+                                          //update status in local storage
+                                          handle_aspect().updateStatus(
+                                              aspectList.data[i].name);
+                                          //change selected value
+                                          __isSelected[i]
+                                              ? __isSelected[i] = false
+                                              : __isSelected[i] = true;
+                                          //save selected aspect name
+                                          __isSelected[i]
+                                              ? selectedAspects
+                                                  .add(aspectList.data[i].name)
+                                              : selectedAspects.remove(
+                                                  aspectList.data[i].name);
+                                        });
+                                      },
+                                      child: ListTile(
+                                        title: Text(
+                                          aspectList.aspectsArabic[i],
+                                          style: TextStyle(
+                                              fontFamily: 'Frutiger',
+                                              fontSize: 15,
+                                              color: __isSelected[i]
+                                                  ? kWhiteColor
+                                                  : kBlackColor),
                                         ),
-                                      ),
+                                        trailing: Icon(
+                                          IconData(
+                                            aspectList
+                                                .allAspects[i].iconCodePoint,
+                                            fontFamily: aspectList
+                                                .allAspects[i].iconFontFamily,
+                                            fontPackage: aspectList
+                                                .allAspects[i].iconFontPackage,
+                                            matchTextDirection: aspectList
+                                                .allAspects[i].iconDirection,
+                                          ),
+                                          color: __isSelected[i]
+                                              ? kWhiteColor
+                                              : kDarkGreyColor,
+                                          size: 27,
+                                        ),
+                                      )),
                                   growable: false),
                             ),
                           ]))),
               Container(
+                color: kWhiteColor.withOpacity(0),
                 margin:
                     const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
                 child: Align(

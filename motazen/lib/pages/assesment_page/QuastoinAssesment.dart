@@ -41,14 +41,15 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   // always the value of the sliderRange = answare if no answare then zero
   //Start of the slider Range  = the answers of the quastion //
   double _currentValue = AssessmentQuestions.currentChosenAnswer;
+  double _value = 0;
   Widget setQuestionAnswer() {
     return SliderTheme(
       data: const SliderThemeData(
-        trackHeight: 13,
+        trackHeight: 5,
       ),
       child: Slider(
         //it should be good in ios or we use Cupertino
-        value: _currentValue, //answare of that quastion
+        value: _value, //answare of that quastion
         min: 0,
         max: 10,
         divisions: 10, //to stick
@@ -58,6 +59,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
         onChanged: (double value) {
           setState(() {
             //save the value chosen by the user
+            _value = value;
             _currentValue = value;
             AssessmentQuestions.answers[
                 AssessmentQuestions

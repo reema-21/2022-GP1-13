@@ -133,6 +133,8 @@ class _getAllAspectsState extends State<getAllAspects> {
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<WheelData>(context);
+    //initialize aspects to DB
+    handle_aspect().initializeAspects(aspectList.data);
     return Scaffold(
       body: Center(
         child: FutureBuilder(

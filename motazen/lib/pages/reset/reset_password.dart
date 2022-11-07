@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:motazen/pages/reset/reset_form.dart';
 import 'package:motazen/theme.dart';
+
+import '../login/login.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   const ResetPasswordScreen({super.key});
@@ -8,6 +11,13 @@ class ResetPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kWhiteColor.withOpacity(0),
+        iconTheme: const IconThemeData(
+          color: kBlackColor,
+        ),
+        elevation: 0,
+      ),
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: Padding(

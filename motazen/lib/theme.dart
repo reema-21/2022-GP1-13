@@ -18,6 +18,11 @@ TextStyle titleText = const TextStyle(
     fontSize: 32,
     fontFamily: 'Frutiger',
     fontWeight: FontWeight.w700);
+TextStyle titleText2 = const TextStyle(
+    color: kPrimaryColor,
+    fontSize: 18,
+    fontFamily: 'Frutiger',
+    fontWeight: FontWeight.w700);
 TextStyle subTitle = const TextStyle(
     color: kSecondaryColor,
     fontSize: 18,
@@ -26,6 +31,13 @@ TextStyle subTitle = const TextStyle(
 TextStyle textButton = const TextStyle(
   color: kPrimaryColor,
   fontSize: 18,
+  fontFamily: 'Frutiger',
+  fontWeight: FontWeight.w700,
+);
+
+TextStyle normalText = const TextStyle(
+  color: kBlackColor,
+  fontSize: 25,
   fontFamily: 'Frutiger',
   fontWeight: FontWeight.w700,
 );

@@ -70,7 +70,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
         actions: [
           IconButton(
               // ignore: prefer_const_constructors
-              icon: Icon(Icons.arrow_back_ios_new, color: kBlackColor),
+              icon: Icon(Icons.arrow_forward_ios, color: kBlackColor),
               onPressed: () async {
                 final action = await AlertDialogs.yesCancelDialog(
                     context,
