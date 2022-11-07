@@ -5,6 +5,8 @@ import 'package:line_icons/line_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:motazen/theme.dart';
+import '../pages/communities_page/comming-soon(community).dart';
+import '../pages/journal_page/commin-soon(journal).dart';
 import '/pages/goals_habits_tab/goal_habits_pages.dart';
 import '/isar_service.dart';
 import '/pages/homepage/homepage.dart';
@@ -23,8 +25,8 @@ class _MynavBar extends State<navBar> {
   final List<Widget> _pages = [
     const Homepage(),
     Goals_habit(iser: IsarService()),
-    const Homepage(), //placehloder
-    const Homepage(), //placehloder
+    const Communities(), //placehloder
+    const Journal(), //placehloder
   ];
   navigate(int index) {
     setState(() {
