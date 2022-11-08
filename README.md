@@ -31,13 +31,9 @@ the application is built using [Dart](https://dart.dev/) alongside the [flutter]
 3. It will show as an app in your emulator(simulator).
 4. Click on the app icon to launch it.
 
-## visuals
-
----add later---
-
 ## documentation
 
----add later---
+---On Jira---
 
 ## Authors
 - [Reema](https://github.com/reema-21)
