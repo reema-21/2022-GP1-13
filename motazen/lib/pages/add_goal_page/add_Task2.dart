@@ -50,7 +50,6 @@ class _AddTaskState extends State<AddTask> {
     widget.isr.saveTask(newTask);
   }
 
-  @override
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -87,9 +86,7 @@ class _AddTaskState extends State<AddTask> {
                               final impo = freq.goalTask.value[index].duration;
                               final durationDescription = freq
                                   .goalTask.value[index].durationDescribtion;
-                              if (name != null) {
-                                TasksNamedropmenue.add(name);
-                              }
+                              TasksNamedropmenue.add(name);
                               String diplayedduration = "";
                               switch (durationDescription) {
                                 case "أيام":
@@ -171,7 +168,7 @@ class _AddTaskState extends State<AddTask> {
                                     // if not null added
                                     title: Padding(
                                       padding: const EdgeInsets.all(6.0),
-                                      child: Text("$name"),
+                                      child: Text(name),
                                     ),
                                     subtitle:
                                         Text(" الفترة :$diplayedduration"),
@@ -256,7 +253,7 @@ class _AddTaskState extends State<AddTask> {
                                       width: 10,
                                     ),
                                     Obx((() => Text(
-                                          "${freq.TaskDuration.toString()}",
+                                          freq.TaskDuration.toString(),
                                           style: const TextStyle(fontSize: 20),
                                         ))),
                                     const SizedBox(width: 10),
@@ -301,10 +298,10 @@ class _AddTaskState extends State<AddTask> {
                                               if (value!
                                                   .contains(durationName[0])) {
                                                 freq.setvalue(durationName[0]);
-                                              } else if (value!
+                                              } else if (value
                                                   .contains(durationName[1])) {
                                                 freq.setvalue(durationName[1]);
-                                              } else if (value!
+                                              } else if (value
                                                   .contains(durationName[2])) {
                                                 freq.setvalue(durationName[2]);
                                               } else {
@@ -349,94 +346,86 @@ class _AddTaskState extends State<AddTask> {
                                 const SizedBox(
                                   height: 30,
                                 ),
-                                Container(
-                                    child: Obx(() => ElevatedButton(
-                                          onPressed: freq.iscool.value
-                                              ? () {
-                                                  if (formKey.currentState!
-                                                      .validate()) {
-                                                    setState(() {
-                                                      // TasksNamedropmenue.add(inputTaskName.text);
+                                Obx(() => ElevatedButton(
+                                      onPressed: freq.iscool.value
+                                          ? () {
+                                              if (formKey.currentState!
+                                                  .validate()) {
+                                                setState(() {
+                                                  // TasksNamedropmenue.add(inputTaskName.text);
 
-                                                      Task newTak = Task();
-                                                      newTak.name = freq
-                                                          .inputTaskName
-                                                          .value
-                                                          .text;
-                                                      String
-                                                          durationDescribtion =
-                                                          "";
-                                                      switch (freq
-                                                          .isSelected.value) {
-                                                        case "أيام":
-                                                          newTak.duration = freq
+                                                  Task newTak = Task();
+                                                  newTak.name = freq
+                                                      .inputTaskName.value.text;
+                                                  String durationDescribtion =
+                                                      "";
+                                                  switch (
+                                                      freq.isSelected.value) {
+                                                    case "أيام":
+                                                      newTak.duration = freq
+                                                          .TaskDuration.value;
+                                                      durationDescribtion =
+                                                          "أيام";
+                                                      newTak.durationDescribtion =
+                                                          durationDescribtion;
+                                                      break;
+                                                    case "أسابيع":
+                                                      newTak.duration = (freq
                                                               .TaskDuration
-                                                              .value;
-                                                          durationDescribtion =
-                                                              "أيام";
-                                                          newTak.durationDescribtion =
-                                                              durationDescribtion;
-                                                          break;
-                                                        case "أسابيع":
-                                                          newTak.duration =
-                                                              (freq.TaskDuration
-                                                                      .value *
-                                                                  7);
-                                                          durationDescribtion =
-                                                              "أسابيع";
-                                                          newTak.durationDescribtion =
-                                                              durationDescribtion;
+                                                              .value *
+                                                          7);
+                                                      durationDescribtion =
+                                                          "أسابيع";
+                                                      newTak.durationDescribtion =
+                                                          durationDescribtion;
 
-                                                          break;
-                                                        case "أشهر":
-                                                          newTak.duration =
-                                                              (freq.TaskDuration
-                                                                      .value *
-                                                                  30);
-                                                          durationDescribtion =
-                                                              "أشهر";
-                                                          newTak.durationDescribtion =
-                                                              durationDescribtion;
+                                                      break;
+                                                    case "أشهر":
+                                                      newTak.duration = (freq
+                                                              .TaskDuration
+                                                              .value *
+                                                          30);
+                                                      durationDescribtion =
+                                                          "أشهر";
+                                                      newTak.durationDescribtion =
+                                                          durationDescribtion;
 
-                                                          break;
-                                                        case "سنوات":
-                                                          newTak.duration =
-                                                              (freq.TaskDuration
-                                                                      .value *
-                                                                  360);
-                                                          durationDescribtion =
-                                                              "سنوات ";
-                                                          newTak.durationDescribtion =
-                                                              durationDescribtion;
+                                                      break;
+                                                    case "سنوات":
+                                                      newTak.duration = (freq
+                                                              .TaskDuration
+                                                              .value *
+                                                          360);
+                                                      durationDescribtion =
+                                                          "سنوات ";
+                                                      newTak.durationDescribtion =
+                                                          durationDescribtion;
 
-                                                          break;
-                                                      }
-                                                      AddTheEnterdTask(newTak);
-
-                                                      freq.addTask(
-                                                          freq.inputTaskName
-                                                              .value.text,
-                                                          freq.isSelected.value,
-                                                          freq.TaskDuration
-                                                              .value);
-
-                                                      freq.TaskDuration.value =
-                                                          0;
-
-                                                      freq.storeStatusOpen(
-                                                          false);
-                                                      freq.incrementTaskDuration();
-                                                      freq.currentTaskDuration
-                                                          .value = 0;
-
-                                                      freq.setvalue(
-                                                          durationName[0]);
-                                                    });
+                                                      break;
                                                   }
-                                                }
-                                              : null,
-                                          child: const Text("اضافة"),
-                                        )))
+                                                  AddTheEnterdTask(newTak);
+
+                                                  freq.addTask(
+                                                      freq.inputTaskName.value
+                                                          .text,
+                                                      freq.isSelected.value,
+                                                      freq.TaskDuration.value);
+
+                                                  freq.TaskDuration.value = 0;
+
+                                                  freq.storeStatusOpen(false);
+                                                  freq.incrementTaskDuration();
+                                                  freq.currentTaskDuration
+                                                      .value = 0;
+
+                                                  freq.setvalue(
+                                                      durationName[0]);
+                                                });
+                                              }
+                                            }
+                                          : null,
+                                      child: const Text("اضافة"),
+                                    ))
                               ])),
                             ),
                           ));

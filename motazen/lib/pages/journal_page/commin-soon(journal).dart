@@ -12,7 +12,7 @@ class Journal extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Text(
-          'comming soon',
+          'coming soon',
           style: titleText,
         ),
       ),

@@ -1,9 +1,9 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:motazen/pages/add_goal_page/task_controller.dart';
 import 'package:motazen/entities/task.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:number_inc_dec/number_inc_dec.dart';
-import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:get/get.dart';
 
 import '../assesment_page/alert_dialog.dart';
@@ -34,6 +34,7 @@ class _EditTaskState extends State<EditTask> {
   late int currentTaskduraions;
   late String selectedtype;
 
+  @override
   void initState() {
     super.initState();
     int totalSummation = 0;
@@ -70,6 +71,7 @@ class _EditTaskState extends State<EditTask> {
   @override
   final formKey = GlobalKey<FormState>();
 
+  @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       home: Directionality(
@@ -411,9 +413,9 @@ class _EditTaskState extends State<EditTask> {
                                                                               i++) {
                                                                             if (value!.contains(durationName[0])) {
                                                                               freq.setvalue(durationName[0]);
-                                                                            } else if (value!.contains(durationName[1])) {
+                                                                            } else if (value.contains(durationName[1])) {
                                                                               freq.setvalue(durationName[1]);
-                                                                            } else if (value!.contains(durationName[2])) {
+                                                                            } else if (value.contains(durationName[2])) {
                                                                               freq.setvalue(durationName[2]);
                                                                             } else {
                                                                               freq.setvalue(durationName[3]);
@@ -679,10 +681,10 @@ class _EditTaskState extends State<EditTask> {
                                           if (value!
                                               .contains(durationName[0])) {
                                             freq.setvalue(durationName[0]);
-                                          } else if (value!
+                                          } else if (value
                                               .contains(durationName[1])) {
                                             freq.setvalue(durationName[1]);
-                                          } else if (value!
+                                          } else if (value
                                               .contains(durationName[2])) {
                                             freq.setvalue(durationName[2]);
                                           } else {

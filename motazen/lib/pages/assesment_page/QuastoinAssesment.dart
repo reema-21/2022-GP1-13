@@ -40,27 +40,37 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
 //------------------------------------------------------------
   // always the value of the sliderRange = answare if no answare then zero
   //Start of the slider Range  = the answers of the quastion //
-  double _currentValue = AssessmentQuestions.currentChosenAnswer;
-  double _value = 0;
   Widget setQuestionAnswer() {
     return SliderTheme(
       data: const SliderThemeData(
         trackHeight: 5,
+        thumbShape: RoundSliderThumbShape(
+          enabledThumbRadius: 14.0,
+          pressedElevation: 8.0,
+        ),
+        valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+        valueIndicatorColor: Colors.black,
+        valueIndicatorTextStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 20.0,
+        ),
       ),
       child: Slider(
         //it should be good in ios or we use Cupertino
-        value: _value, //answare of that quastion
+        value:
+            AssessmentQuestions.currentChosenAnswer, //answare of that quastion
         min: 0,
         max: 10,
         divisions: 10, //to stick
         activeColor: kPrimaryColor,
 
-        label: _currentValue.round().toString(), // to show the lable number
+        label: AssessmentQuestions.currentChosenAnswer
+            .round()
+            .toString(), // to show the lable number
         onChanged: (double value) {
           setState(() {
             //save the value chosen by the user
-            _value = value;
-            _currentValue = value;
+            AssessmentQuestions.currentChosenAnswer = value;
             AssessmentQuestions.answers[
                 AssessmentQuestions
                     .activeStep] = '$value' +
@@ -258,7 +268,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   // Returns the header text based on the AssessmentQuestions.activeStep.
 
   String headerText() {
-    ///can be added to a different page
+    ///can be added to a different page (note: sometimes crashes)
     return widget.question?[AssessmentQuestions.activeStep];
   }
 

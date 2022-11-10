@@ -8,7 +8,7 @@ class handle_aspect {
   final IsarService isar = IsarService();
 
 //initialize all aspects in local storage
-  Future<void> initializeAspects(List<Data> list) async {
+  Future<int> initializeAspects(List<Data> list) async {
     await isar.cleanAspects();
 
     for (var i = 0; i < list.length; i++) {
@@ -24,6 +24,8 @@ class handle_aspect {
         ..iconDirection = list[i].icon.matchTextDirection;
       await isar.createAspect(newAspect);
     }
+    return 1;
+    //add a case for failure later
   }
 
   //update aspect status

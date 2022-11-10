@@ -134,19 +134,25 @@ class _getAllAspectsState extends State<getAllAspects> {
   Widget build(BuildContext context) {
     var aspectList = Provider.of<WheelData>(context);
     //initialize aspects to DB
-    handle_aspect().initializeAspects(aspectList.data);
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-            future: handle_aspect().getAspects(),
-            builder: ((context, snapshot) {
+            future: Future.wait([
+              handle_aspect().initializeAspects(aspectList.data),
+              handle_aspect().getAspects(),
+            ]),
+            builder: ((context, AsyncSnapshot<List<dynamic>> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                aspectList.allAspects = snapshot.data!;
+                while (true) {
+                  if (snapshot.data![0] == 1) {
+                    aspectList.allAspects = snapshot.data![1];
 
-                return AspectSelection(
-                  isr: isar,
-                  aspects: aspectList.allAspects,
-                );
+                    return AspectSelection(
+                      isr: isar,
+                      aspects: aspectList.allAspects,
+                    );
+                  }
+                }
               } else {
                 return const CircularProgressIndicator();
               }

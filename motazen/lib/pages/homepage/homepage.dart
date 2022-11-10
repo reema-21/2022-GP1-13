@@ -17,6 +17,7 @@ class _MyHomepageState extends State<Homepage> {
 //progress Widget
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -40,28 +41,20 @@ class _MyHomepageState extends State<Homepage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             //displays the visualization (wheel of life)
-            Stack(
-              children: [
-                //display's the wheel's background image
-                Positioned(
-                  top: MediaQuery.of(context).size.height * -0.065,
-                  left: MediaQuery.of(context).size.width * 0.05,
-                  child: Container(
-                    margin: const EdgeInsets.all(0.0),
-                    width: 350,
-                    height: 500,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/wheelHome.png'),
-                          fit: BoxFit.fill),
-                    ),
-                  ),
+            Stack(alignment: Alignment.center, children: [
+              Container(
+                margin: const EdgeInsets.all(0.0),
+                height: height * 0.5,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      image: AssetImage('assets/images/wheelHome.png'),
+                      fit: BoxFit.contain),
                 ),
-                //displays the wheel's sections from user data
-                const life_wheel(),
-              ],
-            ),
+              ),
+              const life_wheel(),
+            ]),
+
             // displays the daily tasks list
             Flexible(
               child: Center(
