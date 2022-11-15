@@ -63,6 +63,7 @@ final fakeData = Todo(id: 'todo-tag-1', description: 'مهام اليوم', item
 ////////////////////////////////////////Aspect Data\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 class WheelData with ChangeNotifier {
+  int selectedIndex = 0;
   List<Data> data = [
     //add friends and family aspect
     Data(name: 'Family and Friends', color: 4294938880, icon: Icons.person),

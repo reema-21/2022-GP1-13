@@ -5,6 +5,8 @@ import 'package:line_icons/line_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
+import '../data/data.dart';
 import '../pages/communities_page/comming-soon(community).dart';
 import '../pages/journal_page/commin-soon(journal).dart';
 import '/pages/goals_habits_tab/goal_habits_pages.dart';
@@ -21,22 +23,23 @@ class navBar extends StatefulWidget {
 }
 
 class _MynavBar extends State<navBar> {
-  int _selectedIndex = 0;
   final List<Widget> _pages = [
     const Homepage(),
     Goals_habit(iser: IsarService()),
     const Communities(), //placehloder
     const Journal(), //placehloder
   ];
-  navigate(int index) {
-    setState(() {
-      _selectedIndex = index;
-      Get.to(_pages[index]);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    var selectedPage = Provider.of<WheelData>(context);
+
+    navigate(int index) {
+      setState(() {
+        selectedPage.selectedIndex = index;
+        Get.to(_pages[index]);
+      });
+    }
+
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Container(
@@ -74,7 +77,7 @@ class _MynavBar extends State<navBar> {
               ),
             ],
             onTabChange: navigate,
-            selectedIndex: _selectedIndex,
+            selectedIndex: selectedPage.selectedIndex,
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:motazen/theme.dart';
 import '../widget/build_images.dart';
 import '/pages/signup/signup.dart';
 
@@ -12,7 +13,7 @@ class OnboardingPage extends StatelessWidget {
       body: IntroductionScreen(
         pages: [
           PageViewModel(
-            title: 'Wheel',
+            title: 'عجلة الحياة',
             body: 'اصنع عجلة حياتك بالجوانب الي تهمك ',
             image: const BuildImages(
               image: 'assets/images/wheel.png',
@@ -20,7 +21,7 @@ class OnboardingPage extends StatelessWidget {
             decoration: getPageDecoration(),
           ),
           PageViewModel(
-            title: 'List',
+            title: 'العادات والمهام',
             body: 'حقق اهدافك و طموحاتك بالالتزام  بمهامك و عاداتك الجيدة ',
             image: const BuildImages(
               image: 'assets/images/todolist.png',
@@ -28,16 +29,15 @@ class OnboardingPage extends StatelessWidget {
             decoration: getPageDecoration(),
           ),
           PageViewModel(
-            title: 'Community',
-            body:
-                'اهلا هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي هنا بنحط كلام عن هذا الشي ',
+            title: 'الانضمام للمجتمعات',
+            body: 'شارك اصدقائك و مجتمعك اهدافك لتشجيع نفسك ',
             image: const BuildImages(
               image: 'assets/images/community.png',
             ),
             decoration: getPageDecoration(),
           ),
           PageViewModel(
-            title: 'Progress',
+            title: 'لاحظ تقدمك',
             body: 'تابع تقدمك بكل اهدافك و عاداتك',
             image: const BuildImages(
               image: 'assets/images/progress.png',
@@ -45,8 +45,8 @@ class OnboardingPage extends StatelessWidget {
             decoration: getPageDecoration(),
           ),
           PageViewModel(
-            title: 'Motazen',
-            body: 'تابع تقدمك بكل اهدافك و عاداتك',
+            title: 'متزن',
+            body: 'هل انت مستعد لبدء رحلتك',
             image: const BuildImages(
               image: 'assets/images/motazen.png',
             ),
@@ -56,16 +56,12 @@ class OnboardingPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.all(20.0),
-                backgroundColor: const Color.fromARGB(255, 66, 131, 196),
+                backgroundColor: kPrimaryColor,
                 fixedSize: const Size(200, 70),
-                textStyle: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+                textStyle: textButton,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
-                    side: const BorderSide(
-                        color: Color.fromARGB(255, 66, 131, 196))),
+                    side: const BorderSide(color: kPrimaryColor)),
               ),
               child: const Text('!لنبدأ'),
             ),
