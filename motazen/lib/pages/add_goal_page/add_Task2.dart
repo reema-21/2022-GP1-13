@@ -1,10 +1,10 @@
-// ignore_for_file: file_names, must_be_immutable, non_constant_identifier_names
+// ignore_for_file: file_names, must_be_immutable, non_constant_identifier_names, unused_element
 
 import 'package:flutter/material.dart';
+import '../assesment_page/alert_dialog.dart';
 import 'task_controller.dart';
 import 'package:motazen/entities/task.dart';
 import 'package:motazen/isar_service.dart';
-import '../assesment_page/aler2.dart';
 import 'package:get/get.dart';
 
 class AddTask extends StatefulWidget {
@@ -58,9 +58,10 @@ class _AddTaskState extends State<AddTask> {
         textDirection: TextDirection.rtl,
         child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: const Color(0xFF66BF77),
             title: const Text(
-              "إضافة هدف جديد",
+              "إضافة مهمة جديدة",
               style: TextStyle(color: Colors.white),
             ),
             actions: [
@@ -75,106 +76,100 @@ class _AddTaskState extends State<AddTask> {
           body: Column(
             children: [
               Expanded(
-                  child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Obx(
-                        () => ListView.builder(
-                            itemCount: freq.itemCount.value,
-                            itemBuilder: (context, index) {
-                              final goal = freq.goalTask.value[index];
-                              final name = freq.goalTask.value[index].name;
-                              final impo = freq.goalTask.value[index].duration;
-                              final durationDescription = freq
-                                  .goalTask.value[index].durationDescribtion;
-                              TasksNamedropmenue.add(name);
-                              String diplayedduration = "";
-                              switch (durationDescription) {
-                                case "أيام":
-                                  if (impo == 1) {
-                                    diplayedduration = " يوم  ";
-                                  } else if (impo == 2) {
-                                    diplayedduration = " يومان";
-                                  } else {
-                                    diplayedduration =
-                                        "$impo  $durationDescription";
-                                  }
-
-                                  break;
-                                case "أسابيع":
-                                  if (impo == 7) {
-                                    diplayedduration = " إسبوع  ";
-                                  } else if (impo == 14) {
-                                    diplayedduration = "إسبوعان ";
-                                  } else {
-                                    double x = impo / 7;
-                                    int y = x.toInt();
-                                    diplayedduration =
-                                        "$y $durationDescription";
-                                  }
-
-                                  break;
-                                case "أشهر":
-                                  if (impo == 30) {
-                                    diplayedduration = " شهر  ";
-                                  } else if (impo == 60) {
-                                    diplayedduration = "شهران ";
-                                  } else {
-                                    double x = impo / 30;
-                                    int y = x.toInt();
-                                    diplayedduration =
-                                        "$y $durationDescription";
-                                  }
-
-                                  break;
-                                case "سنوات":
-                                  if (impo == 360) {
-                                    diplayedduration = " سنة  ";
-                                  } else if (impo == 720) {
-                                    diplayedduration = "سنتان ";
-                                  } else {
-                                    double x = impo / 360;
-                                    int y = x.toInt();
-                                    diplayedduration =
-                                        "$y $durationDescription";
-                                  }
-
-                                  break;
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Obx(() => ListView.builder(
+                        itemCount: freq.itemCount.value,
+                        itemBuilder: (context, index) {
+                          final name = freq.goalTask.value[index].name;
+                          final impo = freq.goalTask.value[index].duration;
+                          final durationDescription =
+                              freq.goalTask.value[index].durationDescribtion;
+                          TasksNamedropmenue.add(name);
+                          String diplayedduration = "";
+                          switch (durationDescription) {
+                            case "أيام":
+                              if (impo == 1) {
+                                diplayedduration = " يوم  ";
+                              } else if (impo == 2) {
+                                diplayedduration = " يومان";
+                              } else {
+                                diplayedduration =
+                                    "$impo  $durationDescription";
                               }
 
-                              return Card(
-                                  elevation: 3,
-                                  // here is the code of each item you have
-                                  child: ListTile(
-                                    trailing: TextButton(
-                                      child: const Icon(Icons.delete),
-                                      onPressed: () async {
-                                        final action =
-                                            await AlertDialogs.yesCancelDialog(
-                                                context,
-                                                ' هل انت متاكد من حذف هذه المهمة  ',
-                                                'بالنقر على "تاكيد"لن تتمكن من استرجاع المهمة ');
-                                        if (action == DialogsAction.yes) {
-                                          int x = freq
-                                              .goalTask.value[index].duration;
-                                          freq.dcrementTaskDuration(x);
-                                          widget.isr.deleteTask2(
-                                              freq.goalTask.value[index]);
-                                          setState(() {
-                                            freq.removeTask(index);
-                                          });
-                                        } else {}
-                                      },
-                                    ),
-                                    // if not null added
-                                    title: Padding(
-                                      padding: const EdgeInsets.all(6.0),
-                                      child: Text(name),
-                                    ),
-                                    subtitle:
-                                        Text(" الفترة :$diplayedduration"),
-                                  ));
-                            }),
-                      ))),
+                              break;
+                            case "أسابيع":
+                              if (impo == 7) {
+                                diplayedduration = " إسبوع  ";
+                              } else if (impo == 14) {
+                                diplayedduration = "إسبوعان ";
+                              } else {
+                                double x = impo / 7;
+                                int y = x.toInt();
+                                diplayedduration = "$y $durationDescription";
+                              }
+
+                              break;
+                            case "أشهر":
+                              if (impo == 30) {
+                                diplayedduration = " شهر  ";
+                              } else if (impo == 60) {
+                                diplayedduration = "شهران ";
+                              } else {
+                                double x = impo / 30;
+                                int y = x.toInt();
+                                diplayedduration = "$y $durationDescription";
+                              }
+
+                              break;
+                            case "سنوات":
+                              if (impo == 360) {
+                                diplayedduration = " سنة  ";
+                              } else if (impo == 720) {
+                                diplayedduration = "سنتان ";
+                              } else {
+                                double x = impo / 360;
+                                int y = x.toInt();
+                                diplayedduration = "$y $durationDescription";
+                              }
+
+                              break;
+                          }
+
+                          return Card(
+                              elevation: 3,
+                              // here is the code of each item you have
+                              child: ListTile(
+                                trailing: TextButton(
+                                  child: const Icon(Icons.delete),
+                                  onPressed: () async {
+                                    final action =
+                                        await AlertDialogs.yesCancelDialog(
+                                            context,
+                                            ' هل انت متاكد من حذف هذه المهمة  ',
+                                            'بالنقر على "تاكيد"لن تتمكن من استرجاع المهمة ');
+                                    if (action == DialogsAction.yes) {
+                                      int x =
+                                          freq.goalTask.value[index].duration;
+                                      freq.dcrementTaskDuration(x);
+                                      widget.isr.deleteTask2(
+                                          freq.goalTask.value[index]);
+                                      setState(() {
+                                        freq.removeTask(index);
+                                      });
+                                    } else {}
+                                  },
+                                ),
+                                // if not null added
+                                title: Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Text(name),
+                                ),
+                                subtitle: Text(" الفترة :$diplayedduration"),
+                              ));
+                        }))),
+              )
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -194,27 +189,25 @@ class _AddTaskState extends State<AddTask> {
                               key: formKey,
                               child: SingleChildScrollView(
                                   child: Column(children: [
-                                Container(
-                                  child: TextFormField(
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "من فضلك ادخل اسم المهمة";
-                                        // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
-                                        //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
-                                        // }
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                    controller: freq.inputTaskName,
-                                    decoration: const InputDecoration(
-                                      labelText: "اسم المهمة",
-                                      prefixIcon: Icon(
-                                        Icons.verified_user_outlined,
-                                        color: Color(0xFF66BF77),
-                                      ),
-                                      border: OutlineInputBorder(),
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "من فضلك ادخل اسم المهمة";
+                                      // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
+                                      //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
+                                      // }
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  controller: freq.inputTaskName,
+                                  decoration: const InputDecoration(
+                                    labelText: "اسم المهمة",
+                                    prefixIcon: Icon(
+                                      Icons.verified_user_outlined,
+                                      color: Color(0xFF66BF77),
                                     ),
+                                    border: OutlineInputBorder(),
                                   ),
                                 ),
                                 const SizedBox(

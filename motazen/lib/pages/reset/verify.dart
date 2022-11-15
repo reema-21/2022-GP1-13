@@ -9,12 +9,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:motazen/dialogue_boxes.dart';
 import 'package:motazen/pages/signup/sign_up_method.dart';
-import 'package:motazen/pages/signup/signup.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
 
-import '../../data/data.dart';
-import '../assesment_page/alert_dialog.dart';
+import '../select_aspectPage/handle_aspect_data.dart';
 
 class VerifyScreen extends StatefulWidget {
   //======= this data is received from sign up form.
@@ -241,7 +239,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       Fluttertoast.showToast(msg: "تم التحقق من بريدك الإلكتروني");
       await FirebaseAuth.instance.signOut();
       AllDialogues.hideloading();
-      Get.to(() => const getAllAspects());
+      Get.to(() => const initializeAspects());
     } on FirebaseAuthException catch (e) {
       AllDialogues.hideloading();
       if (e.code == 'weak-password') {

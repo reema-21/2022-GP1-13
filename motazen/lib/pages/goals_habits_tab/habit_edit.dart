@@ -79,8 +79,7 @@ class _EditGoalState extends State<EditHbit> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Directionality(
+    return  Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
                 floatingActionButtonLocation:
@@ -163,7 +162,7 @@ class _EditGoalState extends State<EditHbit> {
                                       Row(
                                         children: [
                                           const Text(
-                                            "اسم العادى:",
+                                            "اسم العادة: ",
                                             style: TextStyle(fontSize: 23),
                                           ),
                                           const SizedBox(
@@ -220,7 +219,7 @@ class _EditGoalState extends State<EditHbit> {
                                       )
                                     ]))
                               ])))
-                    ])))));
+                    ]))));
   }
 
 //   Widget buildTextField(String labelText ,String placeholder){

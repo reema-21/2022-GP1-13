@@ -90,6 +90,8 @@ class _AddHabitState extends State<AddHabit> {
                 }),
             key: _scaffoldkey,
             appBar: AppBar(
+                                        automaticallyImplyLeading: false,
+
               backgroundColor: const Color(0xFF66BF77),
               title: const Text(
                 "إضافة عادة جديدة",

@@ -82,11 +82,11 @@ class _AddHabitState extends State<HabitDetails> {
   @override
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
-    return GetMaterialApp(
-      home: Directionality(
+    return  Directionality(
           textDirection: TextDirection.rtl,
           child: Scaffold(
             appBar: AppBar(
+              automaticallyImplyLeading: false,
               backgroundColor: const Color(0xFF66BF77),
               title: const Text(
                 "تعديل معلومات العادة",
@@ -330,7 +330,7 @@ class _AddHabitState extends State<HabitDetails> {
                     _AddHabit();
                   }
                 }),
-          )),
-    );
+          ));
+    
   }
 }

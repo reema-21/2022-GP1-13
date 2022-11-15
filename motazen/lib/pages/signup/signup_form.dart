@@ -243,12 +243,12 @@ class _SignUpFormState extends State<SignUpForm> {
                     discription:
                         " مسجل سابقًا، سجّل باسم مستخدم جديد ${user_name_controller.text} ");
               } else {
-                await Get.to(VerifyScreen(
-                  first_name: first_name_controller.text,
-                  user_name: user_name_controller.text.toLowerCase(),
-                  email: email_controller.text,
-                  pass: password_controler.text,
-                ));
+                await Get.to(() => VerifyScreen(
+                      first_name: first_name_controller.text,
+                      user_name: user_name_controller.text.toLowerCase(),
+                      email: email_controller.text,
+                      pass: password_controler.text,
+                    ));
               }
             }
           },

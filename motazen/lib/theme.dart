@@ -35,6 +35,11 @@ TextStyle textButton = const TextStyle(
   fontWeight: FontWeight.w700,
 );
 
+TextStyle sidebarUser = const TextStyle(
+  color: kWhiteColor,
+  fontSize: 18,
+  fontFamily: 'Frutiger',
+);
 TextStyle normalText = const TextStyle(
   color: kBlackColor,
   fontSize: 25,

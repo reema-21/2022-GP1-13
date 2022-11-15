@@ -9,7 +9,7 @@ class MyControleer extends GetxController {
 
   dcrement() {
     if (frequency.value <= 1) {
-      Get.snackbar("", "قيمة التكرارة لا يمكن ان تكون اقل من واحد",
+      Get.snackbar("", "قيمة التكرار لا يمكن ان تكون اقل من واحد",
           icon: const Icon(Icons.alarm), barBlur: 20);
     } else {
       frequency.value--;

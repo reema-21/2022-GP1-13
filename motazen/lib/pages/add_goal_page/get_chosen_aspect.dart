@@ -1,6 +1,6 @@
 // ignore_for_file: camel_case_types
 
-import '/pages/add_goal_page/add_goal_screen.dart';
+import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
 import 'package:provider/provider.dart';
 
 import '/isar_service.dart';
@@ -11,6 +11,7 @@ import '/pages/select_aspectPage/handle_aspect_data.dart';
 
 import '../../data/data.dart';
 import '../../entities/aspect.dart';
+import 'add_goal_screen.dart';
 
 class getChosenAspect extends StatefulWidget {
   final IsarService iser;
@@ -52,14 +53,49 @@ class _showsState extends State<getChosenAspect> {
                 }
 
                 aspectList.allAspects = updatedAspects;
+                List<String> chosenspectNames = [];
+
+                for (int i = 0; i < chosenAspectNames.length; i++) {
+                  String x = chosenAspectNames[i];
+                  String nameInArabic = "";
+                  switch (x) {
+                    case "money and finances":
+                      nameInArabic = "أموالي";
+                      break;
+                    case "Fun and Recreation":
+                      nameInArabic = "متعتي";
+                      break;
+                    case "career":
+                      nameInArabic = "مهنتي";
+                      break;
+                    case "Significant Other":
+                      nameInArabic = "علاقاتي";
+                      break;
+                    case "Physical Environment":
+                      nameInArabic = "بيئتي";
+                      break;
+                    case "Personal Growth":
+                      nameInArabic = "ذاتي";
+                      break;
+
+                    case "Health and Wellbeing":
+                      nameInArabic = "صحتي";
+                      break;
+                    case "Family and Friends":
+                      nameInArabic = "عائلتي وأصدقائي";
+                      break;
+                  }
+
+                  chosenspectNames.add(nameInArabic);
+                }
 
                 switch (widget.page) {
                   case 'Home':
-                    return const Homepage();
+                    return const navBar();
                   case 'Goal':
                     return AddGoal(
                       isr: widget.iser,
-                      chosenAspectNames: chosenAspectNames,
+                      chosenAspectNames: chosenspectNames,
                       goalsTasks: const [],
                     );
                   default:

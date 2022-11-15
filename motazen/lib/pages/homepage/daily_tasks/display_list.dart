@@ -181,7 +181,7 @@ class _TodoItemTileState extends State<_TodoItemTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Checkbox(
+      trailing: Checkbox(
         onChanged: _onChanged,
         value: widget.item.completed,
       ),
@@ -189,7 +189,7 @@ class _TodoItemTileState extends State<_TodoItemTile> {
         widget.item.description,
         textDirection: TextDirection.rtl,
       ),
-      trailing: widget.item.icon,
+      leading: widget.item.icon,
     );
   }
 }

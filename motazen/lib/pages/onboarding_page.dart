@@ -91,20 +91,14 @@ class OnboardingPage extends StatelessWidget {
   void goToHome(context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-          builder: (context) =>
-              const SignUpScreen()), //this is where you add manars part
-      //you will name her page instead of HomePage and import it as a package :)
+      MaterialPageRoute(builder: (context) => const SignUpScreen()),
     );
   }
 
   void goToQuestion(context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-          builder: (context) =>
-              const SignUpScreen()), //this is where you add manars part
-      //you will name her page instead of HomePage and import it as a package :)
+      MaterialPageRoute(builder: (context) => const SignUpScreen()),
     );
   }
 }

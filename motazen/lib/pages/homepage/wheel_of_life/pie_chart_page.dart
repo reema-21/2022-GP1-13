@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 // ignore: camel_case_types
 class life_wheel extends StatefulWidget {
-  const life_wheel({super.key});
+  const life_wheel({super.key, t});
 
   @override
   State<life_wheel> createState() => Life_wheelState();

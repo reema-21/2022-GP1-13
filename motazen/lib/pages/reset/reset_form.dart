@@ -60,7 +60,7 @@ class _ResetFormState extends State<ResetForm> {
                   try {
                     await FirebaseAuth.instance
                         .sendPasswordResetEmail(email: reset_pass_email.text);
-                    Get.to(const LogInScreen());
+                    Get.to(() => const LogInScreen());
                     AllDialogues.showErrorDialog(
                         title: "إعادة ضبط كلمة السر",
                         discription:

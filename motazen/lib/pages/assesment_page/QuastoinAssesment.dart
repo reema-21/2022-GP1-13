@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, non_constant_identifier_names, prefer_interpolation_to_compose_strings, use_build_context_synchronously
 
+import 'package:get/get.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
 
 import '/theme.dart';
@@ -97,25 +98,20 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
           appBar: AppBar(
             actions: [
               IconButton(
-                // ignore: prefer_const_constructors
-                icon: Icon(Icons.arrow_forward_ios, color: kBlackColor),
+                icon: const Icon(Icons.arrow_forward_ios, color: kBlackColor),
                 onPressed: () async {
                   final action = await AlertDialogs.yesCancelDialog(
                       context,
                       'هل انت متاكد من الرجوع ',
                       'بالنقر على "تاكيد"لن يتم حفظ الاجابات ');
                   if (action == DialogsAction.yes) {
-                    //return to the previouse page different code for the ios .
                     List<dynamic> tempAspect =
                         await widget.isr.getAspectFirstTime();
                     widget.isr.deleteAllAspects(tempAspect);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return AspectSelection(
-                        isr: widget.isr,
-                        aspects: widget.fixedAspect,
-                      );
-                    }));
+                    Get.to(() => AspectSelection(
+                          isr: widget.isr,
+                          aspects: widget.fixedAspect,
+                        ));
                   }
                 },
               ),
@@ -203,6 +199,9 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                               Text(headerText(),
                                   style: const TextStyle(
                                       color: kBlackColor, fontSize: 30)),
+                              const SizedBox(
+                                height: 30,
+                              ),
                               Row(
                                 textDirection: TextDirection.ltr,
                                 children: [
@@ -525,13 +524,11 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     }
 //store the fetched chosen aspect from the user
     //delete the aspects you have create a new one with the values you have
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return getChosenAspect(
-        pointsList: allpoints,
-        iser: isar,
-        page: 'Home',
-        goalsTasks: const [],
-      );
-    }));
+    Get.to(() => getChosenAspect(
+          pointsList: allpoints,
+          iser: isar,
+          page: 'Home',
+          goalsTasks: const [],
+        ));
   }
 }

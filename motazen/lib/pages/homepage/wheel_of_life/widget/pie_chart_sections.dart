@@ -4,7 +4,6 @@ import '/entities/aspect.dart';
 
 class PieChartSections {
   List<PieChartSectionData> getSections(int touchedIndex, List<Aspect>? data) =>
-      // if not worikng check the old one an d start over form there
       data!
           .asMap()
           .map<int, PieChartSectionData>((index, data) {
@@ -19,7 +18,7 @@ class PieChartSections {
               color: Color(data.color).withOpacity(1),
               value: 22.5,
               title: '',
-              radius: points * 1.33, //scale the data to the size of the wheel
+              radius: points * 1.13, //scale the data to the size of the wheel
             );
 
             return MapEntry(index, value);

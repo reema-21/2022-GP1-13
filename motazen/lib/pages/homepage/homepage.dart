@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import '/pages/homepage/wheel_of_life/pie_chart_page.dart';
-import '/Sidebar_and_navigation/navigation-bar.dart';
-import '/Sidebar_and_navigation/sidebar.dart';
 import '/data/data.dart';
 import '/pages/homepage/daily_tasks/display_list.dart';
 
-// import 'homepage/wheel_of_life/render-chart.dart'; file accidentally deleted add later
-// how is it implemented
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
   @override
@@ -18,55 +14,35 @@ class _MyHomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        toolbarHeight: 30.0,
-        // notifications button
-        backgroundColor: const Color(0xFFffffff),
-        iconTheme: const IconThemeData(color: Colors.black),
-        elevation: 0.0,
-        leading: const IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.notifications,
-              color: Colors.black,
+    double imageHeight = height * 0.5;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        //displays the visualization (wheel of life)
+        Stack(alignment: Alignment.center, children: [
+          Container(
+            margin: const EdgeInsets.all(0.0),
+            height: imageHeight,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  image: AssetImage('assets/images/wheelHome.png'),
+                  fit: BoxFit.contain),
             ),
-            tooltip: 'View Requests'),
-      ),
-      endDrawer: const NavBar(),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            //displays the visualization (wheel of life)
-            Stack(alignment: Alignment.center, children: [
-              Container(
-                margin: const EdgeInsets.all(0.0),
-                height: height * 0.5,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/wheelHome.png'),
-                      fit: BoxFit.contain),
-                ),
-              ),
-              const life_wheel(),
-            ]),
+          ),
+          const life_wheel(),
+        ]),
 
-            // displays the daily tasks list
-            Flexible(
-              child: Center(
-                child: TodoCard(
-                  todo: fakeData,
-                ),
-              ),
+        // displays the daily tasks list
+        Flexible(
+          child: Center(
+            child: TodoCard(
+              todo: fakeData,
             ),
-          ],
+          ),
         ),
-      ),
-      bottomNavigationBar: const navBar(),
+      ],
     );
   }
 }

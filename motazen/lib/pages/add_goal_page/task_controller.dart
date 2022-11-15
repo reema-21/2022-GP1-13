@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
@@ -71,7 +73,6 @@ class TaskControleer extends GetxController {
 
   void storeStatusOpen(bool isOpen) {
     iscool(isOpen);
-    print(iscool.value);
   }
 
   setvalue(String x) {
@@ -92,7 +93,6 @@ class TaskControleer extends GetxController {
         tem.value = tempIncrementTaskDuration();
         break;
       case "أسابيع":
-        print(TaskDuration);
         currentTaskDuration.value = currentTaskDuration.value + (1 * 7);
         tem.value = tempIncrementTaskDuration();
 
@@ -118,7 +118,7 @@ class TaskControleer extends GetxController {
     if (tem > goalduration) {
       Get.snackbar(
           "", "لا يمكن زيادة الفترة ، فترة المهام ستصبح أعلى من فترة الهدف ",
-          icon: Icon(Icons.alarm), barBlur: 20);
+          icon: const Icon(Icons.alarm), barBlur: 20);
 
       switch (isSelected.value) {
         case "أيام":
@@ -126,7 +126,6 @@ class TaskControleer extends GetxController {
           tem.value = tempIncrementTaskDuration();
           break;
         case "أسابيع":
-          print(TaskDuration);
           currentTaskDuration.value = currentTaskDuration.value - (1 * 7);
           tem.value = tempIncrementTaskDuration();
 
@@ -156,7 +155,6 @@ class TaskControleer extends GetxController {
           tem.value = tempIncrementTaskDuration();
           break;
         case "أسابيع":
-          print(TaskDuration);
           currentTaskDuration.value = currentTaskDuration.value - (1 * 7);
           tem.value = tempIncrementTaskDuration();
 
@@ -182,7 +180,7 @@ class TaskControleer extends GetxController {
 
       Get.snackbar("",
           "لا يمssكن زيادة الفترة ،قيمة فترة المهام ستصبح أعلى من فترة الهدف  ",
-          icon: Icon(Icons.alarm), barBlur: 20);
+          icon: const Icon(Icons.alarm), barBlur: 20);
     } else {
 //       print("here is the cuurent vlaue 5 ");
 // print(currentTaskDuration.value);
@@ -215,7 +213,7 @@ class TaskControleer extends GetxController {
 // print (totalTasksDuration);
     if (TaskDuration.value <= 0) {
       Get.snackbar("", "قيمة الفترة لا يمكن ان تكون اقل من واحد",
-          icon: Icon(Icons.alarm), barBlur: 20);
+          icon: const Icon(Icons.alarm), barBlur: 20);
     } else {
       TaskDuration.value--;
 
@@ -226,7 +224,6 @@ class TaskControleer extends GetxController {
 
           break;
         case "أسابيع":
-          print(TaskDuration);
           tem.value = tem.value - (1 * 7);
           currentTaskDuration.value = currentTaskDuration.value - (1 * 7);
 

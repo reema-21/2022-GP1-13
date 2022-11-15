@@ -1,22 +1,23 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:motazen/pages/add_goal_page/task_controller.dart';
+import '../../entities/aspect.dart';
+import '../../entities/task.dart';
 import '../assesment_page/alert_dialog.dart';
 import '../goals_habits_tab/goal_habits_pages.dart';
 import 'add_Task2.dart';
 
-import '/entities/aspect.dart';
-import '/entities/task.dart';
-
 class AddGoal extends StatefulWidget {
-  final List<Task> goalsTasks;
+  List<Task> goalsTasks = [];
   final IsarService isr;
   final List<String>? chosenAspectNames;
-  const AddGoal(
+  AddGoal(
       {super.key,
       required this.isr,
       this.chosenAspectNames,
@@ -39,6 +40,7 @@ class _AddGoalState extends State<AddGoal> {
   bool isDataSelected = false;
   bool? _checkBox = false;
   bool? _ListtileCheckBox = false;
+  final TaskControleer freq = Get.put(TaskControleer());
 
   String? isSelected;
   @override
@@ -69,11 +71,11 @@ class _AddGoalState extends State<AddGoal> {
 
     newgoal.DescriptiveGoalDuration = duration;
     newgoal.goalDuration = goalDuration;
-
+    widget.goalsTasks = freq.goalTask.value;
     var task = [];
-    task = widget.goalsTasks;
+    task = freq.goalTask.value;
 
-    for (int i = 0; i < widget.goalsTasks.length; i++) {
+    for (int i = 0; i < freq.goalTask.value.length; i++) {
       Task? y = Task();
       String name = "";
 
@@ -83,7 +85,8 @@ class _AddGoalState extends State<AddGoal> {
       newgoal.task.add(y!);
     }
     widget.isr.createGoal(newgoal);
-
+    //
+//
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return Goals_habit(iser: widget.isr);
     }));
@@ -92,8 +95,7 @@ class _AddGoalState extends State<AddGoal> {
   @override
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
-    return MaterialApp(
-        home: Directionality(
+    return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
           floatingActionButtonLocation:
@@ -118,6 +120,7 @@ class _AddGoalState extends State<AddGoal> {
               }),
           key: _scaffoldkey,
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: const Color(0xFF66BF77),
             title: const Text(
               "إضافة هدف جديد",
@@ -528,6 +531,6 @@ class _AddGoalState extends State<AddGoal> {
               ),
             ],
           )),
-    ));
+    );
   }
 }

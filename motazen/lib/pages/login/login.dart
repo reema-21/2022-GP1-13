@@ -2,18 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:motazen/isar_service.dart';
-import 'package:motazen/pages/homepage/homepage.dart';
 //import 'package:get/get.dart';
 import 'package:motazen/pages/reset/reset_password.dart';
+import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
 import 'package:motazen/pages/signup/signup.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
 
-import '../../entities/aspect.dart';
-import '../assesment_page/QuastoinAssesment.dart';
-import '../assesment_page/show.dart';
-import '../select_aspectPage/select_aspect.dart';
+import '../../Sidebar_and_navigation/navigation-bar.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
@@ -180,7 +176,6 @@ class _LogInScreenState extends State<LogInScreen> {
                       //=============== call a function to sign in with email and pass.
                       //====uncomment the below function when app is connected to firebase.
                       signIn(_emailcontroller.text, _passwordcontroler.text);
-
                     }
                   },
                   child: const PrimaryButton(
@@ -205,33 +200,8 @@ signIn(email, pass) async {
     await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: pass);
 
-    Fluttertoast.showToast(
-        msg:
-            "تم تسجيل الدخول بنجاح");
-             IsarService iser = IsarService(); 
-  // iser.openIsar();
-  // List<Aspect> selected = [];
-  // selected = await iser.getchoseAspect();
-  // print("hi");
-  // if (selected.isEmpty){
-  //   print("hi");
-  //   Get.to(AspectSelection(isr:iser));
-  // }else if (!selected.isEmpty){
-  //   print("hi");
-  //   Map<String ,double> points = await iser.getpointsAspects(selected);
-  //   double? sum  = 0 ;
-  //   for(int i = 0 ; i<points.length ; i++){
-  //     sum = points[i];
-  //   }
-  //   if(sum == 0 ){
-  //         Get.to(AssessmentQuestionsList(iser:iser));
-  //   }else{
-  Get.to(Homepage());
-    
-
-  
-
-      
+    Fluttertoast.showToast(msg: "تم تسجيل الدخول بنجاح");
+    Get.to(() => const getAllAspects());
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       //msg user-not-found
