@@ -10,6 +10,7 @@ class SideBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// see documentation
     final userName = FirebaseAuth.instance.currentUser!.displayName;
     final userEmail = FirebaseAuth.instance.currentUser!.email;
     return Drawer(

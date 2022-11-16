@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../Sidebar_and_navigation/navigation-bar.dart';
 import '../../entities/task.dart';
 import '/entities/goal.dart';
 import '/isar_service.dart';
@@ -12,7 +13,6 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../entities/aspect.dart';
 import 'Edit_task.dart';
-import 'goal_habits_pages.dart';
 
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class goalDetails extends StatefulWidget {
@@ -131,7 +131,7 @@ class _goalDetailsState extends State<goalDetails> {
       goal!.task.add(y!);
     }
     widget.isr.UpdateGoal(goal!);
-    Get.to(() => Goals_habit(iser: widget.isr));
+    Get.to(() => const navBar());
   }
 
   @override
@@ -159,7 +159,7 @@ class _goalDetailsState extends State<goalDetails> {
                           ' هل انت متاكد من الرجوع ',
                           'بالنقر على "تاكيد"لن يتم حفظ اي تغييرات قمت بها ');
                       if (action == DialogsAction.yes) {
-                        Get.to(() => Goals_habit(iser: widget.isr));
+                        Get.to(() => const navBar());
                       } else {}
                     }),
               ],

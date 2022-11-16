@@ -2,14 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-//import 'package:get/get.dart';
 import 'package:motazen/pages/reset/reset_password.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
 import 'package:motazen/pages/signup/signup.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
-
-import '../../Sidebar_and_navigation/navigation-bar.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});

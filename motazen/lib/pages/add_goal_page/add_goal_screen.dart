@@ -7,6 +7,7 @@ import 'package:motazen/isar_service.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:motazen/pages/add_goal_page/task_controller.dart';
+import '../../Sidebar_and_navigation/navigation-bar.dart';
 import '../../entities/aspect.dart';
 import '../../entities/task.dart';
 import '../assesment_page/alert_dialog.dart';
@@ -88,7 +89,7 @@ class _AddGoalState extends State<AddGoal> {
     //
 //
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return Goals_habit(iser: widget.isr);
+      return const navBar();
     }));
   }
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import '../../Sidebar_and_navigation/navigation-bar.dart';
 import '../../entities/task.dart';
 import '/entities/goal.dart';
 import '/pages/goals_habits_tab/getchosenAspect_editing.dart';
-import '/pages/goals_habits_tab/goal_habits_pages.dart';
 import '/isar_service.dart';
 
 import 'package:intl/intl.dart' as intl;
@@ -169,7 +169,7 @@ class _EditGoalState extends State<EditGoal> {
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return Goals_habit(iser: widget.isr);
+                          return const navBar();
                         }));
                       }),
                 ],

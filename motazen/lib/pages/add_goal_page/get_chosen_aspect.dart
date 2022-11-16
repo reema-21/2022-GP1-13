@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '/isar_service.dart';
 
 import 'package:flutter/material.dart';
-import '/pages/homepage/homepage.dart';
 import '/pages/select_aspectPage/handle_aspect_data.dart';
 
 import '../../data/data.dart';
