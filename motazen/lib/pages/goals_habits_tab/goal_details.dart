@@ -113,9 +113,9 @@ class _goalDetailsState extends State<goalDetails> {
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
     goal?.aspect.value = selected;
-    if (!isDataSelected) {
-      goal?.dueDate = DateTime.utc(1989, 11, 9);
-    }
+    // if (!isDataSelected) {
+    //   goal?.dueDate = DateTime.utc(1989, 11, 9);
+    // }
     goal?.DescriptiveGoalDuration = duration;
     goal?.goalDuration;
     var task = [];
@@ -281,6 +281,7 @@ class _goalDetailsState extends State<goalDetails> {
                             //     (e?.day ?? 0) == 2 ? 'Please not the first day' : null,
                             onDateSelected: (DateTime value) {
                               selectedDate = value;
+                              goal?.dueDate = value;
                               isDataSelected = true;
                             },
                           ),

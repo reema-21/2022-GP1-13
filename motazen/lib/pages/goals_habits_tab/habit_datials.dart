@@ -57,6 +57,12 @@ class _AddHabitState extends State<HabitDetails> {
     _goalNmaeController.text = widget.HabitName;
     freq.setvalue(widget.durationInInt);
     isDuration = durations[widget.duraioninString];
+    for (int i = 0; i < widget.chosenAspectNames!.length; i++) {
+      String name = widget.chosenAspectNames![i];
+      if (name.contains(widget.habitAspect)) {
+        isSelected = widget.chosenAspectNames![i];
+      }
+    }
   }
 
   String aspectnameInEnglish = "";

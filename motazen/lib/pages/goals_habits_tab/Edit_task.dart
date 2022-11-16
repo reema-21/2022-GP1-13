@@ -76,7 +76,7 @@ class _EditTaskState extends State<EditTask> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: true,
           backgroundColor: const Color(0xFF66BF77),
           title: const Text(
             "تعديل معلومات الهدف",
