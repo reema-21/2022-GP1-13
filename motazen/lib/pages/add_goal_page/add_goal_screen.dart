@@ -11,7 +11,6 @@ import '../../Sidebar_and_navigation/navigation-bar.dart';
 import '../../entities/aspect.dart';
 import '../../entities/task.dart';
 import '../assesment_page/alert_dialog.dart';
-import '../goals_habits_tab/goal_habits_pages.dart';
 import 'add_Task2.dart';
 
 class AddGoal extends StatefulWidget {
@@ -139,9 +138,7 @@ class _AddGoalState extends State<AddGoal> {
                     if (action == DialogsAction.yes) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return Goals_habit(
-                          iser: widget.isr,
-                        );
+                        return const navBar();
                       }));
                     } else {}
                   }),

@@ -2,10 +2,9 @@
 
 import 'package:flutter/material.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
+import '../../isar_service.dart';
 import '/entities/habit.dart';
 
-import '/pages/goals_habits_tab/goal_habits_pages.dart';
-import '/isar_service.dart';
 import '../assesment_page/alert_dialog.dart';
 import 'package:get/get.dart';
 import "my_controller.dart";
@@ -109,9 +108,7 @@ class _AddHabitState extends State<AddHabit> {
                     if (action == DialogsAction.yes) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return Goals_habit(
-                          iser: widget.isr,
-                        );
+                        return const navBar();
                       }));
                     } else {}
                   }),
