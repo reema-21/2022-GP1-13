@@ -277,8 +277,6 @@ class _goalDetailsState extends State<goalDetails> {
                             initialDate:
                                 DateTime.now().add(const Duration(days: 20)),
                             autovalidateMode: AutovalidateMode.always,
-                            // validator: (DateTime? e) =>
-                            //     (e?.day ?? 0) == 2 ? 'Please not the first day' : null,
                             onDateSelected: (DateTime value) {
                               selectedDate = value;
                               goal?.dueDate = value;
