@@ -45,18 +45,18 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDwPvbxp9a-ezZjEoUwdPPtz7BQfeSEkF4',
-    appId: '1:919398316951:web:b320e4c4a154dc0a1962d2',
+    appId: '1:919398316951:web:4e4e519e272366b11962d2',
     messagingSenderId: '919398316951',
     projectId: 'motazen-f2cc8',
     authDomain: 'motazen-f2cc8.firebaseapp.com',
     databaseURL: 'https://motazen-f2cc8-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'motazen-f2cc8.appspot.com',
-    measurementId: 'G-1T4B2B6X6E',
+    measurementId: 'G-11KL9NHXKJ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBgjbr63P_ObC7uEt_-2tMmlMTR_TIPnMw',
-    appId: '1:919398316951:android:64c095d9b9bfb8a91962d2',
+    appId: '1:919398316951:android:28168e9f0b29f55a1962d2',
     messagingSenderId: '919398316951',
     projectId: 'motazen-f2cc8',
     databaseURL: 'https://motazen-f2cc8-default-rtdb.europe-west1.firebasedatabase.app',
@@ -65,18 +65,18 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCcVzPFn39F-qaYStG-UqDW3EUO_X5huNQ',
-    appId: '1:919398316951:ios:87c2a3f8cc96ba8d1962d2',
+    appId: '1:919398316951:ios:100a1072ac6343df1962d2',
     messagingSenderId: '919398316951',
     projectId: 'motazen-f2cc8',
     databaseURL: 'https://motazen-f2cc8-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'motazen-f2cc8.appspot.com',
-    iosClientId: '919398316951-1h0dtrdulfgqullo9qqh36pd7mm0u5pd.apps.googleusercontent.com',
-    iosBundleId: 'com.example.motazen',
+    iosClientId: '919398316951-psonnl7243i6sal154uf5mkbp1chnsdq.apps.googleusercontent.com',
+    iosBundleId: 'com.testing.motazen',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyCcVzPFn39F-qaYStG-UqDW3EUO_X5huNQ',
-    appId: '1:919398316951:ios:87c2a3f8cc96ba8d1962d2',
+    appId: '1:919398316951:ios:73036021fdd82cf21962d2',
     messagingSenderId: '919398316951',
     projectId: 'motazen-f2cc8',
     databaseURL: 'https://motazen-f2cc8-default-rtdb.europe-west1.firebasedatabase.app',

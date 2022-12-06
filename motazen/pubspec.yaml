@@ -38,6 +38,7 @@ dependencies:
   fluttertoast: ^8.1.1
   email_auth: ^1.0.0
   is_first_run: ^1.0.0
+  mailer: ^5.2.0
 
 dev_dependencies:
   flutter_test:

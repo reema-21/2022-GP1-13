@@ -34,14 +34,6 @@ class _SignUpFormState extends State<SignUpForm> {
     return result.docs.isEmpty;
   }
 
-  Future<bool> emailIdCheck(String email) async {
-    final result = await FirebaseFirestore.instance
-        .collection('user')
-        .where('email', isEqualTo: email)
-        .get();
-    return result.docs.isEmpty;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -240,32 +232,23 @@ class _SignUpFormState extends State<SignUpForm> {
           onTap: () async {
             if (_SignUpformKey.currentState!.validate()) {
               AllDialogues.showDialogue(title: "جاري التحميل...");
-              final validEmail =
-                  await emailIdCheck(email_controller.text.toLowerCase());
+              final validUserName =
+                  await usernameCheck(user_name_controller.text.toLowerCase());
               //======after validation the form I navigate the user for email verification in the verify screen in reset folder.
               // ====by using the Get.to method. //make sure it is in the yaml class in the motazen share code
               AllDialogues.hideloading();
-              if (!validEmail) {
+              if (!validUserName) {
                 AllDialogues.showErrorDialog(
-                    title: "!البريد الإلكتروني موجود مُسبقًا",
+                    title: "!هذا المستخدم مسجل سابقًا",
                     discription:
-                        " مسجل مسبقًا, الرجاء التسجيل ببريد آخر ${email_controller.text} البريد الإلكتروني  ");
+                        " مسجل سابقًا، سجّل باسم مستخدم جديد ${user_name_controller.text} ");
               } else {
-                final validUserName = await usernameCheck(
-                    user_name_controller.text.toLowerCase());
-                if (!validUserName) {
-                  AllDialogues.showErrorDialog(
-                      title: "!هذا المستخدم مسجل سابقًا",
-                      discription:
-                          " مسجل سابقًا، سجّل باسم مستخدم جديد ${user_name_controller.text} ");
-                } else {
-                  await Get.to(() => VerifyScreen(
-                        first_name: first_name_controller.text,
-                        user_name: user_name_controller.text.toLowerCase(),
-                        email: email_controller.text.toLowerCase(),
-                        pass: password_controler.text,
-                      ));
-                }
+                await Get.to(() => VerifyScreen(
+                      first_name: first_name_controller.text,
+                      user_name: user_name_controller.text.toLowerCase(),
+                      email: email_controller.text,
+                      pass: password_controler.text,
+                    ));
               }
             }
           },

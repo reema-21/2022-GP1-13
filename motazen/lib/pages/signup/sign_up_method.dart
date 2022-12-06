@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:motazen/dialogue_boxes.dart';
 
-void saveSignUpFormData(firstName, userName, email, pass, userId) async {
+saveSignUpFormData(firstName, userName, email, pass, userId) async {
   try {
     await FirebaseFirestore.instance.collection('user').doc(userId).set({
       "first_name": firstName,

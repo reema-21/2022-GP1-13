@@ -91,8 +91,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: StreamBuilder<List<Habit>>(
+    return StreamBuilder<List<Habit>>(
       stream: IsarService().getAllHabits(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -174,6 +173,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
           );
         }
       },
-    ));
+    );
   }
 }

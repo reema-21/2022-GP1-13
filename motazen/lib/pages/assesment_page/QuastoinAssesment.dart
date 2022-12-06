@@ -211,7 +211,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
 
                                     /// it takes a widget as a child
                                   ),
-                                  buildSlideLable(0),
+                                  buildSlideLable(1),
                                 ],
                               ),
                             ],

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
+import 'package:provider/provider.dart';
 import '/pages/homepage/wheel_of_life/pie_chart_page.dart';
 import '/data/data.dart';
 import '/pages/homepage/daily_tasks/display_list.dart';

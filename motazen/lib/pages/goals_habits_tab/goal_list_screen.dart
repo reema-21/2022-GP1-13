@@ -91,8 +91,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: StreamBuilder<List<Goal>>(
+    return StreamBuilder<List<Goal>>(
       stream: IsarService().getAllGoals(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -182,6 +181,6 @@ class _GoalListScreenState extends State<GoalListScreen> {
           );
         }
       },
-    ));
+    );
   }
 }

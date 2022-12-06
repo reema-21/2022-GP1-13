@@ -2,11 +2,13 @@
 
 import 'dart:async';
 
-import 'package:email_auth/email_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
+import 'package:motazen/create_otp.dart';
 import 'package:motazen/dialogue_boxes.dart';
 import 'package:motazen/pages/signup/sign_up_method.dart';
 import 'package:motazen/primary_button.dart';
@@ -22,7 +24,7 @@ class VerifyScreen extends StatefulWidget {
   final String pass;
   VerifyScreen(
       {Key? key,
-      this.first_name = "",
+      required this.first_name,
       this.user_name = "",
       this.email = "",
       this.pass = ""})
@@ -34,10 +36,10 @@ class VerifyScreen extends StatefulWidget {
 class _VerifyScreenState extends State<VerifyScreen> {
   final otpformkey = GlobalKey<FormState>();
   TextEditingController otpTextfield = TextEditingController();
-  EmailAuth emailAuth = EmailAuth(sessionName: "motazen");
 
   //=====================timer
   int _counter = 60;
+  String sentOTP = '';
   // late Timer _timer;
   late Timer _timer;
   void _startTimer() {
@@ -55,7 +57,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   @override
   void initState() {
-    sendOtp();
+    sentOTP = generateOTP();
+    sendOTP(widget.email, sentOTP);
     super.initState();
     _startTimer();
   }
@@ -161,9 +164,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   height: 20,
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     AllDialogues.showDialogue(title: "يتم الآن إرسال الرمز");
-                    sendOtp();
+                    sentOTP = generateOTP();
+                    await sendOTP(widget.email, sentOTP);
+                    AllDialogues.hideloading();
                   },
                   child: const PrimaryButton(
                     buttonText: 'إعادة إرسال الرمز',
@@ -179,37 +184,71 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   ///======================================================================methods =====================
   //==send otp method
-  void sendOtp() async {
-    if (widget.email.isNotEmpty) {
-      var res =
-          await emailAuth.sendOtp(recipientMail: widget.email, otpLength: 6);
-      if (res) {
-        AllDialogues.hideloading();
-        Fluttertoast.showToast(
-            msg: "تم إرسال الرمز عبر بريدك الإلكتروني الخاص",
-            toastLength: Toast.LENGTH_LONG);
-        _startTimer();
-      } else {
-        setState(() {
-          _counter = 00;
-        });
-        _timer.cancel();
-        AllDialogues.hideloading();
-        Fluttertoast.showToast(msg: "حدث خطأ");
-      }
-    } else {
+
+  sendOTP(String receiverEmail, String otp) async {
+    String username = 'motazenapp@gmail.com';
+    String password = "nwzwtraabozrdipz";
+
+    final smtpServer = gmail(username, password);
+    final message = Message()
+      ..from = Address(username, 'Motazen')
+      ..recipients.add(receiverEmail)
+      ..subject = ' مُتزن- تأكيد هوية المستخدم من خلال رمز التحقق لمرة واحدة  '
+      ..text =
+          ' .  إذا لم تقم بطلب رمز التحقق فضلا تجاهل هذه الرسالة. \n\n فريق مُتزن ${otp} رمز التحقق من هويتك من خلال البريد المُسجل لدينا في تطبيق متزن هو   ${receiverEmail}عزيزي ';
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      print(sendReport);
       AllDialogues.hideloading();
       Fluttertoast.showToast(
-          msg: "هذا البريد الإلكتروني غير مسجل في تطبيق متزن");
+          msg: "تم إرسال الرمز عبر بريدك الإلكتروني الخاص",
+          toastLength: Toast.LENGTH_LONG);
+      _startTimer();
+    } on MailerException catch (e) {
+      print('الرسالة لم تُرسل');
+      for (var p in e.problems) {
+        print(': مشكلة${p.code}: ${p.msg}');
+      }
+      setState(() {
+        _counter = 00;
+      });
+      _timer.cancel();
+      AllDialogues.hideloading();
+      Fluttertoast.showToast(msg: "حدث خطأ");
     }
   }
+
+  // void sendOtp() async {
+  //   if (widget.email.isNotEmpty) {
+  //     var res =
+  //         await emailAuth.sendOtp(recipientMail: widget.email, otpLength: 6);
+  //     if (res) {
+  //       AllDialogues.hideloading();
+  //       Fluttertoast.showToast(
+  //           msg: "تم إرسال الرمز عبر بريدك الإلكتروني الخاص",
+  //           toastLength: Toast.LENGTH_LONG);
+  //       _startTimer();
+  //     } else {
+  //       setState(() {
+  //         _counter = 00;
+  //       });
+  //       _timer.cancel();
+  //       AllDialogues.hideloading();
+  //       Fluttertoast.showToast(msg: "حدث خطأ");
+  //     }
+  //   } else {
+  //     AllDialogues.hideloading();
+  //     Fluttertoast.showToast(
+  //         msg: "هذا البريد الإلكتروني غير مسجل في تطبيق متزن");
+  //   }
+  // }
 
 //====verify otp=======
 //this function  verify the users email from singup form.
   void verifyEmail() async {
     AllDialogues.showDialogue(title: "يتم الآن التحقق، الرجاء الانتظار...");
-    var verified = await emailAuth.validateOtp(
-        recipientMail: widget.email, userOtp: otpTextfield.text.toString());
+    var verified = otpTextfield.text.toString() == sentOTP;
     if (verified) {
       AllDialogues.hideloading();
       //=============after verification of email, we create an account of the user with email and password.
@@ -233,11 +272,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: widget.email, password: widget.pass);
-      userCredential.user!.updateDisplayName(widget.first_name);
-      saveSignUpFormData(widget.first_name, widget.user_name, widget.email,
-          widget.pass, userCredential.user!.uid);
+      await userCredential.user!.updateDisplayName(widget.first_name);
+      await saveSignUpFormData(widget.first_name, widget.user_name,
+          widget.email, widget.pass, userCredential.user!.uid);
       Fluttertoast.showToast(msg: "تم التحقق من بريدك الإلكتروني");
-      await FirebaseAuth.instance.signOut();
+      // await FirebaseAuth.instance.signOut();
       AllDialogues.hideloading();
       Get.to(() => const initializeAspects());
     } on FirebaseAuthException catch (e) {

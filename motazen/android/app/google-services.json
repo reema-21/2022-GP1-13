@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:919398316951:android:64c095d9b9bfb8a91962d2",
+        "mobilesdk_app_id": "1:919398316951:android:28168e9f0b29f55a1962d2",
         "android_client_info": {
           "package_name": "com.example.motazen"
         }
@@ -44,7 +44,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:919398316951:android:ecd83594eb5f54ba1962d2",
+        "mobilesdk_app_id": "1:919398316951:android:70b985313aec7af61962d2",
         "android_client_info": {
           "package_name": "com.motaz.motazenapp"
         }
