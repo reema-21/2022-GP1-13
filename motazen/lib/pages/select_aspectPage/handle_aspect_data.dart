@@ -43,6 +43,7 @@ class handle_aspect {
         break;
       case true:
         isar.deselectAspect(name);
+
         break;
     }
   }
@@ -105,8 +106,8 @@ class _initializeAspectsState extends State<initializeAspects> {
 
 //////////////////////////////// fetch aspects from local storage///////////////////////
 class getAllAspects extends StatefulWidget {
-  const getAllAspects({super.key});
-
+  final page;
+  const getAllAspects({super.key, this.page});
   @override
   State<getAllAspects> createState() => _getAllAspectsState();
 }
@@ -122,7 +123,15 @@ class _getAllAspectsState extends State<getAllAspects> {
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 aspectList.allAspects = snapshot.data!;
-                return const navBar();
+                switch (widget.page) {
+                  case 'AspectSelection':
+                    return AspectSelection(
+                      isr: IsarService(),
+                    );
+
+                  default:
+                    return const navBar();
+                }
               } else {
                 return const CircularProgressIndicator();
               }

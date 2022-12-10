@@ -19,6 +19,7 @@ class AspectSelection extends StatefulWidget {
 }
 
 class _selectAspectState extends State<AspectSelection> {
+  //use the local storge att instead
   final List<bool> __isSelected = [
     false,
     false,
@@ -168,7 +169,7 @@ class _selectAspectState extends State<AspectSelection> {
                           ]))),
               Container(
                 margin:
-                    const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: doneButton(widget.isr),
