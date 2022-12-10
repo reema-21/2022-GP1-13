@@ -28,6 +28,11 @@ TextStyle subTitle = const TextStyle(
     fontSize: 18,
     fontFamily: 'Frutiger',
     fontWeight: FontWeight.w500);
+TextStyle subTitleBold = const TextStyle(
+    color: kSecondaryColor,
+    fontSize: 14,
+    fontFamily: 'Frutiger',
+    fontWeight: FontWeight.bold);
 TextStyle textButton = const TextStyle(
   color: kPrimaryColor,
   fontSize: 18,

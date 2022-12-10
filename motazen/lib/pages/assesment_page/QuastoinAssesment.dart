@@ -103,24 +103,31 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                   final action = await AlertDialogs.yesCancelDialog(
                       context,
                       'هل انت متاكد من الرجوع ',
-                      'بالنقر على "تاكيد"لن يتم حفظ الاجابات ');
+                      'بالنقر على "تاكيد" لن يتم حفظ الاجابات ');
                   if (action == DialogsAction.yes) {
-                    List<dynamic> tempAspect =
-                        await widget.isr.getAspectFirstTime();
-                    widget.isr.deleteAllAspects(tempAspect);
                     Get.to(() => AspectSelection(
                           isr: widget.isr,
-                          aspects: widget.fixedAspect,
                         ));
                   }
                 },
               ),
             ],
-            title: Text(
-              'اسئلة تقييم جوانب الحياة ',
-              style: titleText,
-            ),
+            title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'تقييم جوانب الحياة',
+                    textDirection: TextDirection.rtl,
+                    style: titleText,
+                  ),
+                  Text('ادخل اجابتك بإستخدام المؤشر',
+                      textDirection: TextDirection.rtl, style: subTitle),
+                  Text('10 (ينطبق دائما) - 1 (نادراً ما ينطبق)',
+                      textDirection: TextDirection.rtl, style: subTitleBold),
+                ]),
             elevation: 0,
+            toolbarHeight: 120,
             backgroundColor: kWhiteColor,
           ),
           body: SafeArea(
@@ -128,7 +135,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Container(
                     decoration:
@@ -143,7 +150,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                       stepColor: kDisabled,
                       stepRadius: 20,
                       stepPadding: 0,
-                      // move it to a function so that you take the aspect and the number of quastion = x and then you reapt the icon    x times
+                      // move it to a function so that you take the aspect and the number of quastion = x and then you reapt the icon x times
                       icons: createIcon(),
 
                       // AssessmentQuestions.activeStep property set to AssessmentQuestions.activeStep variable defined above.
@@ -166,23 +173,23 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                                               .answers[AssessmentQuestions
                                                   .activeStep]
                                               .length -
-                                          1)); // this is for reseting the slider for each quasion but the problem we want to save the value
+                                          1));
                         });
                       },
                     )),
                 const SizedBox(
-                  height: 40,
+                  height: 16,
                 ),
-                header(), // apply quasion
+                header(), // progress
                 const Divider(
                   color: Colors.white,
                   thickness: 0.5,
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 5,
                 ),
+                //question card
                 Hero(
-                  ///can be added in a different page
                   tag: 'question-card',
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -200,7 +207,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                                   style: const TextStyle(
                                       color: kBlackColor, fontSize: 30)),
                               const SizedBox(
-                                height: 30,
+                                height: 20,
                               ),
                               Row(
                                 textDirection: TextDirection.ltr,

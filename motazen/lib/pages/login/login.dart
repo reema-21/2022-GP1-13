@@ -8,6 +8,8 @@ import 'package:motazen/pages/signup/signup.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
 
+import '../../Sidebar_and_navigation/navigation-bar.dart';
+
 class LogInScreen extends StatefulWidget {
   const LogInScreen({super.key});
 
@@ -198,7 +200,9 @@ signIn(email, pass) async {
         .signInWithEmailAndPassword(email: email, password: pass);
 
     Fluttertoast.showToast(msg: "تم تسجيل الدخول بنجاح");
-    Get.to(() => const getAllAspects());
+    Get.to(() => const getAllAspects(
+          page: navBar(),
+        ));
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       //msg user-not-found

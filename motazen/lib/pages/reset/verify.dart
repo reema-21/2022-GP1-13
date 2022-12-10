@@ -195,21 +195,17 @@ class _VerifyScreenState extends State<VerifyScreen> {
       ..recipients.add(receiverEmail)
       ..subject = ' مُتزن- تأكيد هوية المستخدم من خلال رمز التحقق لمرة واحدة  '
       ..text =
-          ' .  إذا لم تقم بطلب رمز التحقق فضلا تجاهل هذه الرسالة. \n\n فريق مُتزن ${otp} رمز التحقق من هويتك من خلال البريد المُسجل لدينا في تطبيق متزن هو   ${receiverEmail}عزيزي ';
+          ' .  إذا لم تقم بطلب رمز التحقق فضلا تجاهل هذه الرسالة. \n\n فريق مُتزن $otp رمز التحقق من هويتك من خلال البريد المُسجل لدينا في تطبيق متزن هو   $receiverEmailعزيزي ';
 
     try {
       final sendReport = await send(message, smtpServer);
-      print(sendReport);
       AllDialogues.hideloading();
       Fluttertoast.showToast(
           msg: "تم إرسال الرمز عبر بريدك الإلكتروني الخاص",
           toastLength: Toast.LENGTH_LONG);
       _startTimer();
     } on MailerException catch (e) {
-      print('الرسالة لم تُرسل');
-      for (var p in e.problems) {
-        print(': مشكلة${p.code}: ${p.msg}');
-      }
+      for (var p in e.problems) {}
       setState(() {
         _counter = 00;
       });

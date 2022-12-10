@@ -11,8 +11,7 @@ import '../../theme.dart';
 
 class AspectSelection extends StatefulWidget {
   final IsarService isr;
-  final List<dynamic>? aspects;
-  const AspectSelection({super.key, required this.isr, this.aspects});
+  const AspectSelection({super.key, required this.isr});
 
   @override
   State<AspectSelection> createState() => _selectAspectState();
@@ -20,33 +19,29 @@ class AspectSelection extends StatefulWidget {
 
 class _selectAspectState extends State<AspectSelection> {
   //use the local storge att instead
-  final List<bool> __isSelected = [
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ];
+  final List<bool> __isSelected = [];
   List<String> selectedAspects = [];
   @override
   Widget build(BuildContext context) {
     //list of all aspects
     var aspectList = Provider.of<WheelData>(context);
+    for (var i = 0; i < aspectList.allAspects.length; i++) {
+      __isSelected.add(aspectList.allAspects[i].isSelected);
+      if (aspectList.allAspects[i].isSelected == true) {
+        selectedAspects.add(aspectList.allAspects[i].name);
+      }
+    }
 
     Widget doneButton(IsarService isar) {
       return ElevatedButton(
+        ///add style
         onPressed: __isSelected.contains(true)
             ? () {
 //call a method that add the index to the local and go to assignment page .
                 Navigator.push(context, MaterialPageRoute(
                   builder: (context) {
                     return AssessmentQuestionsList(
-                        iser: widget.isr,
-                        fixedAspect: widget.aspects,
-                        chosenAspect: selectedAspects);
+                        iser: widget.isr, chosenAspect: selectedAspects);
                   },
                 ));
               }
@@ -112,9 +107,11 @@ class _selectAspectState extends State<AspectSelection> {
                                                     const Size(150, 90)),
                                             backgroundColor:
                                                 MaterialStateProperty.all(
-                                                    __isSelected[i]
+                                                    aspectList.allAspects[i]
+                                                            .isSelected
                                                         ? Color(aspectList
-                                                                .data[i].color)
+                                                                .allAspects[i]
+                                                                .color)
                                                             .withOpacity(0.8)
                                                         : kDisabled),
                                             elevation:
@@ -123,17 +120,20 @@ class _selectAspectState extends State<AspectSelection> {
                                           setState(() {
                                             //update status in local storage
                                             handle_aspect().updateStatus(
-                                                aspectList.data[i].name);
+                                                aspectList.allAspects[i].name);
                                             //change selected value
-                                            __isSelected[i]
-                                                ? __isSelected[i] = false
-                                                : __isSelected[i] = true;
+                                            aspectList.allAspects[i].isSelected
+                                                ? aspectList.allAspects[i]
+                                                    .isSelected = false
+                                                : aspectList.allAspects[i]
+                                                    .isSelected = true;
                                             //save selected aspect name
-                                            __isSelected[i]
-                                                ? selectedAspects.add(
-                                                    aspectList.data[i].name)
+                                            aspectList.allAspects[i].isSelected
+                                                ? selectedAspects.add(aspectList
+                                                    .allAspects[i].name)
                                                 : selectedAspects.remove(
-                                                    aspectList.data[i].name);
+                                                    aspectList
+                                                        .allAspects[i].name);
                                           });
                                         },
                                         child: ListTile(
@@ -141,7 +141,8 @@ class _selectAspectState extends State<AspectSelection> {
                                             aspectList.aspectsArabic[i],
                                             style: TextStyle(
                                                 fontSize: 18,
-                                                color: __isSelected[i]
+                                                color: aspectList.allAspects[i]
+                                                        .isSelected
                                                     ? kWhiteColor
                                                     : kBlackColor),
                                           ),
@@ -157,7 +158,8 @@ class _selectAspectState extends State<AspectSelection> {
                                               matchTextDirection: aspectList
                                                   .allAspects[i].iconDirection,
                                             ),
-                                            color: __isSelected[i]
+                                            color: aspectList
+                                                    .allAspects[i].isSelected
                                                 ? kWhiteColor
                                                 : kDarkGreyColor,
                                             size: 27,

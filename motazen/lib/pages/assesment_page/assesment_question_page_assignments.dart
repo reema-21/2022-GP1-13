@@ -12,21 +12,17 @@ class AssessmentQuestions {
   static List<dynamic> tempquastionsList = [];
   static double currentChosenAnswer = 0;
 
-  Future<List<dynamic>> fetchAllAspect() async {
-    //for Select Aspect Page
-    List<dynamic> allAspects = [];
-    for (int i = 0; i <= 7; i++) {
-      var aspect = await FirebaseFirestore.instance
-          .collection("aspect")
-          .get()
-          .then((value) => value.docs.elementAt(i));
-
-      allAspects.addAll(aspect.data().values);
-    }
-    return allAspects;
+  resetQuestions() {
+    activeStep = 0;
+    quastionsList = [];
+    answers = {};
+    currentvalue = "";
+    tempquastionsList = [];
+    currentChosenAnswer = 0;
   }
 
   Future<List<dynamic>> createQuestionList() async {
+    resetQuestions();
     List<Aspect> tempAspect =
         []; //store the fetched chosen aspect from the user
     List<dynamic> tempQuestionList = []; //temporary store one aspect quastion
@@ -200,7 +196,7 @@ class AssessmentQuestions {
       //the output of this loop is the quastion list and the answer list
       Aspect aspect = aspects[i];
       switch (aspect.name) {
-        // include all the aspect make sure the index is write//
+        // include all the aspect make sure the index is write
         case "money and finances":
           for (countr; countr < 4 + endpoint; countr++) {
             AssessmentQuestions.answers[countr] = "0M";

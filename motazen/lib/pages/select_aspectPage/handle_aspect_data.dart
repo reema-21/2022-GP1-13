@@ -1,7 +1,6 @@
 // ignore_for_file: camel_case_types
 
 import 'package:flutter/material.dart';
-import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/data.dart';
@@ -93,7 +92,6 @@ class _initializeAspectsState extends State<initializeAspects> {
                 aspectList.allAspects = snapshot.data!;
                 return AspectSelection(
                   isr: isar,
-                  aspects: aspectList.allAspects,
                 );
               } else {
                 return const CircularProgressIndicator();
@@ -104,10 +102,11 @@ class _initializeAspectsState extends State<initializeAspects> {
   }
 }
 
-//////////////////////////////// fetch aspects from local storage///////////////////////
+//////////////////////////////// fetch aspects from local storage then///////////////////////
 class getAllAspects extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final page;
-  const getAllAspects({super.key, this.page});
+  const getAllAspects({super.key, required this.page});
   @override
   State<getAllAspects> createState() => _getAllAspectsState();
 }
@@ -123,15 +122,7 @@ class _getAllAspectsState extends State<getAllAspects> {
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 aspectList.allAspects = snapshot.data!;
-                switch (widget.page) {
-                  case 'AspectSelection':
-                    return AspectSelection(
-                      isr: IsarService(),
-                    );
-
-                  default:
-                    return const navBar();
-                }
+                return widget.page;
               } else {
                 return const CircularProgressIndicator();
               }
