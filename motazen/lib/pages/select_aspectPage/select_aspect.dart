@@ -1,6 +1,8 @@
 // ignore_for_file: camel_case_types, iterable_contains_unrelated_type, list_remove_unrelated_type
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:motazen/pages/assesment_page/assesment_question_page_assignments.dart';
 import 'package:provider/provider.dart';
 
 import '../assesment_page/show.dart';
@@ -21,29 +23,48 @@ class _selectAspectState extends State<AspectSelection> {
   //use the local storge att instead
   final List<bool> __isSelected = [];
   List<String> selectedAspects = [];
+  List<String> unselectedAspects = [];
   @override
   Widget build(BuildContext context) {
+    //clean lists
+    __isSelected.clear();
+    selectedAspects.clear();
+    unselectedAspects.clear();
     //list of all aspects
     var aspectList = Provider.of<WheelData>(context);
     for (var i = 0; i < aspectList.allAspects.length; i++) {
       __isSelected.add(aspectList.allAspects[i].isSelected);
       if (aspectList.allAspects[i].isSelected == true) {
         selectedAspects.add(aspectList.allAspects[i].name);
+      } else {
+        unselectedAspects.add(aspectList.allAspects[i].name);
       }
     }
 
     Widget doneButton(IsarService isar) {
       return ElevatedButton(
-        ///add style
+        style: const ButtonStyle(
+          backgroundColor: MaterialStatePropertyAll<Color>(kPrimaryColor),
+          padding:
+              MaterialStatePropertyAll<EdgeInsetsGeometry>(kDefaultPadding),
+          textStyle: MaterialStatePropertyAll<TextStyle>(TextStyle(
+            color: kPrimaryColor,
+            fontSize: 18,
+            fontFamily: 'Frutiger',
+            fontWeight: FontWeight.w700,
+          )),
+        ),
         onPressed: __isSelected.contains(true)
             ? () {
+                AssessmentQuestions()
+                    .removeDeselectedAnswers(unselectedAspects);
+                AssessmentQuestions.activeStep = 0;
 //call a method that add the index to the local and go to assignment page .
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return AssessmentQuestionsList(
-                        iser: widget.isr, chosenAspect: selectedAspects);
-                  },
-                ));
+                Get.to(() => AssessmentQuestionsList(
+                      iser: widget.isr,
+                      chosenAspect: selectedAspects,
+                      unselectedAspects: unselectedAspects,
+                    ));
               }
             : null,
         child: const Text("التالي"),
@@ -132,6 +153,14 @@ class _selectAspectState extends State<AspectSelection> {
                                                 ? selectedAspects.add(aspectList
                                                     .allAspects[i].name)
                                                 : selectedAspects.remove(
+                                                    aspectList
+                                                        .allAspects[i].name);
+                                            //save unselected aspect name
+                                            aspectList.allAspects[i].isSelected
+                                                ? unselectedAspects.remove(
+                                                    aspectList
+                                                        .allAspects[i].name)
+                                                : unselectedAspects.add(
                                                     aspectList
                                                         .allAspects[i].name);
                                           });

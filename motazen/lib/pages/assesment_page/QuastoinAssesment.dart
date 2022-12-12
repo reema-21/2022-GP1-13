@@ -20,6 +20,7 @@ class WheelOfLifeAssessmentPage extends StatefulWidget {
   final IsarService isr;
   final List<dynamic>? question;
   final List<dynamic>? fixedAspect;
+  final List<dynamic>? unselectedAspects;
   final List<dynamic>? chosenAspect;
 
   static double upperBound = 0;
@@ -28,7 +29,8 @@ class WheelOfLifeAssessmentPage extends StatefulWidget {
       required this.isr,
       required this.question,
       this.fixedAspect,
-      this.chosenAspect});
+      this.chosenAspect,
+      this.unselectedAspects});
   @override
   State<WheelOfLifeAssessmentPage> createState() =>
       _WheelOfLifeAssessmentPage();
@@ -60,7 +62,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
         //it should be good in ios or we use Cupertino
         value:
             AssessmentQuestions.currentChosenAnswer, //answare of that quastion
-        min: 0,
+        min: 1,
         max: 10,
         divisions: 10, //to stick
         activeColor: kPrimaryColor,
@@ -207,7 +209,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                                   style: const TextStyle(
                                       color: kBlackColor, fontSize: 30)),
                               const SizedBox(
-                                height: 20,
+                                height: 30,
                               ),
                               Row(
                                 textDirection: TextDirection.ltr,
@@ -387,6 +389,16 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
       }
     } // to check whether all the quastions are answerd or not .
     return ElevatedButton(
+      style: const ButtonStyle(
+        backgroundColor: MaterialStatePropertyAll<Color>(kPrimaryColor),
+        padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(kDefaultPadding),
+        textStyle: MaterialStatePropertyAll<TextStyle>(TextStyle(
+          color: kPrimaryColor,
+          fontSize: 18,
+          fontFamily: 'Frutiger',
+          fontWeight: FontWeight.w700,
+        )),
+      ),
       onPressed: isAllQuastionAnswerd
           ? () {
               Evaluate(widget.isr);

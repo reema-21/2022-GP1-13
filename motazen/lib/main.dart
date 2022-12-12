@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:is_first_run/is_first_run.dart';
 import 'package:motazen/pages/onboarding_page.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
+import 'package:motazen/pages/select_aspectPage/select_aspect.dart';
 import '/data/data.dart';
 import '/isar_service.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,9 @@ Future main() async {
             debugShowCheckedModeBanner: false,
             home: ifr
                 ? const OnboardingPage()
-                : const initializeAspects()), //add verification to check which page should be next (sign in/homepage)
+                : getAllAspects(
+                    page: AspectSelection(
+                        isr:
+                            IsarService()))), //add verification to check which page should be next (sign in/homepage)
       )));
 }

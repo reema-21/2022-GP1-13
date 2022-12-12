@@ -10,9 +10,14 @@ import 'QuastoinAssesment.dart';
 class AssessmentQuestionsList extends StatefulWidget {
   final IsarService iser;
   final List<dynamic>? fixedAspect;
+  final List<dynamic>? unselectedAspects;
   final List<dynamic>? chosenAspect;
   const AssessmentQuestionsList(
-      {super.key, required this.iser, this.fixedAspect, this.chosenAspect});
+      {super.key,
+      required this.iser,
+      this.fixedAspect,
+      this.chosenAspect,
+      this.unselectedAspects});
 
   @override
   State<AssessmentQuestionsList> createState() => _showsState();
