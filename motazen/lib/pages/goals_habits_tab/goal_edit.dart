@@ -45,6 +45,7 @@ class _EditGoalState extends State<EditGoal> {
     setState(() {
       displayGoalNameControlller.text = goal!.titel;
       goalAspect = goal!.aspect.value!.name;
+      
       switch (goalAspect) {
         case "money and finances":
           goalAspect = "أموالي";
@@ -103,7 +104,7 @@ class _EditGoalState extends State<EditGoal> {
       if (goalDuration != 0) {
         if (goalDurationDescription.contains("أسبوع")) {
           weekisSelected = true;
-        } else if (goalDurationDescription.contains("يوم")) {
+        } else  { //you had a condition  to check whether it contains يوم in here now it is deleted 
           daysisSelected = true;
         }
       }
@@ -353,7 +354,7 @@ class _EditGoalState extends State<EditGoal> {
         textDirection: TextDirection.rtl,
         child: ListView.builder(
             shrinkWrap: true,
-            itemCount: goalTasks.length,
+            itemCount: goalTasks.length, //here is what causing the error
             itemBuilder: (context, index) {
               final name = goalTasks[index].name;
               return Card(

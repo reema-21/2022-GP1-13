@@ -12,7 +12,6 @@ import '../../entities/aspect.dart';
 import '../../entities/task.dart';
 import '../assesment_page/alert_dialog.dart';
 import 'add_Task2.dart';
-
 class AddGoal extends StatefulWidget {
   List<Task> goalsTasks = [];
   final IsarService isr;
@@ -62,9 +61,12 @@ class _AddGoalState extends State<AddGoal> {
   _Addgoal() async {
     newgoal.titel = _goalName;
     newgoal.importance = importance;
+    print(aspectnameInEnglish);
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
-    newgoal.aspect.value = selected;
+    newgoal.aspect.value = selected; // link aspect to the goal 
+    selected!.goals.add(newgoal) ; 
+    widget.isr.createAspect(selected);
     if (!isDataSelected) {
       newgoal.dueDate = DateTime.utc(1989, 11, 9);
     }
@@ -82,11 +84,26 @@ class _AddGoalState extends State<AddGoal> {
       name = task[i].name;
 
       y = await widget.isr.findSepecificTask(name);
-      newgoal.task.add(y!);
+      y!.goal.value = newgoal;
+      newgoal.task.add(y); // to link the task to the goal
+      widget.isr.saveTask(y);
     }
     widget.isr.createGoal(newgoal);
     //
 //
+freq.TaskDuration = 0.obs;
+  freq.currentTaskDuration = 0.obs;
+  freq.totalTasksDuration = 0.obs;
+  freq.iscool = false.obs;
+  freq.tem = 0.obs;
+  freq.isSelected = "أيام".obs;
+  freq.goalTask = Rx<List<Task>>([]);
+  freq.newTasksAddedInEditing = Rx<List<Task>>([]);
+freq.TasksMenue.value.clear() ; 
+freq.selectedTasks.value.clear();
+  freq.itemCount = 0.obs;
+  freq.itemCountAdd = 0.obs;
+
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return const navBar();
     }));
@@ -135,7 +152,19 @@ class _AddGoalState extends State<AddGoal> {
                         context,
                         ' هل انت متاكد من الرجوع للخلف',
                         'بالنقر على "تأكيد" لن يتم حفظ معلومات الهدف  ');
-                    if (action == DialogsAction.yes) {
+                    if (action == DialogsAction.yes) {//to have intionals values all thetime 
+                      freq.TaskDuration = 0.obs;
+  freq.currentTaskDuration = 0.obs;
+  freq.totalTasksDuration = 0.obs;
+  freq.iscool = false.obs;
+  freq.tem = 0.obs;
+  freq.isSelected = "أيام".obs;
+  freq.goalTask = Rx<List<Task>>([]);
+  freq.newTasksAddedInEditing = Rx<List<Task>>([]);
+freq.TasksMenue.value.clear() ; 
+freq.selectedTasks.value.clear();
+  freq.itemCount = 0.obs;
+  freq.itemCountAdd = 0.obs;
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return const navBar();
@@ -265,9 +294,43 @@ class _AddGoalState extends State<AddGoal> {
                           // validator: (DateTime? e) =>
                           //     (e?.day ?? 0) == 2 ? 'Please not the first day' : null,
                           onDateSelected: (DateTime value) {
-                            selectedDate = value;
+                           
+                            setState(() {
+                                selectedDate = value;
                             newgoal.dueDate = value;
                             isDataSelected = true;
+                              ///to change the duration description  ; 
+                              if (_checkBox== true) {
+                                        int durationInNumber = selectedDate!
+                                                .difference(DateTime.now())
+                                                .inDays +
+                                            1;
+                                        duration = durationInNumber.toString();
+                                        duration= "$duration يوماً ";
+
+                                        goalDuration = durationInNumber;
+                                      }
+                              if (_ListtileCheckBox == true) {
+                                        int durationInNumber = selectedDate!
+                                                .difference(DateTime.now())
+                                                .inDays +
+                                            1;
+                                        goalDuration = durationInNumber;
+
+                                        double numberOfWork =
+                                            (durationInNumber / 7);
+                                        int numberOfWork2 =
+                                            numberOfWork.floor();
+                                        int numberofDyas = durationInNumber % 7;
+                                        duration = "$numberOfWork2 أسبوع";
+                                        if (numberofDyas != 0) {
+                                          duration =
+                                              "$duration و $numberofDyasيوماً ";
+                                        }
+
+                                      }
+                            
+                              });
                           },
                         ),
                         const SizedBox(
@@ -314,6 +377,7 @@ class _AddGoalState extends State<AddGoal> {
                                   onChanged: (val) {
                                     setState(() {
                                       _checkBox = val;
+                                      
                                       if (selectedDate == null) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
@@ -342,8 +406,13 @@ class _AddGoalState extends State<AddGoal> {
                                                 .inDays +
                                             1;
                                         duration = durationInNumber.toString();
+                                       duration= "$duration يوماً ";
                                         goalDuration = durationInNumber;
                                         _ListtileCheckBox = false;
+                                      }else if (_ListtileCheckBox== false){
+                                          goalDuration = 0;
+                                          duration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
+
                                       }
                                     });
                                   },
@@ -383,7 +452,7 @@ class _AddGoalState extends State<AddGoal> {
                                                     SizedBox(width: 20),
                                                     Expanded(
                                                       child: Text(
-                                                          "أدخل تاريخ الاستحقاق"),
+                                                          " أدخل تاريخ الاستحقاق أولاً" ),
                                                     )
                                                   ],
                                                 )));
@@ -407,6 +476,10 @@ class _AddGoalState extends State<AddGoal> {
                                         }
 
                                         _checkBox = false;
+                                      }else if (_checkBox== false){
+                                          goalDuration = 0;
+                                          duration = "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
+
                                       }
                                     });
                                   },
@@ -486,8 +559,9 @@ class _AddGoalState extends State<AddGoal> {
                                         const Color(0xFF66BF77)),
                                     elevation: MaterialStateProperty.all(7),
                                   ),
-                                  onPressed: isDataSelected
+                                  onPressed: isDataSelected&&goalDuration!=0
                                       ? () {
+                                        
                                           Navigator.push(context,
                                               MaterialPageRoute(
                                                   builder: (context) {

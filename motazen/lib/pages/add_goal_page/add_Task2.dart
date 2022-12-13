@@ -6,6 +6,8 @@ import 'task_controller.dart';
 import 'package:motazen/entities/task.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:get/get.dart';
+import 'package:multiselect/multiselect.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class AddTask extends StatefulWidget {
   final IsarService isr;
@@ -36,17 +38,23 @@ class _AddTaskState extends State<AddTask> {
   @override
   void initState() {
     super.initState();
-
-    // inputTaskName.addListener(_updateText);
   }
 
-  void _updateText() {
-    setState(() {
-      // TaskName = inputTaskName.text;
-    });
-  }
+  AddTheEnterdTask(Task newTask , List<String> tasks) async {
+    List <String> Taskss = tasks ;
+    await Future.forEach(Taskss, (item) async {
+    
 
-  AddTheEnterdTask(Task newTask) async {
+      Task? y = Task();
+      String name = item;
+
+
+      y = await widget.isr.findSepecificTask(name);
+      newTask.TaskDependency.add(y!);// to link task and it depends tasks ;
+      // widget.isr.saveTask(y);// to link
+  });
+
+    
     widget.isr.saveTask(newTask);
   }
 
@@ -69,6 +77,7 @@ class _AddTaskState extends State<AddTask> {
                   // ignore: prefer_const_constructors
                   icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
                   onPressed: () {
+                    freq.selectedTasks.value.clear();
                     Navigator.of(context).pop();
                   }),
             ],
@@ -85,7 +94,8 @@ class _AddTaskState extends State<AddTask> {
                           final impo = freq.goalTask.value[index].duration;
                           final durationDescription =
                               freq.goalTask.value[index].durationDescribtion;
-                          TasksNamedropmenue.add(name);
+                          TasksNamedropmenue.add(
+                              name); //this might not been used
                           String diplayedduration = "";
                           switch (durationDescription) {
                             case "أيام":
@@ -153,8 +163,16 @@ class _AddTaskState extends State<AddTask> {
                                       int x =
                                           freq.goalTask.value[index].duration;
                                       freq.dcrementTaskDuration(x);
+                                      for(int i = 0 ; i<freq.TasksMenue.value.length ;i++){ // delete the deleted task from the menue 
+                                          if(freq.TasksMenue.value[i]== freq.goalTask.value[index].name ){
+                                            freq.TasksMenue.value.removeAt(i);
+                                            break ; 
+                                          }
+                                      }
+
                                       widget.isr.deleteTask2(
                                           freq.goalTask.value[index]);
+
                                       setState(() {
                                         freq.removeTask(index);
                                       });
@@ -175,6 +193,16 @@ class _AddTaskState extends State<AddTask> {
           floatingActionButton: FloatingActionButton(
               child: const Icon(Icons.add),
               onPressed: () {
+                freq.selectedTasks.value.clear();
+                freq.inputTaskName.text = "";
+                freq.TaskDuration.value= 0 ; 
+                freq.isSelected.value="أيام";
+                  freq.currentTaskDuration
+                                                      .value = 0;
+
+                                                  freq.setvalue(
+                                                      durationName[0]);
+
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -337,6 +365,38 @@ class _AddTaskState extends State<AddTask> {
                                   ],
                                 ),
                                 const SizedBox(
+                                  height: 20,
+                                ),
+                               
+                                Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: DropDownMultiSelect(
+                                    // icon: const Icon(
+                                    //   Icons.arrow_drop_down_circle,
+                                    //   color: Color(0xFF66BF77),
+                                    // ),
+                                    options: freq.TasksMenue.value,
+                                    //need to be righted
+                                    decoration: const InputDecoration(
+                                      labelText: "المهمام الاعتمادية",
+                                      prefixIcon: Icon(
+                                        Icons.splitscreen,
+                                        color: Color(0xFF66BF77),
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      print(
+                                          "here i am printing thae value of the selected ");
+                                      print(freq.TasksMenue.value);
+                                      freq.selectedTasks.value = value;
+                                      //here you can save the tasks and link it
+                                    },
+                                                                      selectedValues: freq.selectedTasks.value,
+                                
+                                  ),
+                                ),
+                             
+                                SizedBox(
                                   height: 30,
                                 ),
                                 Obx(() => ElevatedButton(
@@ -396,8 +456,12 @@ class _AddTaskState extends State<AddTask> {
 
                                                       break;
                                                   }
-                                                  AddTheEnterdTask(newTak);
-
+                                                
+                                                  AddTheEnterdTask(newTak , freq.selectedTasks.value) ;
+                                                  freq.TasksMenue.value.add(freq
+                                                      .inputTaskName
+                                                      .value
+                                                      .text); //ad the enterd to the tasks to the dependncy tasks .
                                                   freq.addTask(
                                                       freq.inputTaskName.value
                                                           .text,
@@ -413,8 +477,10 @@ class _AddTaskState extends State<AddTask> {
 
                                                   freq.setvalue(
                                                       durationName[0]);
+                                                      // freq.selectedTasks.value.clear();
                                                 });
                                               }
+                                              Navigator.pop(context);
                                             }
                                           : null,
                                       child: const Text("اضافة"),
