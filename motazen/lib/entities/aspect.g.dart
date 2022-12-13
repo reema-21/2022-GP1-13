@@ -64,7 +64,20 @@ const AspectSchema = CollectionSchema(
   deserializeProp: _aspectDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'goals': LinkSchema(
+      id: -1002800887951404337,
+      name: r'goals',
+      target: r'Goal',
+      single: false,
+    ),
+    r'habits': LinkSchema(
+      id: 5941525303253881743,
+      name: r'habits',
+      target: r'Habit',
+      single: false,
+    )
+  },
   embeddedSchemas: {},
   getId: _aspectGetId,
   getLinks: _aspectGetLinks,
@@ -162,11 +175,13 @@ Id _aspectGetId(Aspect object) {
 }
 
 List<IsarLinkBase<dynamic>> _aspectGetLinks(Aspect object) {
-  return [];
+  return [object.goals, object.habits];
 }
 
 void _aspectAttach(IsarCollection<dynamic> col, Id id, Aspect object) {
   object.id = id;
+  object.goals.attach(col, col.isar.collection<Goal>(), r'goals', id);
+  object.habits.attach(col, col.isar.collection<Habit>(), r'habits', id);
 }
 
 extension AspectQueryWhereSort on QueryBuilder<Aspect, Aspect, QWhere> {
@@ -914,7 +929,119 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
 
 extension AspectQueryObject on QueryBuilder<Aspect, Aspect, QFilterCondition> {}
 
-extension AspectQueryLinks on QueryBuilder<Aspect, Aspect, QFilterCondition> {}
+extension AspectQueryLinks on QueryBuilder<Aspect, Aspect, QFilterCondition> {
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> goals(
+      FilterQuery<Goal> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'goals');
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> goalsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'goals', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> goalsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'goals', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> goalsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'goals', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> goalsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'goals', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> goalsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'goals', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> goalsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'goals', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> habits(
+      FilterQuery<Habit> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'habits');
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> habitsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'habits', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> habitsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'habits', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> habitsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'habits', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> habitsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'habits', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> habitsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'habits', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> habitsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'habits', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension AspectQuerySortBy on QueryBuilder<Aspect, Aspect, QSortBy> {
   QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByColor() {

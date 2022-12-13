@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 import 'package:is_first_run/is_first_run.dart';
+import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
+import 'package:motazen/pages/homepage/homepage.dart';
 import 'package:motazen/pages/onboarding_page.dart';
+import 'package:motazen/pages/select_aspectPage/select_aspect.dart';
 import '/data/data.dart';
 import '/isar_service.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +21,7 @@ Future main() async {
 
   /// check if the the app is in it's first run
   bool ifr = await IsFirstRun.isFirstRun();
-
+   iser =IsarService();
   runApp(ChangeNotifierProvider<WheelData>(
       create: (_) => WheelData(),
       child: GetMaterialApp(
@@ -27,6 +30,6 @@ Future main() async {
             debugShowCheckedModeBanner: false,
             home: ifr
                 ? const OnboardingPage()
-                : const LogInScreen()), //add verification to check which page should be next (sign in/homepage)
-      )));
+                : const LogInScreen(), //add verification to check which page should be next (sign in/homepage)
+      ))));
 }

@@ -565,7 +565,7 @@ class _EditTaskState extends State<EditTask> {
                                                                 decoration:
                                                                     const InputDecoration(
                                                                   labelText:
-                                                                      "المهمام الاعتمادية",
+                                                                      "تعتمد على المهام",
                                                                   prefixIcon:
                                                                       Icon(
                                                                     Icons
@@ -913,7 +913,7 @@ print(freq.selectedTasks.value);
                                   options: freq.TasksMenue.value,
                                   //need to be righted
                                   decoration: const InputDecoration(
-                                    labelText: "المهمام الاعتمادية",
+                                    labelText: "تعتمد على المهام",
                                     prefixIcon: Icon(
                                       Icons.splitscreen,
                                       color: Color(0xFF66BF77),
