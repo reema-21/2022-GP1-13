@@ -7,6 +7,7 @@ import 'package:motazen/isar_service.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:motazen/pages/add_goal_page/task_controller.dart';
+import 'package:motazen/pages/goals_habits_tab/taskClass.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
 import '../../entities/aspect.dart';
 import '../../entities/task.dart';
@@ -61,7 +62,6 @@ class _AddGoalState extends State<AddGoal> {
   _Addgoal() async {
     newgoal.titel = _goalName;
     newgoal.importance = importance;
-    print(aspectnameInEnglish);
     Aspect? selected =
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
     newgoal.aspect.value = selected; // link aspect to the goal 
@@ -83,7 +83,7 @@ class _AddGoalState extends State<AddGoal> {
 
       name = task[i].name;
 
-      y = await widget.isr.findSepecificTask(name);
+      y = await widget.isr.findSepecificTask2(name);
       y!.goal.value = newgoal;
       newgoal.task.add(y); // to link the task to the goal
       widget.isr.saveTask(y);
@@ -91,17 +91,22 @@ class _AddGoalState extends State<AddGoal> {
     widget.isr.createGoal(newgoal);
     //
 //
-freq.TaskDuration = 0.obs;
+  freq.TaskDuration = 0.obs;
   freq.currentTaskDuration = 0.obs;
   freq.totalTasksDuration = 0.obs;
   freq.iscool = false.obs;
   freq.tem = 0.obs;
   freq.isSelected = "أيام".obs;
   freq.goalTask = Rx<List<Task>>([]);
+  freq.TasksMenue = Rx<List<String>>([]);
+  freq.selectedTasks = Rx<List<String>>([]);
   freq.newTasksAddedInEditing = Rx<List<Task>>([]);
-freq.TasksMenue.value.clear() ; 
-freq.selectedTasks.value.clear();
+  freq.TasksMenue.value.clear() ; 
+  freq.selectedTasks.value.clear();
+  freq.allTaskForDepency = Rx<List<TaskData>> ([]);
+  freq.tryTask =  Rx<TaskData>(TaskData()); 
   freq.itemCount = 0.obs;
+  freq.allTaskForDepency.value.clear() ;
   freq.itemCountAdd = 0.obs;
 
     Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -152,7 +157,18 @@ freq.selectedTasks.value.clear();
                         context,
                         ' هل انت متاكد من الرجوع للخلف',
                         'بالنقر على "تأكيد" لن يتم حفظ معلومات الهدف  ');
-                    if (action == DialogsAction.yes) {//to have intionals values all thetime 
+                    if (action == DialogsAction.yes) {
+                      //to have intionals values all thetime 
+                      // delete the added tasks .
+                      for (int i = 0; i < freq.goalTask.value.length; i++) {
+
+      widget.isr.deleteTask3(freq.goalTask.value[i]);
+   
+    }
+
+
+
+                      //...............................
                       freq.TaskDuration = 0.obs;
   freq.currentTaskDuration = 0.obs;
   freq.totalTasksDuration = 0.obs;
@@ -163,8 +179,13 @@ freq.selectedTasks.value.clear();
   freq.newTasksAddedInEditing = Rx<List<Task>>([]);
 freq.TasksMenue.value.clear() ; 
 freq.selectedTasks.value.clear();
+freq.allTaskForDepency.value.clear() ; 
   freq.itemCount = 0.obs;
   freq.itemCountAdd = 0.obs;
+   Rx<List<String>> TasksMenue = Rx<List<String>>([]);
+  Rx<List<String>> selectedTasks = Rx<List<String>>([]);
+  Rx<List<TaskData>> allTaskForDepency = Rx<List<TaskData>> ([]);
+  Rx<TaskData> tryTask =  Rx<TaskData>(TaskData()); 
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return const navBar();

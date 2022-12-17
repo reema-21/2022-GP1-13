@@ -9,8 +9,9 @@ import 'package:motazen/pages/homepage/homepage.dart';
 import 'package:motazen/theme.dart';
 import '../pages/add_goal_page/get_chosen_aspect.dart';
 import '../pages/add_habit_page/get_chosed_aspect.dart';
-import '../pages/communities_page/comming-soon(community).dart';
-import '../pages/journal_page/commin-soon(journal).dart';
+
+import '../pages/communities_page/comming-sooncommunity.dart';
+import '../pages/journal_page/commin-soonjournal.dart';
 import '/pages/goals_habits_tab/goal_habits_pages.dart';
 import '/isar_service.dart';
 import 'sidebar.dart';

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:motazen/pages/goals_habits_tab/taskClass.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
 import '../../entities/task.dart';
 import '../add_goal_page/task_controller.dart';
@@ -157,7 +158,26 @@ class _goalDetailsState extends State<goalDetails> {
       selectedDate = widget.temGoalDataTime;
       isDataSelected = true;
     }
+    getTasks().then((value) {
+
+
+
+      for(var i in value){
+        TaskData t = new TaskData() ; 
+        t.name = i.name ; 
+        for(var j in i.TaskDependency){
+          t.TaskDependency.add(j.name);
+        }
+        freq.OrginalTasks.value.add(t);
+      }
+
+    });
+   
+
+
+
   }
+  
 
   _onBasicWaitingAlertPressed(context) async {
     await Alert(
@@ -208,7 +228,6 @@ print(aspectnameInEnglish);
 
     goal!.dueDate = selectedDate;
     print(goal!.dueDate);
-    goal!.aspect.save();
     print("here  is the value you asssign");
 
     print("here is the value of the goal ");
@@ -221,6 +240,8 @@ print(aspectnameInEnglish);
     freq.tem = 0.obs;
     freq.isSelected = "أيام".obs;
     freq.goalTask = Rx<List<Task>>([]);
+      Rx<List<TaskData>> allTaskForDepency = Rx<List<TaskData>> ([]);
+
     freq.newTasksAddedInEditing = Rx<List<Task>>([]);
 freq.TasksMenue.value.clear() ; 
 freq.selectedTasks.value.clear();
@@ -256,7 +277,8 @@ freq.selectedTasks.value.clear();
                           context,
                           ' هل انت متاكد من الرجوع ',
                           'بالنقر على "تاكيد"لن يتم حفظ اي تغييرات قمت بها ');
-                      if (action == DialogsAction.yes) {
+                      if (action == DialogsAction.yes) { 
+                        // here is should make sure to fetch the tasks to take itis depenency before saving it 
                         print(oldgoalTasks);
                         print(oldgoalTasks[0].name);
                         List<Task> g = [];
@@ -268,39 +290,40 @@ freq.selectedTasks.value.clear();
                         }
                         for (int i = 0; i < oldgoalTasks.length; i++) {
                           //this for canceling
+                          //here i will add new code for the dependncy 
+                                 List <String> Taskss = freq.OrginalTasks.value[i].TaskDependency ;
+    await Future.forEach(Taskss, (item) async {
+    
+
+      Task? y = Task();
+      String name = item;
+
+
+      y = await widget.isr.findSepecificTask(name);
+      oldgoalTasks[i].TaskDependency.add(y!);// to link task and it depends tasks ;
+      // widget.isr.saveTask(y);// to link
+  });
+                          
+
+
+
+
+
+
+
                           widget.isr.saveTask(oldgoalTasks[i]);
                           Goal? goal = Goal();
                           goal = await widget.isr.getSepecificGoall(widget.id);
                           goal!.task.add(oldgoalTasks[i]);
+
                           widget.isr.createGoal(goal);
+                          oldgoalTasks[i].goal.value = goal;
+                                widget.isr.saveTask(oldgoalTasks[i]);
+
+
                         }
 
-                        // List<Task> g = [];
-                        // Goal? goal = Goal();
-                        // goal = await widget.isr.getSepecificGoall(widget.id);
-                        // g = goal!.task.toList();
-                        // //get back all the deleted
-
-                        // for(int i = 0  ; i<freq.DeletedTasks.value.length ; i++){
-                        //   goal.task.add(freq.DeletedTasks.value[i]);
-                        // }
-                        // widget.isr.createGoal(goal);
-                        // goal = await widget.isr.getSepecificGoall(widget.id);
-                        // g = goal!.task.toList();
-
-                        // if (!freq.newTasksAddedInEditing.value.isEmpty) {
-                        //   for (int i = 0;
-                        //       i < freq.newTasksAddedInEditing.value.length;
-                        //       i++) {
-                        //     for (int j = 0; j < g.length; j++) {
-                        //       if (g[j].name ==
-                        //           freq.newTasksAddedInEditing.value[i].name) {
-                        //         widget.isr.deleteTask2(g[j]);
-                        //       }
-                        //     }
-                        //   }
-                        //   freq.newTasksAddedInEditing.value.clear();
-                        // }
+                       
                         freq.TaskDuration = 0.obs;
                         freq.currentTaskDuration = 0.obs;
                         freq.totalTasksDuration = 0.obs;
@@ -308,9 +331,14 @@ freq.selectedTasks.value.clear();
                         freq.tem = 0.obs;
                         freq.isSelected = "أيام".obs;
                         freq.goalTask = Rx<List<Task>>([]);
+                        freq.allTaskForDepency = Rx<List<TaskData>> ([]);
+
                         freq.newTasksAddedInEditing = Rx<List<Task>>([]);
+
 freq.TasksMenue.value.clear() ; 
 freq.selectedTasks.value.clear();
+freq.OrginalTasks.value.clear();
+
                         freq.itemCount = 0.obs;
                         freq.itemCountAdd = 0.obs;
 

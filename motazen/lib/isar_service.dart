@@ -45,10 +45,14 @@ class IsarService {
     });
   }
 
-  Future<Task?> getSepecificTask(int id) async {
+  
+   Future<Task?> getSepecificTask(int id) async {
     final isar = await db;
-    return await isar.tasks.where().filter().idEqualTo(id).findFirst();
+
+    return await isar.tasks.where().filter().idEqualTo(id).findFirstSync();
   }
+   
+
 
   Future<void> createHabit(Habit newHabit) async {
     //Add habits
@@ -96,6 +100,10 @@ class IsarService {
   Future<Task?> findSepecificTask(String name) async {
     final isar = await db;
     return await isar.tasks.where().filter().nameEqualTo(name).findFirst();
+  }
+   Future<Task?> findSepecificTask2(String name) async {
+    final isar = await db;
+    return  await isar.tasks.filter().nameContains(name).goalIsNull().findFirst();
   }
 
   // THER IS ANOTHE WAY IF YOU DON'T NEED IT AS STREAM .
@@ -163,10 +171,14 @@ class IsarService {
     return await isar.aspects.where().filter().nameEqualTo(name).findFirst();
   }
 
-  Future<void> saveTask(Task task) async {
+  Future<bool> saveTask(Task task) async {
+    //Add goals
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.tasks.putSync(task));
+    print("task is saved");
+    return true;
   }
+
 
   Future<void> updateTask(Task task) async {
     final isar = await db;
@@ -177,6 +189,24 @@ class IsarService {
     final isar = await db;
     isar.writeTxnSync<bool>(() => isar.tasks.deleteSync(id));
   }
+
+//   Future<void> AssignDependncies(List<String> tasks , Task? task) async {
+
+//     final isar = await db;
+//     await isar.writeTxnSync(() async {
+//       task!.TaskDependency.clear();
+
+//   for (var i  in tasks){
+//   Task ? y = await findSepecificTask(i);
+//       task.TaskDependency.add(y!);
+
+
+
+
+//  }
+//   });
+//   }
+  
 
   Stream<List<Task>> listenTasks() async* {
     final isar = await db;
@@ -256,16 +286,34 @@ class IsarService {
   }
 
   void deleteGoal(Goal goal) async {
+   List<Task> goalTasks = goal.task.toList();
+   for(var i in goalTasks){
+  deleteTask2(i);
+
+   }
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.goals.delete(goal.id);
     });
+
+
+
   }
 
   void deleteTask2(Task task) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.tasks.delete(task.id);
+    });
+  }
+   void deleteTask3(Task task) async {
+    final isar = await db;
+    
+    await isar.writeTxn(() async {
+      Task? ttask = await isar.tasks.filter().nameContains(task.name).goalIsNull().findFirst() ;
+
+        await isar.tasks.delete(ttask!.id);
+
     });
   }
 
@@ -279,8 +327,9 @@ class IsarService {
   void UpdateGoal(Goal tem) async {
     final isar = await db;
 
-    await isar.writeTxn(() async {
-      await isar.goals.put(tem);
+    await isar.writeTxnSync(() async {
+      await isar.goals.putSync(tem);
+
     });
   }
 
