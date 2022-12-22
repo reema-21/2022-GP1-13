@@ -1,7 +1,12 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
+import 'package:motazen/entities/LocalTask.dart';
+import 'package:motazen/isarService.dart';
+import 'package:motazen/theme.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import '/entities/goal.dart';
 import '/pages/goals_habits_tab/goal_edit.dart';
-import "/isar_service.dart";
 
 import '../add_goal_page/get_chosen_aspect.dart';
 import '../assesment_page/alert_dialog.dart';
@@ -112,8 +117,8 @@ class _GoalListScreenState extends State<GoalListScreen> {
                         MaterialPageRoute(builder: (context) {
                       return getChosenAspect(
                         iser: widget.isr,
-                        goalsTasks: const [],
                         page: 'Goal',
+                        origin: '',
                       ); // must be the
                     }));
                   },
@@ -130,46 +135,69 @@ class _GoalListScreenState extends State<GoalListScreen> {
                 return Container(
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                  margin: const EdgeInsets.only(bottom: 4),
+                  margin: const EdgeInsets.only(bottom: 4, right: 4, left: 4),
                   child: GestureDetector(
                     onTap: () {},
                     child: Card(
-                      elevation: 3,
+                      elevation: 5,
                       // here is the code of each item you have
-                      child: ListTile(
-                        trailing: TextButton(
-                          child: const Icon(Icons.delete),
-                          onPressed: () async {
-                            final action = await AlertDialogs.yesCancelDialog(
-                                context,
-                                ' هل انت متاكد من حذف هذا الهدف  ',
-                                'بالنقر على "تاكيد"لن تتمكن من استرجاع الهدف ا  ');
-                            if (action == DialogsAction.yes) {
-                              widget.isr.deleteGoal(goal);
-                            } else {}
-                          },
-                        ),
-                        tileColor: (index % 2 == 0)
-                            ? Colors.white
-                            : const Color.fromARGB(33, 102, 191, 118),
-                        leading: chooseIcon(aspectName),
-                        subtitle: Text(
-                            "تاريخ الاستحقاق : $startData"), // if not null added
-                        title: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(goal.titel),
-                        ),
-                        contentPadding: const EdgeInsets.all(7),
-                        onTap: () {
-                          // should return me to the page with add field
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return EditGoal(
-                              isr: widget.isr,
-                              goalId: goal.id,
-                            ); // must be the
-                          }));
-                        },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          ListTile(
+                            trailing: TextButton(
+                              child: const Icon(Icons.delete),
+                              onPressed: () async {
+                                final action = await AlertDialogs.yesCancelDialog(
+                                    context,
+                                    ' هل انت متاكد من حذف هذا الهدف  ',
+                                    'بالنقر على "تاكيد"لن تتمكن من استرجاع الهدف  ');
+                                if (action == DialogsAction.yes) {
+                                  List<LocalTask> goalstasks =
+                                      goal.task.toList();
+
+                                  widget.isr.deleteGoal(goal);
+                                } else {}
+                              },
+                            ),
+                            tileColor: Colors.white,
+                            leading: chooseIcon(aspectName),
+                            subtitle: Text(
+                                "تاريخ الاستحقاق : $startData"), // if not null added
+                            title: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(goal.titel),
+                            ),
+                            contentPadding: const EdgeInsets.all(7),
+                            onTap: () {
+                              // should return me to the page with add field
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return EditGoal(
+                                  isr: widget.isr,
+                                  goalId: goal.id,
+                                ); // must be the
+                              }));
+                            },
+                          ),
+                          const SizedBox(
+                            height: 2,
+                          ),
+                          LinearPercentIndicator(
+                            animation: true,
+                            animationDuration: 600,
+                            curve: Curves.easeIn,
+                            percent: goal.goalProgressPercentage,
+                            lineHeight: 7,
+                            isRTL: true,
+                            progressColor: kPrimaryColor,
+                            backgroundColor: kPrimaryColor.withOpacity(0.3),
+                            barRadius: const Radius.circular(10),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                        ],
                       ),
                     ),
                   ),

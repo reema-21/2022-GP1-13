@@ -1,60 +1,35 @@
 // ignore_for_file: await_only_futures, camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:motazen/entities/LocalTask.dart';
+import 'package:motazen/entities/goal.dart';
 import '/entities/aspect.dart';
 import 'models.dart';
 
-/// Fake data used to demo the application.
-final fakeData = Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: [
-  Item(
-    id: 'todo-1-item-1',
-    description: 'اتصل علي أحمد',
-    icon: const Icon(
-      Icons.person,
-      color: Color(0xFFff9100),
-    ),
-  ),
-  Item(
-    id: 'todo-1-item-2',
-    description: 'حل الواجب',
-    icon: const Icon(
-      Icons.work,
-      color: Color(0xff0065A3),
-    ),
-  ),
-  Item(
-    id: 'todo-1-item-3',
-    description: 'ذاكر للإختبار',
-    icon: const Icon(
-      Icons.work,
-      color: Color(0xff0065A3),
-    ),
-  ),
-  Item(
-    id: 'todo-1-item-4',
-    description: 'انتهي من المشروع',
-    icon: const Icon(
-      Icons.work,
-      color: Color(0xff0065A3),
-    ),
-  ),
-  Item(
-    id: 'todo-1-item-5',
-    description: 'استثمر',
-    icon: const Icon(
-      Icons.attach_money,
-      color: Color(0xff54e360),
-    ),
-  ),
-  Item(
-    id: 'todo-1-item-6',
-    description: 'العب',
-    icon: const Icon(
-      Icons.games,
-      color: Color(0xff008adf),
-    ),
-  ),
-]);
+///create the todo list
+Todo createTodoList(List<Goal> goalList) {
+  List<Item> itemList = [];
+  List<LocalTask> taskList = [];
+  for (var i = 0; i < goalList.length; i++) {
+    taskList = goalList[i].task.toList();
+    for (var item in taskList) {
+      itemList.add(Item(
+        itemGoal: goalList[i].id,
+        id: item.id,
+        description: item.name,
+        //fix later
+        icon: const Icon(
+          Icons.person,
+          color: Color(0xFFff9100),
+        ),
+      ));
+    }
+  }
+  return Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: itemList);
+}
+
+// empty todo
+const emptyTasks = Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: []);
 
 ////////////////////////////////////////Aspect Data\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -80,18 +55,9 @@ class WheelData with ChangeNotifier {
         color: 4283753312,
         icon: Icons.attach_money),
   ];
-  final List<String> aspectsArabic = [
-    'عائلتي و أصدقائي',
-    'صحتي',
-    'ذاتي',
-    'بيئتي',
-    'علاقاتي',
-    'مهنتي',
-    'متعتي',
-    'أموالي'
-  ];
   List<Aspect> allAspects = [];
   List<Aspect> selected = [];
+  List<String> selectedArabic = [];
 
   contains(String s) {
     for (var i = 0; i < data.length; i++) {

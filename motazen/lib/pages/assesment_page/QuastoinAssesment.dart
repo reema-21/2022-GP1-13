@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, non_constant_identifier_names, prefer_interpolation_to_compose_strings, use_build_context_synchronously
 
 import 'package:get/get.dart';
+import 'package:motazen/isarService.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
 
 import '/theme.dart';
@@ -8,12 +9,9 @@ import 'package:provider/provider.dart';
 
 import '../add_goal_page/get_chosen_aspect.dart';
 import '../../data/data.dart';
-import '/isar_service.dart';
 import '/entities/aspect.dart';
 import 'package:flutter/material.dart';
 import 'package:im_stepper/stepper.dart';
-import 'alert_dialog.dart';
-import '/pages/select_aspectPage/select_aspect.dart';
 import 'assesment_question_page_assignments.dart';
 
 class WheelOfLifeAssessmentPage extends StatefulWidget {
@@ -92,47 +90,29 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   Widget build(BuildContext context) {
     var aspectList = Provider.of<WheelData>(context);
 
-    return Directionality(
-        // <-- Add this Directionality
-        textDirection: TextDirection.rtl,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.arrow_forward_ios, color: kBlackColor),
-                onPressed: () async {
-                  final action = await AlertDialogs.yesCancelDialog(
-                      context,
-                      'هل انت متاكد من الرجوع ',
-                      'بالنقر على "تاكيد" لن يتم حفظ الاجابات ');
-                  if (action == DialogsAction.yes) {
-                    Get.to(() => AspectSelection(
-                          isr: widget.isr,
-                        ));
-                  }
-                },
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'تقييم جوانب الحياة',
+                textDirection: TextDirection.rtl,
+                style: titleText,
               ),
-            ],
-            title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'تقييم جوانب الحياة',
-                    textDirection: TextDirection.rtl,
-                    style: titleText,
-                  ),
-                  Text('ادخل اجابتك بإستخدام المؤشر',
-                      textDirection: TextDirection.rtl, style: subTitle),
-                  Text('10 (ينطبق دائما) - 1 (نادراً ما ينطبق)',
-                      textDirection: TextDirection.rtl, style: subTitleBold),
-                ]),
-            elevation: 0,
-            toolbarHeight: 120,
-            backgroundColor: kWhiteColor,
-          ),
-          body: SafeArea(
+              Text('ادخل اجابتك بإستخدام المؤشر',
+                  textDirection: TextDirection.rtl, style: subTitle),
+              Text('10 (ينطبق دائما) - 1 (نادراً ما ينطبق)',
+                  textDirection: TextDirection.rtl, style: subTitle),
+            ]),
+        toolbarHeight: 120,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Directionality(
+            textDirection: TextDirection.rtl,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -223,6 +203,10 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                                   buildSlideLable(1),
                                 ],
                               ),
+                              //--------------------------------------here is what you tried -----------------//
+                              Text(
+                                "الإجابة: ${AssessmentQuestions.currentChosenAnswer.round()}",
+                              ),
                             ],
                           ),
                         ),
@@ -241,7 +225,9 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
               ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   /// Returns the next button.
@@ -393,10 +379,9 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
         backgroundColor: MaterialStatePropertyAll<Color>(kPrimaryColor),
         padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(kDefaultPadding),
         textStyle: MaterialStatePropertyAll<TextStyle>(TextStyle(
-          color: kPrimaryColor,
           fontSize: 18,
-          fontFamily: 'Frutiger',
           fontWeight: FontWeight.w700,
+          fontFamily: 'Frutiger',
         )),
       ),
       onPressed: isAllQuastionAnswerd
@@ -429,7 +414,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     List<double> allpoints = [0, 0, 0, 0, 0, 0, 0, 0];
 
     for (int i = 0; i < AssessmentQuestions.answers.length; i++) {
-      // i will sunm the point of each aspect ;
+      // i will sum the point of each aspect ;
       String aspectType = AssessmentQuestions.answers[i]
           .substring(AssessmentQuestions.answers[i].length - 1);
       double x = 0;
@@ -547,7 +532,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
           pointsList: allpoints,
           iser: isar,
           page: 'Home',
-          goalsTasks: const [],
+          origin: 'Assessment',
         ));
   }
 }

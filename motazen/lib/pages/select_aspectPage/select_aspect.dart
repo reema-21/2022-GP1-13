@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:motazen/pages/assesment_page/assesment_question_page_assignments.dart';
 import 'package:provider/provider.dart';
 
+import '../../isarService.dart';
 import '../assesment_page/show.dart';
 import 'handle_aspect_data.dart';
-import '/isar_service.dart';
 import '../../data/data.dart';
 import '../../theme.dart';
 
@@ -24,6 +24,17 @@ class _selectAspectState extends State<AspectSelection> {
   final List<bool> __isSelected = [];
   List<String> selectedAspects = [];
   List<String> unselectedAspects = [];
+  final List<String> aspectsArabic = [
+    'عائلتي و أصدقائي',
+    'صحتي',
+    'ذاتي',
+    'بيئتي',
+    'علاقاتي',
+    'مهنتي',
+    'متعتي',
+    'أموالي'
+  ];
+
   @override
   Widget build(BuildContext context) {
     //clean lists
@@ -50,8 +61,8 @@ class _selectAspectState extends State<AspectSelection> {
           textStyle: MaterialStatePropertyAll<TextStyle>(TextStyle(
             color: kPrimaryColor,
             fontSize: 18,
-            fontFamily: 'Frutiger',
             fontWeight: FontWeight.w700,
+            fontFamily: 'Frutiger',
           )),
         ),
         onPressed: __isSelected.contains(true)
@@ -89,8 +100,6 @@ class _selectAspectState extends State<AspectSelection> {
                 ),
                 Text("اختر الجوانب اللي تريد اضافتها للعجلة", style: subTitle),
               ]),
-          backgroundColor: kWhiteColor,
-          iconTheme: const IconThemeData(color: kBlackColor),
           elevation: 0.0,
           toolbarHeight: 86,
           automaticallyImplyLeading: false,
@@ -167,7 +176,7 @@ class _selectAspectState extends State<AspectSelection> {
                                         },
                                         child: ListTile(
                                           title: Text(
-                                            aspectList.aspectsArabic[i],
+                                            aspectsArabic[i],
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 color: aspectList.allAspects[i]

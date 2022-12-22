@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../goals_habits_tab/calculate_progress.dart';
 import '/data/models.dart';
 import '/pages/homepage/daily_tasks/custom_rect_tween.dart';
 import '/pages/homepage/daily_tasks/hero_dialog_route.dart';
@@ -175,6 +176,8 @@ class _TodoItemTileState extends State<_TodoItemTile> {
   void _onChanged(bool? val) {
     setState(() {
       widget.item.completed = val!;
+      CalculateProgress()
+          .updateAmountCompleted(widget.item.id, widget.item.itemGoal);
     });
   }
 

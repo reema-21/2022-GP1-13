@@ -32,13 +32,18 @@ const GoalSchema = CollectionSchema(
       name: r'goalDuration',
       type: IsarType.long,
     ),
-    r'importance': PropertySchema(
+    r'goalProgressPercentage': PropertySchema(
       id: 3,
+      name: r'goalProgressPercentage',
+      type: IsarType.double,
+    ),
+    r'importance': PropertySchema(
+      id: 4,
       name: r'importance',
       type: IsarType.long,
     ),
     r'titel': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'titel',
       type: IsarType.string,
     )
@@ -79,7 +84,7 @@ const GoalSchema = CollectionSchema(
     r'task': LinkSchema(
       id: 1307600547408402184,
       name: r'task',
-      target: r'Task',
+      target: r'LocalTask',
       single: false,
     )
   },
@@ -110,8 +115,9 @@ void _goalSerialize(
   writer.writeString(offsets[0], object.DescriptiveGoalDuration);
   writer.writeDateTime(offsets[1], object.dueDate);
   writer.writeLong(offsets[2], object.goalDuration);
-  writer.writeLong(offsets[3], object.importance);
-  writer.writeString(offsets[4], object.titel);
+  writer.writeDouble(offsets[3], object.goalProgressPercentage);
+  writer.writeLong(offsets[4], object.importance);
+  writer.writeString(offsets[5], object.titel);
 }
 
 Goal _goalDeserialize(
@@ -124,9 +130,10 @@ Goal _goalDeserialize(
   object.DescriptiveGoalDuration = reader.readString(offsets[0]);
   object.dueDate = reader.readDateTime(offsets[1]);
   object.goalDuration = reader.readLong(offsets[2]);
+  object.goalProgressPercentage = reader.readDouble(offsets[3]);
   object.id = id;
-  object.importance = reader.readLong(offsets[3]);
-  object.titel = reader.readString(offsets[4]);
+  object.importance = reader.readLong(offsets[4]);
+  object.titel = reader.readString(offsets[5]);
   return object;
 }
 
@@ -144,8 +151,10 @@ P _goalDeserializeProp<P>(
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 4:
+      return (reader.readLong(offset)) as P;
+    case 5:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -165,7 +174,7 @@ void _goalAttach(IsarCollection<dynamic> col, Id id, Goal object) {
   object.goalDependency
       .attach(col, col.isar.collection<Goal>(), r'goalDependency', id);
   object.aspect.attach(col, col.isar.collection<Aspect>(), r'aspect', id);
-  object.task.attach(col, col.isar.collection<Task>(), r'task', id);
+  object.task.attach(col, col.isar.collection<LocalTask>(), r'task', id);
 }
 
 extension GoalQueryWhereSort on QueryBuilder<Goal, Goal, QWhere> {
@@ -586,6 +595,70 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> goalProgressPercentageEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'goalProgressPercentage',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition>
+      goalProgressPercentageGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'goalProgressPercentage',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition>
+      goalProgressPercentageLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'goalProgressPercentage',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> goalProgressPercentageBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'goalProgressPercentage',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<Goal, Goal, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -848,7 +921,8 @@ extension GoalQueryLinks on QueryBuilder<Goal, Goal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> task(FilterQuery<Task> q) {
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> task(
+      FilterQuery<LocalTask> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'task');
     });
@@ -941,6 +1015,18 @@ extension GoalQuerySortBy on QueryBuilder<Goal, Goal, QSortBy> {
     });
   }
 
+  QueryBuilder<Goal, Goal, QAfterSortBy> sortByGoalProgressPercentage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'goalProgressPercentage', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterSortBy> sortByGoalProgressPercentageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'goalProgressPercentage', Sort.desc);
+    });
+  }
+
   QueryBuilder<Goal, Goal, QAfterSortBy> sortByImportance() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'importance', Sort.asc);
@@ -1003,6 +1089,18 @@ extension GoalQuerySortThenBy on QueryBuilder<Goal, Goal, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Goal, Goal, QAfterSortBy> thenByGoalProgressPercentage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'goalProgressPercentage', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterSortBy> thenByGoalProgressPercentageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'goalProgressPercentage', Sort.desc);
+    });
+  }
+
   QueryBuilder<Goal, Goal, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1061,6 +1159,12 @@ extension GoalQueryWhereDistinct on QueryBuilder<Goal, Goal, QDistinct> {
     });
   }
 
+  QueryBuilder<Goal, Goal, QDistinct> distinctByGoalProgressPercentage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'goalProgressPercentage');
+    });
+  }
+
   QueryBuilder<Goal, Goal, QDistinct> distinctByImportance() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'importance');
@@ -1098,6 +1202,13 @@ extension GoalQueryProperty on QueryBuilder<Goal, Goal, QQueryProperty> {
   QueryBuilder<Goal, int, QQueryOperations> goalDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'goalDuration');
+    });
+  }
+
+  QueryBuilder<Goal, double, QQueryOperations>
+      goalProgressPercentageProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'goalProgressPercentage');
     });
   }
 

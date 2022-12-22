@@ -5,37 +5,54 @@ import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:motazen/isarService.dart';
+import 'package:motazen/pages/communities_page/create_community.dart';
 import 'package:motazen/pages/homepage/homepage.dart';
 import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
+import '../controllers/auth_controller.dart';
+import '../controllers/community_controller.dart';
+import '../data/data.dart';
 import '../pages/add_goal_page/get_chosen_aspect.dart';
-import '../pages/add_habit_page/get_chosed_aspect.dart';
-
-import '../pages/communities_page/comming-sooncommunity.dart';
+import '../pages/add_goal_page/task_controller.dart';
+import '../pages/add_habit_page/add_habit.dart';
+import '../pages/communities_page/communities.dart';
 import '../pages/journal_page/commin-soonjournal.dart';
+import '../pages/notifications_screen.dart/notifications_screen.dart';
 import '/pages/goals_habits_tab/goal_habits_pages.dart';
-import '/isar_service.dart';
 import 'sidebar.dart';
 
-///add page redirection later
-///
 class navBar extends StatefulWidget {
-  const navBar({super.key});
+  final int selectedIndex;
+  const navBar({super.key, required this.selectedIndex});
 
   @override
   State<navBar> createState() => _MynavBar();
 }
 
 class _MynavBar extends State<navBar> {
-  int selectedIndex = 0;
+  late int selectedIndex;
+  AuthController authController = Get.put(AuthController());
+  CommunityController communityController = Get.put(CommunityController());
+  TaskControleer taskControleer = Get.put(TaskControleer());
+
   final List<Widget> _widgetOptions = [
     const Homepage(),
     Goals_habit(iser: IsarService()),
     const Communities(),
     const Journal(),
   ];
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.selectedIndex;
+    authController.getUsersList();
+    communityController.getNotifications();
+  }
 
   @override
   Widget build(BuildContext context) {
+    var aspectList = Provider.of<WheelData>(context);
     navigate(int index) {
       setState(() {
         selectedIndex = index;
@@ -48,15 +65,16 @@ class _MynavBar extends State<navBar> {
         //show the controller if the goals and habits tab is selected
         length: selectedIndex == 1 ? 2 : 1,
         child: Scaffold(
+          backgroundColor: kWhiteColor,
           appBar: AppBar(
               // notifications button
-              backgroundColor: kWhiteColor,
-              iconTheme: const IconThemeData(color: Colors.black),
               elevation: 0.0,
               actions: <Widget>[
-                const IconButton(
-                    onPressed: null,
-                    icon: Icon(
+                IconButton(
+                    onPressed: () {
+                      Get.to(const NotificationsScreen());
+                    },
+                    icon: const Icon(
                       Icons.notifications,
                       color: Colors.black,
                     ),
@@ -69,42 +87,65 @@ class _MynavBar extends State<navBar> {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return Center(
-                                  child: AlertDialog(
-                                      title: const Text(
-                                        "أود إضافة ",
-                                      ),
-                                      content: Row(children: [
-                                        TextButton(
-                                          child: const Text("هدف"),
-                                          onPressed: () {
-                                            Get.to(() => getChosenAspect(
-                                                  iser: IsarService(),
-                                                  goalsTasks: const [],
-                                                  page: 'Goal',
-                                                ));
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-                                        TextButton(
-                                          child: const Text("عادة"),
-                                          onPressed: () {
-                                            Get.to(() => getChosenAspectH(
-                                                  iser: IsarService(),
-                                                ));
-                                          },
-                                        ),
-                                      ])),
-                                );
+                                return AlertDialog(
+                                    title: Text(
+                                      "أود إضافة ",
+                                      textAlign: TextAlign.center,
+                                      style: subTitle,
+                                    ),
+                                    content: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextButton(
+                                            child: Text(
+                                              "هدف",
+                                              style: alertText,
+                                            ),
+                                            onPressed: () {
+                                              Get.to(() => getChosenAspect(
+                                                    iser: IsarService(),
+                                                    page: 'Goal',
+                                                    origin: '',
+                                                  ));
+                                            },
+                                          ),
+                                          const SizedBox(
+                                            width: 20,
+                                          ),
+                                          TextButton(
+                                            child: Text(
+                                              "عادة",
+                                              style: alertText,
+                                            ),
+                                            onPressed: () {
+                                              Get.to(() => AddHabit(
+                                                    isr: IsarService(),
+                                                    chosenAspectNames:
+                                                        aspectList
+                                                            .selectedArabic,
+                                                  ));
+                                            },
+                                          ),
+                                        ]));
                               });
                         },
                       )
-                    : const SizedBox(
-                        height: 0,
-                        width: 0,
-                      ),
+                    : selectedIndex == 2
+                        ? IconButton(
+                            icon: const Icon(Icons.add, color: kBlackColor),
+                            iconSize: 30,
+                            onPressed: () async {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return const CreateCommunity();
+                              }));
+                            },
+                          )
+                        : const SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
               ],
               bottom: selectedIndex == 1
                   ? const TabBar(
@@ -136,7 +177,6 @@ class _MynavBar extends State<navBar> {
                   : const PreferredSize(
                       preferredSize: Size(0, 0), child: SizedBox())),
           drawer: const SideBar(),
-          backgroundColor: kWhiteColor,
           body: SafeArea(child: _widgetOptions[selectedIndex]),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(

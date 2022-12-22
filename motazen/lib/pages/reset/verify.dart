@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, non_constant_identifier_names, await_only_futures
+// ignore_for_file: must_be_immutable, non_constant_identifier_names, await_only_futures, deprecated_member_use, unused_local_variable
 
 import 'dart:async';
 

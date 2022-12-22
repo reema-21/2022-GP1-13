@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:motazen/isarService.dart';
 import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
+import '../../data/data.dart';
 import '/entities/habit.dart';
-import '/isar_service.dart';
-import 'getChosenAspectEh.dart';
+import 'habit_datials.dart';
 
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class EditHbit extends StatefulWidget {
@@ -79,6 +81,7 @@ class _EditGoalState extends State<EditHbit> {
 
   @override
   Widget build(BuildContext context) {
+    var aspectList = Provider.of<WheelData>(context);
     return Directionality(
         textDirection: TextDirection.rtl,
         child: SafeArea(
@@ -88,14 +91,15 @@ class _EditGoalState extends State<EditHbit> {
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return getChosenAspectEh(
+                    return HabitDetails(
                       isr: widget.isr,
-                      habitAspect: habitAspect,
-                      habitFrequency: displayHabitfrequencyControlller.text,
+                      chosenAspectNames: aspectList.selectedArabic,
                       HabitName: displayHabitNameControlller.text,
+                      habitFrequency: displayHabitfrequencyControlller.text,
+                      habitAspect: habitAspect,
                       id: widget.HabitId,
-                      durationInNumber: durationInNumber,
-                      durationIndString: durationIndex,
+                      duraioninString: durationIndex,
+                      durationInInt: durationInNumber,
                     ); // must be the
                   }));
                 },
@@ -125,7 +129,9 @@ class _EditGoalState extends State<EditHbit> {
                             onPressed: () {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                return const navBar();
+                                return const navBar(
+                                  selectedIndex: 1,
+                                );
                               }));
                             }),
                       ],

@@ -1,5 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:get/get.dart';
+import '../../../../isarService.dart';
+import '../progress_screen.dart';
 import '/entities/aspect.dart';
 
 class PieChartSections {
@@ -11,7 +15,14 @@ class PieChartSections {
 
             final isTouched = index == touchedIndex;
             if (isTouched) {
-              //add code to move to info page
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                //this is for the binding error
+                // add your code here.
+                Get.to(() => ProgressScreen(
+                      aspect: data,
+                      isr: IsarService(),
+                    )); // sending the aspect to the page
+              });
             }
 
             final value = PieChartSectionData(

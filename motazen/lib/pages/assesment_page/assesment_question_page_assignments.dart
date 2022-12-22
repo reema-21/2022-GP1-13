@@ -1,4 +1,5 @@
-import '/isar_service.dart';
+import 'package:motazen/isarService.dart';
+
 import '/entities/aspect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '/pages/select_aspectPage/handle_aspect_data.dart';
@@ -7,10 +8,12 @@ class AssessmentQuestions {
   IsarService iser = IsarService();
   static int activeStep = 0;
   static List<dynamic> quastionsList = [];
+  static List<dynamic> resectedquestion = [];
   static Map answers = {};
   static String currentvalue = "";
   static List<dynamic> tempquastionsList = [];
   static double currentChosenAnswer = 1;
+
 
   void removeDeselectedAnswers(List<String> unselectedAspects) {
     int counter;
@@ -79,6 +82,7 @@ class AssessmentQuestions {
   }
 
   Future<List<dynamic>> createQuestionList() async {
+    
     List<Aspect> tempAspect =
         []; //store the fetched chosen aspect from the user
     List<dynamic> tempQuestionList = []; //temporary store one aspect quastion

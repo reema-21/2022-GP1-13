@@ -1,9 +1,9 @@
 // ignore_for_file: camel_case_types
 
 import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
+import 'package:motazen/isarService.dart';
 import 'package:provider/provider.dart';
 
-import '/isar_service.dart';
 
 import 'package:flutter/material.dart';
 import '/pages/select_aspectPage/handle_aspect_data.dart';
@@ -15,13 +15,14 @@ import 'add_goal_screen.dart';
 class getChosenAspect extends StatefulWidget {
   final IsarService iser;
   final String page;
+  final String origin;
   final List<double>? pointsList;
   const getChosenAspect({
     super.key,
     required this.iser,
     required this.page,
-    required List goalsTasks,
     this.pointsList,
+    required this.origin,
   });
 
   @override
@@ -46,7 +47,7 @@ class _showsState extends State<getChosenAspect> {
                   if (updatedAspects[i].isSelected) {
                     chosenAspectNames.add(updatedAspects[i].name);
                   }
-                  if (widget.page == 'Home') {
+                  if (widget.page == 'Home' && widget.origin == 'Assessment') {
                     updatedAspects[i].percentagePoints = widget.pointsList![i];
                   }
                 }
@@ -87,10 +88,13 @@ class _showsState extends State<getChosenAspect> {
 
                   chosenspectNames.add(nameInArabic);
                 }
+                aspectList.selectedArabic = chosenspectNames;
 
                 switch (widget.page) {
                   case 'Home':
-                    return const navBar();
+                    return const navBar(
+                      selectedIndex: 0,
+                    );
                   case 'Goal':
                     return AddGoal(
                       isr: widget.iser,

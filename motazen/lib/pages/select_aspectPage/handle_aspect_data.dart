@@ -1,11 +1,13 @@
 // ignore_for_file: camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:motazen/entities/goal.dart';
+import 'package:motazen/isarService.dart';
+import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/data.dart';
 import '/entities/aspect.dart';
-import '/isar_service.dart';
 import '../../data/models.dart';
 import 'select_aspect.dart';
 
@@ -62,6 +64,20 @@ class handle_aspect {
   //return a list of all selected aspects
   Future<void> setAspectpoints(String name, double point) async {
     isar.assignPointAspect(name, point);
+  }
+
+  void updateAspects(Aspect aspect) {
+    double aspectProgressSum = 0;
+    double aspectProgressPercentage = 0;
+    List<Goal> goals = aspect.goals.toList(); //the issue is probably here
+    for (var element in goals) {
+      aspectProgressSum = aspectProgressSum +
+          (element.importance * element.goalProgressPercentage);
+    }
+    aspectProgressPercentage =
+        aspectProgressSum + aspect.percentagePoints % 100;
+
+    IsarService().updateAspectPercentage(aspect.id, aspectProgressPercentage);
   }
 }
 
@@ -122,7 +138,16 @@ class _getAllAspectsState extends State<getAllAspects> {
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 aspectList.allAspects = snapshot.data!;
-                return widget.page;
+                switch (widget.page) {
+                  case 'Home':
+                    return getChosenAspect(
+                      iser: IsarService(),
+                      page: 'Home',
+                      origin: '',
+                    );
+                  default:
+                    throw 'Error404: page not found';
+                }
               } else {
                 return const CircularProgressIndicator();
               }

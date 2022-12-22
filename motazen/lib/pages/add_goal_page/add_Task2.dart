@@ -1,21 +1,18 @@
-// ignore_for_file: file_names, must_be_immutable, non_constant_identifier_names, unused_element
-
-import 'dart:developer';
+// ignore_for_file: file_names, must_be_immutable, non_constant_identifier_names, unused_element, use_build_context_synchronously, unused_local_variable, unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
+import 'package:motazen/entities/LocalTask.dart';
+import 'package:motazen/isarService.dart';
+import 'package:motazen/pages/add_goal_page/taskLocal_controller.dart';
 import '../assesment_page/alert_dialog.dart';
 import '../goals_habits_tab/taskClass.dart';
-import 'task_controller.dart';
-import 'package:motazen/entities/task.dart';
-import 'package:motazen/isar_service.dart';
 import 'package:get/get.dart';
 import 'package:multiselect/multiselect.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class AddTask extends StatefulWidget {
   final IsarService isr;
   int goalDurtion;
-  List<Task> goalTask;
+  List<LocalTask> goalTask;
   AddTask(
       {super.key,
       required this.isr,
@@ -28,11 +25,11 @@ class AddTask extends StatefulWidget {
 
 class _AddTaskState extends State<AddTask> {
   //counter
-  final TaskControleer freq = Get.put(TaskControleer());
+  final TaskLocalControleer freq = Get.put(TaskLocalControleer());
 
   //counter
   List<String> durationName = ['أيام', 'أسابيع', 'أشهر', 'سنوات'];
-bool x = false ;
+  bool x = false;
   List<String> TasksNamedropmenue = [];
   List<String> selected = [];
   String? isSelected = "";
@@ -42,21 +39,17 @@ bool x = false ;
     super.initState();
   }
 
-  AddTheEnterdTask(Task newTask , List<String> tasks) async {
-    List <String> Taskss = tasks ;
+  AddTheEnterdTask(LocalTask newTask, List<String> tasks) async {
+    List<String> Taskss = tasks;
     await Future.forEach(Taskss, (item) async {
-    
-
-      Task? y = Task();
+      LocalTask? y = LocalTask();
       String name = item;
 
-
       y = await widget.isr.findSepecificTask(name);
-      newTask.TaskDependency.add(y!);// to link task and it depends tasks ;
+      newTask.TaskDependency.add(y!); // to link task and it depends tasks ;
       // widget.isr.saveTask(y);// to link
-  });
+    });
 
-    
     widget.isr.saveTask(newTask);
   }
 
@@ -72,7 +65,7 @@ bool x = false ;
             backgroundColor: const Color(0xFF66BF77),
             title: const Text(
               "إضافة مهمة جديدة",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: 25),
             ),
             actions: [
               IconButton(
@@ -162,33 +155,30 @@ bool x = false ;
                                             ' هل انت متاكد من حذف هذه المهمة  ',
                                             'بالنقر على "تاكيد"لن تتمكن من استرجاع المهمة ');
                                     if (action == DialogsAction.yes) {
-                                     
+                                      bool isDependent =
+                                          false; // prevent the user from deleting any task the depends by other tasks
+                                      for (int i = 0;
+                                          i < freq.goalTask.value.length;
+                                          i++) {
+                                        List<TaskData> x =
+                                            freq.allTaskForDepency.value;
 
-                                      bool isDependent = false ;  // prevent the user from deleting any task the depends by other tasks
-                                      for(int i =0 ; i<freq.goalTask.value.length ; i++){
-                                        
-                                        List <TaskData>  x = freq.allTaskForDepency.value ; 
-                                      
-                                        for(int j = 0 ;j<x.length ; j++){
-                                          List<String> dependencies  = x[i].TaskDependency ; 
-                                          print("here is the dependincies i am checkin when deleteing");
-                                          print(dependencies);
-                                          for(int k = 0 ; k<dependencies.length ; k++) {
-                                            
-                                             if(dependencies[k] == freq.goalTask.value[index].name){
-                                              print("here we are "); 
-                                            print(dependencies[k] );
-                                            isDependent = true ; 
-                                            break ; 
+                                        for (int j = 0; j < x.length; j++) {
+                                          List<String> dependencies =
+                                              x[i].TaskDependency;
+                                          for (int k = 0;
+                                              k < dependencies.length;
+                                              k++) {
+                                            if (dependencies[k] ==
+                                                freq.goalTask.value[index]
+                                                    .name) {
+                                              isDependent = true;
+                                              break;
+                                            }
                                           }
-
-                                          }
-                                         
                                         }
-
                                       }
-                                      if(isDependent){
-                                        print ("i am here there there there there there ") ; 
+                                      if (isDependent) {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                                 duration:
@@ -209,28 +199,27 @@ bool x = false ;
                                                     )
                                                   ],
                                                 )));
-
-                                      }else{
-                                         int x =
-                                          freq.goalTask.value[index].duration;
-                                      freq.dcrementTaskDuration(x);
-                                      for(int i = 0 ; i<freq.TasksMenue.value.length ;i++){ // delete the deleted task from the menue 
-                                          if(freq.TasksMenue.value[i]== freq.goalTask.value[index].name ){
+                                      } else {
+                                        int x =
+                                            freq.goalTask.value[index].duration;
+                                        freq.dcrementTaskDuration(x);
+                                        for (int i = 0;
+                                            i < freq.TasksMenue.value.length;
+                                            i++) {
+                                          // delete the deleted task from the menue
+                                          if (freq.TasksMenue.value[i] ==
+                                              freq.goalTask.value[index].name) {
                                             freq.TasksMenue.value.removeAt(i);
-                                            break ; 
+                                            break;
                                           }
-                                      }
+                                        }
                                         widget.isr.deleteTask3(
-                                          freq.goalTask.value[index]);
+                                            freq.goalTask.value[index]);
 
-                                      setState(() {
-                                        freq.removeTask(index);
-                                      });
-                                    }
-
-                                      
-
-                                      
+                                        setState(() {
+                                          freq.removeTask(index);
+                                        });
+                                      }
                                     }
                                   },
                                 ),
@@ -245,27 +234,20 @@ bool x = false ;
               )
             ],
           ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniStartFloat,
           floatingActionButton: FloatingActionButton(
-              child: const Icon(Icons.add),
+              backgroundColor: const Color.fromARGB(255, 252, 252, 252),
+              child: const Icon(Icons.add, color: Color(0xFF66BF77)),
               onPressed: () {
-
-              print("here is the dependncies  ");
-              for(var i in freq.allTaskForDepency.value){
-                print("the task name "); 
-                print(i.name); 
-                print(i.TaskDependency.toString());
-              }
+                for (var i in freq.allTaskForDepency.value) {}
                 freq.selectedTasks.value.clear();
                 freq.inputTaskName.text = "";
-                freq.TaskDuration.value= 0 ; 
-                freq.isSelected.value="أيام";
-                  freq.currentTaskDuration
-                                                      .value = 0;
+                freq.TaskDuration.value = 0;
+                freq.isSelected.value = "أيام";
+                freq.currentTaskDuration.value = 0;
 
-                                                  freq.setvalue(
-                                                      durationName[0]);
-                                                                                                            print("check what tasks do you have");
-                                                      print(freq.goalTask.value);
+                freq.setvalue(durationName[0]);
 
                 showDialog(
                     context: context,
@@ -283,9 +265,9 @@ bool x = false ;
                                   child: Column(children: [
                                 TextFormField(
                                   validator: (value) {
-                                     bool Repeated  = false ; 
-                                    for(var i in freq.goalTask.value){
-                                      if(i.name == value){
+                                    bool Repeated = false;
+                                    for (var i in freq.goalTask.value) {
+                                      if (i.name == value) {
                                         setState(() {
                                           Repeated = true;
                                         });
@@ -296,12 +278,9 @@ bool x = false ;
                                       // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
                                       //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
                                       // }
-                                    } else if ( Repeated){
+                                    } else if (Repeated) {
                                       return "يوجد مهمة بنفس الاسم";
-
-                                    }
-                                    
-                                    else {
+                                    } else {
                                       return null;
                                     }
                                   },
@@ -444,7 +423,6 @@ bool x = false ;
                                 const SizedBox(
                                   height: 20,
                                 ),
-                               
                                 Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: DropDownMultiSelect(
@@ -455,34 +433,32 @@ bool x = false ;
                                     options: freq.TasksMenue.value,
                                     //need to be righted
                                     decoration: const InputDecoration(
-                                      labelText: "المهمام الاعتمادية",
+                                      labelText: "تعتمد على المهام :",
                                       prefixIcon: Icon(
                                         Icons.splitscreen,
                                         color: Color(0xFF66BF77),
                                       ),
                                     ),
                                     onChanged: (value) {
-                                     
                                       freq.selectedTasks.value = value;
                                       //here you can save the tasks and link it
                                     },
-                                                                      selectedValues: freq.selectedTasks.value,
-                                
+                                    selectedValues: freq.selectedTasks.value,
                                   ),
                                 ),
-                             
-                                SizedBox(
+                                const SizedBox(
                                   height: 30,
                                 ),
                                 Obx(() => ElevatedButton(
-                                      onPressed: freq.iscool.value 
+                                      onPressed: freq.iscool.value
                                           ? () {
                                               if (formKey.currentState!
                                                   .validate()) {
                                                 setState(() {
                                                   // TasksNamedropmenue.add(inputTaskName.text);
 
-                                                  Task newTak = Task();
+                                                  LocalTask newTak =
+                                                      LocalTask();
                                                   newTak.name = freq
                                                       .inputTaskName.value.text;
                                                   String durationDescribtion =
@@ -531,36 +507,36 @@ bool x = false ;
 
                                                       break;
                                                   }
-                                                
-                                                  AddTheEnterdTask(newTak , freq.selectedTasks.value) ;
+
+                                                  AddTheEnterdTask(newTak,
+                                                      freq.selectedTasks.value);
                                                   freq.TasksMenue.value.add(freq
                                                       .inputTaskName
                                                       .value
                                                       .text);
-                                                      setState(() {
-                                                        x =    freq.addTask(
-                                                      freq.inputTaskName.value
-                                                          .text,
-                                                      freq.isSelected.value,
-                                                      freq.TaskDuration.value);
-                                                        
-                                                      }); //ad the enterd to the tasks to the dependncy tasks .
-                                                
+                                                  setState(() {
+                                                    x = freq.addTask(
+                                                        freq.inputTaskName.value
+                                                            .text,
+                                                        freq.isSelected.value,
+                                                        freq.TaskDuration
+                                                            .value);
+                                                  }); //ad the enterd to the tasks to the dependncy tasks .
 
                                                   freq.TaskDuration.value = 0;
 
                                                   freq.storeStatusOpen(false);
                                                   freq.incrementTaskDuration();
-                                freq.currentTaskDuration
+                                                  freq.currentTaskDuration
                                                       .value = 0;
 
                                                   freq.setvalue(
                                                       durationName[0]);
-                                                      // freq.selectedTasks.value.clear();
+                                                  // freq.selectedTasks.value.clear();
                                                 });
-                                                if (x)
-                                                Navigator.pop(context); 
-
+                                                if (x) {
+                                                  Navigator.pop(context);
+                                                }
                                               }
                                             }
                                           : null,

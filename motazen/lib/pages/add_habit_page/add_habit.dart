@@ -1,8 +1,11 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:motazen/isarService.dart';
+import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
-import '../../isar_service.dart';
+import '../../data/data.dart';
 import '/entities/habit.dart';
 
 import '../assesment_page/alert_dialog.dart';
@@ -57,13 +60,16 @@ class _AddHabitState extends State<AddHabit> {
     newhabit.aspect.value = selected;
     widget.isr.createHabit(newhabit);
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return const navBar();
+      return const navBar(
+        selectedIndex: 1,
+      );
     }));
   }
 
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
+    var aspectList = Provider.of<WheelData>(context);
+
     return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
@@ -77,7 +83,10 @@ class _AddHabitState extends State<AddHabit> {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Row(
                     children: const [
-                      Icon(Icons.thumb_up_sharp),
+                      Icon(
+                        Icons.thumb_up_sharp,
+                        color: kWhiteColor,
+                      ),
                       SizedBox(width: 20),
                       Expanded(
                         child: Text("تمت اضافة العادة "),
@@ -108,7 +117,9 @@ class _AddHabitState extends State<AddHabit> {
                     if (action == DialogsAction.yes) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return const navBar();
+                        return const navBar(
+                          selectedIndex: 1,
+                        );
                       }));
                     } else {}
                   }),
@@ -148,8 +159,8 @@ class _AddHabitState extends State<AddHabit> {
 
                   DropdownButtonFormField(
                     value: isSelected,
-                    items: widget.chosenAspectNames
-                        ?.map((e) => DropdownMenuItem(
+                    items: aspectList.selectedArabic
+                        .map((e) => DropdownMenuItem(
                               value: e,
                               child: Text(e),
                             ))

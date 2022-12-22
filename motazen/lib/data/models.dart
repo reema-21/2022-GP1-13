@@ -32,6 +32,7 @@ class Todo {
 class Item {
   /// {@macro item}
   Item({
+    required this.itemGoal,
     required this.id,
     this.description = '',
     this.completed = false,
@@ -39,7 +40,10 @@ class Item {
   });
 
   /// The id of this item.
-  final String id;
+  final int id;
+
+  /// The id of this item.
+  final int itemGoal;
 
   /// Description of this item.
   final String description;

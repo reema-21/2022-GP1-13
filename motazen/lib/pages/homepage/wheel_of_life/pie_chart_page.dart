@@ -1,7 +1,6 @@
 // ignore_for_file: camel_case_types, duplicate_ignore
 
-import '/data/data.dart';
-import 'package:provider/provider.dart';
+import '../../../entities/aspect.dart';
 
 import '/pages/homepage/wheel_of_life/widget/pie_chart_sections.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -9,7 +8,8 @@ import 'package:flutter/material.dart';
 
 // ignore: camel_case_types
 class life_wheel extends StatefulWidget {
-  const life_wheel({super.key, t});
+  final List<Aspect> allAspects;
+  const life_wheel({super.key, required this.allAspects});
 
   @override
   State<life_wheel> createState() => Life_wheelState();
@@ -17,10 +17,8 @@ class life_wheel extends StatefulWidget {
 
 class Life_wheelState extends State<life_wheel> {
   int touchedIndex = -1;
-
   @override
   Widget build(BuildContext context) {
-    var aspctData = Provider.of<WheelData>(context);
     return Row(
       children: <Widget>[
         const SizedBox(
@@ -51,7 +49,7 @@ class Life_wheelState extends State<life_wheel> {
                 sectionsSpace: 0,
                 centerSpaceRadius: 0,
                 sections: PieChartSections()
-                    .getSections(touchedIndex, aspctData.allAspects),
+                    .getSections(touchedIndex, widget.allAspects),
 
                 ///
               ),

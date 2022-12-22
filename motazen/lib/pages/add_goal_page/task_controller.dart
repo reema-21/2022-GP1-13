@@ -1,17 +1,17 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, unused_local_variable
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:motazen/pages/goals_habits_tab/taskClass.dart';
 
 import '/entities/task.dart';
-// create  a class called task 
-//the class have the same name property except having a list that 
-// when save in here save 
-
+// create  a class called task
+//the class have the same name property except having a list that
+// when save in here save
 
 class TaskControleer extends GetxController {
-var checkTotalTaskDuration = 0.obs ; // to check whether the user Enterd a valid goal duration or not 
+  var checkTotalTaskDuration =
+      0.obs; // to check whether the user Enterd a valid goal duration or not
   var TaskDuration = 0.obs;
   var currentTaskDuration = 0.obs;
   var totalTasksDuration = 0.obs;
@@ -19,24 +19,14 @@ var checkTotalTaskDuration = 0.obs ; // to check whether the user Enterd a valid
   var tem = 0.obs;
   var isSelected = "أيام".obs;
 
-  Rx<List<Task>> goalTask = Rx<List<Task>>([]); // for saving the task depenecy  .
+  Rx<List<Task>> goalTask =
+      Rx<List<Task>>([]); // for saving the task depenecy  .
   Rx<List<Task>> newTasksAddedInEditing = Rx<List<Task>>([]);
-  Rx<List<Task>> DeletedTasks = Rx<List<Task>>([]); 
+  Rx<List<Task>> DeletedTasks = Rx<List<Task>>([]);
   Rx<List<Task>> EditedTasksInEditing = Rx<List<Task>>([]);
   Rx<List<String>> TasksMenue = Rx<List<String>>([]);
   Rx<List<String>> selectedTasks = Rx<List<String>>([]);
-  var selectedOption = "".obs ;
-
-
-
-
-
-
-
-
-    
-
-
+  var selectedOption = "".obs;
 
   var isEdit = false
       .obs; // to know what to do with the total duration in case of editing
@@ -44,129 +34,119 @@ var checkTotalTaskDuration = 0.obs ; // to check whether the user Enterd a valid
   late Task task;
   var itemCount = 0.obs;
   var itemCountAdd = 0.obs;
-  var itemCountDelete = 0.obs ; 
-  var itemCountEdit = 0.obs ; 
-  Rx<List<TaskData>> OrginalTasks = Rx<List<TaskData>> ([]);
+  var itemCountDelete = 0.obs;
+  var itemCountEdit = 0.obs;
+  Rx<List<TaskData>> OrginalTasks = Rx<List<TaskData>>([]);
 
-  Rx<List<TaskData>> allTaskForDepency = Rx<List<TaskData>> ([]);
-  Rx<TaskData> tryTask =  Rx<TaskData>(TaskData()); 
+  Rx<List<TaskData>> allTaskForDepency = Rx<List<TaskData>>([]);
+  Rx<TaskData> tryTask = Rx<TaskData>(TaskData());
 
   TextEditingController inputTaskName = TextEditingController();
-  addEditTask(String name, String duName, int val) {
 
-    Task newTak = Task();
-    newTak.name = name;
+  get durationn => null;
+  addEditTask(String name, String duName, int val) {
+    int durationn = 0;
     String durationDescribtion = "";
     switch (duName) {
       case "أيام":
-        newTak.duration = val;
+        durationn = val;
         durationDescribtion = "أيام";
-        newTak.durationDescribtion = durationDescribtion;
+        durationDescribtion = durationDescribtion;
         break;
       case "أسابيع":
-        newTak.duration = (val * 7);
+        durationn = (val * 7);
         durationDescribtion = "أسابيع";
-        newTak.durationDescribtion = durationDescribtion;
+        durationDescribtion = durationDescribtion;
 
         break;
       case "أشهر":
-        newTak.duration = (val * 30);
+        durationn = (val * 30);
         durationDescribtion = "أشهر";
-        newTak.durationDescribtion = durationDescribtion;
+        durationDescribtion = durationDescribtion;
 
         break;
       case "سنوات":
-        newTak.duration = (val * 360);
+        durationn = (val * 360);
         durationDescribtion = "سنوات ";
-        newTak.durationDescribtion = durationDescribtion;
+        durationDescribtion = durationDescribtion;
 
         break;
     }
+    Task newTak = Task(
+      TaskDependency: [],
+      amountCompleted: 0,
+      duration: durationn,
+      durationDescribtion: durationDescribtion,
+      name: name,
+      taskCompletionPercentage: 0,
+    );
 
     newTasksAddedInEditing.value.add(newTak);
     itemCountAdd.value = goalTask.value.length;
     inputTaskName.clear();
-    print("here i am printing the tasksin controller");
-    print(goalTask.value);
   }
 
   bool addTask(String name, String duName, int val) {
-        TaskData TaskForDependency  = TaskData();
-    TaskForDependency.name= name ;
-    print("here is what i am giving to it") ; 
-    print(selectedTasks.value);
-     //this is just to create the list to check for andy dependen to not delete .
-     for(int i = 0 ; i< selectedTasks.value.length ; i++){
+    TaskData TaskForDependency = TaskData();
+    TaskForDependency.name = name;
+    //this is just to create the list to check for andy dependen to not delete .
+    for (int i = 0; i < selectedTasks.value.length; i++) {
       TaskForDependency.TaskDependency.add(selectedTasks.value[i]);
-     }
-    // TaskForDependency.TaskDependency = selectedTasks.value ; 
+    }
+    // TaskForDependency.TaskDependency = selectedTasks.value ;
 
-    allTaskForDepency.value.add(TaskForDependency); 
-    print("the task name in the controller"); 
-    print(TaskForDependency.name); 
-    print("the task dependency for the controler") ; 
-    print(TaskForDependency.TaskDependency ); 
-    
-    print("===========================================");
-    Task newTak = Task();
-    newTak.name = name;
-    print("her is what i am sending ");
-    print(selectedTasks.value);
-    
-     
-     
-    
+    allTaskForDepency.value.add(TaskForDependency);
 
     String durationDescribtion = "";
+    int duraitionn = 0;
     switch (duName) {
       case "أيام":
-        newTak.duration = val;
+        duraitionn = val;
         durationDescribtion = "أيام";
-        newTak.durationDescribtion = durationDescribtion;
+        durationDescribtion = durationDescribtion;
         break;
       case "أسابيع":
-        newTak.duration = (val * 7);
+        duraitionn = (val * 7);
         durationDescribtion = "أسابيع";
-        newTak.durationDescribtion = durationDescribtion;
+        durationDescribtion = durationDescribtion;
 
         break;
       case "أشهر":
-        newTak.duration = (val * 30);
+        duraitionn = (val * 30);
         durationDescribtion = "أشهر";
-        newTak.durationDescribtion = durationDescribtion;
+        durationDescribtion = durationDescribtion;
 
         break;
       case "سنوات":
-        newTak.duration = (val * 360);
+        duraitionn = (val * 360);
         durationDescribtion = "سنوات ";
-        newTak.durationDescribtion = durationDescribtion;
+        durationDescribtion = durationDescribtion;
 
         break;
     }
+    Task newTak = Task(
+        name: name,
+        TaskDependency: [],
+        amountCompleted: 0,
+        duration: duraitionn,
+        durationDescribtion: durationDescribtion,
+        taskCompletionPercentage: 0);
 
     goalTask.value.add(newTak);
     itemCount.value = goalTask.value.length;
     inputTaskName.clear();
 
-    return true ; 
-    
+    return true;
   }
 
   removeTask(int index) {
-    // i am suppose that they will have the same index 
+    // i am suppose that they will have the same index
     allTaskForDepency.value.removeAt(index);
-    print("+++++++++++++++++++++++++++++++++the dependcies after deleteing +++++++++++++++++++++++++++++++++++++++");
 
-    for (var i in allTaskForDepency.value){
-      print(i.name);
-      print(i.TaskDependency); 
-
-    }
-        print("+++++++++++++++++++++++++++++++++Done +++++++++++++++++++++++++++++++++++++++");
+    for (var i in allTaskForDepency.value) {}
 
     goalTask.value.removeAt(index);
     itemCount.value = goalTask.value.length;
-
   }
 
   AssignTaks(List<Task> currentGoalTask) {
@@ -174,8 +154,7 @@ var checkTotalTaskDuration = 0.obs ; // to check whether the user Enterd a valid
     goalTask.value.addAll(currentGoalTask);
 
     itemCount.value = goalTask.value.length;
-    //Assign the alldependency values ; 
-    
+    //Assign the alldependency values ;
   }
 
   void setInitionals(int taskduration, int currentTaskduraions,
@@ -184,12 +163,12 @@ var checkTotalTaskDuration = 0.obs ; // to check whether the user Enterd a valid
     for (int i = 0; i < goalTask.value.length; i++) {
       totalSummation = totalSummation + goalTask.value[i].duration;
     }
-  
+
     TaskDuration.value = taskduration;
     currentTaskDuration.value = currentTaskduraions;
     tem.value = totalDurtion;
     totalTasksDuration.value = totalDurtion;
-    checkTotalTaskDuration.value=totalDurtion;
+    checkTotalTaskDuration.value = totalDurtion;
     isSelected.value = selectedType;
     // print("here is the taskduraion valuesetIntionals");
     // print(totalTasksDuration);
@@ -310,8 +289,8 @@ var checkTotalTaskDuration = 0.obs ; // to check whether the user Enterd a valid
       storeStatusOpen(
           false); /////////////////////////////////////////////////////////////////////////////////////////
 
-      Get.snackbar("",
-          "لا يمssكن زيادة الفترة ،قيمة فترة المهام ستصبح أعلى من فترة الهدف  ",
+      Get.snackbar(
+          "", "لا يمكن زيادة الفترة ، فترة المهام ستصبح أعلى من فترة الهدف ",
           icon: const Icon(Icons.alarm), barBlur: 20);
     } else {
 //       print("here is the cuurent vlaue 5 ");
@@ -401,13 +380,12 @@ var checkTotalTaskDuration = 0.obs ; // to check whether the user Enterd a valid
 // print(tem);
     if (isEdit.value) {
       totalTasksDuration.value = 0;
-      checkTotalTaskDuration.value = 0 ;
+      checkTotalTaskDuration.value = 0;
       for (int i = 0; i < goalTask.value.length; i++) {
-        print(goalTask.value[i].duration);
         totalTasksDuration.value =
             totalTasksDuration.value + goalTask.value[i].duration;
-          checkTotalTaskDuration.value = checkTotalTaskDuration.value + goalTask.value[i].duration ;
-
+        checkTotalTaskDuration.value =
+            checkTotalTaskDuration.value + goalTask.value[i].duration;
       }
       // print("here is the taskduraion valu e 9 EDITED ");
       // print(totalTasksDuration);
@@ -418,8 +396,8 @@ var checkTotalTaskDuration = 0.obs ; // to check whether the user Enterd a valid
       // print(totalTasksDuration);
       totalTasksDuration.value =
           totalTasksDuration.value + currentTaskDuration.value;
-                    checkTotalTaskDuration.value = checkTotalTaskDuration.value + currentTaskDuration.value ;
-
+      checkTotalTaskDuration.value =
+          checkTotalTaskDuration.value + currentTaskDuration.value;
 
       // print("here is the cuurent vlaue 10 ");
       // print(currentTaskDuration.value);
@@ -438,10 +416,8 @@ var checkTotalTaskDuration = 0.obs ; // to check whether the user Enterd a valid
     // print("here is the taskduraion value 11");
     // print(totalTasksDuration);
     totalTasksDuration.value = totalTasksDuration.value - deletedTaskDuration;
-                  checkTotalTaskDuration.value 
- =           checkTotalTaskDuration.value 
- - deletedTaskDuration;
-
+    checkTotalTaskDuration.value =
+        checkTotalTaskDuration.value - deletedTaskDuration;
 
 // print("here is the cuurent vlaue 12 ");
 // print(currentTaskDuration.value);

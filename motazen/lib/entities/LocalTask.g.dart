@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'task.dart';
+part of 'LocalTask.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,59 +9,69 @@ part of 'task.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
 
-extension GetTaskCollection on Isar {
-  IsarCollection<Task> get tasks => this.collection();
+extension GetLocalTaskCollection on Isar {
+  IsarCollection<LocalTask> get localTasks => this.collection();
 }
 
-const TaskSchema = CollectionSchema(
-  name: r'Task',
-  id: 2998003626758701373,
+const LocalTaskSchema = CollectionSchema(
+  name: r'LocalTask',
+  id: -2302952909969641796,
   properties: {
-    r'duration': PropertySchema(
+    r'amountCompleted': PropertySchema(
       id: 0,
+      name: r'amountCompleted',
+      type: IsarType.long,
+    ),
+    r'duration': PropertySchema(
+      id: 1,
       name: r'duration',
       type: IsarType.long,
     ),
     r'durationDescribtion': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'durationDescribtion',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'name',
       type: IsarType.string,
+    ),
+    r'taskCompletionPercentage': PropertySchema(
+      id: 4,
+      name: r'taskCompletionPercentage',
+      type: IsarType.double,
     )
   },
-  estimateSize: _taskEstimateSize,
-  serialize: _taskSerialize,
-  deserialize: _taskDeserialize,
-  deserializeProp: _taskDeserializeProp,
+  estimateSize: _localTaskEstimateSize,
+  serialize: _localTaskSerialize,
+  deserialize: _localTaskDeserialize,
+  deserializeProp: _localTaskDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {
     r'TaskDependency': LinkSchema(
-      id: -1098463849821095448,
+      id: -96631418246996705,
       name: r'TaskDependency',
-      target: r'Task',
+      target: r'LocalTask',
       single: false,
     ),
     r'goal': LinkSchema(
-      id: -2209890815044215538,
+      id: 3936554597141504948,
       name: r'goal',
       target: r'Goal',
       single: true,
     )
   },
   embeddedSchemas: {},
-  getId: _taskGetId,
-  getLinks: _taskGetLinks,
-  attach: _taskAttach,
+  getId: _localTaskGetId,
+  getLinks: _localTaskGetLinks,
+  attach: _localTaskAttach,
   version: '3.0.2',
 );
 
-int _taskEstimateSize(
-  Task object,
+int _localTaskEstimateSize(
+  LocalTask object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -71,32 +81,36 @@ int _taskEstimateSize(
   return bytesCount;
 }
 
-void _taskSerialize(
-  Task object,
+void _localTaskSerialize(
+  LocalTask object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.duration);
-  writer.writeString(offsets[1], object.durationDescribtion);
-  writer.writeString(offsets[2], object.name);
+  writer.writeLong(offsets[0], object.amountCompleted);
+  writer.writeLong(offsets[1], object.duration);
+  writer.writeString(offsets[2], object.durationDescribtion);
+  writer.writeString(offsets[3], object.name);
+  writer.writeDouble(offsets[4], object.taskCompletionPercentage);
 }
 
-Task _taskDeserialize(
+LocalTask _localTaskDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Task();
-  object.duration = reader.readLong(offsets[0]);
-  object.durationDescribtion = reader.readString(offsets[1]);
+  final object = LocalTask();
+  object.amountCompleted = reader.readLong(offsets[0]);
+  object.duration = reader.readLong(offsets[1]);
+  object.durationDescribtion = reader.readString(offsets[2]);
   object.id = id;
-  object.name = reader.readString(offsets[2]);
+  object.name = reader.readString(offsets[3]);
+  object.taskCompletionPercentage = reader.readDouble(offsets[4]);
   return object;
 }
 
-P _taskDeserializeProp<P>(
+P _localTaskDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -106,39 +120,45 @@ P _taskDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
+      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-Id _taskGetId(Task object) {
+Id _localTaskGetId(LocalTask object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _taskGetLinks(Task object) {
+List<IsarLinkBase<dynamic>> _localTaskGetLinks(LocalTask object) {
   return [object.TaskDependency, object.goal];
 }
 
-void _taskAttach(IsarCollection<dynamic> col, Id id, Task object) {
+void _localTaskAttach(IsarCollection<dynamic> col, Id id, LocalTask object) {
   object.id = id;
   object.TaskDependency.attach(
-      col, col.isar.collection<Task>(), r'TaskDependency', id);
+      col, col.isar.collection<LocalTask>(), r'TaskDependency', id);
   object.goal.attach(col, col.isar.collection<Goal>(), r'goal', id);
 }
 
-extension TaskQueryWhereSort on QueryBuilder<Task, Task, QWhere> {
-  QueryBuilder<Task, Task, QAfterWhere> anyId() {
+extension LocalTaskQueryWhereSort
+    on QueryBuilder<LocalTask, LocalTask, QWhere> {
+  QueryBuilder<LocalTask, LocalTask, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
-  QueryBuilder<Task, Task, QAfterWhereClause> idEqualTo(Id id) {
+extension LocalTaskQueryWhere
+    on QueryBuilder<LocalTask, LocalTask, QWhereClause> {
+  QueryBuilder<LocalTask, LocalTask, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -147,7 +167,7 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<LocalTask, LocalTask, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -169,7 +189,7 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<LocalTask, LocalTask, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -178,7 +198,7 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<LocalTask, LocalTask, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -187,7 +207,7 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterWhereClause> idBetween(
+  QueryBuilder<LocalTask, LocalTask, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -204,8 +224,66 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
   }
 }
 
-extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationEqualTo(int value) {
+extension LocalTaskQueryFilter
+    on QueryBuilder<LocalTask, LocalTask, QFilterCondition> {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      amountCompletedEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'amountCompleted',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      amountCompletedGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'amountCompleted',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      amountCompletedLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'amountCompleted',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      amountCompletedBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'amountCompleted',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> durationEqualTo(
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'duration',
@@ -214,7 +292,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationGreaterThan(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> durationGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -227,7 +305,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationLessThan(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> durationLessThan(
     int value, {
     bool include = false,
   }) {
@@ -240,7 +318,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationBetween(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> durationBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -257,7 +335,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionEqualTo(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      durationDescribtionEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -270,7 +349,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition>
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
       durationDescribtionGreaterThan(
     String value, {
     bool include = false,
@@ -286,7 +365,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionLessThan(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      durationDescribtionLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -301,7 +381,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionBetween(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      durationDescribtionBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -320,7 +401,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionStartsWith(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      durationDescribtionStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -333,7 +415,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionEndsWith(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      durationDescribtionEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -346,9 +429,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      durationDescribtionContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'durationDescribtion',
@@ -358,9 +440,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      durationDescribtionMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'durationDescribtion',
@@ -370,7 +451,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> durationDescribtionIsEmpty() {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      durationDescribtionIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'durationDescribtion',
@@ -379,7 +461,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition>
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
       durationDescribtionIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -389,7 +471,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> idEqualTo(Id value) {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> idEqualTo(
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -398,7 +481,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -411,7 +494,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> idLessThan(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -424,7 +507,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> idBetween(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -441,7 +524,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameEqualTo(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -454,7 +537,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameGreaterThan(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> nameGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -469,7 +552,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameLessThan(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> nameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -484,7 +567,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameBetween(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> nameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -503,7 +586,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameStartsWith(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> nameStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -516,7 +599,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameEndsWith(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> nameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -529,7 +612,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameContains(String value,
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> nameContains(
+      String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -540,7 +624,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameMatches(String pattern,
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> nameMatches(
+      String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -551,7 +636,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameIsEmpty() {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'name',
@@ -560,7 +645,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> nameIsNotEmpty() {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
@@ -568,38 +653,109 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      taskCompletionPercentageEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'taskCompletionPercentage',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      taskCompletionPercentageGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'taskCompletionPercentage',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      taskCompletionPercentageLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'taskCompletionPercentage',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      taskCompletionPercentageBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'taskCompletionPercentage',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
 }
 
-extension TaskQueryObject on QueryBuilder<Task, Task, QFilterCondition> {}
+extension LocalTaskQueryObject
+    on QueryBuilder<LocalTask, LocalTask, QFilterCondition> {}
 
-extension TaskQueryLinks on QueryBuilder<Task, Task, QFilterCondition> {
-  QueryBuilder<Task, Task, QAfterFilterCondition> taskDependency(
-      FilterQuery<Task> q) {
+extension LocalTaskQueryLinks
+    on QueryBuilder<LocalTask, LocalTask, QFilterCondition> {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> taskDependency(
+      FilterQuery<LocalTask> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'TaskDependency');
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> taskDependencyLengthEqualTo(
-      int length) {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      taskDependencyLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'TaskDependency', length, true, length, true);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> taskDependencyIsEmpty() {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      taskDependencyIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'TaskDependency', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> taskDependencyIsNotEmpty() {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      taskDependencyIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'TaskDependency', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> taskDependencyLengthLessThan(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      taskDependencyLengthLessThan(
     int length, {
     bool include = false,
   }) {
@@ -608,7 +764,7 @@ extension TaskQueryLinks on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition>
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
       taskDependencyLengthGreaterThan(
     int length, {
     bool include = false,
@@ -618,7 +774,8 @@ extension TaskQueryLinks on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> taskDependencyLengthBetween(
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      taskDependencyLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -630,115 +787,178 @@ extension TaskQueryLinks on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> goal(FilterQuery<Goal> q) {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> goal(
+      FilterQuery<Goal> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'goal');
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> goalIsNull() {
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> goalIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'goal', 0, true, 0, true);
     });
   }
 }
 
-extension TaskQuerySortBy on QueryBuilder<Task, Task, QSortBy> {
-  QueryBuilder<Task, Task, QAfterSortBy> sortByDuration() {
+extension LocalTaskQuerySortBy on QueryBuilder<LocalTask, LocalTask, QSortBy> {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByAmountCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'amountCompleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByAmountCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'amountCompleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'duration', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByDurationDesc() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'duration', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByDurationDescribtion() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByDurationDescribtion() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'durationDescribtion', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByDurationDescribtionDesc() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
+      sortByDurationDescribtionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'durationDescribtion', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByName() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> sortByNameDesc() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
+      sortByTaskCompletionPercentage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'taskCompletionPercentage', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
+      sortByTaskCompletionPercentageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'taskCompletionPercentage', Sort.desc);
+    });
+  }
 }
 
-extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
-  QueryBuilder<Task, Task, QAfterSortBy> thenByDuration() {
+extension LocalTaskQuerySortThenBy
+    on QueryBuilder<LocalTask, LocalTask, QSortThenBy> {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByAmountCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'amountCompleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByAmountCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'amountCompleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'duration', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByDurationDesc() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByDurationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'duration', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByDurationDescribtion() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByDurationDescribtion() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'durationDescribtion', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByDurationDescribtionDesc() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
+      thenByDurationDescribtionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'durationDescribtion', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenById() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByName() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<Task, Task, QAfterSortBy> thenByNameDesc() {
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
+      thenByTaskCompletionPercentage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'taskCompletionPercentage', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
+      thenByTaskCompletionPercentageDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'taskCompletionPercentage', Sort.desc);
+    });
+  }
 }
 
-extension TaskQueryWhereDistinct on QueryBuilder<Task, Task, QDistinct> {
-  QueryBuilder<Task, Task, QDistinct> distinctByDuration() {
+extension LocalTaskQueryWhereDistinct
+    on QueryBuilder<LocalTask, LocalTask, QDistinct> {
+  QueryBuilder<LocalTask, LocalTask, QDistinct> distinctByAmountCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'amountCompleted');
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QDistinct> distinctByDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'duration');
     });
   }
 
-  QueryBuilder<Task, Task, QDistinct> distinctByDurationDescribtion(
+  QueryBuilder<LocalTask, LocalTask, QDistinct> distinctByDurationDescribtion(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'durationDescribtion',
@@ -746,36 +966,58 @@ extension TaskQueryWhereDistinct on QueryBuilder<Task, Task, QDistinct> {
     });
   }
 
-  QueryBuilder<Task, Task, QDistinct> distinctByName(
+  QueryBuilder<LocalTask, LocalTask, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<LocalTask, LocalTask, QDistinct>
+      distinctByTaskCompletionPercentage() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'taskCompletionPercentage');
+    });
+  }
 }
 
-extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
-  QueryBuilder<Task, int, QQueryOperations> idProperty() {
+extension LocalTaskQueryProperty
+    on QueryBuilder<LocalTask, LocalTask, QQueryProperty> {
+  QueryBuilder<LocalTask, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<Task, int, QQueryOperations> durationProperty() {
+  QueryBuilder<LocalTask, int, QQueryOperations> amountCompletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'amountCompleted');
+    });
+  }
+
+  QueryBuilder<LocalTask, int, QQueryOperations> durationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'duration');
     });
   }
 
-  QueryBuilder<Task, String, QQueryOperations> durationDescribtionProperty() {
+  QueryBuilder<LocalTask, String, QQueryOperations>
+      durationDescribtionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'durationDescribtion');
     });
   }
 
-  QueryBuilder<Task, String, QQueryOperations> nameProperty() {
+  QueryBuilder<LocalTask, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<LocalTask, double, QQueryOperations>
+      taskCompletionPercentageProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'taskCompletionPercentage');
     });
   }
 }

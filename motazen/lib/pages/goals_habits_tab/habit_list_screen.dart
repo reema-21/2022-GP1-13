@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../add_habit_page/get_chosed_aspect.dart';
+import 'package:motazen/isarService.dart';
+import 'package:provider/provider.dart';
+import '../../data/data.dart';
+import '../add_habit_page/add_habit.dart';
 import '/entities/habit.dart';
 import '/pages/goals_habits_tab/habit_edit.dart';
-import "/isar_service.dart";
 
 import '../assesment_page/alert_dialog.dart';
 
@@ -91,6 +93,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var aspectList = Provider.of<WheelData>(context);
     return StreamBuilder<List<Habit>>(
       stream: IsarService().getAllHabits(),
       builder: (context, snapshot) {
@@ -110,7 +113,10 @@ class _HabitListScreenState extends State<HabitListScreen> {
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return getChosenAspectH(iser: widget.isr); // must be the
+                      return AddHabit(
+                        isr: widget.isr,
+                        chosenAspectNames: aspectList.selectedArabic,
+                      ); // must be the
                     }));
                   },
                 )

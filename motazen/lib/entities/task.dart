@@ -1,17 +1,31 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:isar/isar.dart';
-import 'package:motazen/entities/goal.dart';
-
-part 'task.g.dart';
-
-@collection
 class Task {
-  Id id = Isar.autoIncrement; // you can also use id = null to auto increment
-  final TaskDependency = IsarLinks<Task>();
+  //I am making it without id
+  List<Task> TaskDependency = [];
   late String name;
-  final goal = IsarLink<Goal>();
-
+  // List <Goal> goal = [];
+  int amountCompleted = 0;
+  double taskCompletionPercentage = 0;
   late int duration;
   late String durationDescribtion;
+  Task(
+      {required this.TaskDependency,
+      required this.amountCompleted,
+      required this.duration,
+      required this.durationDescribtion,
+      // required this.goal,
+      required this.name,
+      required this.taskCompletionPercentage});
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        // "goal": goal,
+        "amountCompleted": amountCompleted,
+        "taskCompletionPercentage": taskCompletionPercentage,
+        "duration": duration,
+        "durationDescribtion": durationDescribtion,
+        "TaskDependency": TaskDependency,
+        // "id": id,
+      };
 }
