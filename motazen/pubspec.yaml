@@ -43,6 +43,9 @@ dependencies:
   auto_size_text: ^3.0.0
   cached_network_image: ^3.2.3
   percent_indicator: ^4.2.2
+  firebase_database: ^9.1.7
+  searchfield: ^0.7.2
+  syncfusion_flutter_charts: ^20.4.38
 
 dev_dependencies:
   flutter_test:
