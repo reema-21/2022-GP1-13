@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/LocalTask.dart';
-import 'package:motazen/isarService.dart';
+import 'package:motazen/pages/goals_habits_tab/goal_edit.dart';
+import 'package:motazen/isar_service.dart';
+import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
+import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import '/entities/goal.dart';
-import '/pages/goals_habits_tab/goal_edit.dart';
-
-import '../add_goal_page/get_chosen_aspect.dart';
-import '../assesment_page/alert_dialog.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+import 'package:intl/intl.dart' as intl;
 
 class GoalListScreen extends StatefulWidget {
   final IsarService isr;
@@ -20,6 +20,9 @@ class GoalListScreen extends StatefulWidget {
 }
 
 class _GoalListScreenState extends State<GoalListScreen> {
+  DateTime temGoalDataTime = DateTime.utc(1989, 11, 9);
+  late String dueDataDescription;
+
   Icon chooseIcon(String? x) {
     Icon rightIcon = const Icon(Icons.abc);
     switch (x) {
@@ -130,7 +133,15 @@ class _GoalListScreenState extends State<GoalListScreen> {
               itemCount: goals.length,
               itemBuilder: (context, index) {
                 final goal = goals[index];
-                final startData = goals[index].dueDate;
+                final startDate = goals[index].dueDate;
+                if (startDate.compareTo(temGoalDataTime) == 0) {
+                  dueDataDescription = "لايوجد تاريخ استحقاق";
+                } else {
+                  temGoalDataTime = startDate;
+                  dueDataDescription =
+                      "تاريخ الاستحقاق :${intl.DateFormat.yMMMEd().format(temGoalDataTime)}";
+                }
+
                 final aspectName = goal.aspect.value?.name;
                 return Container(
                   decoration:
@@ -162,8 +173,8 @@ class _GoalListScreenState extends State<GoalListScreen> {
                             ),
                             tileColor: Colors.white,
                             leading: chooseIcon(aspectName),
-                            subtitle: Text(
-                                "تاريخ الاستحقاق : $startData"), // if not null added
+                            subtitle:
+                                Text(dueDataDescription), // if not null added
                             title: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Text(goal.titel),

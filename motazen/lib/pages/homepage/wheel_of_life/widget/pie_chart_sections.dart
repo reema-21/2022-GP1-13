@@ -2,9 +2,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
-import '../../../../isarService.dart';
-import '../progress_screen.dart';
+import 'package:motazen/isar_service.dart';
 import '/entities/aspect.dart';
+import 'progress_screen.dart';
 
 class PieChartSections {
   List<PieChartSectionData> getSections(int touchedIndex, List<Aspect>? data) =>
@@ -27,9 +27,9 @@ class PieChartSections {
 
             final value = PieChartSectionData(
               color: Color(data.color).withOpacity(1),
+              showTitle: false,
               value: 22.5,
-              title: '',
-              radius: points * 1.13, //scale the data to the size of the wheel
+              radius: points * 1.4, //scale the data to the size of the wheel
             );
 
             return MapEntry(index, value);

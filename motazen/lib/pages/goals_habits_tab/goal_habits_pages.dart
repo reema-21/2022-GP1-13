@@ -1,8 +1,8 @@
 // ignore_for_file: camel_case_types, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:motazen/isarService.dart';
-import '/pages/goals_habits_tab/goal_list_screen.dart';
+import 'package:motazen/pages/goals_habits_tab/goal_list_screen.dart';
+import 'package:motazen/isar_service.dart';
 import 'habit_list_screen.dart';
 
 class Goals_habit extends StatefulWidget {

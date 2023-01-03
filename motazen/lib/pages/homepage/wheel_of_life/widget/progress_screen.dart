@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/isarService.dart';
+import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/homepage/wheel_of_life/widget/AspectGoalList.dart';
 import 'package:motazen/pages/homepage/wheel_of_life/widget/AspectHabitList.dart';
 import 'package:motazen/theme.dart';
@@ -25,10 +25,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
     AspectImporvment(DateTime.now(),
         35), //DateTime will start from the Date of  the selection and end with last date when and improvment happend
     // the points will start from the result of the assesment and then the increasing each day untill today
-    AspectImporvment(DateTime.utc(2022, 12, 20), 28),
-    AspectImporvment(DateTime.utc(2022, 12, 23), 34),
-    AspectImporvment(DateTime.utc(2022, 12, 25), 32),
-    AspectImporvment(DateTime.utc(2022, 12, 28), 40)
+    AspectImporvment(DateTime.utc(2022, 12, 25), 28),
+    AspectImporvment(DateTime.utc(2022, 12, 29), 34),
+    AspectImporvment(DateTime.utc(2022, 12, 30), 32),
+    AspectImporvment(DateTime.utc(2023, 1, 2), 40)
   ];
   Icon chooseIcon(String? x) {
     Icon rightIcon = const Icon(Icons.abc);
@@ -157,170 +157,160 @@ class _ProgressScreenState extends State<ProgressScreen> {
         leading: chooseIcon(widget.aspect.name),
         title: Text(
           AspectName(widget.aspect.name),
-          textDirection: TextDirection.rtl,
           style: titleText2,
         ),
         automaticallyImplyLeading: true, // need color
         backgroundColor: Colors.white,
       ),
-      body: Directionality(
-        textDirection: TextDirection.rtl,
-        child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: const Color.fromARGB(255, 236, 239, 240),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset:
-                            const Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 5),
-                      child: Row(
-                        textDirection: TextDirection.rtl,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                              child: customCircularIndicator(
-                                "الأهداف",
-                                widget.aspect.goals.length.toString(),
-                                "greenProgress.png",
-                                Colors.green,
-                              ),
-                              onTap: () {
-                                Get.to(AspectGoal(
-                                    isr: widget.isr, aspect: widget.aspect));
-                              }),
-                          GestureDetector(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: const Color.fromARGB(255, 236, 239, 240),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
                             child: customCircularIndicator(
-                                "العادات",
-                                widget.aspect.habits.length.toString(),
-                                'yellowProgress.png',
-                                Colors.yellow),
-                            onTap: () {
-                              Get.to(AspectHabit(
-                                  isr: widget.isr, aspect: widget.aspect));
-                            },
-                          ),
-
-                          GestureDetector(
-                            child: customCircularIndicator("المجتمعات", "3",
-                                'blueProgress.png', Colors.blue),
-                            onTap: () {},
-                          ),
-
-                          // Fixed for now need to be changed
-                        ],
-                      )),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                //----------------------------- here is the line chart ---------------------- //
-
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: const Color.fromARGB(255, 236, 239, 240),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.7),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset:
-                            const Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: SfCartesianChart(
-                          enableAxisAnimation: true,
-                          title: ChartTitle(text: "تطور الجانب "),
-                          primaryXAxis: DateTimeAxis(),
-                          series: <ChartSeries>[
-                            // Renders line chart
-                            SplineAreaSeries<AspectImporvment, DateTime>(
-                              yAxisName: "النقاط",
-                              dataSource: chartData,
-                              xValueMapper: (AspectImporvment improve, _) =>
-                                  improve.day,
-                              yValueMapper: (AspectImporvment improve, _) =>
-                                  improve.points,
-                              gradient: LinearGradient(
-                                  colors: gradientColors
-                                      .map((e) => e.withOpacity(0.3))
-                                      .toList()),
-                            )
-                          ])),
-                ),
-
-                //----------------------------- here is the line chart ---------------------- //
-                const SizedBox(
-                  height: 25,
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: const Color.fromARGB(255, 236, 239, 240),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.7),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset:
-                            const Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          textDirection: TextDirection.rtl,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                'أهم أهدافك',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 102, 191, 119),
-                                    fontSize: 25),
-                              ),
+                              "الأهداف",
+                              widget.aspect.goals.length.toString(),
+                              "greenProgress.png",
+                              Colors.green,
                             ),
-                            //take a list of the most recent goal
-                            // send the goal name and the goal points
-                            customLinearIndicator("الهدف 1", 60,
-                                Colors.green.shade300, Colors.grey),
-                            customLinearIndicator("الهدف 2", 65,
-                                Colors.green.shade300, Colors.grey),
-                            customLinearIndicator("الهدف 3", 20,
-                                Colors.green.shade300, Colors.grey),
-                          ],
-                        )),
-                  ),
-                )
-              ],
-            ),
+                            onTap: () {
+                              Get.to(AspectGoal(
+                                  isr: widget.isr, aspect: widget.aspect));
+                            }),
+                        GestureDetector(
+                          child: customCircularIndicator(
+                              "العادات",
+                              widget.aspect.habits.length.toString(),
+                              'yellowProgress.png',
+                              Colors.yellow),
+                          onTap: () {
+                            Get.to(AspectHabit(
+                                isr: widget.isr, aspect: widget.aspect));
+                          },
+                        ),
+
+                        GestureDetector(
+                          child: customCircularIndicator("المجتمعات", "3",
+                              'blueProgress.png', Colors.blue),
+                          onTap: () {},
+                        ),
+
+                        // Fixed for now need to be changed
+                      ],
+                    )),
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              //----------------------------- here is the line chart ---------------------- //
+
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: const Color.fromARGB(255, 236, 239, 240),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.7),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: SfCartesianChart(
+                    enableAxisAnimation: true,
+                    title: ChartTitle(text: "تطور الجانب "),
+                    primaryXAxis: DateTimeAxis(
+                      minorTicksPerInterval: 4,
+                      minimum: chartData[0].day,
+                      maximum: chartData[chartData.length - 1].day,
+                    ),
+                    series: <ChartSeries>[
+                      // Renders line chart
+                      SplineAreaSeries<AspectImporvment, DateTime>(
+                        yAxisName: "النقاط",
+                        dataSource: chartData,
+                        xValueMapper: (AspectImporvment improve, _) =>
+                            improve.day,
+                        yValueMapper: (AspectImporvment improve, _) =>
+                            improve.points,
+                        gradient: LinearGradient(
+                            colors: gradientColors
+                                .map((e) => e.withOpacity(0.3))
+                                .toList()),
+                      )
+                    ]),
+              ),
+
+              //----------------------------- here is the line chart ---------------------- //
+              const SizedBox(
+                height: 25,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: const Color.fromARGB(255, 236, 239, 240),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.7),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            'أهم أهدافك',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 102, 191, 119),
+                                fontSize: 25),
+                          ),
+                        ),
+                        //take a list of the most recent goal
+                        // send the goal name and the goal points
+                        customLinearIndicator(
+                            "الهدف 1", 60, Colors.green.shade300, Colors.grey),
+                        customLinearIndicator(
+                            "الهدف 2", 65, Colors.green.shade300, Colors.grey),
+                        customLinearIndicator(
+                            "الهدف 3", 20, Colors.green.shade300, Colors.grey),
+                      ],
+                    )),
+              )
+            ],
           ),
         ),
       ),

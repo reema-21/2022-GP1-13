@@ -10,6 +10,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:motazen/create_otp.dart';
 import 'package:motazen/dialogue_boxes.dart';
+import 'package:motazen/models/community.dart';
 import 'package:motazen/pages/signup/sign_up_method.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
@@ -74,108 +75,105 @@ class _VerifyScreenState extends State<VerifyScreen> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        child: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Padding(
-            padding: kDefaultPadding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 120,
+        child: Padding(
+          padding: kDefaultPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 120,
+              ),
+              Text(
+                'التحقق من بريدك الإلكتروني',
+                style: titleText.copyWith(
+                  fontSize: 30,
                 ),
-                Text(
-                  'التحقق من بريدك الإلكتروني',
-                  style: titleText.copyWith(
-                    fontSize: 30,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                '2) ادخل الرمز المرسل عبر بريدك:',
+                style: subTitle.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const Text('رمز (OTP) قد تم ارساله عبر بريدك المسجل ',
+                  style: TextStyle(fontSize: 14)),
+              const SizedBox(
+                height: 10,
+              ),
+              //=================otp field===============================
+              Form(
+                key: otpformkey,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: TextFormField(
+                    controller: otpTextfield,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'فضلا ادخل الرمز المُرسل';
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                        hintText: 'ادخل الرمز',
+                        hintStyle: TextStyle(color: kTextFieldColor),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: kPrimaryColor))),
                   ),
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  '2) ادخل الرمز المرسل عبر بريدك:',
-                  style: subTitle.copyWith(
-                    fontWeight: FontWeight.w600,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'ادخل الرمز خلال:',
+                    style: TextStyle(fontSize: 16, color: kBlackColor),
                   ),
-                ),
-                const Text('رمز (OTP) قد تم ارساله عبر بريدك المسجل ',
-                    style: TextStyle(fontSize: 14)),
-                const SizedBox(
-                  height: 10,
-                ),
-                //=================otp field===============================
-                Form(
-                  key: otpformkey,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: TextFormField(
-                      controller: otpTextfield,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'فضلا ادخل الرمز المُرسل';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                          hintText: 'ادخل الرمز',
-                          hintStyle: TextStyle(color: kTextFieldColor),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: kPrimaryColor))),
-                    ),
+                  Text(
+                    _counter.toString(),
+                    style: const TextStyle(
+                        fontSize: 20,
+                        color: kBlackColor,
+                        fontWeight: FontWeight.bold),
                   ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: () {
+                  //==this button a verify otp function
+                  if (otpformkey.currentState!.validate()) {
+                    verifyEmail();
+                  } else {
+                    // Fluttertoast.showToast(msg: "Invalid OTP.");
+                  }
+                },
+                child: const PrimaryButton(
+                  buttonText: 'تأكيد',
                 ),
-                const SizedBox(
-                  height: 20,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              InkWell(
+                onTap: () async {
+                  AllDialogues.showDialogue(title: "يتم الآن إرسال الرمز");
+                  sentOTP = generateOTP();
+                  await sendOTP(widget.email, sentOTP);
+                  AllDialogues.hideloading();
+                },
+                child: const PrimaryButton(
+                  buttonText: 'إعادة إرسال الرمز',
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'ادخل الرمز خلال:',
-                      style: TextStyle(fontSize: 16, color: kBlackColor),
-                    ),
-                    Text(
-                      _counter.toString(),
-                      style: const TextStyle(
-                          fontSize: 20,
-                          color: kBlackColor,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    //==this button a verify otp function
-                    if (otpformkey.currentState!.validate()) {
-                      verifyEmail();
-                    } else {
-                      // Fluttertoast.showToast(msg: "Invalid OTP.");
-                    }
-                  },
-                  child: const PrimaryButton(
-                    buttonText: 'تأكيد',
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () async {
-                    AllDialogues.showDialogue(title: "يتم الآن إرسال الرمز");
-                    sentOTP = generateOTP();
-                    await sendOTP(widget.email, sentOTP);
-                    AllDialogues.hideloading();
-                  },
-                  child: const PrimaryButton(
-                    buttonText: 'إعادة إرسال الرمز',
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -212,6 +210,35 @@ class _VerifyScreenState extends State<VerifyScreen> {
       _timer.cancel();
       AllDialogues.hideloading();
       Fluttertoast.showToast(msg: "حدث خطأ");
+    }
+  }
+
+  sendInvitation(String receiverEmail, Community comm) async {
+    String username = 'motazenapp@gmail.com';
+    String password = "nwzwtraabozrdipz";
+
+    final smtpServer = gmail(username, password);
+    final message = Message()
+      ..from = Address(username, 'Motazen')
+      ..recipients.add(receiverEmail)
+      ..subject = 'Motazen Community Invitation [${comm.communityName}]'
+      ..text =
+          'Dear $receiverEmail,\n${comm.founderUsername} has invited you in the community ${comm.communityName}. Please check the app notification to accept or reject the invitation\n\nRegards,\nTeam Motazen';
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      AllDialogues.hideloading();
+      Fluttertoast.showToast(
+          msg: "Invite sent", toastLength: Toast.LENGTH_LONG);
+      _startTimer();
+    } on MailerException catch (e) {
+      for (var p in e.problems) {}
+      setState(() {
+        _counter = 00;
+      });
+      _timer.cancel();
+      AllDialogues.hideloading();
+      Fluttertoast.showToast(msg: "Failed sending invite mail");
     }
   }
 

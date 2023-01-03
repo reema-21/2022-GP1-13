@@ -1,8 +1,11 @@
 // ignore_for_file: file_names, camel_case_types
 
-import 'package:get/get.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:motazen/controllers/community_controller.dart';
+import 'package:motazen/pages/communities_page/community_home.dart';
 import 'package:motazen/pages/notifications_screen.dart/notification_details_popup.dart';
 import 'package:motazen/theme.dart';
 
@@ -21,72 +24,83 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
-    communityController.getNotifications();
+    // startTheTimer();
+  }
+
+  void startTheTimer() {
+    Timer.periodic(const Duration(seconds: 2), (_) {
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        drawer: const SideBar(),
-        appBar: AppBar(
-          backgroundColor: kWhiteColor,
-          iconTheme: const IconThemeData(color: Colors.black),
-          elevation: 0.0,
-          actions: <Widget>[
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const RotatedBox(
-                  quarterTurns: 2,
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black,
-                  ),
-                ),
-                tooltip: 'View Requests'),
-          ],
-        ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      drawer: const SideBar(),
+      appBar: AppBar(
         backgroundColor: kWhiteColor,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
-                children: [
-                  const Spacer(),
-                  txt(
-                    txt: 'My Notifications',
-                    fontSize: 32,
-                    fontColor: kPrimaryColor,
-                  ),
-                  const Spacer(
-                    flex: 2,
-                  )
-                ],
+        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const RotatedBox(
+                quarterTurns: 2,
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
+                ),
               ),
-              SizedBox(
-                height: screenHeight(context) * 0.03,
+              tooltip: 'View Requests'),
+        ],
+      ),
+      backgroundColor: kWhiteColor,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(
+            children: [
+              const Spacer(),
+              txt(
+                txt: 'My Notifications',
+                fontSize: 32,
+                fontColor: kPrimaryColor,
               ),
-              Obx(() {
-                return SizedBox(
-                  height: communityController.listOfNotifications.isEmpty
-                      ? screenHeight(context) * 0.3
-                      : screenHeight(context),
-                  child: communityController.listOfNotifications.isEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(30.0),
-                          child: Center(
-                            child: txt(
-                                txt: 'No Notifications yet',
-                                fontSize: 18,
-                                fontColor: kPrimaryColor),
-                          ))
-                      : ListView.builder(
+              const Spacer(
+                flex: 2,
+              )
+            ],
+          ),
+          SizedBox(
+            height: screenHeight(context) * 0.03,
+          ),
+          Obx(() {
+            return communityController.listOfNotifications.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Center(
+                      child: txt(
+                          txt: 'No Notifications yet',
+                          fontSize: 18,
+                          fontColor: kPrimaryColor),
+                    ))
+                : Expanded(
+                    child: StreamBuilder(
+                      stream: firestore
+                          .collection('user')
+                          .doc(firebaseAuth.currentUser!.uid)
+                          .collection('notifications')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          communityController.notificationQuerySnapshot =
+                              snapshot.data;
+                          communityController.getNotifications();
+                        }
+                        return ListView.builder(
                           itemCount:
                               communityController.listOfNotifications.length,
                           itemBuilder: (context, index) {
@@ -115,26 +129,125 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      txt(
-                                          txt: communityController
+                                      if (communityController
                                               .listOfNotifications[index]
-                                              .communityName
-                                              .toString(),
-                                          fontSize: 24),
-                                      txt(
-                                          txt:
-                                              '${communityController.listOfNotifications[index].founderUsername.toString()} is inviting you to community ${communityController.listOfNotifications[index].communityName.toString()}',
-                                          fontSize: 18),
+                                              .comm !=
+                                          null)
+                                        txt(
+                                            txt: communityController
+                                                .listOfNotifications[index]
+                                                .comm
+                                                .communityName
+                                                .toString(),
+                                            fontSize: 24),
+                                      if (communityController
+                                                  .listOfNotifications[index]
+                                                  .notificationType ==
+                                              'reply' ||
+                                          communityController
+                                                  .listOfNotifications[index]
+                                                  .notificationType ==
+                                              'like')
+                                        txt(
+                                            txt: communityController
+                                                .listOfNotifications[index]
+                                                .userName
+                                                .toString(),
+                                            fontSize: 24),
+                                      if (communityController
+                                              .listOfNotifications[index]
+                                              .notificationType ==
+                                          'invite')
+                                        txt(
+                                            txt:
+                                                '${communityController.listOfNotifications[index].comm.founderUsername.toString()} is inviting you to community ${communityController.listOfNotifications[index].comm.communityName.toString()}',
+                                            fontSize: 18),
+                                      if (communityController
+                                              .listOfNotifications[index]
+                                              .notificationType ==
+                                          'reply')
+                                        txt(
+                                            txt:
+                                                '${communityController.listOfNotifications[index].userName.toString()} has replied to your message "${communityController.listOfNotifications[index].reply}"',
+                                            fontSize: 18),
+                                      if (communityController
+                                              .listOfNotifications[index]
+                                              .notificationType ==
+                                          'like')
+                                        txt(
+                                            txt:
+                                                '${communityController.listOfNotifications[index].userName.toString()} has liked to your message "${communityController.listOfNotifications[index].post['text']}"',
+                                            fontSize: 18),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              notificationDetailsPopup(context,
-                                                  community: communityController
+                                              if (communityController
+                                                      .listOfNotifications[
+                                                          index]
+                                                      .notificationType ==
+                                                  'invite') {
+                                                notificationDetailsPopup(
+                                                    context,
+                                                    community:
+                                                        communityController
+                                                            .listOfNotifications[
+                                                                index]
+                                                            .comm);
+                                              } else if (communityController
                                                           .listOfNotifications[
-                                                      index]);
+                                                              index]
+                                                          .notificationType ==
+                                                      'reply' ||
+                                                  communityController
+                                                          .listOfNotifications[
+                                                              index]
+                                                          .notificationType ==
+                                                      'like') {
+                                                final inA = communityController
+                                                    .listOfCreatedCommunities
+                                                    .indexWhere((e) =>
+                                                        e.id ==
+                                                        communityController
+                                                            .listOfNotifications[
+                                                                index]
+                                                            .notificationOfTheCommunity);
+                                                final inB = communityController
+                                                    .listOfJoinedCommunities
+                                                    .indexWhere((e) =>
+                                                        e.id ==
+                                                        communityController
+                                                            .listOfNotifications[
+                                                                index]
+                                                            .notificationOfTheCommunity);
+                                                final comm = inA >= 0
+                                                    ? communityController
+                                                            .listOfCreatedCommunities[
+                                                        inA]
+                                                    : inB >= 0
+                                                        ? communityController
+                                                            .listOfJoinedCommunities[inB]
+                                                        : null;
+                                                if (comm != null) {
+                                                  communityController.removeNotification(
+                                                      creationDateOfCommunity:
+                                                          communityController
+                                                              .listOfNotifications[
+                                                                  index]
+                                                              .creationDate,
+                                                      type:
+                                                          '${communityController.listOfNotifications[index].notificationType}');
+                                                  Get.to(CommunityHomePage(
+                                                      comm: comm,
+                                                      cameFromNotification:
+                                                          communityController
+                                                              .listOfNotifications[
+                                                                  index]
+                                                              .post));
+                                                }
+                                              }
                                             },
                                             child: Container(
                                               height:
@@ -159,12 +272,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               ),
                             );
                           },
-                        ),
-                );
-              })
-            ]),
-          ),
-        ),
+                        );
+                      },
+                    ),
+                  );
+          })
+        ]),
       ),
     );
   }

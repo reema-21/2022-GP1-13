@@ -21,9 +21,6 @@ class TaskControleer extends GetxController {
 
   Rx<List<Task>> goalTask =
       Rx<List<Task>>([]); // for saving the task depenecy  .
-  Rx<List<Task>> newTasksAddedInEditing = Rx<List<Task>>([]);
-  Rx<List<Task>> DeletedTasks = Rx<List<Task>>([]);
-  Rx<List<Task>> EditedTasksInEditing = Rx<List<Task>>([]);
   Rx<List<String>> TasksMenue = Rx<List<String>>([]);
   Rx<List<String>> selectedTasks = Rx<List<String>>([]);
   var selectedOption = "".obs;
@@ -42,49 +39,6 @@ class TaskControleer extends GetxController {
   Rx<TaskData> tryTask = Rx<TaskData>(TaskData());
 
   TextEditingController inputTaskName = TextEditingController();
-
-  get durationn => null;
-  addEditTask(String name, String duName, int val) {
-    int durationn = 0;
-    String durationDescribtion = "";
-    switch (duName) {
-      case "أيام":
-        durationn = val;
-        durationDescribtion = "أيام";
-        durationDescribtion = durationDescribtion;
-        break;
-      case "أسابيع":
-        durationn = (val * 7);
-        durationDescribtion = "أسابيع";
-        durationDescribtion = durationDescribtion;
-
-        break;
-      case "أشهر":
-        durationn = (val * 30);
-        durationDescribtion = "أشهر";
-        durationDescribtion = durationDescribtion;
-
-        break;
-      case "سنوات":
-        durationn = (val * 360);
-        durationDescribtion = "سنوات ";
-        durationDescribtion = durationDescribtion;
-
-        break;
-    }
-    Task newTak = Task(
-      TaskDependency: [],
-      amountCompleted: 0,
-      duration: durationn,
-      durationDescribtion: durationDescribtion,
-      name: name,
-      taskCompletionPercentage: 0,
-    );
-
-    newTasksAddedInEditing.value.add(newTak);
-    itemCountAdd.value = goalTask.value.length;
-    inputTaskName.clear();
-  }
 
   bool addTask(String name, String duName, int val) {
     TaskData TaskForDependency = TaskData();
@@ -126,7 +80,7 @@ class TaskControleer extends GetxController {
     }
     Task newTak = Task(
         name: name,
-        TaskDependency: [],
+        TaskDependency: selectedTasks.value,
         amountCompleted: 0,
         duration: duraitionn,
         durationDescribtion: durationDescribtion,
@@ -135,7 +89,6 @@ class TaskControleer extends GetxController {
     goalTask.value.add(newTak);
     itemCount.value = goalTask.value.length;
     inputTaskName.clear();
-
     return true;
   }
 
@@ -147,14 +100,6 @@ class TaskControleer extends GetxController {
 
     goalTask.value.removeAt(index);
     itemCount.value = goalTask.value.length;
-  }
-
-  AssignTaks(List<Task> currentGoalTask) {
-    goalTask.value.clear();
-    goalTask.value.addAll(currentGoalTask);
-
-    itemCount.value = goalTask.value.length;
-    //Assign the alldependency values ;
   }
 
   void setInitionals(int taskduration, int currentTaskduraions,

@@ -1,14 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:is_first_run/is_first_run.dart';
-import 'package:motazen/isarService.dart';
+import 'package:motazen/isar_service.dart';
+import 'package:motazen/pages/login/login.dart';
 import 'package:motazen/pages/onboarding_page.dart';
 import 'package:motazen/theme.dart';
-import '/data/data.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import '/data/data.dart';
 import 'firebase_options.dart';
-import 'pages/login/login.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,5 +40,9 @@ Future main() async {
         home: ifr
             ? const OnboardingPage()
             : const LogInScreen(), //add verification to check which page should be next (sign in/homepage)
+        locale: const Locale('ar', ''),
+
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
       )));
 }

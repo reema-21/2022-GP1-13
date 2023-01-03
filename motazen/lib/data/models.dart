@@ -32,7 +32,9 @@ class Todo {
 class Item {
   /// {@macro item}
   Item({
-    required this.itemGoal,
+    required this.duration,
+    this.importance,
+    this.itemGoal,
     required this.id,
     this.description = '',
     this.completed = false,
@@ -42,8 +44,8 @@ class Item {
   /// The id of this item.
   final int id;
 
-  /// The id of this item.
-  final int itemGoal;
+  /// The id of this item's goal.
+  final int? itemGoal;
 
   /// Description of this item.
   final String description;
@@ -53,6 +55,12 @@ class Item {
 
   ///aspect icon
   final Widget icon;
+
+  ///the duration of this item
+  final int duration;
+
+  ///the importance of this item
+  final int? importance;
 }
 
 ///------------------------------------------Models for piechart---------------------------------------------

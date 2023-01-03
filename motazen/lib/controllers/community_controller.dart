@@ -1,4 +1,5 @@
-// ignore: depend_on_referenced_packages
+// ignore_for_file: empty_catches, depend_on_referenced_packages, prefer_typing_uninitialized_variables
+
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ import 'package:motazen/models/community.dart';
 import 'package:motazen/models/user.dart';
 
 import '../entities/task.dart';
+import '../models/notification_model.dart';
 import '../theme.dart';
 
 class CommunityController extends GetxController {
@@ -16,7 +18,7 @@ class CommunityController extends GetxController {
   RxList<dynamic> projects = <dynamic>[].obs;
   RxList<Community> listOfCreatedCommunities = <Community>[].obs;
   RxList<Community> listOfJoinedCommunities = <Community>[].obs;
-  RxList<Community> listOfNotifications = <Community>[].obs;
+  RxList<NotificationModel> listOfNotifications = <NotificationModel>[].obs;
   RxList shoppingList = [].obs;
   Rx<bool> isProfilePhotoUpdating = false.obs;
   Rx<bool> isProfileComplete = false.obs;
@@ -35,6 +37,7 @@ class CommunityController extends GetxController {
   Rx<String> goalWeight = ''.obs;
   Rx<String> goal = ''.obs;
   Rx<String> activityLevel = ''.obs;
+  var notificationQuerySnapshot;
 
   final Rx<String> _uid = "".obs;
 
@@ -44,44 +47,58 @@ class CommunityController extends GetxController {
   }
 
   getNotifications() async {
-    listOfNotifications.clear();
     try {
-      var querySnapshot = await firestore
-          .collection('user')
-          .doc(firebaseAuth.currentUser!.uid)
-          .collection('notifications')
-          .limit(1)
-          .get();
+      listOfNotifications.clear();
+    } catch (e) {}
 
-      if (querySnapshot.docs.isNotEmpty) {
-        for (var doc in querySnapshot.docs) {
+    try {
+      if (notificationQuerySnapshot.docs.isNotEmpty) {
+        for (var doc in notificationQuerySnapshot.docs) {
           var notydoc = doc.data();
 
           List<Task> listOfTasks = [];
-          for (var task in notydoc['listOfTasks']) {
-            listOfTasks.add(Task(
-              TaskDependency: task['TaskDependency'],
-              amountCompleted: task['amountCompleted'],
-              duration: task['duration'],
-              durationDescribtion: task['durationDescribtion'],
-              // goal: task['goal'],
-              // id: task['id'],
-              name: task['name'],
-              taskCompletionPercentage: task['taskCompletionPercentage'],
-            ));
+          if (notydoc['community'] != null) {
+            for (var task in notydoc['community']['listOfTasks']) {
+              listOfTasks.add(Task(
+                TaskDependency: task['TaskDependency'],
+                amountCompleted: task['amountCompleted'],
+                duration: task['duration'],
+                durationDescribtion: task['durationDescribtion'],
+                // goal: task['goal'],
+                // id: task['id'],
+                name: task['name'],
+                taskCompletionPercentage: task['taskCompletionPercentage'],
+              ));
+            }
           }
-
-          listOfNotifications.add(Community(
-              aspect: notydoc['aspect'],
-              communityName: notydoc['communityName'],
-              creationDate: notydoc['creationDate'].toDate(),
-              founderUsername: notydoc['founderUsername'],
-              goalName: notydoc['goalName'],
-              isPrivate: notydoc['isPrivate'],
-              listOfTasks: listOfTasks,
-              tillDate: notydoc['tillDate'].toDate(),
-              id: notydoc['_id']));
+          try {
+            listOfNotifications.add(
+              NotificationModel(
+                  comm: notydoc['community'] == null
+                      ? null
+                      : Community(
+                          aspect: notydoc['community']['aspect'],
+                          communityName: notydoc['community']['communityName'],
+                          creationDate:
+                              notydoc['community']['creationDate'].toDate(),
+                          founderUsername: notydoc['community']
+                              ['founderUsername'],
+                          goalName: notydoc['community']['goalName'],
+                          isPrivate: notydoc['community']['isPrivate'],
+                          listOfTasks: listOfTasks,
+                          tillDate: notydoc['community']['tillDate'].toDate(),
+                          id: notydoc['community']['_id']),
+                  creationDate: notydoc['creation_date'].toDate(),
+                  post: notydoc['post'],
+                  reply: notydoc['reply'],
+                  userName: notydoc['user_name'],
+                  notificationType: notydoc['type'] ?? "invite",
+                  notificationOfTheCommunity: notydoc['community_link']),
+            );
+          } catch (e) {}
         }
+        listOfNotifications
+            .sort((b, a) => a.creationDate.compareTo(b.creationDate));
       } else {}
     } catch (e) {}
     update();
@@ -202,17 +219,21 @@ class CommunityController extends GetxController {
                 .doc(user.userID)
                 .collection('notifications')
                 .add({
-              'aspect': community.aspect,
-              'communityName': community.communityName,
-              'creationDate': community.creationDate,
-              'founderUsername': community.founderUsername,
-              'goalName': community.goalName,
-              'isPrivate': community.isPrivate,
-              'listOfTasks': community.listOfTasks!.isNotEmpty
-                  ? community.listOfTasks!.map((e) => e.toJson()).toList()
-                  : [],
-              'tillDate': community.tillDate,
-              '_id': community.id
+              'creation_date': community.creationDate,
+              'type': 'invite',
+              'community': {
+                'aspect': community.aspect,
+                'communityName': community.communityName,
+                'creationDate': community.creationDate,
+                'founderUsername': community.founderUsername,
+                'goalName': community.goalName,
+                'isPrivate': community.isPrivate,
+                'listOfTasks': community.listOfTasks!.isNotEmpty
+                    ? community.listOfTasks!.map((e) => e.toJson()).toList()
+                    : [],
+                'tillDate': community.tillDate,
+                '_id': community.id
+              }
             }));
           }
         }
@@ -224,8 +245,8 @@ class CommunityController extends GetxController {
       listOfCreatedCommunities.remove(community);
       getErrorSnackBar('Something went wrong, Please try again');
       Get.off(() => const navBar(
-            selectedIndex: 2,
-          ));
+            selectedIndex: 1,
+          )); // here you  maight need to change the number
     }
   }
 
@@ -255,13 +276,15 @@ class CommunityController extends GetxController {
     Get.back();
   }
 
-  removeNotification({required DateTime creationDateOfCommunity}) async {
+  removeNotification(
+      {required DateTime creationDateOfCommunity, required String type}) async {
     try {
       await firestore
           .collection('user')
           .doc(firebaseAuth.currentUser!.uid)
           .collection('notifications')
-          .where('creationDate', isEqualTo: creationDateOfCommunity)
+          .where('type', isEqualTo: type)
+          .where('creation_date', isEqualTo: creationDateOfCommunity)
           .get()
           .then((snapshot) {
         for (DocumentSnapshot ds in snapshot.docs) {

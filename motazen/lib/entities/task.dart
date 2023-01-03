@@ -2,7 +2,7 @@
 
 class Task {
   //I am making it without id
-  List<Task> TaskDependency = [];
+  late List<String> TaskDependency ;
   late String name;
   // List <Goal> goal = [];
   int amountCompleted = 0;

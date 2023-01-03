@@ -1,4 +1,5 @@
-import 'package:motazen/isarService.dart';
+
+import 'package:motazen/isar_service.dart';
 
 import '/entities/aspect.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

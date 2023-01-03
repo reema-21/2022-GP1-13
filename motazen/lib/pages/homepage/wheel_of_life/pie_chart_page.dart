@@ -1,8 +1,8 @@
 // ignore_for_file: camel_case_types, duplicate_ignore
 
-import '../../../entities/aspect.dart';
+import 'package:motazen/pages/homepage/wheel_of_life/widget/pie_chart_sections.dart';
 
-import '/pages/homepage/wheel_of_life/widget/pie_chart_sections.dart';
+import '../../../entities/aspect.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 

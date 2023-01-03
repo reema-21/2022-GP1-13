@@ -1,3 +1,5 @@
+// ignore_for_file: list_remove_unrelated_type
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/community_controller.dart';
@@ -53,13 +55,13 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                       ),
                       Expanded(
                         child: txt(
-                          txt: 'Aspect: ${community.aspect.toString()}',
+                          txt: 'جانب الحياة: ${community.aspect.toString()}',
                           fontSize: 18,
                         ),
                       ),
                       Expanded(
                         child: txt(
-                          txt: 'Duration: $duration days ',
+                          txt: 'المدة: $duration days ',
                           fontSize: 18,
                         ),
                       ),
@@ -94,7 +96,8 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                                     .remove(community);
                                 communityController.removeNotification(
                                     creationDateOfCommunity:
-                                        community.creationDate!);
+                                        community.creationDate!,
+                                    type: 'invite');
                                 communityController.update();
                               },
                               child: Container(
@@ -132,7 +135,8 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
 
                                 communityController.removeNotification(
                                     creationDateOfCommunity:
-                                        community.creationDate!);
+                                        community.creationDate!,
+                                    type: 'invite');
                                 communityController.update();
                                 setState(() {});
                                 Get.back();

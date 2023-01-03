@@ -33,13 +33,6 @@ class SideBar extends StatelessWidget {
               userEmail!,
               style: sidebarUser,
             ),
-            currentAccountPicture: const CircleAvatar(
-                backgroundColor: kWhiteColor,
-                child: Icon(
-                  Icons.person,
-                  color: kBlackColor,
-                  size: 30,
-                )),
             decoration: const BoxDecoration(
               color: kPrimaryColor,
             ),

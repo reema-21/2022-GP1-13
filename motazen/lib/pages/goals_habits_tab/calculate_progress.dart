@@ -1,8 +1,8 @@
 import 'package:motazen/entities/LocalTask.dart';
 import 'package:motazen/entities/goal.dart';
-import 'package:motazen/isarService.dart';
 
 import '../../entities/aspect.dart';
+import '../../isar_service.dart';
 import '../select_aspectPage/handle_aspect_data.dart';
 
 class CalculateProgress {
@@ -19,25 +19,28 @@ class CalculateProgress {
         completedTask!.amountCompleted / completedTask.duration;
     //check if the task has been completed
     if (completionPercentage <= 1) {
-      print('less than 1');
       IsarService().updateTaskPercentage(taskId, completionPercentage);
       calculateGoalPercentage(goal);
     } else {
-      print('1 or more');
       IsarService().decrementAmountCompleted(taskId);
     }
   }
 
   Future<void> calculateGoalPercentage(Goal? goal) async {
     double totalDaysCompleted = 0;
+    int totalGoalDuration = 0;
     double totalGoalProgress = 0;
     List<LocalTask> allTasks = goal!.task.toList(); //the issue is probably here
     for (var element in allTasks) {
       totalDaysCompleted = totalDaysCompleted + element.amountCompleted;
+      totalGoalDuration = totalGoalDuration + element.duration;
     }
-    totalGoalProgress = totalDaysCompleted / goal.goalDuration;
-    IsarService().updateGoalPercentage(goal.id, totalGoalProgress);
-    Aspect? aspect = await IsarService().getAspectByGoal(goal.id);
-    handle_aspect().updateAspects(aspect!);
+    totalGoalProgress = totalDaysCompleted / totalGoalDuration;
+    //it still passes when it's grater than 1 (bug)
+    if (totalGoalProgress < 1.00) {
+      IsarService().updateGoalPercentage(goal.id, totalGoalProgress);
+      Aspect? aspect = await IsarService().getAspectByGoal(goal.id);
+      handle_aspect().updateAspects(aspect!);
+    }
   }
 }

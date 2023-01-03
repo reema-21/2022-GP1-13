@@ -1,6 +1,7 @@
 // ignore_for_file: camel_case_types
 
-import 'package:motazen/isarService.dart';
+
+import 'package:motazen/isar_service.dart';
 
 import 'add_habit.dart';
 

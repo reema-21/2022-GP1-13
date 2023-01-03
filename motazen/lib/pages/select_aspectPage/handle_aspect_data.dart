@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
-import 'package:motazen/isarService.dart';
+import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:provider/provider.dart';
 
@@ -74,10 +74,11 @@ class handle_aspect {
       aspectProgressSum = aspectProgressSum +
           (element.importance * element.goalProgressPercentage);
     }
-    aspectProgressPercentage =
-        aspectProgressSum + aspect.percentagePoints % 100;
+    aspectProgressPercentage = aspectProgressSum + aspect.percentagePoints;
 
-    IsarService().updateAspectPercentage(aspect.id, aspectProgressPercentage);
+    if (aspectProgressPercentage <= 100) {
+      IsarService().updateAspectPercentage(aspect.id, aspectProgressPercentage);
+    }
   }
 }
 

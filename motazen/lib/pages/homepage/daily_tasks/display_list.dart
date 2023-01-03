@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:motazen/pages/homepage/daily_tasks/custom_rect_tween.dart';
+import 'package:motazen/pages/homepage/daily_tasks/hero_dialog_route.dart';
 import '../../goals_habits_tab/calculate_progress.dart';
 import '/data/models.dart';
-import '/pages/homepage/daily_tasks/custom_rect_tween.dart';
-import '/pages/homepage/daily_tasks/hero_dialog_route.dart';
 
 /// {@template todo_card}
 /// Card that display a [Todo]'s content.
@@ -177,7 +177,7 @@ class _TodoItemTileState extends State<_TodoItemTile> {
     setState(() {
       widget.item.completed = val!;
       CalculateProgress()
-          .updateAmountCompleted(widget.item.id, widget.item.itemGoal);
+          .updateAmountCompleted(widget.item.id, widget.item.itemGoal!);
     });
   }
 
@@ -190,7 +190,6 @@ class _TodoItemTileState extends State<_TodoItemTile> {
       ),
       title: Text(
         widget.item.description,
-        textDirection: TextDirection.rtl,
       ),
       leading: widget.item.icon,
     );

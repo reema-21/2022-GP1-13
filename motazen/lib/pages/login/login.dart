@@ -24,166 +24,163 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Padding(
-          padding: kDefaultPadding,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 120,
-                ),
-                Text(
-                  'أهلاً بك مجددًا',
-                  style: titleText,
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'مستخدم جديد؟',
-                      style: subTitle,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignUpScreen(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        'إنشاء حساب',
-                        style: textButton.copyWith(
-                          decoration: TextDecoration.underline,
-                          decorationThickness: 1,
+      body: Padding(
+        padding: kDefaultPadding,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 120,
+              ),
+              Text(
+                'أهلاً بك مجددًا',
+                style: titleText,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  Text(
+                    'مستخدم جديد؟',
+                    style: subTitle,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpScreen(),
                         ),
+                      );
+                    },
+                    child: Text(
+                      'إنشاء حساب',
+                      style: textButton.copyWith(
+                        decoration: TextDecoration.underline,
+                        decorationThickness: 1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              //=================login form=================
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    // //=================email field===============
+                    Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: TextFormField(
+                            controller: _emailcontroller,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'فضلًا ادخل بريدك الإلكتروني';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'البريد الإلكتروني',
+                              labelStyle: TextStyle(
+                                color: kTextFieldColor,
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: kPrimaryColor),
+                              ),
+                            ))),
+
+                    //==============password field'======================
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: TextFormField(
+                        controller: _passwordcontroler,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'فضلًا ادخل كلمة السر';
+                          }
+                          return null;
+                        },
+                        obscureText: obscureText ? true : false,
+                        decoration: InputDecoration(
+                            labelText: 'كلمة السر',
+                            labelStyle: const TextStyle(
+                              color: kTextFieldColor,
+                            ),
+                            focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: kPrimaryColor),
+                            ),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  obscureText = !obscureText;
+                                });
+                              },
+                              icon: obscureText
+                                  ? const Icon(
+                                      Icons.visibility_off,
+                                      color: kTextFieldColor,
+                                    )
+                                  : const Icon(
+                                      Icons.visibility,
+                                      color: kPrimaryColor,
+                                    ),
+                            )),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                //=================login form=================
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      // //=================email field===============
-                      Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: TextFormField(
-                              controller: _emailcontroller,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'فضلًا ادخل بريدك الإلكتروني';
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                labelText: 'البريد الإلكتروني',
-                                labelStyle: TextStyle(
-                                  color: kTextFieldColor,
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: kPrimaryColor),
-                                ),
-                              ))),
+              ),
 
-                      //==============password field'======================
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: TextFormField(
-                          controller: _passwordcontroler,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'فضلًا ادخل كلمة السر';
-                            }
-                            return null;
-                          },
-                          obscureText: obscureText ? true : false,
-                          decoration: InputDecoration(
-                              labelText: 'كلمة السر',
-                              labelStyle: const TextStyle(
-                                color: kTextFieldColor,
-                              ),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: kPrimaryColor),
-                              ),
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    obscureText = !obscureText;
-                                  });
-                                },
-                                icon: obscureText
-                                    ? const Icon(
-                                        Icons.visibility_off,
-                                        color: kTextFieldColor,
-                                      )
-                                    : const Icon(
-                                        Icons.visibility,
-                                        color: kPrimaryColor,
-                                      ),
-                              )),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ResetPasswordScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    'نسيت كلمة المرور؟',
-                    style: TextStyle(
-                      color: kZambeziColor,
-                      fontSize: 20,
-                      decoration: TextDecoration.underline,
-                      decorationThickness: 1,
+              const SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ResetPasswordScreen(),
                     ),
+                  );
+                },
+                child: const Text(
+                  'نسيت كلمة المرور؟',
+                  style: TextStyle(
+                    color: kZambeziColor,
+                    fontSize: 20,
+                    decoration: TextDecoration.underline,
+                    decorationThickness: 1,
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              //==============Signin Button============================
+              InkWell(
+                onTap: () {
+                  if (_formKey.currentState!.validate()) {
+                    //=============== call a function to sign in with email and pass.
+                    //====uncomment the below function when app is connected to firebase.
+                    signIn(_emailcontroller.text, _passwordcontroler.text);
+                  }
+                },
+                child: const PrimaryButton(
+                  buttonText: 'تسجيل الدخول',
                 ),
-                //==============Signin Button============================
-                InkWell(
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      //=============== call a function to sign in with email and pass.
-                      //====uncomment the below function when app is connected to firebase.
-                      signIn(_emailcontroller.text, _passwordcontroler.text);
-                    }
-                  },
-                  child: const PrimaryButton(
-                    buttonText: 'تسجيل الدخول',
-                  ),
-                ),
-                const SizedBox(
-                  height: 23,
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                height: 23,
+              ),
+            ],
           ),
         ),
       ),

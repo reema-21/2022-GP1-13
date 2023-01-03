@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, non_constant_identifier_names, prefer_interpolation_to_compose_strings, use_build_context_synchronously
 
 import 'package:get/get.dart';
-import 'package:motazen/isarService.dart';
+import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
 
 import '/theme.dart';
@@ -99,131 +99,124 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
             children: [
               Text(
                 'تقييم جوانب الحياة',
-                textDirection: TextDirection.rtl,
                 style: titleText,
               ),
-              Text('ادخل اجابتك بإستخدام المؤشر',
-                  textDirection: TextDirection.rtl, style: subTitle),
-              Text('10 (ينطبق دائما) - 1 (نادراً ما ينطبق)',
-                  textDirection: TextDirection.rtl, style: subTitle),
+              Text('ادخل اجابتك بإستخدام المؤشر', style: subTitle),
+              Text('10 (ينطبق دائما) - 1 (نادراً ما ينطبق)', style: subTitle),
             ]),
         toolbarHeight: 120,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Directionality(
-            textDirection: TextDirection.rtl,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(0)),
-                    child: IconStepper(
-                      stepReachedAnimationEffect:
-                          Curves.linear, //stop the jumping
-                      lineColor: Colors.black,
-                      stepReachedAnimationDuration:
-                          const Duration(milliseconds: 200),
-                      activeStepColor: kWhiteColor,
-                      stepColor: kDisabled,
-                      stepRadius: 20,
-                      stepPadding: 0,
-                      // move it to a function so that you take the aspect and the number of quastion = x and then you reapt the icon x times
-                      icons: createIcon(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(0)),
+                  child: IconStepper(
+                    stepReachedAnimationEffect:
+                        Curves.linear, //stop the jumping
+                    lineColor: Colors.black,
+                    stepReachedAnimationDuration:
+                        const Duration(milliseconds: 200),
+                    activeStepColor: kWhiteColor,
+                    stepColor: kDisabled,
+                    stepRadius: 20,
+                    stepPadding: 0,
+                    // move it to a function so that you take the aspect and the number of quastion = x and then you reapt the icon x times
+                    icons: createIcon(),
 
-                      // AssessmentQuestions.activeStep property set to AssessmentQuestions.activeStep variable defined above.
-                      activeStep: AssessmentQuestions.activeStep,
+                    // AssessmentQuestions.activeStep property set to AssessmentQuestions.activeStep variable defined above.
+                    activeStep: AssessmentQuestions.activeStep,
 
-                      // This ensures step-tapping updates the AssessmentQuestions.activeStep.
-                      onStepReached: (index) {
-                        setState(() {
-                          // possible so for the below problem
-                          /* if the answare has value then the value is the currenslide 
-                    if not the value is 1 */
+                    // This ensures step-tapping updates the AssessmentQuestions.activeStep.
+                    onStepReached: (index) {
+                      setState(() {
+                        // possible so for the below problem
+                        /* if the answare has value then the value is the currenslide 
+                  if not the value is 1 */
 
-                          AssessmentQuestions.activeStep = index;
-                          AssessmentQuestions.currentChosenAnswer =
-                              double.parse(AssessmentQuestions
-                                  .answers[AssessmentQuestions.activeStep]
-                                  .substring(
-                                      0,
-                                      AssessmentQuestions
-                                              .answers[AssessmentQuestions
-                                                  .activeStep]
-                                              .length -
-                                          1));
-                        });
-                      },
-                    )),
-                const SizedBox(
-                  height: 16,
-                ),
-                header(), // progress
-                const Divider(
-                  color: Colors.white,
-                  thickness: 0.5,
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                //question card
-                Hero(
-                  tag: 'question-card',
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Material(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.white,
-                      elevation: 10.0,
-                      child: SizedBox(
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            textDirection: TextDirection.rtl,
-                            children: [
-                              Text(headerText(),
-                                  style: const TextStyle(
-                                      color: kBlackColor, fontSize: 30)),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              Row(
-                                textDirection: TextDirection.ltr,
-                                children: [
-                                  buildSlideLable(10),
-                                  Expanded(
-                                    child: setQuestionAnswer(),
+                        AssessmentQuestions.activeStep = index;
+                        AssessmentQuestions.currentChosenAnswer = double.parse(
+                            AssessmentQuestions
+                                .answers[AssessmentQuestions.activeStep]
+                                .substring(
+                                    0,
+                                    AssessmentQuestions
+                                            .answers[
+                                                AssessmentQuestions.activeStep]
+                                            .length -
+                                        1));
+                      });
+                    },
+                  )),
+              const SizedBox(
+                height: 16,
+              ),
+              header(), // progress
+              const Divider(
+                color: Colors.white,
+                thickness: 0.5,
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              //question card
+              Hero(
+                tag: 'question-card',
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Material(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.white,
+                    elevation: 10.0,
+                    child: SizedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            Text(headerText(),
+                                style: const TextStyle(
+                                    color: kBlackColor, fontSize: 30)),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                              textDirection: TextDirection.ltr,
+                              children: [
+                                buildSlideLable(10),
+                                Expanded(
+                                  child: setQuestionAnswer(),
 
-                                    /// it takes a widget as a child
-                                  ),
-                                  buildSlideLable(1),
-                                ],
-                              ),
-                              //--------------------------------------here is what you tried -----------------//
-                              Text(
-                                "الإجابة: ${AssessmentQuestions.currentChosenAnswer.round()}",
-                              ),
-                            ],
-                          ),
+                                  /// it takes a widget as a child
+                                ),
+                                buildSlideLable(1),
+                              ],
+                            ),
+                            //--------------------------------------here is what you tried -----------------//
+                            Text(
+                              "الإجابة: ${AssessmentQuestions.currentChosenAnswer.round()}",
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: doneButton(widget.isr, aspectList.allAspects),
-                  ),
-                )
-              ],
-            ),
+              ),
+              Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: doneButton(widget.isr, aspectList.allAspects),
+                ),
+              )
+            ],
           ),
         ),
       ),

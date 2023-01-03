@@ -32,77 +32,73 @@ class _CommunitiesState extends State<Communities> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Column(
-        children: [
-          Row(
-            textDirection: TextDirection.rtl,
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Spacer(
+              flex: 2,
+            ),
+            txt(
+              txt: 'مجتمعاتي',
+              fontSize: 32,
+              fontColor: kPrimaryColor,
+            ),
+            const Spacer()
+          ],
+        ),
+        SizedBox(
+          height: screenHeight(context) * 0.03,
+        ),
+        Expanded(
+          child: Column(
             children: [
-              const Spacer(
-                flex: 2,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isSearchCommunitySelected = false;
+                        isMyCommunitySelected = true;
+                      });
+                    },
+                    child: communityScreenTabContainer(context,
+                        color: isMyCommunitySelected
+                            ? kPrimaryColor
+                            : kPrimaryColor.withOpacity(0.5),
+                        text: 'مجتمعات انا ضمنها'),
+                  ),
+                  SizedBox(
+                    width: screenWidth(context) * 0.02,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isSearchCommunitySelected = true;
+                        isMyCommunitySelected = false;
+                      });
+                    },
+                    child: communityScreenTabContainer(context,
+                        color: isSearchCommunitySelected
+                            ? kPrimaryColor
+                            : kPrimaryColor.withOpacity(0.5),
+                        text: 'البحث عن مجتمعات'),
+                  ),
+                ],
               ),
-              txt(
-                txt: 'مجتمعاتي',
-                fontSize: 32,
-                fontColor: kPrimaryColor,
+              Container(
+                width: screenWidth(context),
+                height: 1,
+                color: Colors.grey.shade300,
               ),
-              const Spacer()
+              isSearchCommunitySelected
+                  ? searchCommunitiesSelectedContainer(context)
+                  : myCommunitiesSelectedContainer(context)
             ],
           ),
-          SizedBox(
-            height: screenHeight(context) * 0.03,
-          ),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          isSearchCommunitySelected = false;
-                          isMyCommunitySelected = true;
-                        });
-                      },
-                      child: communityScreenTabContainer(context,
-                          color: isMyCommunitySelected
-                              ? kPrimaryColor
-                              : kPrimaryColor.withOpacity(0.5),
-                          text: 'مجتمعاتي'),
-                    ),
-                    SizedBox(
-                      width: screenWidth(context) * 0.02,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          isSearchCommunitySelected = true;
-                          isMyCommunitySelected = false;
-                        });
-                      },
-                      child: communityScreenTabContainer(context,
-                          color: isSearchCommunitySelected
-                              ? kPrimaryColor
-                              : kPrimaryColor.withOpacity(0.5),
-                          text: 'البحث عن مجتمعات'),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: screenWidth(context),
-                  height: 1,
-                  color: Colors.grey.shade300,
-                ),
-                isSearchCommunitySelected
-                    ? searchCommunitiesSelectedContainer(context)
-                    : myCommunitiesSelectedContainer(context)
-              ],
-            ),
-          )
-        ],
-      ),
+        )
+      ],
     );
   }
 
@@ -127,7 +123,7 @@ class _CommunitiesState extends State<Communities> {
                     });
                   },
                   child: greenTextContainer(context,
-                      text: 'مجتمعات انشئتها',
+                      text: 'مجتمعات بدأتها',
                       isSelected: createdCommunitiesSelected),
                 ),
                 InkWell(
@@ -138,7 +134,7 @@ class _CommunitiesState extends State<Communities> {
                     });
                   },
                   child: greenTextContainer(context,
-                      text: 'مجتمعات انضممت اليها',
+                      text: 'مجتمعات انضممت لها',
                       isSelected: joinedCommunitiesSelected),
                 ),
               ],

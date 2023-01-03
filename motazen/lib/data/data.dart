@@ -1,30 +1,62 @@
 // ignore_for_file: await_only_futures, camel_case_types
 
 import 'package:flutter/material.dart';
-import 'package:motazen/entities/LocalTask.dart';
-import 'package:motazen/entities/goal.dart';
 import '/entities/aspect.dart';
 import 'models.dart';
 
 ///create the todo list
-Todo createTodoList(List<Goal> goalList) {
+Todo createTodoList(List<Aspect> aspectList) {
+  //initialize lists
   List<Item> itemList = [];
-  List<LocalTask> taskList = [];
-  for (var i = 0; i < goalList.length; i++) {
-    taskList = goalList[i].task.toList();
-    for (var item in taskList) {
+
+  //step1: add all tasks and habits to a list
+  for (var aspect in aspectList) {
+    //retrieve the aspect's goals
+    for (var goal in aspect.goals.toList()) {
+      //retrive the goal's tasks
+      for (var task in goal.task.toList()) {
+        itemList.add(Item(
+            itemGoal: goal.id,
+            id: task.id,
+            description: task.name,
+            icon: Icon(
+              IconData(
+                aspect.iconCodePoint,
+                fontFamily: aspect.iconFontFamily,
+                fontPackage: aspect.iconFontPackage,
+                matchTextDirection: aspect.iconDirection,
+              ),
+              color: Color(aspect.color),
+            ),
+            duration: task.duration,
+            importance: goal.importance));
+      }
+    }
+
+    //retrieve the aspect's habits
+    for (var habit in aspect.habits.toList()) {
+      /// the code is not going inside bc the habits are not being retieved!!!!!!
       itemList.add(Item(
-        itemGoal: goalList[i].id,
-        id: item.id,
-        description: item.name,
-        //fix later
-        icon: const Icon(
-          Icons.person,
-          color: Color(0xFFff9100),
+        id: habit.id,
+        description: habit.titel,
+        icon: Icon(
+          IconData(
+            aspect.iconCodePoint,
+            fontFamily: aspect.iconFontFamily,
+            fontPackage: aspect.iconFontPackage,
+            matchTextDirection: aspect.iconDirection,
+          ),
+          color: Color(aspect.color),
         ),
+        duration: habit.durationInNumber,
       ));
     }
   }
+
+  ///step 2: rank the list
+  ///------------------------(add call to ranking code here, pass the item list as a parameter)----------------------------------------
+
+  ///Step3: visualize the list
   return Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: itemList);
 }
 

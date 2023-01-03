@@ -1,18 +1,24 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:motazen/models/post_model.dart';
+import 'package:motazen/pages/communities_page/view_photo.dart';
 
 class PostDesign extends StatefulWidget {
   final PostModel post;
   final dbpathToPostChnl;
-  final callback;
+  final commentCallback;
+  final likeCallback;
+  final repliedPostScrollCallback;
   const PostDesign(
       {Key? key,
       required this.post,
       required this.dbpathToPostChnl,
-      this.callback})
+      this.commentCallback,
+      this.likeCallback,
+      this.repliedPostScrollCallback})
       : super(key: key);
 
   @override
@@ -28,13 +34,19 @@ class _PostDesignState extends State<PostDesign> {
       return OwnMessageDesign(
         pst: widget.post,
         postLink: widget.dbpathToPostChnl,
-        callback: widget.callback,
+        commentCallback: widget.commentCallback,
+        likeCallback: widget.likeCallback,
+        authID: cuser,
+        repliedPostScrollCallback: widget.repliedPostScrollCallback,
       );
     } else {
       return OtherMessageDesign(
         pst: widget.post,
         postLink: widget.dbpathToPostChnl,
-        callback: widget.callback,
+        commentCallback: widget.commentCallback,
+        likeCallback: widget.likeCallback,
+        authID: cuser,
+        repliedPostScrollCallback: widget.repliedPostScrollCallback,
       );
     }
   }
@@ -43,13 +55,19 @@ class _PostDesignState extends State<PostDesign> {
 class OwnMessageDesign extends StatelessWidget {
   const OwnMessageDesign(
       {Key? key,
-      required this.callback,
+      required this.commentCallback,
       required this.pst,
-      required this.postLink})
+      required this.postLink,
+      required this.likeCallback,
+      required this.authID,
+      required this.repliedPostScrollCallback})
       : super(key: key);
   final PostModel pst;
   final postLink;
-  final callback;
+  final commentCallback;
+  final likeCallback;
+  final authID;
+  final repliedPostScrollCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -88,52 +106,71 @@ class OwnMessageDesign extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-                Container(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width / 1.75,
-                      minWidth: MediaQuery.of(context).size.width / 1.75),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
+                GestureDetector(
+                  onTap: () {
+                    repliedPostScrollCallback(pst.replyingPost);
+                  },
+                  child: Container(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width / 1.75,
+                        minWidth: MediaQuery.of(context).size.width / 1.75),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset:
-                            const Offset(0, 3), // changes position of shadow
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    textDirection: TextDirection.rtl,
-                    children: [
-                      Text(
-                        '${pst.replyingPost['author']}',
-                        style: const TextStyle(
-                            color: Colors.red,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        pst.replyingPost['text'].length > 40
-                            ? '...${pst.replyingPost['text'].substring(0, 40)}'
-                            : '${pst.replyingPost['text']}',
-                        style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 12,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset:
+                              const Offset(0, 3), // changes position of shadow
                         ),
-                        textAlign: TextAlign.right,
-                      ),
-                    ],
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      textDirection: TextDirection.rtl,
+                      children: [
+                        Text(
+                          '${pst.replyingPost['author']}',
+                          style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        if (pst.replyingPost['text'] != '')
+                          Text(
+                            pst.replyingPost['text'].length > 30
+                                ? '...${pst.replyingPost['text'].substring(0, 30)}'
+                                : '${pst.replyingPost['text']}',
+                            style: TextStyle(
+                              color: Colors.grey[800],
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+                        if (pst.replyingPost['post_type'] == 'image')
+                          Container(
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.width / 5,
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl: pst.replyingPost['image_url'],
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ))
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -186,14 +223,36 @@ class OwnMessageDesign extends StatelessWidget {
                     const SizedBox(
                       height: 8,
                     ),
-                    Text(
-                      '${pst.text}',
-                      style: TextStyle(
-                        color: Colors.grey[800],
-                        fontSize: 14,
+                    if (pst.text != '')
+                      Text(
+                        '${pst.text}',
+                        style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.right,
                       ),
-                      textAlign: TextAlign.right,
-                    ),
+                    if (pst.postType == 'image')
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      viewPhoto(imgURL: pst.imageURL)));
+                        },
+                        child: Container(
+                            constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.width / 1.25),
+                            child: CachedNetworkImage(
+                              imageUrl: pst.imageURL,
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            )),
+                      ),
                     const SizedBox(
                       height: 8,
                     ),
@@ -201,16 +260,7 @@ class OwnMessageDesign extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            callback(pst);
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => CommentPage(
-                            //               minAgo: minAgo,
-                            //               unit: unit,
-                            //               dbPathToComment:
-                            //                   '$postLink/${pst.time.toString()}${pst.authorId}/comment/',
-                            //             )));
+                            commentCallback(pst);
                           },
                           child: Icon(
                             Icons.reply,
@@ -222,9 +272,23 @@ class OwnMessageDesign extends StatelessWidget {
                           width: 6,
                         ),
                         InkWell(
-                          onTap: () {},
-                          child: const Icon(
-                            Icons.favorite,
+                          onTap: () {
+                            likeCallback(pst,
+                                '$postLink/${pst.time.toString()}${pst.authorId}/');
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => CommentPage(
+                            //               minAgo: minAgo,
+                            //               unit: unit,
+                            //               dbPathToComment:
+                            //                   '$postLink/${pst.time.toString()}${pst.authorId}/comment/',
+                            //             )));
+                          },
+                          child: Icon(
+                            pst.likes.contains(authID)
+                                ? Icons.favorite
+                                : Icons.favorite_border,
                             color: Colors.red,
                           ),
                         ),
@@ -232,7 +296,7 @@ class OwnMessageDesign extends StatelessWidget {
                           width: 2,
                         ),
                         Text(
-                          '${pst.likes}',
+                          '${pst.likes.length}',
                           style:
                               TextStyle(color: Colors.grey[500], fontSize: 18),
                         ),
@@ -252,13 +316,19 @@ class OwnMessageDesign extends StatelessWidget {
 class OtherMessageDesign extends StatelessWidget {
   const OtherMessageDesign(
       {Key? key,
-      required this.callback,
+      required this.commentCallback,
+      required this.likeCallback,
       required this.pst,
-      required this.postLink})
+      required this.postLink,
+      required this.authID,
+      required this.repliedPostScrollCallback})
       : super(key: key);
   final PostModel pst;
   final postLink;
-  final callback;
+  final commentCallback;
+  final likeCallback;
+  final authID;
+  final repliedPostScrollCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -296,52 +366,71 @@ class OtherMessageDesign extends StatelessWidget {
                   const SizedBox(
                     width: 10,
                   ),
-                  Container(
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width / 1.75,
-                        minWidth: MediaQuery.of(context).size.width / 1.75),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
+                  GestureDetector(
+                    onTap: () {
+                      repliedPostScrollCallback(pst.replyingPost);
+                    },
+                    child: Container(
+                      constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width / 1.75,
+                          minWidth: MediaQuery.of(context).size.width / 1.75),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset:
-                              const Offset(0, 3), // changes position of shadow
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      textDirection: TextDirection.rtl,
-                      children: [
-                        Text(
-                          '${pst.replyingPost['author']}',
-                          style: const TextStyle(
-                              color: Colors.red,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          pst.replyingPost['text'].length > 40
-                              ? '...${pst.replyingPost['text'].substring(0, 40)}'
-                              : '${pst.replyingPost['text']}',
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 12,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(
+                                0, 3), // changes position of shadow
                           ),
-                          textAlign: TextAlign.right,
-                        ),
-                      ],
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        textDirection: TextDirection.rtl,
+                        children: [
+                          Text(
+                            '${pst.replyingPost['author']}',
+                            style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          if (pst.replyingPost['text'] != '')
+                            Text(
+                              pst.replyingPost['text'].length > 30
+                                  ? '...${pst.replyingPost['text'].substring(0, 30)}'
+                                  : '${pst.replyingPost['text']}',
+                              style: TextStyle(
+                                color: Colors.grey[800],
+                                fontSize: 12,
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                          if (pst.replyingPost['post_type'] == 'image')
+                            Container(
+                                constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.of(context).size.width / 5,
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl: pst.replyingPost['image_url'],
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ))
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -395,14 +484,36 @@ class OtherMessageDesign extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      Text(
-                        '${pst.text}',
-                        style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 14,
+                      if (pst.text != '')
+                        Text(
+                          '${pst.text}',
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.right,
                         ),
-                        textAlign: TextAlign.left,
-                      ),
+                      if (pst.postType == 'image')
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        viewPhoto(imgURL: pst.imageURL)));
+                          },
+                          child: Container(
+                              constraints: BoxConstraints(
+                                  maxHeight:
+                                      MediaQuery.of(context).size.width / 1.25),
+                              child: CachedNetworkImage(
+                                imageUrl: pst.imageURL,
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              )),
+                        ),
                       const SizedBox(
                         height: 8,
                       ),
@@ -410,9 +521,14 @@ class OtherMessageDesign extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           InkWell(
-                            onTap: () {},
-                            child: const Icon(
-                              Icons.favorite,
+                            onTap: () {
+                              likeCallback(pst,
+                                  '$postLink/${pst.time.toString()}${pst.authorId}/');
+                            },
+                            child: Icon(
+                              pst.likes.contains(authID)
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
                               color: Colors.red,
                             ),
                           ),
@@ -420,7 +536,7 @@ class OtherMessageDesign extends StatelessWidget {
                             width: 2,
                           ),
                           Text(
-                            '${pst.likes}',
+                            '${pst.likes.length}',
                             style: TextStyle(
                                 color: Colors.grey[500], fontSize: 18),
                           ),
@@ -429,7 +545,7 @@ class OtherMessageDesign extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              callback(pst);
+                              commentCallback(pst);
                             },
                             child: Icon(
                               Icons.reply,

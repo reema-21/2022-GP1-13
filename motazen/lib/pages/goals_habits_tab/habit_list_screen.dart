@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:motazen/isarService.dart';
+import 'package:motazen/pages/add_habit_page/add_habit.dart';
+import 'package:motazen/pages/goals_habits_tab/habit_edit.dart';
+import 'package:motazen/isar_service.dart';
+import 'package:motazen/pages/assesment_page/aler2.dart';
 import 'package:provider/provider.dart';
-import '../../data/data.dart';
-import '../add_habit_page/add_habit.dart';
+import '../../../data/data.dart';
 import '/entities/habit.dart';
-import '/pages/goals_habits_tab/habit_edit.dart';
-
-import '../assesment_page/alert_dialog.dart';
 
 class HabitListScreen extends StatefulWidget {
   final IsarService isr;

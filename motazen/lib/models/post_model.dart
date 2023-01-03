@@ -4,10 +4,12 @@ class PostModel {
   String? author;
   String? authorId;
   final time;
-  String? text;
+  final text;
   final comments;
   final replyingPost;
-  int? likes;
+  final likes;
+  String? postType;
+  final imageURL;
   PostModel(
       {this.author,
       this.authorId,
@@ -15,14 +17,16 @@ class PostModel {
       this.time,
       required this.comments,
       required this.likes,
-      required this.replyingPost});
+      required this.replyingPost,
+      required this.postType,
+      required this.imageURL});
 
   Map<String, dynamic> toJson() => {
         'author': author,
         'author_id': authorId,
         'time': time,
         'text': text,
-        'comment': comments,
-        'likes': likes,
+        'post_type': postType,
+        'image_url': imageURL
       };
 }

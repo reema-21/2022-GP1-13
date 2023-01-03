@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/entities/habit.dart';
-import 'package:motazen/isarService.dart';
+import 'package:motazen/isar_service.dart';
+import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
 
-import '../../../assesment_page/aler2.dart';
 import '../../../goals_habits_tab/habit_edit.dart';
 
 class AspectHabit extends StatefulWidget {
@@ -135,68 +135,63 @@ class _AspectGoal extends State<AspectHabit> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-        textDirection: TextDirection.rtl,
-        child: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              leading: chooseIcon(widget.aspect.name),
-              title: Text(
-                AspectName(widget.aspect.name),
-                textDirection: TextDirection.rtl,
-                style: titleText2,
-              ),
-              automaticallyImplyLeading: true, // need color
-              backgroundColor: Colors.white,
-            ),
-            body: ListView.builder(
-                itemCount: habits.length,
-                itemBuilder: (context, index) {
-                  final habit = habits[index];
-                  final startData = habits[index].frequency;
-                  final aspectName = habit.aspect.value?.name;
-                  return Container(
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                    margin: const EdgeInsets.only(bottom: 4),
-                    child: Card(
-                      elevation: 3,
-                      // here is the code of each item you have
-                      child: ListTile(
-                        trailing: TextButton(
-                          child: const Icon(Icons.delete),
-                          onPressed: () async {
-                            final action = await AlertDialogs.yesCancelDialog(
-                                context,
-                                ' هل انت متاكد من حذف هذه العادة  ',
-                                'بالنقر على تأكيد لن تتمكن من استرجاع تلك العادة ');
-                            if (action == DialogsAction.yes) {
-                              widget.isr.deleteHabit(habit);
-                            } else {}
-                          },
-                        ),
-                        tileColor: (index % 2 != 0)
-                            ? Colors.white
-                            : const Color.fromARGB(33, 102, 191, 118),
-                        subtitle:
-                            Text("التكرار : $startData"), // if not null added
-                        title: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(habit.titel),
-                        ),
-                        contentPadding: const EdgeInsets.all(7),
-                        onTap: () {
-                          // should return me to the page with add field
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return EditHbit(
-                                isr: widget.isr,
-                                HabitId: habit.id); // must be the
-                          }));
-                        },
-                      ),
+    return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          leading: chooseIcon(widget.aspect.name),
+          title: Text(
+            AspectName(widget.aspect.name),
+            style: titleText2,
+          ),
+          automaticallyImplyLeading: true, // need color
+          backgroundColor: Colors.white,
+        ),
+        body: ListView.builder(
+            itemCount: habits.length,
+            itemBuilder: (context, index) {
+              final habit = habits[index];
+              final startData = habits[index].frequency;
+              final aspectName = habit.aspect.value?.name;
+              return Container(
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                margin: const EdgeInsets.only(bottom: 4),
+                child: Card(
+                  elevation: 3,
+                  // here is the code of each item you have
+                  child: ListTile(
+                    trailing: TextButton(
+                      child: const Icon(Icons.delete),
+                      onPressed: () async {
+                        final action = await AlertDialogs.yesCancelDialog(
+                            context,
+                            ' هل انت متاكد من حذف هذه العادة  ',
+                            'بالنقر على تأكيد لن تتمكن من استرجاع تلك العادة ');
+                        if (action == DialogsAction.yes) {
+                          widget.isr.deleteHabit(habit);
+                        } else {}
+                      },
                     ),
-                  );
-                })));
+                    tileColor: (index % 2 != 0)
+                        ? Colors.white
+                        : const Color.fromARGB(33, 102, 191, 118),
+                    subtitle: Text("التكرار : $startData"), // if not null added
+                    title: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(habit.titel),
+                    ),
+                    contentPadding: const EdgeInsets.all(7),
+                    onTap: () {
+                      // should return me to the page with add field
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return EditHbit(
+                            isr: widget.isr, HabitId: habit.id); // must be the
+                      }));
+                    },
+                  ),
+                ),
+              );
+            }));
   }
 }

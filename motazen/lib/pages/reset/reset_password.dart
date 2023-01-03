@@ -15,41 +15,38 @@ class ResetPasswordScreen extends StatelessWidget {
         ),
         elevation: 0,
       ),
-      body: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Padding(
-          padding: kDefaultPadding,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 120,
+      body: Padding(
+        padding: kDefaultPadding,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 120,
+              ),
+              Text(
+                'إعادة تعيين كلمة السر',
+                style: titleText.copyWith(
+                  fontSize: 30,
                 ),
-                Text(
-                  'إعادة تعيين كلمة السر',
-                  style: titleText.copyWith(
-                    fontSize: 30,
-                  ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                '1) من فضلك، قم بادخال بريدك الإلكتروني:',
+                style: subTitle.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  '1) من فضلك، قم بادخال بريدك الإلكتروني:',
-                  style: subTitle.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const ResetForm(),
-                const SizedBox(
-                  height: 40,
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const ResetForm(),
+              const SizedBox(
+                height: 40,
+              ),
+            ],
           ),
         ),
       ),

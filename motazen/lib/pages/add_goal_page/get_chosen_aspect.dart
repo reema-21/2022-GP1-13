@@ -1,11 +1,10 @@
 // ignore_for_file: camel_case_types
 
 import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
-import 'package:motazen/isarService.dart';
 import 'package:provider/provider.dart';
 
-
 import 'package:flutter/material.dart';
+import '../../isar_service.dart';
 import '/pages/select_aspectPage/handle_aspect_data.dart';
 
 import '../../data/data.dart';
@@ -35,14 +34,18 @@ class _showsState extends State<getChosenAspect> {
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-            future: handle_aspect().getAspects(),
-            builder: ((context, snapshot) {
+            future: Future.wait([
+              handle_aspect().getAspects(),
+              IsarService().getSelectedAspects()
+            ]),
+            builder: ((context, AsyncSnapshot<List<dynamic>> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 var aspectList = Provider.of<WheelData>(context);
                 //prepare the parameter of add goal
                 List<String> chosenAspectNames = [];
                 //a list of selected aspects
-                List<Aspect>? updatedAspects = snapshot.data;
+                List<Aspect>? updatedAspects = snapshot.data![0];
+                aspectList.selected = snapshot.data![1];
                 for (int i = 0; i < updatedAspects!.length; i++) {
                   if (updatedAspects[i].isSelected) {
                     chosenAspectNames.add(updatedAspects[i].name);
@@ -51,7 +54,6 @@ class _showsState extends State<getChosenAspect> {
                     updatedAspects[i].percentagePoints = widget.pointsList![i];
                   }
                 }
-
                 aspectList.allAspects = updatedAspects;
                 List<String> chosenspectNames = [];
 

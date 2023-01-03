@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:motazen/data/data.dart';
 import 'package:motazen/entities/LocalTask.dart';
-import 'package:motazen/isarService.dart';
 import 'package:motazen/pages/goals_habits_tab/goal_details.dart';
+import 'package:motazen/isar_service.dart';
 import 'package:motazen/theme.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -120,201 +120,193 @@ class _EditGoalState extends State<EditGoal> {
   Widget build(BuildContext context) {
     var aspectList = Provider.of<WheelData>(context);
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "معلومات الهدف",
-            style: titleText,
-            textDirection: TextDirection.rtl,
-          ),
-          backgroundColor: kWhiteColor,
-          iconTheme: const IconThemeData(color: kBlackColor),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "معلومات الهدف",
+          style: titleText,
         ),
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.miniStartFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return goalDetails(
-                chosenAspectNames: aspectList.selectedArabic,
-                isr: widget.isr,
-                goalName: displayGoalNameControlller.text,
-                goalAspect: goalAspect,
-                importance: importance,
-                goalDuration: goalDuration,
-                goalDurationDescription: goalDurationDescription,
-                goalImportanceDescription: goalImportanceDescription,
-                temGoalDataTime: temGoalDataTime,
-                dueDataDescription: dueDataDescription,
-                weekisSelected: weekisSelected,
-                daysisSelected: daysisSelected,
-                goalTasks: goalTasks,
-                id: widget.goalId,
-              );
-            }));
-          },
-          backgroundColor: const Color.fromARGB(255, 252, 252, 252),
-          child: const Icon(
-            Icons.edit,
-            color: Color(0xFF66BF77),
-          ),
+        backgroundColor: kWhiteColor,
+        iconTheme: const IconThemeData(color: kBlackColor),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return goalDetails(
+              chosenAspectNames: aspectList.selectedArabic,
+              isr: widget.isr,
+              goalName: displayGoalNameControlller.text,
+              goalAspect: goalAspect,
+              importance: importance,
+              goalDuration: goalDuration,
+              goalDurationDescription: goalDurationDescription,
+              goalImportanceDescription: goalImportanceDescription,
+              temGoalDataTime: temGoalDataTime,
+              dueDataDescription: dueDataDescription,
+              weekisSelected: weekisSelected,
+              daysisSelected: daysisSelected,
+              goalTasks: goalTasks,
+              id: widget.goalId,
+            );
+          }));
+        },
+        backgroundColor: const Color.fromARGB(255, 252, 252, 252),
+        child: const Icon(
+          Icons.edit,
+          color: Color(0xFF66BF77),
         ),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Column(children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                child: ListView(
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      body: Column(children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: ListView(
+              children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
                   children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "اسم الهدف:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          displayGoalNameControlller.text,
-                          style: subTitle,
-                        )
-                      ],
+                    Text(
+                      "اسم الهدف:",
+                      style: titleText2,
                     ),
                     const SizedBox(
-                      height: 20,
+                      width: 10,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "جانب الحياة:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          goalAspect,
-                          style: subTitle,
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "تاريخ الاستحقاق:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          dueDataDescription,
-                          style: subTitle,
-                        )
-                      ],
+                    Text(
+                      displayGoalNameControlller.text,
+                      style: subTitle,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "جانب الحياة:",
+                      style: titleText2,
                     ),
                     const SizedBox(
-                      height: 20,
+                      width: 10,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "الفترة:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          goalDurationDescription,
-                          style: subTitle,
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "الأهمية:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(goalImportanceDescription, style: subTitle)
-                      ],
+                    Text(
+                      goalAspect,
+                      style: subTitle,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "تاريخ الاستحقاق:",
+                      style: titleText2,
                     ),
                     const SizedBox(
-                      height: 20,
+                      width: 10,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "المهام:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: kPrimaryColor,
-                              padding: kDefaultPadding),
-                          onPressed: goalTasks.isNotEmpty
-                              ? () {
-                                  dialogBox(context);
-                                  //the nevigator is downs
-                                }
-                              : null,
-                          child: const Text(
-                            "اعرض المهام",
-                            style: TextStyle(
-                              color: kWhiteColor,
-                              fontSize: 16,
-                              fontFamily: 'Frutiger',
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        )
-                      ],
+                    Text(
+                      dueDataDescription,
+                      style: subTitle,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "الفترة:",
+                      style: titleText2,
                     ),
                     const SizedBox(
-                      height: 50,
+                      width: 10,
                     ),
-                    CircularPercentIndicator(
-                      radius: 120,
-                      lineWidth: 20,
-                      circularStrokeCap: CircularStrokeCap.round,
-                      percent: goal!.goalProgressPercentage,
-                      animation: true,
-                      animationDuration: 600,
-                      progressColor: kPrimaryColor,
-                      backgroundColor: kPrimaryColor.withOpacity(0.3),
-                      center: Text(
-                        '${(goal!.goalProgressPercentage * 100).round().toString()}%',
-                        style: titleText,
+                    Text(
+                      goalDurationDescription,
+                      style: subTitle,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "الأهمية:",
+                      style: titleText2,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(goalImportanceDescription, style: subTitle)
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "المهام:",
+                      style: titleText2,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: kPrimaryColor,
+                          padding: kDefaultPadding),
+                      onPressed: goalTasks.isNotEmpty
+                          ? () {
+                              dialogBox(context);
+                              //the nevigator is downs
+                            }
+                          : null,
+                      child: const Text(
+                        "اعرض المهام",
+                        style: TextStyle(
+                          color: kWhiteColor,
+                          fontSize: 16,
+                          fontFamily: 'Frutiger',
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     )
                   ],
                 ),
-              ),
+                const SizedBox(
+                  height: 50,
+                ),
+                CircularPercentIndicator(
+                  radius: 120,
+                  lineWidth: 20,
+                  circularStrokeCap: CircularStrokeCap.round,
+                  percent: goal!.goalProgressPercentage,
+                  animation: true,
+                  animationDuration: 600,
+                  progressColor: kPrimaryColor,
+                  backgroundColor: kPrimaryColor.withOpacity(0.3),
+                  center: Text(
+                    '${(goal!.goalProgressPercentage * 100).round().toString()}%',
+                    style: titleText,
+                  ),
+                )
+              ],
             ),
-          ]),
+          ),
         ),
-      ),
+      ]),
     );
   }
 
@@ -336,49 +328,46 @@ class _EditGoalState extends State<EditGoal> {
   Widget buildView(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: goalTasks.length, //here is what causing the error
-            itemBuilder: (context, index) {
-              final name = goalTasks[index].name;
-              final completionPercentage =
-                  goalTasks[index].taskCompletionPercentage;
-              return Card(
-                  // here is the code of each item you have
-                  child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.task, color: Color(0xFF66BF77)),
-                    title: Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Text(
-                        name,
-                        style: subTitle,
-                      ),
+      child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: goalTasks.length, //here is what causing the error
+          itemBuilder: (context, index) {
+            final name = goalTasks[index].name;
+            final completionPercentage =
+                goalTasks[index].taskCompletionPercentage;
+            return Card(
+                // here is the code of each item you have
+                child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.task, color: Color(0xFF66BF77)),
+                  title: Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Text(
+                      name,
+                      style: subTitle,
                     ),
                   ),
-                  LinearPercentIndicator(
-                    animation: true,
-                    animationDuration: 600,
-                    curve: Curves.easeIn,
+                ),
+                LinearPercentIndicator(
+                  animation: true,
+                  animationDuration: 600,
+                  curve: Curves.easeIn,
 
-                    ///check later why the value isn't updated
-                    percent: completionPercentage,
-                    lineHeight: 7,
-                    isRTL: true,
-                    progressColor: kPrimaryColor,
-                    backgroundColor: kPrimaryColor.withOpacity(0.3),
-                    barRadius: const Radius.circular(10),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  )
-                ],
-              ));
-            }),
-      ),
+                  ///check later why the value isn't updated
+                  percent: completionPercentage,
+                  lineHeight: 7,
+                  isRTL: true,
+                  progressColor: kPrimaryColor,
+                  backgroundColor: kPrimaryColor.withOpacity(0.3),
+                  barRadius: const Radius.circular(10),
+                ),
+                const SizedBox(
+                  height: 15,
+                )
+              ],
+            ));
+          }),
     );
   }
 }

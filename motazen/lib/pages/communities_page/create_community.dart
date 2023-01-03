@@ -2,20 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:motazen/controllers/auth_controller.dart';
 import 'package:motazen/controllers/community_controller.dart';
+import 'package:motazen/data/data.dart';
+import 'package:motazen/isar_service.dart';
 import 'package:motazen/models/community.dart';
 import 'package:motazen/pages/add_goal_page/task_controller.dart';
-import 'package:motazen/pages/communities_page/add_CommunityGoalTask.dart';
 import 'package:motazen/pages/communities_page/community_home.dart';
 import 'package:motazen/theme.dart';
 import 'package:motazen/widget/greenContainer.dart';
 import 'package:provider/provider.dart';
-import 'package:searchfield/searchfield.dart';
 
 import '../../Sidebar_and_navigation/sidebar.dart';
-import '../../data/data.dart';
-import '../../models/user.dart';
+import '../add_goal_page/add_Task2.dart';
 
 class CreateCommunity extends StatefulWidget {
   const CreateCommunity({super.key});
@@ -26,15 +24,14 @@ class CreateCommunity extends StatefulWidget {
 
 class _CreateCommunityState extends State<CreateCommunity> {
   TextEditingController communityNameController = TextEditingController();
-  TextEditingController inviteFriendsController = TextEditingController();
-  FocusNode inviteFriendsFocusNode = FocusNode();
+
   TextEditingController goalNameController = TextEditingController();
   CommunityController communityController = Get.find();
-  AuthController authController = Get.find();
+
   TaskControleer taskControleer = Get.find();
 
   bool private = true;
-  bool shouldEnabled = false;
+
   bool public = false;
   DateTime duration = DateTime.now();
   int difference = 0;
@@ -50,224 +47,228 @@ class _CreateCommunityState extends State<CreateCommunity> {
   }
 
   // Initial Selected Value
-  String? aspect;
-  List<Userr> selectedUsers = [];
-  List<Userr> newSelectedUsersList = [];
+  String aspect = 'Finance';
+
+  // List<Community> listOfUsers = [
+  //   'user1',
+  //   'user2',
+  //   'user3',
+  //   'user4',
+  //   'user5',
+  //   'user6',
+  //   'user7',
+  //   'user8',
+  //   'user9',
+  //   'user10'
+  // ];
 
   // List of items in our dropdown menu
-
+  var items = [
+    'Finance',
+    'Family',
+    'Fun',
+    'Career',
+    'Health',
+    'Enviroment',
+    'Relationships',
+    'Pesonal Growth',
+  ];
   @override
   void dispose() {
     communityNameController.dispose();
-    inviteFriendsController.dispose();
     goalNameController.dispose();
-    inviteFriendsFocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        drawer: const SideBar(),
-        appBar: AppBar(
-          backgroundColor: kWhiteColor,
-          iconTheme: const IconThemeData(color: Colors.black),
-          elevation: 0.0,
-          title: Text(
-            'إنشاء مجتمع',
-            style: titleText,
-          ),
-          actions: <Widget>[
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const RotatedBox(
-                  quarterTurns: 2,
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black,
-                  ),
-                ),
-                tooltip: 'View Requests'),
-          ],
-        ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      drawer: const SideBar(),
+      appBar: AppBar(
         backgroundColor: kWhiteColor,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(
+        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const RotatedBox(
+                quarterTurns: 2,
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
+                ),
+              ),
+              tooltip: 'View Requests'),
+        ],
+      ),
+      backgroundColor: kWhiteColor,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(
+              textDirection: TextDirection.rtl,
+              children: [
+                const Spacer(),
+                txt(
+                  txt: 'ابدأ مجتمع',
+                  fontSize: 32,
+                  fontColor: kPrimaryColor,
+                ),
+                const Spacer(
+                  flex: 2,
+                )
+              ],
+            ),
+            SizedBox(
+              height: screenHeight(context) * 0.03,
+            ),
+            textformField(
+                hint: "اسم المجتمع", controller: communityNameController),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  txt(txt: "نوع المجتمع", fontSize: 16),
+                ],
+              ),
+            ),
+            isPrivateWidget(context),
+
+            // inviteFriendsWidget(context),
+            SizedBox(
+              height: screenHeight(context) * 0.01,
+            ),
+            textformField(hint: "اسم الهدف", controller: goalNameController),
+            Padding(
+              padding: const EdgeInsets.only(top: 12, bottom: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  txt(txt: "جانب الحياة", fontSize: 16),
+                ],
+              ),
+            ),
+            aspectWidget(context),
+            Padding(
+              padding: const EdgeInsets.only(top: 12, bottom: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  txt(txt: "المدة", fontSize: 16),
+                ],
+              ),
+            ),
+            durationWidget(context),
+            Padding(
+              padding: const EdgeInsets.only(top: 12, bottom: 8),
+              child: Row(
                 textDirection: TextDirection.rtl,
                 children: [
-                  const Spacer(),
-                  txt(
-                    txt: '',
-                    fontSize: 32,
-                    fontColor: kPrimaryColor,
+                  txt(txt: "أضف مهمة:", fontSize: 16),
+                  SizedBox(
+                    width: Get.width * 0.05,
                   ),
-                  const Spacer(
-                    flex: 2,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: screenHeight(context) * 0.03,
-              ),
-              textformField(
-                  hint: "اسم المجتمع", controller: communityNameController),
-              Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    txt(txt: "نوع المجتمع", fontSize: 16),
-                  ],
-                ),
-              ),
-              isPrivateWidget(context),
-              Padding(
-                padding: const EdgeInsets.only(top: 12, bottom: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    txt(txt: "دعوة الأصدقاء", fontSize: 16),
-                  ],
-                ),
-              ),
-              inviteFriendsWidget(context),
-              SizedBox(
-                height: screenHeight(context) * 0.01,
-              ),
-              textformField(hint: "اسم الهدف", controller: goalNameController),
-              Padding(
-                padding: const EdgeInsets.only(top: 12, bottom: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    txt(txt: "جوانب الحياة", fontSize: 16),
-                  ],
-                ),
-              ),
-              aspectWidget(context),
-              Padding(
-                padding: const EdgeInsets.only(top: 12, bottom: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    txt(txt: "الفترة", fontSize: 16),
-                  ],
-                ),
-              ),
-              durationWidget(context),
-              Padding(
-                padding: const EdgeInsets.only(top: 12, bottom: 8),
-                child: Row(
-                  textDirection: TextDirection.rtl,
-                  children: [
-                    txt(txt: ":إضافة المهام", fontSize: 16),
-                    SizedBox(
-                      width: Get.width * 0.05,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        if (difference != 0) {
-                          Get.to(() => AddCommunityGoalTask(
-                              goalTask: const [], goalDurtion: difference));
-                        } else {
-                          getWarningSnackBar('فضلا ادخل الفترة');
-                        }
-                      },
-                      child: const CircleAvatar(
-                        backgroundColor: kPrimaryColor,
-                        radius: 12,
-                        child: Center(
-                            child: Icon(
-                          Icons.add,
-                          size: 16,
-                          color: Colors.white,
-                        )),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: screenHeight(context) * 0.05,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
                   InkWell(
                     onTap: () {
-                      String commID =
-                          '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
-                      if (communityNameController.text.isNotEmpty &&
-                          goalNameController.text.isNotEmpty &&
-                          difference != 0 &&
-                          newSelectedUsersList.isNotEmpty) {
-                        communityController.listOfCreatedCommunities.add(
-                          Community(
-                              communityName: communityNameController.text,
-                              aspect: aspect,
-                              isPrivate: private,
-                              founderUsername:
-                                  firebaseAuth.currentUser!.displayName,
-                              tillDate: duration,
-                              creationDate: DateTime.now(),
-                              goalName: goalNameController.text,
-                              listOfTasks: taskControleer.goalTask.value.isEmpty
-                                  ? []
-                                  : taskControleer.goalTask.value,
-                              id: commID),
-                        );
-                        communityController.update();
-                        communityController.createCommunity(
-                          invitedUsers: newSelectedUsersList,
-                          community: Community(
-                              communityName: communityNameController.text,
-                              aspect: aspect,
-                              founderUsername:
-                                  firebaseAuth.currentUser!.displayName,
-                              isPrivate: private,
-                              tillDate: duration,
-                              creationDate: DateTime.now(),
-                              goalName: goalNameController.text,
-                              listOfTasks: taskControleer.goalTask.value.isEmpty
-                                  ? []
-                                  : taskControleer.goalTask.value,
-                              id: commID),
-                        );
-
-                        Get.back();
-                        Get.to(CommunityHomePage(
-                            comm: communityController
-                                .listOfCreatedCommunities.last));
+                      if (difference != 0) {
+                        Get.to(() => AddTask(
+                            goalTask: const [],
+                            isr: IsarService(),
+                            goalDurtion: difference));
                       } else {
-                        getWarningSnackBar('يجب تعبئة جميع الخانات للإستمرار');
+                        getWarningSnackBar('Please select duration first');
                       }
                     },
-                    child: Container(
-                      height: screenHeight(context) * 0.05,
-                      width: screenWidth(context) * 0.4,
-                      decoration: BoxDecoration(
-                          color: kPrimaryColor,
-                          borderRadius: BorderRadius.circular(5)),
+                    child: const CircleAvatar(
+                      backgroundColor: kPrimaryColor,
+                      radius: 12,
                       child: Center(
-                          child: txt(
-                              txt: 'إنشاء',
-                              fontSize: 16,
-                              fontColor: Colors.white)),
+                          child: Icon(
+                        Icons.add,
+                        size: 16,
+                        color: Colors.white,
+                      )),
                     ),
                   )
                 ],
-              )
-            ]),
-          ),
+              ),
+            ),
+            SizedBox(
+              height: screenHeight(context) * 0.05,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    String commID =
+                        '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
+                    if (communityNameController.text.isNotEmpty &&
+                        goalNameController.text.isNotEmpty &&
+                        difference != 0) {
+                      communityController.listOfCreatedCommunities.add(
+                        Community(
+                            communityName: communityNameController.text,
+                            aspect: aspect,
+                            isPrivate: private,
+                            founderUsername:
+                                firebaseAuth.currentUser!.displayName,
+                            tillDate: duration,
+                            creationDate: DateTime.now(),
+                            goalName: goalNameController.text,
+                            listOfTasks: taskControleer.goalTask.value.isEmpty
+                                ? []
+                                : taskControleer.goalTask.value,
+                            id: commID),
+                      );
+                      communityController.update();
+                      communityController.createCommunity(
+                        invitedUsers: [],
+                        community: Community(
+                            communityName: communityNameController.text,
+                            aspect: aspect,
+                            founderUsername:
+                                firebaseAuth.currentUser!.displayName,
+                            isPrivate: private,
+                            tillDate: duration,
+                            creationDate: DateTime.now(),
+                            goalName: goalNameController.text,
+                            listOfTasks: taskControleer.goalTask.value.isEmpty
+                                ? []
+                                : taskControleer.goalTask.value,
+                            id: commID),
+                      );
+
+                      Get.back();
+                      Get.to(CommunityHomePage(
+                          comm: communityController
+                              .listOfCreatedCommunities.last));
+                    } else {
+                      getWarningSnackBar('Please fill out all the details');
+                    }
+                  },
+                  child: Container(
+                    height: screenHeight(context) * 0.05,
+                    width: screenWidth(context) * 0.4,
+                    decoration: BoxDecoration(
+                        color: kPrimaryColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Center(
+                        child: txt(
+                            txt: 'ابدأ',
+                            fontSize: 16,
+                            fontColor: Colors.white)),
+                  ),
+                )
+              ],
+            )
+          ]),
         ),
       ),
     );
@@ -384,193 +385,38 @@ class _CreateCommunityState extends State<CreateCommunity> {
       ),
       child: Padding(
         padding: const EdgeInsets.only(right: 10, top: 5, left: 10),
-        child: Directionality(
-          textDirection: TextDirection.rtl,
-          child: DropdownButton(
-            dropdownColor: kPrimaryColor,
-            underline: Container(),
-            borderRadius: BorderRadius.circular(5),
-            iconSize: 24,
-            isExpanded: true,
-            icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
-            items: aspectList.selectedArabic.map((String item) {
-              return DropdownMenuItem<String>(
-                  value: item,
-                  child: Row(
-                    textDirection: TextDirection.ltr,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 12,
-                        ),
-                        child: txt(
-                          txt: item,
-                          fontColor: Colors.white,
-                          fontSize: 16,
-                        ),
+        child: DropdownButton(
+          dropdownColor: kPrimaryColor,
+          underline: Container(),
+          borderRadius: BorderRadius.circular(5),
+          iconSize: 24,
+          isExpanded: true,
+          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+          items: aspectList.selectedArabic.map((String item) {
+            return DropdownMenuItem<String>(
+                value: item,
+                child: Row(
+                  textDirection: TextDirection.ltr,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 12,
                       ),
-                    ],
-                  ));
-            }).toList(),
-            onChanged: (String? newValue) {
-              setState(() {
-                aspect = newValue!;
-              });
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  Container inviteFriendsWidget(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          color: Colors.grey,
-        ),
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  shouldEnabled = true;
-                });
-                inviteFriendsController.text = '';
-                inviteFriendsFocusNode.requestFocus();
-              },
-              child: const Icon(
-                Icons.add,
-                color: kPrimaryColor,
-              ),
-            ),
-          ),
-          Expanded(
-            child: shouldEnabled || newSelectedUsersList.isEmpty
-                ? inviteFriendssearchField(context)
-                : inviteFriendsListView(context),
-          ),
-          const SizedBox(width: 10),
-        ],
-      ),
-    );
-  }
-
-  SizedBox inviteFriendsListView(BuildContext context) {
-    return SizedBox(
-      height: screenHeight(context) * 0.07,
-      child: ListView(
-        reverse: true,
-        scrollDirection: Axis.horizontal,
-        children: newSelectedUsersList.map((Userr user) {
-          return Padding(
-            padding: const EdgeInsets.all(8),
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all()),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 12,
+                      child: txt(
+                        txt: item,
+                        fontColor: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
-                    child: txt(
-                      txt: user.userName!,
-                      fontSize: 16,
-                    ),
-                  ),
-                  SizedBox(
-                    width: screenWidth(context) * 0.05,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            newSelectedUsersList.remove(user);
-                            selectedUsers.remove(user);
-                            if (newSelectedUsersList.isEmpty) {
-                              inviteFriendsController.text = '';
-                            }
-                          });
-                        },
-                        child: const Icon(
-                          Icons.close,
-                          color: kPrimaryColor,
-                        )),
-                  )
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Padding inviteFriendssearchField(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 12),
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: SearchField(
-          searchInputDecoration:
-              const InputDecoration(border: InputBorder.none),
-          focusNode: inviteFriendsFocusNode,
-          controller: inviteFriendsController,
-          onSuggestionTap: (p0) {
-            newSelectedUsersList.clear();
+                  ],
+                ));
+          }).toList(),
+          onChanged: (String? newValue) {
             setState(() {
-              inviteFriendsFocusNode.unfocus();
-              shouldEnabled = false;
+              aspect = newValue!;
             });
-
-            for (var user in authController.usersList) {
-              if (user.userName == p0.searchKey) {
-                selectedUsers.add(user);
-                break;
-              }
-            }
-
-            newSelectedUsersList = selectedUsers.toSet().toList();
-            for (var user in newSelectedUsersList) {
-              if (user.userID == firebaseAuth.currentUser!.uid) {
-                newSelectedUsersList.remove(user);
-              }
-            }
           },
-          suggestions: ((authController.usersList)
-                ..removeWhere((e) => e.userID == firebaseAuth.currentUser!.uid))
-              .map(
-                (e) => SearchFieldListItem(
-                  e.userName!,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        txt(txt: e.userName!, fontSize: 16),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
-          suggestionState: Suggestion.expand,
-          textInputAction: TextInputAction.next,
-          hint: 'اختر اسم المستخدم',
-          hasOverlay: false,
-          searchStyle: TextStyle(
-            fontSize: 18,
-            color: Colors.black.withOpacity(0.8),
-          ),
-          itemHeight: screenHeight(context) * 0.07,
         ),
       ),
     );
@@ -583,25 +429,22 @@ class _CreateCommunityState extends State<CreateCommunity> {
       bool? isEnabled}) {
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 10),
-      child: Directionality(
+      child: TextFormField(
         textDirection: TextDirection.rtl,
-        child: TextFormField(
-          textDirection: TextDirection.rtl,
-          enabled: isEnabled,
-          controller: controller,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "من فضلك ادخل اسم الهدف";
-            } else {
-              return null;
-            }
-          },
-          decoration: InputDecoration(
-            hintTextDirection: TextDirection.rtl,
-            labelText: hint,
-            suffixIcon: suffixIcon,
-            border: const OutlineInputBorder(),
-          ),
+        enabled: isEnabled,
+        controller: controller,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "من فضلك ادخل اسم الهدف";
+          } else {
+            return null;
+          }
+        },
+        decoration: InputDecoration(
+          hintTextDirection: TextDirection.rtl,
+          labelText: hint,
+          suffixIcon: suffixIcon,
+          border: const OutlineInputBorder(),
         ),
       ),
     );
