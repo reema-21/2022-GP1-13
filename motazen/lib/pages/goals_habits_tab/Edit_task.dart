@@ -68,7 +68,7 @@ class _EditTaskState extends State<EditTask> {
       //create the object
       //fetch the tasks so that you can get its dependency
       //assign value and add to the list
-      LocalTask? tem = LocalTask();
+      LocalTask? tem = LocalTask(userID: IsarService.getUserID);
       TaskData task = TaskData();
       tem = await widget.isr.getSepecificTask(i.id);
       if (tem != null) {
@@ -83,7 +83,7 @@ class _EditTaskState extends State<EditTask> {
   }
 
   Future<List<LocalTask>> getTasks() async {
-    Goal? goal = Goal();
+    Goal? goal = Goal(userID: IsarService.getUserID);
     goal = await widget.isr.getSepecificGoall(widget.id);
     return goal!.task.toList();
   }
@@ -94,7 +94,7 @@ class _EditTaskState extends State<EditTask> {
     });
   }
 
-  LocalTask? task = LocalTask();
+  LocalTask? task = LocalTask(userID: IsarService.getUserID);
   UpdateTask(LocalTask UpdateTask, List<String> tasks, int index) async {
     task = await widget.isr.getSepecificTask(UpdateTask.id);
 
@@ -135,7 +135,7 @@ class _EditTaskState extends State<EditTask> {
         }
       }
       await Future.forEach(tasks, (item) async {
-        LocalTask? y = LocalTask();
+        LocalTask? y = LocalTask(userID: IsarService.getUserID);
         String name = item;
 
         y = await widget.isr.findSepecificTask(name);
@@ -157,7 +157,7 @@ class _EditTaskState extends State<EditTask> {
       Taskss.add(freq.selectedTasks.value[i]);
     }
     await Future.forEach(Taskss, (item) async {
-      LocalTask? y = LocalTask();
+      LocalTask? y = LocalTask(userID: IsarService.getUserID);
       String name = item;
 
       y = await widget.isr.findSepecificTask(name);
@@ -171,7 +171,7 @@ class _EditTaskState extends State<EditTask> {
       task!.TaskDependency.remove(item);
     });
     widget.isr.saveTask(newTask);
-    Goal? goal = Goal();
+    Goal? goal = Goal(userID: IsarService.getUserID);
     goal = await widget.isr.getSepecificGoall(widget.id);
     goal!.task.add(newTask);
     widget.isr.createGoal(goal);
@@ -1127,7 +1127,7 @@ class _EditTaskState extends State<EditTask> {
                                     ? () {
                                         if (formKey.currentState!.validate()) {
                                           setState(() {
-                                            LocalTask newTak = LocalTask();
+                                            LocalTask newTak = LocalTask(userID: IsarService.getUserID);
                                             newTak.name =
                                                 freq.inputTaskName.value.text;
                                             String durationDescribtion = "";

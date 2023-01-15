@@ -44,7 +44,7 @@ class _AddHabitState extends State<AddHabit> {
     });
   }
 
-  Habit newhabit = Habit();
+  Habit newhabit = Habit(userID: IsarService.getUserID);
   String aspectnameInEnglish = "";
   int seletedduration = 0;
   _AddHabit() async {

@@ -14,4 +14,6 @@ class LocalTask {
   double taskCompletionPercentage = 0;
   late int duration;
   late String durationDescribtion;
+  String userID;
+  LocalTask({required this.userID});
 }

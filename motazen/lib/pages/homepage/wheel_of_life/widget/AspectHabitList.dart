@@ -1,5 +1,5 @@
 // ignore_for_file: file_names, non_constant_identifier_names, unused_local_variable
-
+//man
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/entities/habit.dart';
@@ -138,10 +138,18 @@ class _AspectGoal extends State<AspectHabit> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          leading: chooseIcon(widget.aspect.name),
-          title: Text(
-            AspectName(widget.aspect.name),
-            style: titleText2,
+          title: Row(
+            children: [
+              Text(
+                AspectName(widget.aspect.name),
+                textDirection: TextDirection.rtl,
+                style: titleText2,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              chooseIcon(widget.aspect.name)
+            ],
           ),
           automaticallyImplyLeading: true, // need color
           backgroundColor: Colors.white,

@@ -1,5 +1,5 @@
 // ignore_for_file: camel_case_types
-
+//manar
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:motazen/isar_service.dart';
@@ -18,7 +18,7 @@ class handle_aspect {
   Future<List<Aspect>> initializeAspects(List<Data> list) async {
     await isar.cleanAspects();
     for (var i = 0; i < list.length; i++) {
-      var newAspect = Aspect();
+      var newAspect = Aspect(userID: IsarService.getUserID);
       newAspect
         ..name = list[i].name
         ..isSelected = false
@@ -77,7 +77,7 @@ class handle_aspect {
     aspectProgressPercentage = aspectProgressSum + aspect.percentagePoints;
 
     if (aspectProgressPercentage <= 100) {
-      IsarService().updateAspectPercentage(aspect.id, aspectProgressPercentage);
+      IsarService().updateAspectPercentage(aspect.id, aspectProgressPercentage ,aspectProgressPercentage);
     }
   }
 }
@@ -102,10 +102,10 @@ class _initializeAspectsState extends State<initializeAspects> {
     var aspectList = Provider.of<WheelData>(context);
     return Scaffold(
       body: Center(
-        child: FutureBuilder(
+        child: FutureBuilder<List<Aspect>>(
             future: handle_aspect().initializeAspects(aspectList.data),
             builder: ((context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
                 aspectList.allAspects = snapshot.data!;
                 return AspectSelection(
                   isr: isar,

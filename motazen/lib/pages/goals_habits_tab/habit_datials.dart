@@ -93,7 +93,7 @@ class _AddHabitState extends State<HabitDetails> {
   }
 
   String aspectnameInEnglish = "";
-  Habit? habit = Habit();
+  Habit? habit = Habit(userID: IsarService.getUserID);
   _AddHabit() async {
     habit = await widget.isr.getSepecificHabit(widget.id);
     habit?.titel = _goalNmaeController.text;

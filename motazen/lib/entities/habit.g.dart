@@ -36,6 +36,11 @@ const HabitSchema = CollectionSchema(
       id: 3,
       name: r'titel',
       type: IsarType.string,
+    ),
+    r'userID': PropertySchema(
+      id: 4,
+      name: r'userID',
+      type: IsarType.string,
     )
   },
   estimateSize: _habitEstimateSize,
@@ -67,6 +72,7 @@ int _habitEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.frequency.length * 3;
   bytesCount += 3 + object.titel.length * 3;
+  bytesCount += 3 + object.userID.length * 3;
   return bytesCount;
 }
 
@@ -80,6 +86,7 @@ void _habitSerialize(
   writer.writeLong(offsets[1], object.durationIndString);
   writer.writeString(offsets[2], object.frequency);
   writer.writeString(offsets[3], object.titel);
+  writer.writeString(offsets[4], object.userID);
 }
 
 Habit _habitDeserialize(
@@ -88,7 +95,9 @@ Habit _habitDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Habit();
+  final object = Habit(
+    userID: reader.readString(offsets[4]),
+  );
   object.durationInNumber = reader.readLong(offsets[0]);
   object.durationIndString = reader.readLong(offsets[1]);
   object.frequency = reader.readString(offsets[2]);
@@ -111,6 +120,8 @@ P _habitDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -622,6 +633,135 @@ extension HabitQueryFilter on QueryBuilder<Habit, Habit, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> userIDEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> userIDGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> userIDLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> userIDBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userID',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> userIDStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> userIDEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> userIDContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> userIDMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userID',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> userIDIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userID',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> userIDIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userID',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension HabitQueryObject on QueryBuilder<Habit, Habit, QFilterCondition> {}
@@ -689,6 +829,18 @@ extension HabitQuerySortBy on QueryBuilder<Habit, Habit, QSortBy> {
       return query.addSortBy(r'titel', Sort.desc);
     });
   }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> sortByUserID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> sortByUserIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.desc);
+    });
+  }
 }
 
 extension HabitQuerySortThenBy on QueryBuilder<Habit, Habit, QSortThenBy> {
@@ -751,6 +903,18 @@ extension HabitQuerySortThenBy on QueryBuilder<Habit, Habit, QSortThenBy> {
       return query.addSortBy(r'titel', Sort.desc);
     });
   }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> thenByUserID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> thenByUserIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.desc);
+    });
+  }
 }
 
 extension HabitQueryWhereDistinct on QueryBuilder<Habit, Habit, QDistinct> {
@@ -777,6 +941,13 @@ extension HabitQueryWhereDistinct on QueryBuilder<Habit, Habit, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'titel', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QDistinct> distinctByUserID(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userID', caseSensitive: caseSensitive);
     });
   }
 }
@@ -809,6 +980,12 @@ extension HabitQueryProperty on QueryBuilder<Habit, Habit, QQueryProperty> {
   QueryBuilder<Habit, String, QQueryOperations> titelProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'titel');
+    });
+  }
+
+  QueryBuilder<Habit, String, QQueryOperations> userIDProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userID');
     });
   }
 }

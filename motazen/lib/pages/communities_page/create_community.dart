@@ -82,193 +82,185 @@ class _CreateCommunityState extends State<CreateCommunity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      drawer: const SideBar(),
-      appBar: AppBar(
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        drawer: const SideBar(),
+        appBar: AppBar(
+          backgroundColor: kWhiteColor,
+          iconTheme: const IconThemeData(color: Colors.black),
+          elevation: 0.0,
+          actions: <Widget>[
+            IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const RotatedBox(
+                  quarterTurns: 2,
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.black,
+                  ),
+                ),
+                tooltip: 'View Requests'),
+          ],
+        ),
         backgroundColor: kWhiteColor,
-        iconTheme: const IconThemeData(color: Colors.black),
-        elevation: 0.0,
-        actions: <Widget>[
-          IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const RotatedBox(
-                quarterTurns: 2,
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
-                ),
-              ),
-              tooltip: 'View Requests'),
-        ],
-      ),
-      backgroundColor: kWhiteColor,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(
-              textDirection: TextDirection.rtl,
-              children: [
-                const Spacer(),
-                txt(
-                  txt: 'ابدأ مجتمع',
-                  fontSize: 32,
-                  fontColor: kPrimaryColor,
-                ),
-                const Spacer(
-                  flex: 2,
-                )
-              ],
-            ),
-            SizedBox(
-              height: screenHeight(context) * 0.03,
-            ),
-            textformField(
-                hint: "اسم المجتمع", controller: communityNameController),
-            Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  txt(txt: "نوع المجتمع", fontSize: 16),
-                ],
-              ),
-            ),
-            isPrivateWidget(context),
-
-            // inviteFriendsWidget(context),
-            SizedBox(
-              height: screenHeight(context) * 0.01,
-            ),
-            textformField(hint: "اسم الهدف", controller: goalNameController),
-            Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  txt(txt: "جانب الحياة", fontSize: 16),
-                ],
-              ),
-            ),
-            aspectWidget(context),
-            Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  txt(txt: "المدة", fontSize: 16),
-                ],
-              ),
-            ),
-            durationWidget(context),
-            Padding(
-              padding: const EdgeInsets.only(top: 12, bottom: 8),
-              child: Row(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(
                 textDirection: TextDirection.rtl,
                 children: [
-                  txt(txt: "أضف مهمة:", fontSize: 16),
-                  SizedBox(
-                    width: Get.width * 0.05,
+                  const Spacer(),
+                  txt(
+                    txt: 'انشاء مجتمع',
+                    fontSize: 32,
+                    fontColor: kPrimaryColor,
                   ),
-                  InkWell(
-                    onTap: () {
-                      if (difference != 0) {
-                        Get.to(() => AddTask(
-                            goalTask: const [],
-                            isr: IsarService(),
-                            goalDurtion: difference));
-                      } else {
-                        getWarningSnackBar('Please select duration first');
-                      }
-                    },
-                    child: const CircleAvatar(
-                      backgroundColor: kPrimaryColor,
-                      radius: 12,
-                      child: Center(
-                          child: Icon(
-                        Icons.add,
-                        size: 16,
-                        color: Colors.white,
-                      )),
-                    ),
+                  const Spacer(
+                    flex: 2,
                   )
                 ],
               ),
-            ),
-            SizedBox(
-              height: screenHeight(context) * 0.05,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                InkWell(
-                  onTap: () {
-                    String commID =
-                        '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
-                    if (communityNameController.text.isNotEmpty &&
-                        goalNameController.text.isNotEmpty &&
-                        difference != 0) {
-                      communityController.listOfCreatedCommunities.add(
-                        Community(
-                            communityName: communityNameController.text,
-                            aspect: aspect,
-                            isPrivate: private,
-                            founderUsername:
-                                firebaseAuth.currentUser!.displayName,
-                            tillDate: duration,
-                            creationDate: DateTime.now(),
-                            goalName: goalNameController.text,
-                            listOfTasks: taskControleer.goalTask.value.isEmpty
-                                ? []
-                                : taskControleer.goalTask.value,
-                            id: commID),
-                      );
-                      communityController.update();
-                      communityController.createCommunity(
-                        invitedUsers: [],
-                        community: Community(
-                            communityName: communityNameController.text,
-                            aspect: aspect,
-                            founderUsername:
-                                firebaseAuth.currentUser!.displayName,
-                            isPrivate: private,
-                            tillDate: duration,
-                            creationDate: DateTime.now(),
-                            goalName: goalNameController.text,
-                            listOfTasks: taskControleer.goalTask.value.isEmpty
-                                ? []
-                                : taskControleer.goalTask.value,
-                            id: commID),
-                      );
+              SizedBox(
+                height: screenHeight(context) * 0.03,
+              ),
+              textformField(
+                  hint: "اسم المجتمع", controller: communityNameController),
+              Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    txt(txt: "نوع المجتمع", fontSize: 16),
+                  ],
+                ),
+              ),
+              isPrivateWidget(context),
 
-                      Get.back();
-                      Get.to(CommunityHomePage(
-                          comm: communityController
-                              .listOfCreatedCommunities.last));
-                    } else {
-                      getWarningSnackBar('Please fill out all the details');
-                    }
-                  },
-                  child: Container(
-                    height: screenHeight(context) * 0.05,
-                    width: screenWidth(context) * 0.4,
-                    decoration: BoxDecoration(
-                        color: kPrimaryColor,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Center(
-                        child: txt(
-                            txt: 'ابدأ',
-                            fontSize: 16,
-                            fontColor: Colors.white)),
-                  ),
-                )
-              ],
-            )
-          ]),
+              // inviteFriendsWidget(context),
+              SizedBox(
+                height: screenHeight(context) * 0.01,
+              ),
+              textformField(hint: "اسم الهدف", controller: goalNameController),
+              Padding(
+                padding: const EdgeInsets.only(top: 12, bottom: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    txt(txt: "الجانب", fontSize: 16),
+                  ],
+                ),
+              ),
+              aspectWidget(context),
+              Padding(
+                padding: const EdgeInsets.only(top: 12, bottom: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    txt(txt: "الفترة", fontSize: 16),
+                  ],
+                ),
+              ),
+              durationWidget(context),
+              Padding(
+                padding: const EdgeInsets.only(top: 12, bottom: 8),
+                child: Row(
+                  textDirection: TextDirection.rtl,
+                  children: [
+                    txt(txt: "إضافة مهمة:", fontSize: 16),
+                    SizedBox(
+                      width: Get.width * 0.05,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (difference != 0) {
+                          Get.to(() => AddTask(
+                              goalTask: const [],
+                              isr: IsarService(),
+                              goalDurtion: difference));
+                        } else {
+                          getWarningSnackBar('اختر الفترة أولا');
+                        }
+                      },
+                      child: const CircleAvatar(
+                        backgroundColor: kPrimaryColor,
+                        radius: 12,
+                        child: Center(
+                            child: Icon(
+                          Icons.add,
+                          size: 16,
+                          color: Colors.white,
+                        )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: screenHeight(context) * 0.05,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      String commID =
+                          '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
+                      if (communityNameController.text.isNotEmpty &&
+                          goalNameController.text.isNotEmpty &&
+                          difference != 0) {
+                        final createdComm = Community(
+                            progressList: [
+                              {firebaseAuth.currentUser!.uid: 0}
+                            ],
+                            communityName: communityNameController.text,
+                            aspect: aspect,
+                            isPrivate: private,
+                            founderUsername:
+                                firebaseAuth.currentUser!.displayName,
+                            tillDate: duration,
+                            creationDate: DateTime.now(),
+                            goalName: goalNameController.text,
+                            listOfTasks: taskControleer.goalTask.value.isEmpty
+                                ? []
+                                : taskControleer.goalTask.value,
+                            id: commID);
+                        communityController.listOfCreatedCommunities
+                            .insert(0, createdComm);
+                        communityController.update();
+                        communityController.createCommunity(
+                          invitedUsers: [],
+                          community: createdComm,
+                        );
+
+                        Get.back();
+                        Get.to(CommunityHomePage(comm: createdComm));
+                      } else {
+                        getWarningSnackBar('فضلا ادخل جميع المعلومات');
+                      }
+                    },
+                    child: Container(
+                      height: screenHeight(context) * 0.05,
+                      width: screenWidth(context) * 0.4,
+                      decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                          child: txt(
+                              txt: 'انشاء',
+                              fontSize: 16,
+                              fontColor: Colors.white)),
+                    ),
+                  )
+                ],
+              )
+            ]),
+          ),
         ),
       ),
     );
@@ -326,7 +318,7 @@ class _CreateCommunityState extends State<CreateCommunity> {
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  txt(txt: '${difference.toString()} days', fontSize: 16),
+                  txt(txt: '${difference.toString()} ايام', fontSize: 16),
                 ],
               )),
             ],
@@ -385,38 +377,41 @@ class _CreateCommunityState extends State<CreateCommunity> {
       ),
       child: Padding(
         padding: const EdgeInsets.only(right: 10, top: 5, left: 10),
-        child: DropdownButton(
-          dropdownColor: kPrimaryColor,
-          underline: Container(),
-          borderRadius: BorderRadius.circular(5),
-          iconSize: 24,
-          isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
-          items: aspectList.selectedArabic.map((String item) {
-            return DropdownMenuItem<String>(
-                value: item,
-                child: Row(
-                  textDirection: TextDirection.ltr,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 12,
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: DropdownButton(
+            dropdownColor: kPrimaryColor,
+            underline: Container(),
+            borderRadius: BorderRadius.circular(5),
+            iconSize: 24,
+            isExpanded: true,
+            icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+            items: aspectList.selectedArabic.map((String item) {
+              return DropdownMenuItem<String>(
+                  value: item,
+                  child: Row(
+                    textDirection: TextDirection.ltr,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 12,
+                        ),
+                        child: txt(
+                          txt: item,
+                          fontColor: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
-                      child: txt(
-                        txt: item,
-                        fontColor: Colors.white,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ));
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              aspect = newValue!;
-            });
-          },
+                    ],
+                  ));
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                aspect = newValue!;
+              });
+            },
+          ),
         ),
       ),
     );
@@ -429,22 +424,25 @@ class _CreateCommunityState extends State<CreateCommunity> {
       bool? isEnabled}) {
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 10),
-      child: TextFormField(
+      child: Directionality(
         textDirection: TextDirection.rtl,
-        enabled: isEnabled,
-        controller: controller,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "من فضلك ادخل اسم الهدف";
-          } else {
-            return null;
-          }
-        },
-        decoration: InputDecoration(
-          hintTextDirection: TextDirection.rtl,
-          labelText: hint,
-          suffixIcon: suffixIcon,
-          border: const OutlineInputBorder(),
+        child: TextFormField(
+          textDirection: TextDirection.rtl,
+          enabled: isEnabled,
+          controller: controller,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "من فضلك ادخل اسم الهدف";
+            } else {
+              return null;
+            }
+          },
+          decoration: InputDecoration(
+            hintTextDirection: TextDirection.rtl,
+            labelText: hint,
+            suffixIcon: suffixIcon,
+            border: const OutlineInputBorder(),
+          ),
         ),
       ),
     );

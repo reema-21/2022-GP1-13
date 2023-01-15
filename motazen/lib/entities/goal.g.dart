@@ -22,9 +22,9 @@ const GoalSchema = CollectionSchema(
       name: r'DescriptiveGoalDuration',
       type: IsarType.string,
     ),
-    r'dueDate': PropertySchema(
+    r'endDate': PropertySchema(
       id: 1,
-      name: r'dueDate',
+      name: r'endDate',
       type: IsarType.dateTime,
     ),
     r'goalDuration': PropertySchema(
@@ -42,9 +42,19 @@ const GoalSchema = CollectionSchema(
       name: r'importance',
       type: IsarType.long,
     ),
-    r'titel': PropertySchema(
+    r'startData': PropertySchema(
       id: 5,
+      name: r'startData',
+      type: IsarType.dateTime,
+    ),
+    r'titel': PropertySchema(
+      id: 6,
       name: r'titel',
+      type: IsarType.string,
+    ),
+    r'userID': PropertySchema(
+      id: 7,
+      name: r'userID',
       type: IsarType.string,
     )
   },
@@ -103,6 +113,7 @@ int _goalEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.DescriptiveGoalDuration.length * 3;
   bytesCount += 3 + object.titel.length * 3;
+  bytesCount += 3 + object.userID.length * 3;
   return bytesCount;
 }
 
@@ -113,11 +124,13 @@ void _goalSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.DescriptiveGoalDuration);
-  writer.writeDateTime(offsets[1], object.dueDate);
+  writer.writeDateTime(offsets[1], object.endDate);
   writer.writeLong(offsets[2], object.goalDuration);
   writer.writeDouble(offsets[3], object.goalProgressPercentage);
   writer.writeLong(offsets[4], object.importance);
-  writer.writeString(offsets[5], object.titel);
+  writer.writeDateTime(offsets[5], object.startData);
+  writer.writeString(offsets[6], object.titel);
+  writer.writeString(offsets[7], object.userID);
 }
 
 Goal _goalDeserialize(
@@ -126,14 +139,17 @@ Goal _goalDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Goal();
+  final object = Goal(
+    userID: reader.readString(offsets[7]),
+  );
   object.DescriptiveGoalDuration = reader.readString(offsets[0]);
-  object.dueDate = reader.readDateTime(offsets[1]);
+  object.endDate = reader.readDateTime(offsets[1]);
   object.goalDuration = reader.readLong(offsets[2]);
   object.goalProgressPercentage = reader.readDouble(offsets[3]);
   object.id = id;
   object.importance = reader.readLong(offsets[4]);
-  object.titel = reader.readString(offsets[5]);
+  object.startData = reader.readDateTime(offsets[5]);
+  object.titel = reader.readString(offsets[6]);
   return object;
 }
 
@@ -155,6 +171,10 @@ P _goalDeserializeProp<P>(
     case 4:
       return (reader.readLong(offset)) as P;
     case 5:
+      return (reader.readDateTime(offset)) as P;
+    case 6:
+      return (reader.readString(offset)) as P;
+    case 7:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -489,43 +509,43 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> dueDateEqualTo(
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> endDateEqualTo(
       DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'dueDate',
+        property: r'endDate',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> dueDateGreaterThan(
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> endDateGreaterThan(
     DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'dueDate',
+        property: r'endDate',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> dueDateLessThan(
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> endDateLessThan(
     DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'dueDate',
+        property: r'endDate',
         value: value,
       ));
     });
   }
 
-  QueryBuilder<Goal, Goal, QAfterFilterCondition> dueDateBetween(
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> endDateBetween(
     DateTime lower,
     DateTime upper, {
     bool includeLower = true,
@@ -533,7 +553,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'dueDate',
+        property: r'endDate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -763,6 +783,59 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> startDataEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'startData',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> startDataGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'startData',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> startDataLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'startData',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> startDataBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'startData',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Goal, Goal, QAfterFilterCondition> titelEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -890,6 +963,134 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> userIDEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> userIDGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> userIDLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> userIDBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userID',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> userIDStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> userIDEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> userIDContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> userIDMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userID',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> userIDIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userID',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> userIDIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userID',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension GoalQueryObject on QueryBuilder<Goal, Goal, QFilterCondition> {}
@@ -991,15 +1192,15 @@ extension GoalQuerySortBy on QueryBuilder<Goal, Goal, QSortBy> {
     });
   }
 
-  QueryBuilder<Goal, Goal, QAfterSortBy> sortByDueDate() {
+  QueryBuilder<Goal, Goal, QAfterSortBy> sortByEndDate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dueDate', Sort.asc);
+      return query.addSortBy(r'endDate', Sort.asc);
     });
   }
 
-  QueryBuilder<Goal, Goal, QAfterSortBy> sortByDueDateDesc() {
+  QueryBuilder<Goal, Goal, QAfterSortBy> sortByEndDateDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dueDate', Sort.desc);
+      return query.addSortBy(r'endDate', Sort.desc);
     });
   }
 
@@ -1039,6 +1240,18 @@ extension GoalQuerySortBy on QueryBuilder<Goal, Goal, QSortBy> {
     });
   }
 
+  QueryBuilder<Goal, Goal, QAfterSortBy> sortByStartData() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startData', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterSortBy> sortByStartDataDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startData', Sort.desc);
+    });
+  }
+
   QueryBuilder<Goal, Goal, QAfterSortBy> sortByTitel() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'titel', Sort.asc);
@@ -1048,6 +1261,18 @@ extension GoalQuerySortBy on QueryBuilder<Goal, Goal, QSortBy> {
   QueryBuilder<Goal, Goal, QAfterSortBy> sortByTitelDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'titel', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterSortBy> sortByUserID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterSortBy> sortByUserIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.desc);
     });
   }
 }
@@ -1065,15 +1290,15 @@ extension GoalQuerySortThenBy on QueryBuilder<Goal, Goal, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Goal, Goal, QAfterSortBy> thenByDueDate() {
+  QueryBuilder<Goal, Goal, QAfterSortBy> thenByEndDate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dueDate', Sort.asc);
+      return query.addSortBy(r'endDate', Sort.asc);
     });
   }
 
-  QueryBuilder<Goal, Goal, QAfterSortBy> thenByDueDateDesc() {
+  QueryBuilder<Goal, Goal, QAfterSortBy> thenByEndDateDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dueDate', Sort.desc);
+      return query.addSortBy(r'endDate', Sort.desc);
     });
   }
 
@@ -1125,6 +1350,18 @@ extension GoalQuerySortThenBy on QueryBuilder<Goal, Goal, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Goal, Goal, QAfterSortBy> thenByStartData() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startData', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterSortBy> thenByStartDataDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startData', Sort.desc);
+    });
+  }
+
   QueryBuilder<Goal, Goal, QAfterSortBy> thenByTitel() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'titel', Sort.asc);
@@ -1134,6 +1371,18 @@ extension GoalQuerySortThenBy on QueryBuilder<Goal, Goal, QSortThenBy> {
   QueryBuilder<Goal, Goal, QAfterSortBy> thenByTitelDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'titel', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterSortBy> thenByUserID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterSortBy> thenByUserIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.desc);
     });
   }
 }
@@ -1147,9 +1396,9 @@ extension GoalQueryWhereDistinct on QueryBuilder<Goal, Goal, QDistinct> {
     });
   }
 
-  QueryBuilder<Goal, Goal, QDistinct> distinctByDueDate() {
+  QueryBuilder<Goal, Goal, QDistinct> distinctByEndDate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'dueDate');
+      return query.addDistinctBy(r'endDate');
     });
   }
 
@@ -1171,10 +1420,23 @@ extension GoalQueryWhereDistinct on QueryBuilder<Goal, Goal, QDistinct> {
     });
   }
 
+  QueryBuilder<Goal, Goal, QDistinct> distinctByStartData() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'startData');
+    });
+  }
+
   QueryBuilder<Goal, Goal, QDistinct> distinctByTitel(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'titel', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QDistinct> distinctByUserID(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userID', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1193,9 +1455,9 @@ extension GoalQueryProperty on QueryBuilder<Goal, Goal, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Goal, DateTime, QQueryOperations> dueDateProperty() {
+  QueryBuilder<Goal, DateTime, QQueryOperations> endDateProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'dueDate');
+      return query.addPropertyName(r'endDate');
     });
   }
 
@@ -1218,9 +1480,21 @@ extension GoalQueryProperty on QueryBuilder<Goal, Goal, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Goal, DateTime, QQueryOperations> startDataProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'startData');
+    });
+  }
+
   QueryBuilder<Goal, String, QQueryOperations> titelProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'titel');
+    });
+  }
+
+  QueryBuilder<Goal, String, QQueryOperations> userIDProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userID');
     });
   }
 }

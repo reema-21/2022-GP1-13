@@ -24,10 +24,10 @@ class _MyHomepageState extends State<Homepage> {
 /////////////////////start of stream builder for aspects///////////////////////////////
       builder: (context, snapshot) {
         //create empty incase
-        final List<Aspect> aspects = [];
+        List<Aspect>? aspects = [];
         //check if there are goals (check for habits later)
         if (snapshot.hasData) {
-          final aspects = snapshot.data;
+          aspects = snapshot.data;
           //add habits to list later
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -64,13 +64,13 @@ class _MyHomepageState extends State<Homepage> {
                   height: imageHeight,
                   child: const WheelBackground(),
                 ),
-                life_wheel(allAspects: aspects!),
+                life_wheel(allAspects: aspects??[]),
               ]),
               // displays the daily tasks list
               Flexible(
                 child: Center(
                   child: TodoCard(
-                    todo: createTodoList(aspects),
+                    todo: createTodoList(aspects??[]),
                   ),
                 ),
               ),

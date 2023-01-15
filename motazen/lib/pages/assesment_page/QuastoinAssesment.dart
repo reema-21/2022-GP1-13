@@ -3,6 +3,7 @@
 import 'package:get/get.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
+import 'package:motazen/pages/assesment_page/c.dart';
 
 import '/theme.dart';
 import 'package:provider/provider.dart';
@@ -41,49 +42,86 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
 //------------------------------------------------------------
   // always the value of the sliderRange = answare if no answare then zero
   //Start of the slider Range  = the answers of the quastion //
+  @override
+  void initState() {
+    AssessmentQuestions.currentChosenAnswer = double.parse(AssessmentQuestions
+            .answers[AssessmentQuestions.activeStep]
+            .substring(
+                0,
+                AssessmentQuestions
+                        .answers[AssessmentQuestions.activeStep].length -
+                    1)) +
+        1;
+  }
+
   Widget setQuestionAnswer() {
     return SliderTheme(
-      data: const SliderThemeData(
-        trackHeight: 5,
-        thumbShape: RoundSliderThumbShape(
-          enabledThumbRadius: 14.0,
-          pressedElevation: 8.0,
+        data: const SliderThemeData(
+          trackHeight: 5,
+          thumbShape: RoundSliderThumbShape(
+            enabledThumbRadius: 14.0,
+            pressedElevation: 8.0,
+          ),
+          valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+          valueIndicatorColor: Colors.black,
+          valueIndicatorTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20.0,
+          ),
         ),
-        valueIndicatorShape: PaddleSliderValueIndicatorShape(),
-        valueIndicatorColor: Colors.black,
-        valueIndicatorTextStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 20.0,
-        ),
-      ),
-      child: Slider(
-        //it should be good in ios or we use Cupertino
-        value:
-            AssessmentQuestions.currentChosenAnswer, //answare of that quastion
-        min: 1,
-        max: 10,
-        divisions: 10, //to stick
-        activeColor: kPrimaryColor,
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              AssessmentQuestions.answers[AssessmentQuestions.activeStep] =
+                  '1' +
+                      AssessmentQuestions
+                          .answers[AssessmentQuestions.activeStep]
+                          .substring(AssessmentQuestions
+                                  .answers[AssessmentQuestions.activeStep]
+                                  .length -
+                              1);
+              AssessmentQuestions.AnswerdOrnot[AssessmentQuestions.activeStep] =
+                  true;
+              freq.storeStatusOpen(true);
+            });
+          },
+          child: Slider(
+              //it should be good in ios or we use Cupertino
+              value: AssessmentQuestions
+                  .currentChosenAnswer, //answare of that quastion
+              min: 1,
+              max: 10,
+              divisions: 10, //to stick
+              activeColor: kPrimaryColor,
+              label: AssessmentQuestions.currentChosenAnswer
+                  .round()
+                  .toString(), // to show the lable number
+              // ignore: dead_code
+              onChanged: AssessmentQuestions
+                      .AnswerdOrnot[AssessmentQuestions.activeStep]
+                  ? (double value) {
+                      setState(() {
+                        //save the value chosen by the user
 
-        label: AssessmentQuestions.currentChosenAnswer
-            .round()
-            .toString(), // to show the lable number
-        onChanged: (double value) {
-          setState(() {
-            //save the value chosen by the user
-            AssessmentQuestions.currentChosenAnswer = value;
-            AssessmentQuestions.answers[
-                AssessmentQuestions
-                    .activeStep] = '$value' +
-                AssessmentQuestions.answers[AssessmentQuestions.activeStep]
-                    .substring(AssessmentQuestions
-                            .answers[AssessmentQuestions.activeStep].length -
-                        1); //take the answare chosen by the user for that quastion
-          });
-        },
-      ),
-    );
+                        AssessmentQuestions.currentChosenAnswer = value;
+
+                        int converteAnswer = value.round();
+                        AssessmentQuestions.answers[
+                            AssessmentQuestions
+                                .activeStep] = '$converteAnswer' +
+                            AssessmentQuestions
+                                .answers[AssessmentQuestions.activeStep]
+                                .substring(AssessmentQuestions
+                                        .answers[AssessmentQuestions.activeStep]
+                                        .length -
+                                    1); //take the answare chosen by the user for that quastion
+                      });
+                    }
+                  : null),
+        ));
   }
+
+  final c freq = Get.put(c(), permanent: true);
 
   /// End of the sliderRange  */
   @override
@@ -93,6 +131,16 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            setState(() {
+              freq.AssesmentAswers.value.clear();
+              freq.AssesmentAswers.value.addAll(AssessmentQuestions.answers);
+            });
+            Navigator.pop(context);
+          },
+        ),
+        automaticallyImplyLeading: false,
         title: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
@@ -117,7 +165,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
               Container(
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(0)),
-                  child: IconStepper(
+                  child: ImageStepper(
                     stepReachedAnimationEffect:
                         Curves.linear, //stop the jumping
                     lineColor: Colors.black,
@@ -125,10 +173,10 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                         const Duration(milliseconds: 200),
                     activeStepColor: kWhiteColor,
                     stepColor: kDisabled,
-                    stepRadius: 20,
+                    stepRadius: 25,
                     stepPadding: 0,
                     // move it to a function so that you take the aspect and the number of quastion = x and then you reapt the icon x times
-                    icons: createIcon(),
+                    images: createIcon(),
 
                     // AssessmentQuestions.activeStep property set to AssessmentQuestions.activeStep variable defined above.
                     activeStep: AssessmentQuestions.activeStep,
@@ -138,9 +186,10 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                       setState(() {
                         // possible so for the below problem
                         /* if the answare has value then the value is the currenslide 
-                  if not the value is 1 */
+                    if not the value is 1 */
 
                         AssessmentQuestions.activeStep = index;
+
                         AssessmentQuestions.currentChosenAnswer = double.parse(
                             AssessmentQuestions
                                 .answers[AssessmentQuestions.activeStep]
@@ -150,7 +199,14 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                                             .answers[
                                                 AssessmentQuestions.activeStep]
                                             .length -
-                                        1));
+                                        1)); //! Here you delete +1 cause you faced error this might be it :)
+                        if (AssessmentQuestions.currentChosenAnswer > 10) {
+                          // you are facing out  of range error
+                          AssessmentQuestions.currentChosenAnswer = 10;
+                        } else if (AssessmentQuestions.currentChosenAnswer <
+                            1) {
+                          AssessmentQuestions.currentChosenAnswer = 1;
+                        }
                       });
                     },
                   )),
@@ -178,6 +234,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Column(
+                          textDirection: TextDirection.rtl,
                           children: [
                             Text(headerText(),
                                 style: const TextStyle(
@@ -199,7 +256,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                             ),
                             //--------------------------------------here is what you tried -----------------//
                             Text(
-                              "الإجابة: ${AssessmentQuestions.currentChosenAnswer.round()}",
+                              "الإجابة: ${double.parse(AssessmentQuestions.answers[AssessmentQuestions.activeStep].substring(0, AssessmentQuestions.answers[AssessmentQuestions.activeStep].length - 1)).round()}",
                             ),
                           ],
                         ),
@@ -259,11 +316,15 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
     return widget.question?[AssessmentQuestions.activeStep];
   }
 
-  List<Icon> createIcon() {
+  List<AssetImage> createIcon() {
     // create the icons and the length of the IconsList based on the answare map
-    List<Icon> iconStepper = [];
+    List<AssetImage> iconStepper = [];
 
     for (int i = 0; i < widget.question!.length; i++) {
+      if (AssessmentQuestions.answers[i] == null) {
+        break;
+      }
+
       String aspect = AssessmentQuestions.answers[i]
           .substring(AssessmentQuestions.answers[i].length - 1);
 
@@ -272,74 +333,57 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
         case "H":
           {
             // statements;
-            iconStepper.add(const Icon(Icons.spa, color: Color(0xFFffd400)));
+            iconStepper.add(const AssetImage('assets/images/health.png'));
           }
           break;
 
         case "C":
           {
             //statements;
-            iconStepper.add(const Icon(Icons.work, color: Color(0xff0065A3)));
+            iconStepper.add(const AssetImage('assets/images/career.png'));
           }
           break;
         case "F":
           {
             //statements;
-            iconStepper.add(const Icon(Icons.person, color: Color(0xFFff9100)));
+            iconStepper
+                .add(const AssetImage('assets/images/familyaFriends.png'));
           }
           break;
         case "D":
           {
             //statements;
-            iconStepper.add(const Icon(
-              Icons.people,
-              color: Colors.purple,
-            ));
+            iconStepper.add(const AssetImage('assets/images/health.png'));
           }
           break;
         case "S":
           {
             //statements;
-            iconStepper.add(const Icon(
-              Icons.favorite,
-              color: Color(0xffff4949),
-            ));
+            iconStepper.add(const AssetImage('assets/images/other.png'));
           }
           break;
         case "E":
           {
             //statements;
-            iconStepper.add(const Icon(
-              Icons.home,
-              color: Color(0xFF9E19F0),
-            ));
+            iconStepper.add(const AssetImage('assets/images/Envirmnet.png'));
           }
           break;
         case "M":
           {
             //statements;
-            iconStepper.add(const Icon(
-              Icons.attach_money,
-              color: Color(0xff54e360),
-            ));
+            iconStepper.add(const AssetImage('assets/images/money.png'));
           }
           break;
         case "G":
           {
             //statements;
-            iconStepper.add(const Icon(
-              Icons.psychology,
-              color: Color(0xFF2CDDCB),
-            ));
+            iconStepper.add(const AssetImage('assets/images/personl.png'));
           }
           break;
         case "R":
           {
             //statements;
-            iconStepper.add(const Icon(
-              Icons.games,
-              color: Color(0xff008adf),
-            ));
+            iconStepper.add(const AssetImage('assets/images/fun.png'));
           }
           break;
       }
@@ -360,22 +404,33 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   Widget doneButton(IsarService isar, List<Aspect> allAspects) {
     //once all quastion answare and the user is n any quastion it will be enabeld
     bool isAllQuastionAnswerd = true;
-    for (int i = 0; i < AssessmentQuestions.answers.length; i++) {
-      var result = double.parse(AssessmentQuestions.answers[i]
-          .substring(0, AssessmentQuestions.answers[i].length - 1));
-      if (result == 0) {
+    for (int i = 0; i < AssessmentQuestions.AnswerdOrnot.length; i++) {
+      if (AssessmentQuestions.AnswerdOrnot[i] == false) {
         isAllQuastionAnswerd = false;
+        break;
       }
     } // to check whether all the quastions are answerd or not .
     return ElevatedButton(
-      style: const ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll<Color>(kPrimaryColor),
-        padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(kDefaultPadding),
-        textStyle: MaterialStatePropertyAll<TextStyle>(TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          fontFamily: 'Frutiger',
-        )),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.pressed)) {
+              return Theme.of(context).colorScheme.primary.withOpacity(0.4);
+            } else if (states.contains(MaterialState.disabled)) {
+              return const Color.fromARGB(136, 159, 167, 159);
+            }
+            return kPrimaryColor;
+          },
+        ),
+        padding:
+            const MaterialStatePropertyAll<EdgeInsetsGeometry>(kDefaultPadding),
+        textStyle: const MaterialStatePropertyAll<TextStyle>(
+          TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Frutiger',
+          ),
+        ),
       ),
       onPressed: isAllQuastionAnswerd
           ? () {
@@ -477,10 +532,11 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
 ////////////////////find the percentage for the points and save it in the local storage///////////////
     }
     if (moneyAspectPoints != 0) {
-      final Aspect aspect =
-          Aspect(); // this should be the same as the one created above ;
+      final Aspect aspect = Aspect(
+          userID: IsarService
+              .getUserID); // this should be the same as the one created above ;
       aspect.name = "money and finances";
-      double point = (moneyAspectPoints / 50) * 100;
+      double point = (moneyAspectPoints / 40) * 100;
       await handle_aspect().setAspectpoints("money and finances", point);
       allpoints[7] = point;
     }
@@ -500,7 +556,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
       allpoints[4] = point;
     }
     if (physicalEnvironmentAspectPoints != 0) {
-      double point = (physicalEnvironmentAspectPoints / 50) * 100;
+      double point = (physicalEnvironmentAspectPoints / 40) * 100;
       await handle_aspect().setAspectpoints("Physical Environment", point);
       allpoints[3] = point;
     }

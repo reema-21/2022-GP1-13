@@ -42,7 +42,7 @@ class _AddTaskState extends State<AddTask> {
   AddTheEnterdTask(LocalTask newTask, List<String> tasks) async {
     List<String> Taskss = tasks;
     await Future.forEach(Taskss, (item) async {
-      LocalTask? y = LocalTask();
+      LocalTask? y = LocalTask(userID: IsarService.getUserID);
       String name = item;
 
       y = await widget.isr.findSepecificTask(name);
@@ -437,7 +437,7 @@ class _AddTaskState extends State<AddTask> {
                                           setState(() {
                                             // TasksNamedropmenue.add(inputTaskName.text);
 
-                                            LocalTask newTak = LocalTask();
+                                            LocalTask newTak = LocalTask(userID: IsarService.getUserID);
                                             newTak.name =
                                                 freq.inputTaskName.value.text;
                                             String durationDescribtion = "";

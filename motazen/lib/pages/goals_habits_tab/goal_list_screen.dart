@@ -1,5 +1,5 @@
 // ignore_for_file: unused_local_variable
-
+//manar
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/LocalTask.dart';
 import 'package:motazen/pages/goals_habits_tab/goal_edit.dart';
@@ -133,14 +133,16 @@ class _GoalListScreenState extends State<GoalListScreen> {
               itemCount: goals.length,
               itemBuilder: (context, index) {
                 final goal = goals[index];
-                final startDate = goals[index].dueDate;
-                if (startDate.compareTo(temGoalDataTime) == 0) {
-                  dueDataDescription = "لايوجد تاريخ استحقاق";
-                } else {
-                  temGoalDataTime = startDate;
+                final startDate = goals[index].startData;
+                final endDate = goals[index].endDate; 
+                // if (startDate.compareTo(temGoalDataTime) == 0) {
+                //   dueDataDescription = "لايوجد تاريخ استحقاق";
+                // } else {
+                //   temGoalDataTime = startDate;
                   dueDataDescription =
-                      "تاريخ الاستحقاق :${intl.DateFormat.yMMMEd().format(temGoalDataTime)}";
-                }
+                     "تاريخ الاستحقاق :${intl.DateFormat.yMMMEd().format(endDate)}";
+
+                // }
 
                 final aspectName = goal.aspect.value?.name;
                 return Container(

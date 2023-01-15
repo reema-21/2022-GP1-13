@@ -8,6 +8,7 @@ class PostModel {
   final comments;
   final replyingPost;
   final likes;
+  final progreebar;
   String? postType;
   final imageURL;
   PostModel(
@@ -15,6 +16,7 @@ class PostModel {
       this.authorId,
       this.text,
       this.time,
+      this.progreebar,
       required this.comments,
       required this.likes,
       required this.replyingPost,
@@ -26,6 +28,7 @@ class PostModel {
         'author_id': authorId,
         'time': time,
         'text': text,
+        'progreebar': progreebar,
         'post_type': postType,
         'image_url': imageURL
       };

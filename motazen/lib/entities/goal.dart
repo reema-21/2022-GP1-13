@@ -18,8 +18,11 @@ class Goal {
   // has a relation each goal belong to one aspect
   @Index() // to be always arranged based on the importance
   late int importance;
-  late DateTime dueDate;
+  late DateTime startData ; 
+  late DateTime endDate ; 
   late int goalDuration;
   late String DescriptiveGoalDuration;
   double goalProgressPercentage = 0;
+  String userID;
+  Goal({required this.userID});
 }

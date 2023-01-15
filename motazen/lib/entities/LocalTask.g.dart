@@ -41,6 +41,11 @@ const LocalTaskSchema = CollectionSchema(
       id: 4,
       name: r'taskCompletionPercentage',
       type: IsarType.double,
+    ),
+    r'userID': PropertySchema(
+      id: 5,
+      name: r'userID',
+      type: IsarType.string,
     )
   },
   estimateSize: _localTaskEstimateSize,
@@ -78,6 +83,7 @@ int _localTaskEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.durationDescribtion.length * 3;
   bytesCount += 3 + object.name.length * 3;
+  bytesCount += 3 + object.userID.length * 3;
   return bytesCount;
 }
 
@@ -92,6 +98,7 @@ void _localTaskSerialize(
   writer.writeString(offsets[2], object.durationDescribtion);
   writer.writeString(offsets[3], object.name);
   writer.writeDouble(offsets[4], object.taskCompletionPercentage);
+  writer.writeString(offsets[5], object.userID);
 }
 
 LocalTask _localTaskDeserialize(
@@ -100,7 +107,9 @@ LocalTask _localTaskDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = LocalTask();
+  final object = LocalTask(
+    userID: reader.readString(offsets[5]),
+  );
   object.amountCompleted = reader.readLong(offsets[0]);
   object.duration = reader.readLong(offsets[1]);
   object.durationDescribtion = reader.readString(offsets[2]);
@@ -127,6 +136,8 @@ P _localTaskDeserializeProp<P>(
       return (reader.readString(offset)) as P;
     case 4:
       return (reader.readDouble(offset)) as P;
+    case 5:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -719,6 +730,136 @@ extension LocalTaskQueryFilter
       ));
     });
   }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> userIDEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> userIDGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> userIDLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> userIDBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userID',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> userIDStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> userIDEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> userIDContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> userIDMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userID',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> userIDIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userID',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> userIDIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userID',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension LocalTaskQueryObject
@@ -864,6 +1005,18 @@ extension LocalTaskQuerySortBy on QueryBuilder<LocalTask, LocalTask, QSortBy> {
       return query.addSortBy(r'taskCompletionPercentage', Sort.desc);
     });
   }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByUserID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByUserIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.desc);
+    });
+  }
 }
 
 extension LocalTaskQuerySortThenBy
@@ -942,6 +1095,18 @@ extension LocalTaskQuerySortThenBy
       return query.addSortBy(r'taskCompletionPercentage', Sort.desc);
     });
   }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByUserID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByUserIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.desc);
+    });
+  }
 }
 
 extension LocalTaskQueryWhereDistinct
@@ -977,6 +1142,13 @@ extension LocalTaskQueryWhereDistinct
       distinctByTaskCompletionPercentage() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'taskCompletionPercentage');
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QDistinct> distinctByUserID(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userID', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1018,6 +1190,12 @@ extension LocalTaskQueryProperty
       taskCompletionPercentageProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'taskCompletionPercentage');
+    });
+  }
+
+  QueryBuilder<LocalTask, String, QQueryOperations> userIDProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userID');
     });
   }
 }

@@ -48,27 +48,27 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                       Expanded(
                         child: txt(
                           txt:
-                              '${community.founderUsername.toString()} is inviting you to community ${community.communityName.toString()}',
+                              '${community.founderUsername.toString()} دعاك الى الانضمام الى ${community.communityName.toString()}',
                           maxLines: 3,
                           fontSize: 18,
                         ),
                       ),
                       Expanded(
                         child: txt(
-                          txt: 'جانب الحياة: ${community.aspect.toString()}',
+                          txt: 'قبول: ${community.aspect.toString()}',
                           fontSize: 18,
                         ),
                       ),
                       Expanded(
                         child: txt(
-                          txt: 'المدة: $duration days ',
+                          txt: 'الفترة: $duration يوما ',
                           fontSize: 18,
                         ),
                       ),
                       community.listOfTasks!.isEmpty
                           ? Container()
                           : txt(
-                              txt: 'Tasks: ',
+                              txt: 'المهام: ',
                               fontSize: 18,
                             ),
                       community.listOfTasks!.isEmpty
@@ -108,15 +108,18 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                                     borderRadius: BorderRadius.circular(5)),
                                 child: Center(
                                     child: txt(
-                                        txt: 'reject',
+                                        txt: 'رفض',
                                         fontSize: 16,
                                         fontColor: Colors.white)),
                               ),
                             ),
                             InkWell(
                               onTap: () async {
+                                community.progressList
+                                    .add({firebaseAuth.currentUser!.uid: 0});
                                 communityController.listOfJoinedCommunities.add(
                                   Community(
+                                      progressList: community.progressList,
                                       communityName: community.communityName,
                                       aspect: community.aspect,
                                       isPrivate: community.isPrivate,
@@ -152,7 +155,7 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                                     borderRadius: BorderRadius.circular(5)),
                                 child: Center(
                                     child: txt(
-                                        txt: 'accept',
+                                        txt: 'قبول',
                                         fontSize: 16,
                                         fontColor: Colors.white)),
                               ),

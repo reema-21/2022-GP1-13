@@ -6,10 +6,11 @@ class Community {
   String? founderUsername;
   String? aspect;
   String? goalName;
-  bool? isPrivate;
+  bool isPrivate;
   DateTime? tillDate;
   DateTime? creationDate;
   List<Task>? listOfTasks;
+  List<dynamic> progressList;
   String id;
 
   Community(
@@ -18,9 +19,10 @@ class Community {
       this.creationDate,
       this.tillDate,
       this.goalName,
-      this.isPrivate,
+      required this.isPrivate,
       this.listOfTasks,
       this.founderUsername,
+      required this.progressList,
       required this.id});
 
   Map<String, dynamic> toJson() => {
@@ -32,7 +34,8 @@ class Community {
         "tillDate": tillDate,
         "listOfTasks": listOfTasks,
         "founderUsername": founderUsername,
-        "_id": id
+        "_id": id,
+        "progress_list": progressList
       };
 
   static Community fromSnap(DocumentSnapshot snap) {
@@ -46,6 +49,7 @@ class Community {
         tillDate: snapshot['tillDate'],
         listOfTasks: snapshot['listOfTasks'],
         founderUsername: snapshot['founderUsername'],
-        id: snapshot['_id']);
+        id: snapshot['_id'],
+        progressList: snapshot['progress_list']);
   }
 }

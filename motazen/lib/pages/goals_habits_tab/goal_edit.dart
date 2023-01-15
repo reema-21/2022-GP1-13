@@ -1,3 +1,4 @@
+//manar
 import 'package:flutter/material.dart';
 import 'package:motazen/data/data.dart';
 import 'package:motazen/entities/LocalTask.dart';
@@ -27,13 +28,15 @@ class _EditGoalState extends State<EditGoal> {
   int goalDuration = 0;
   String goalDurationDescription = "-";
   String goalImportanceDescription = "-";
-  DateTime temGoalDataTime = DateTime.utc(1989, 11, 9);
+  late DateTime endDate ; 
+  late DateTime startDate ; 
+  // DateTime temGoalDataTime = DateTime.utc(1989, 11, 9);
   String dueDataDescription = "";
   List<LocalTask> goalTasks = [];
   Goal? goal;
   bool isLoading = false;
-  bool weekisSelected = false;
-  bool daysisSelected = false;
+  // bool weekisSelected = false;
+  // bool daysisSelected = false;
 
   @override
   void initState() {
@@ -44,7 +47,8 @@ class _EditGoalState extends State<EditGoal> {
 
   getGoalInformation() async {
     goal = await widget.isr.getSepecificGoall(widget.goalId);
-
+endDate = goal!.endDate ; 
+startDate = goal!.startData ; 
     setState(() {
       displayGoalNameControlller.text = goal!.titel;
       goalAspect = goal!.aspect.value!.name;
@@ -77,12 +81,12 @@ class _EditGoalState extends State<EditGoal> {
           break;
       }
       //take the otherfeild incase there we not noll
-      if (goal!.dueDate.compareTo(temGoalDataTime) == 0) {
-        dueDataDescription = "لايوجد تاريخ استحقاق";
-      } else {
-        temGoalDataTime = goal!.dueDate;
-        dueDataDescription = intl.DateFormat.yMMMEd().format(temGoalDataTime);
-      }
+      // if (goal!.dueDate.compareTo(temGoalDataTime) == 0) {
+      //   dueDataDescription = "لايوجد تاريخ استحقاق";
+      // } else {
+      //   temGoalDataTime = goal!.dueDate;
+      //   dueDataDescription = intl.DateFormat.yMMMEd().format(temGoalDataTime);
+      // }
       importance = goal!.importance;
 
       switch (importance) {
@@ -104,14 +108,14 @@ class _EditGoalState extends State<EditGoal> {
         goalDurationDescription = goal!.DescriptiveGoalDuration;
       }
 
-      if (goalDuration != 0) {
-        if (goalDurationDescription.contains("أسبوع")) {
-          weekisSelected = true;
-        } else {
-          //you had a condition  to check whether it contains يوم in here now it is deleted
-          daysisSelected = true;
-        }
-      }
+      // if (goalDuration != 0) {
+      //   if (goalDurationDescription.contains("أسبوع")) {
+      //     weekisSelected = true;
+      //   } else {
+      //     //you had a condition  to check whether it contains يوم in here now it is deleted
+      //     daysisSelected = true;
+      //   }
+      // }
       goalTasks = goal!.task.toList();
     });
   }
@@ -134,23 +138,25 @@ class _EditGoalState extends State<EditGoal> {
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return goalDetails(
-              chosenAspectNames: aspectList.selectedArabic,
-              isr: widget.isr,
-              goalName: displayGoalNameControlller.text,
-              goalAspect: goalAspect,
-              importance: importance,
-              goalDuration: goalDuration,
-              goalDurationDescription: goalDurationDescription,
-              goalImportanceDescription: goalImportanceDescription,
-              temGoalDataTime: temGoalDataTime,
-              dueDataDescription: dueDataDescription,
-              weekisSelected: weekisSelected,
-              daysisSelected: daysisSelected,
-              goalTasks: goalTasks,
-              id: widget.goalId,
-            );
-          }));
-        },
+                endDate: endDate ,
+                startDate:  startDate, 
+                chosenAspectNames: aspectList.selectedArabic,
+                isr: widget.isr,
+                goalName: displayGoalNameControlller.text,
+                goalAspect: goalAspect,
+                importance: importance,
+                goalDuration: goalDuration,
+                goalDurationDescription: goalDurationDescription,
+                goalImportanceDescription: goalImportanceDescription,
+                // temGoalDataTime: temGoalDataTime,
+                dueDataDescription: dueDataDescription,
+                // weekisSelected: weekisSelected,
+                // daysisSelected: daysisSelected,
+                goalTasks: goalTasks,
+                id: widget.goalId,
+              );
+            }));
+          },
         backgroundColor: const Color.fromARGB(255, 252, 252, 252),
         child: const Icon(
           Icons.edit,
@@ -185,94 +191,112 @@ class _EditGoalState extends State<EditGoal> {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  children: [
-                    Text(
-                      "جانب الحياة:",
-                      style: titleText2,
+                 Row(
+                      children: [
+                        Text(
+                          "جانب الحياة:",
+                          style: titleText2,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          goalAspect,
+                          style: subTitle,
+                        )
+                      ],
                     ),
                     const SizedBox(
-                      width: 10,
+                      height: 20,
                     ),
-                    Text(
-                      goalAspect,
-                      style: subTitle,
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "تاريخ الاستحقاق:",
-                      style: titleText2,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      dueDataDescription,
-                      style: subTitle,
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "الفترة:",
-                      style: titleText2,
+                     Row(
+                      children: [
+                        Text(
+                          "تاريخ البدء:",
+                          style: titleText2,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          intl.DateFormat.yMMMEd().format(startDate),
+                          style: subTitle,
+                        )
+                      ],
                     ),
                     const SizedBox(
-                      width: 10,
+                      height: 20,
                     ),
-                    Text(
-                      goalDurationDescription,
-                      style: subTitle,
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "الأهمية:",
-                      style: titleText2,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(goalImportanceDescription, style: subTitle)
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "المهام:",
-                      style: titleText2,
+                    Row(
+                      children: [
+                        Text(
+                          "تاريخ الاستحقاق:",
+                          style: titleText2,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          intl.DateFormat.yMMMEd().format(endDate),
+                          style: subTitle,
+                        )
+                      ],
                     ),
                     const SizedBox(
-                      width: 10,
+                      height: 20,
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: kPrimaryColor,
-                          padding: kDefaultPadding),
-                      onPressed: goalTasks.isNotEmpty
-                          ? () {
-                              dialogBox(context);
-                              //the nevigator is downs
-                            }
-                          : null,
+                    Row(
+                      children: [
+                        Text(
+                          "الفترة:",
+                          style: titleText2,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          goalDurationDescription,
+                          style: subTitle,
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "الأهمية:",
+                          style: titleText2,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(goalImportanceDescription, style: subTitle)
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "المهام:",
+                          style: titleText2,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: kPrimaryColor,
+                              padding: kDefaultPadding),
+                          onPressed: goalTasks.isNotEmpty
+                              ? () {
+                                  dialogBox(context);
+                                  //the nevigator is downs
+                                }
+                              : null,
                       child: const Text(
                         "اعرض المهام",
                         style: TextStyle(

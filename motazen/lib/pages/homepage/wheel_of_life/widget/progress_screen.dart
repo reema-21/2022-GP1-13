@@ -1,14 +1,17 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, unused_field
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/entities/aspect.dart';
+import 'package:motazen/entities/imporvment.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/homepage/wheel_of_life/widget/AspectGoalList.dart';
 import 'package:motazen/pages/homepage/wheel_of_life/widget/AspectHabitList.dart';
 import 'package:motazen/theme.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import '../../../../entities/goal.dart';
 
+//manar
 class ProgressScreen extends StatefulWidget {
   final IsarService isr;
   final Aspect aspect;
@@ -19,17 +22,45 @@ class ProgressScreen extends StatefulWidget {
 }
 
 class _ProgressScreenState extends State<ProgressScreen> {
-  // here is the array
-  // create object of aspectImprovemnet each time and then add it to the array .
-  final List<AspectImporvment> chartData = [
-    AspectImporvment(DateTime.now(),
-        35), //DateTime will start from the Date of  the selection and end with last date when and improvment happend
-    // the points will start from the result of the assesment and then the increasing each day untill today
-    AspectImporvment(DateTime.utc(2022, 12, 25), 28),
-    AspectImporvment(DateTime.utc(2022, 12, 29), 34),
-    AspectImporvment(DateTime.utc(2022, 12, 30), 32),
-    AspectImporvment(DateTime.utc(2023, 1, 2), 40)
-  ];
+  late List<GDPData> _chartData;
+  late TooltipBehavior _tooltipBehavior;
+
+  @override
+  initState() {
+    List<Goal> NotStartedGoalList = widget.aspect.goals
+        .toList()
+        .where((element) => element.goalProgressPercentage == 0)
+        .toList();
+    int NumberOfNotStarted = NotStartedGoalList.length;
+    List<Goal> StartedGoalList = widget.aspect.goals
+        .toList()
+        .where((element) =>
+            element.goalProgressPercentage > 0 &&
+            element.endDate.isAfter(DateTime.now()))
+        .toList();
+    int NumberOfStarted = StartedGoalList.length;
+    List<Goal> lateGoalList = widget.aspect.goals
+        .toList()
+        .where((element) => element.endDate.isBefore(DateTime.now()))
+        .toList();
+    int NumberOfLate = lateGoalList.length;
+
+    _chartData = getChartData(NumberOfLate, lateGoalList, NumberOfStarted,
+        StartedGoalList, NumberOfNotStarted, NotStartedGoalList);
+
+    _tooltipBehavior = TooltipBehavior(enable: true);
+  } // here is the array
+
+  // // create object of aspectImprovemnet each time and then add it to the array .
+  // final List<AspectImporvment> chartData = [
+  //   AspectImporvment(DateTime.now(),
+  //       35), //DateTime will start from the Date of  the selection and end with last date when and improvment happend
+  //   // the points will start from the result of the assesment and then the increasing each day untill today
+  //   AspectImporvment(DateTime.utc(2022, 12, 25), 28),
+  //   AspectImporvment(DateTime.utc(2022, 12, 29), 34),
+  //   AspectImporvment(DateTime.utc(2022, 12, 30), 32),
+  //   AspectImporvment(DateTime.utc(2023, 1, 2), 40)
+  // ];
   Icon chooseIcon(String? x) {
     Icon rightIcon = const Icon(Icons.abc);
     switch (x) {
@@ -140,6 +171,61 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<AspectImporvment> chartData = [];
+
+    List<Imporvment> tempList = [];
+
+    tempList = widget.aspect.imporvmentd.toList();
+    DateTime dateOfSelection = tempList[0].date;
+
+    DateTime dateOfSelectionFormated = DateTime.utc(
+        dateOfSelection.year, dateOfSelection.month, dateOfSelection.day);
+    DateTime todayDate = DateTime.now();
+    DateTime todayDateFormated =
+        DateTime.utc(todayDate.year, todayDate.month, todayDate.day);
+
+    List<Imporvment> startList = [];
+
+    while (dateOfSelectionFormated.compareTo(todayDateFormated) != 0) {
+      Imporvment newImprove = Imporvment(userID: IsarService.getUserID);
+      newImprove.date = dateOfSelectionFormated;
+      newImprove.sum = tempList[0].sum;
+      startList.add(newImprove);
+      dateOfSelectionFormated =
+          dateOfSelectionFormated.add(const Duration(days: 1));
+    }
+    Imporvment newImprove = Imporvment(userID: IsarService.getUserID);
+    newImprove.date = dateOfSelectionFormated;
+    newImprove.sum = tempList[0].sum;
+    startList.add(newImprove);
+
+//create the list to be used in the line chart
+    double currentpoints = startList[0].sum;
+    for (int i = 1; i < startList.length; i++) {
+      for (var b = 1; b < tempList.length;) {
+        if (startList[i].date.compareTo(tempList[b].date) == 0) {
+          // try print the date in tem to chak its kind first
+          currentpoints = tempList[b].sum;
+          b++;
+        } else {
+          break;
+        }
+      }
+      startList[i].sum = currentpoints;
+    }
+    for (int i = 0; i < startList.length; i++) {}
+
+// print("here the lenth");
+//   print(newList.length);
+
+    for (var i in startList) {
+      DateTime x = i.date;
+      DateTime date = DateTime.utc(x.year, x.month, x.day);
+
+      AspectImporvment currentImrove = AspectImporvment(date.toUtc(), i.sum);
+
+      chartData.add(currentImrove);
+    }
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -163,157 +249,172 @@ class _ProgressScreenState extends State<ProgressScreen> {
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: const Color.fromARGB(255, 236, 239, 240),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                            child: customCircularIndicator(
-                              "الأهداف",
-                              widget.aspect.goals.length.toString(),
-                              "greenProgress.png",
-                              Colors.green,
-                            ),
-                            onTap: () {
-                              Get.to(AspectGoal(
-                                  isr: widget.isr, aspect: widget.aspect));
-                            }),
-                        GestureDetector(
-                          child: customCircularIndicator(
-                              "العادات",
-                              widget.aspect.habits.length.toString(),
-                              'yellowProgress.png',
-                              Colors.yellow),
-                          onTap: () {
-                            Get.to(AspectHabit(
-                                isr: widget.isr, aspect: widget.aspect));
-                          },
-                        ),
-
-                        GestureDetector(
-                          child: customCircularIndicator("المجتمعات", "3",
-                              'blueProgress.png', Colors.blue),
-                          onTap: () {},
-                        ),
-
-                        // Fixed for now need to be changed
-                      ],
-                    )),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              //----------------------------- here is the line chart ---------------------- //
-
-              Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: const Color.fromARGB(255, 236, 239, 240),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.7),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: SfCartesianChart(
-                    enableAxisAnimation: true,
-                    title: ChartTitle(text: "تطور الجانب "),
-                    primaryXAxis: DateTimeAxis(
-                      minorTicksPerInterval: 4,
-                      minimum: chartData[0].day,
-                      maximum: chartData[chartData.length - 1].day,
-                    ),
-                    series: <ChartSeries>[
-                      // Renders line chart
-                      SplineAreaSeries<AspectImporvment, DateTime>(
-                        yAxisName: "النقاط",
-                        dataSource: chartData,
-                        xValueMapper: (AspectImporvment improve, _) =>
-                            improve.day,
-                        yValueMapper: (AspectImporvment improve, _) =>
-                            improve.points,
-                        gradient: LinearGradient(
-                            colors: gradientColors
-                                .map((e) => e.withOpacity(0.3))
-                                .toList()),
-                      )
-                    ]),
-              ),
-
-              //----------------------------- here is the line chart ---------------------- //
-              const SizedBox(
-                height: 25,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: const Color.fromARGB(255, 236, 239, 240),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.7),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'أهم أهدافك',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 102, 191, 119),
-                                fontSize: 25),
+          child: Container(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: const Color.fromARGB(255, 236, 239, 240),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(
+                                0, 3), // changes position of shadow
                           ),
-                        ),
-                        //take a list of the most recent goal
-                        // send the goal name and the goal points
-                        customLinearIndicator(
-                            "الهدف 1", 60, Colors.green.shade300, Colors.grey),
-                        customLinearIndicator(
-                            "الهدف 2", 65, Colors.green.shade300, Colors.grey),
-                        customLinearIndicator(
-                            "الهدف 3", 20, Colors.green.shade300, Colors.grey),
-                      ],
-                    )),
-              )
-            ],
-          ),
-        ),
-      ),
+                        ],
+                      ),
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                  child: customCircularIndicator(
+                                    "الأهداف",
+                                    widget.aspect.goals.length.toString(),
+                                    "greenProgress.png",
+                                    Colors.green,
+                                  ),
+                                  onTap: () {
+                                    Get.to(AspectGoal(
+                                        isr: widget.isr,
+                                        aspect: widget.aspect));
+                                  }),
+                              GestureDetector(
+                                child: customCircularIndicator(
+                                    "العادات",
+                                    widget.aspect.habits.length.toString(),
+                                    'yellowProgress.png',
+                                    Colors.yellow),
+                                onTap: () {
+                                  Get.to(AspectHabit(
+                                      isr: widget.isr, aspect: widget.aspect));
+                                },
+                              ),
+
+                              GestureDetector(
+                                child: customCircularIndicator("المجتمعات", "3",
+                                    'blueProgress.png', Colors.blue),
+                                onTap: () {},
+                              ),
+
+                              // Fixed for now need to be changed
+                            ],
+                          )),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    //----------------------------- here is the line chart ---------------------- //
+
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: const Color.fromARGB(255, 236, 239, 240),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(
+                                0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: SfCartesianChart(
+                          enableAxisAnimation: true,
+                          title: ChartTitle(text: "تطور الجانب "),
+                          primaryXAxis: DateTimeAxis(
+                            minorTicksPerInterval: 4,
+                            minimum: chartData[0].day,
+                            maximum: chartData[chartData.length - 1].day,
+                          ),
+                          series: <ChartSeries>[
+                            // Renders line chart
+                            SplineAreaSeries<AspectImporvment, DateTime>(
+                              yAxisName: "النقاط",
+                              dataSource: chartData,
+                              xValueMapper: (AspectImporvment improve, _) =>
+                                  improve.day,
+                              yValueMapper: (AspectImporvment improve, _) =>
+                                  improve.points,
+                              gradient: LinearGradient(
+                                  colors: gradientColors
+                                      .map((e) => e.withOpacity(0.3))
+                                      .toList()),
+                            )
+                          ]),
+                    ),
+
+                    //----------------------------- here is the line chart ---------------------- //
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: const Color.fromARGB(255, 236, 239, 240),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(
+                                0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            textDirection: TextDirection.rtl,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: SfCircularChart(
+                                    title: ChartTitle(
+                                        text: 'الأداء المتعلق بأهدافي'),
+                                    legend: Legend(
+                                        isVisible: true,
+                                        overflowMode:
+                                            LegendItemOverflowMode.wrap),
+                                    series: <CircularSeries>[
+                                      DoughnutSeries<GDPData, String>(
+                                          dataSource: _chartData,
+                                          xValueMapper: (GDPData data, _) =>
+                                              data.continent,
+                                          yValueMapper: (GDPData data, _) =>
+                                              data.gdp,
+                                          pointColorMapper: (GDPData data, _) =>
+                                              data.color,
+                                          dataLabelSettings:
+                                              const DataLabelSettings(
+                                                  isVisible: true,
+                                                  showZeroValue: false),
+                                          explodeGesture:
+                                              ActivationMode.singleTap,
+                                          explode: true,
+                                          onPointTap:
+                                              (pointInteractionDetails) {},
+                                          legendIconType: LegendIconType.circle,
+                                          innerRadius: "70%")
+                                    ],
+                                  ))
+                            ],
+                          )),
+                    ),
+                  ]))),
     );
   }
 
@@ -416,4 +517,32 @@ class AspectImporvment {
   AspectImporvment(this.day, this.points);
   final DateTime day;
   final double points;
+}
+
+List<GDPData> getChartData(
+    int NumberOfLate,
+    List<Goal> lateGoalList,
+    int NumberOfStarted,
+    List<Goal> StartedGoalList,
+    int NumberOfNotStarted,
+    List<Goal> NotStartedGoalList) {
+  // here you need to get the value
+  // لم يتم البدء فيها  then ones with zero as progress
+  // قيد التحقيق the ones where  progress greater than zero and due date is before today
+  // متاأخرة those with due date before datetime.now
+
+  final List<GDPData> chartData = [
+    GDPData('لم يتم البدء فيها', NumberOfNotStarted, color: Colors.grey),
+    GDPData('قيد التحقيق', NumberOfStarted, color: Colors.blue),
+    GDPData('متأخره', NumberOfLate,
+        color: const Color.fromARGB(255, 218, 61, 50)),
+  ];
+  return chartData;
+}
+
+class GDPData {
+  GDPData(this.continent, this.gdp, {required this.color});
+  final String continent;
+  final int gdp;
+  final Color color;
 }

@@ -139,10 +139,18 @@ class _AspectGoal extends State<AspectGoal> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          leading: chooseIcon(widget.aspect.name),
-          title: Text(
-            AspectName(widget.aspect.name),
-            style: titleText2,
+          title: Row(
+            children: [
+              Text(
+                AspectName(widget.aspect.name),
+                textDirection: TextDirection.rtl,
+                style: titleText2,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              chooseIcon(widget.aspect.name),
+            ],
           ),
           automaticallyImplyLeading: true, // need color
           backgroundColor: Colors.white,
@@ -151,8 +159,8 @@ class _AspectGoal extends State<AspectGoal> {
             itemCount: goals.length,
             itemBuilder: (context, index) {
               final goal = goals[index];
-              final startData = goals[index].dueDate;
-              final aspectName = goal.aspect.value?.name;
+              final startData = goals[index].startData;
+              final endDate = goals[index].endDate;
               return Container(
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(10)),

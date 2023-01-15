@@ -38,7 +38,7 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  txt(txt: "Invite Friends", fontSize: 16),
+                  txt(txt: "دعوة الأصدقاء", fontSize: 16),
                 ],
               ),
             ),
@@ -89,6 +89,7 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
                         'creation_date': widget.comm.creationDate,
                         'type': 'invite',
                         'community': {
+                          'progress_list': widget.comm.progressList,
                           'aspect': widget.comm.aspect,
                           'communityName': widget.comm.communityName,
                           'creationDate': widget.comm.creationDate,
@@ -125,17 +126,17 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
                               newSelectedUsersList.clear();
                               inviteFriendsController.clear();
                             });
-                            getSuccessSnackBar("Users invited");
+                            getSuccessSnackBar("تمت الدعوة");
                             sendInvitation('${user.email}', widget.comm,
                                 '${firebaseAuth.currentUser!.displayName}');
                           } else {
                             getWarningSnackBar(
-                                'User ${user.email} is invited earlier');
+                                'المستخدم ${user.email} مضاف مسبقا');
                           }
                         });
                       }
                     } else {
-                      getWarningSnackBar('Please select users to add');
+                      getWarningSnackBar('اختر صديقا لإضافته');
                     }
                   },
                   child: Container(
@@ -146,7 +147,7 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
                         borderRadius: BorderRadius.circular(5)),
                     child: Center(
                         child: txt(
-                            txt: 'ابدأ',
+                            txt: 'دعوة',
                             fontSize: 16,
                             fontColor: Colors.white)),
                   ),
@@ -215,68 +216,72 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
   Padding inviteFriendssearchField(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 12),
-      child: SearchField(
-        searchInputDecoration: const InputDecoration(border: InputBorder.none),
-        focusNode: inviteFriendsFocusNode,
-        controller: inviteFriendsController,
-        onSuggestionTap: (p0) {
-          newSelectedUsersList.clear();
-          setState(() {
-            inviteFriendsFocusNode.unfocus();
-            shouldEnabled = false;
-          });
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: SearchField(
+          searchInputDecoration:
+              const InputDecoration(border: InputBorder.none),
+          focusNode: inviteFriendsFocusNode,
+          controller: inviteFriendsController,
+          onSuggestionTap: (p0) {
+            newSelectedUsersList.clear();
+            setState(() {
+              inviteFriendsFocusNode.unfocus();
+              shouldEnabled = false;
+            });
 
-          for (var user in authController.usersList) {
-            if (user.email == p0.searchKey) {
-              selectedUsers.add(user);
-              break;
+            for (var user in authController.usersList) {
+              if (user.email == p0.searchKey) {
+                selectedUsers.add(user);
+                break;
+              }
             }
-          }
 
-          newSelectedUsersList = selectedUsers.toSet().toList();
-          for (var user in newSelectedUsersList) {
-            if (user.userID == firebaseAuth.currentUser!.uid) {
-              newSelectedUsersList.remove(user);
+            newSelectedUsersList = selectedUsers.toSet().toList();
+            for (var user in newSelectedUsersList) {
+              if (user.userID == firebaseAuth.currentUser!.uid) {
+                newSelectedUsersList.remove(user);
+              }
             }
-          }
-        },
-        suggestions: ((authController.usersList)
-              ..removeWhere((e) =>
-                  e.userID == firebaseAuth.currentUser!.uid ||
-                  (e.createdCommunities != null &&
-                      e.createdCommunities!.isNotEmpty &&
-                      e.createdCommunities!.indexWhere(
-                              (element) => element.id == widget.comm.id) >=
-                          0) ||
-                  (e.joinedCommunities != null &&
-                      e.joinedCommunities!.isNotEmpty &&
-                      e.joinedCommunities!.indexWhere(
-                              (element) => element.id == widget.comm.id) >=
-                          0)))
-            .map(
-              (e) => SearchFieldListItem(
-                e.email!,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      txt(txt: e.email!, fontSize: 16),
-                    ],
+          },
+          suggestions: ((authController.usersList)
+                ..removeWhere((e) =>
+                    e.userID == firebaseAuth.currentUser!.uid ||
+                    (e.createdCommunities != null &&
+                        e.createdCommunities!.isNotEmpty &&
+                        e.createdCommunities!.indexWhere(
+                                (element) => element.id == widget.comm.id) >=
+                            0) ||
+                    (e.joinedCommunities != null &&
+                        e.joinedCommunities!.isNotEmpty &&
+                        e.joinedCommunities!.indexWhere(
+                                (element) => element.id == widget.comm.id) >=
+                            0)))
+              .map(
+                (e) => SearchFieldListItem(
+                  e.email!,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        txt(txt: e.email!, fontSize: 16),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )
-            .toList(),
-        suggestionState: Suggestion.expand,
-        textInputAction: TextInputAction.next,
-        hint: 'exp: user1, user2...',
-        hasOverlay: false,
-        searchStyle: TextStyle(
-          fontSize: 18,
-          color: Colors.black.withOpacity(0.8),
+              )
+              .toList(),
+          suggestionState: Suggestion.expand,
+          textInputAction: TextInputAction.next,
+          hint: 'مثلا: مستحدم1, مستخدم2...',
+          hasOverlay: false,
+          searchStyle: TextStyle(
+            fontSize: 18,
+            color: Colors.black.withOpacity(0.8),
+          ),
+          itemHeight: screenHeight(context) * 0.07,
         ),
-        itemHeight: screenHeight(context) * 0.07,
       ),
     );
   }

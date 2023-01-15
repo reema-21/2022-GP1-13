@@ -3,6 +3,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/LocalTask.dart';
+import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/goals_habits_tab/taskClass.dart';
 
 // create  a class called task
@@ -43,7 +44,7 @@ class TaskLocalControleer extends GetxController {
 
   TextEditingController inputTaskName = TextEditingController();
   addEditTask(String name, String duName, int val) {
-    LocalTask newTak = LocalTask();
+    LocalTask newTak = LocalTask(userID: IsarService.getUserID);
     newTak.name = name;
     String durationDescribtion = "";
     switch (duName) {
@@ -88,7 +89,7 @@ class TaskLocalControleer extends GetxController {
 
     allTaskForDepency.value.add(TaskForDependency);
 
-    LocalTask newTak = LocalTask();
+    LocalTask newTak = LocalTask(userID: IsarService.getUserID);
     newTak.name = name;
 
     String durationDescribtion = "";

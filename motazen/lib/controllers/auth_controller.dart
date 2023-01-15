@@ -77,6 +77,7 @@ class AuthController extends GetxController {
 
             try {
               createdCommnitiesOfUser.add(Community(
+                  progressList: community['progress_list'],
                   aspect: community['aspect'],
                   founderUsername: community['founderUsername'],
                   communityName: community['communityName'],
@@ -107,6 +108,7 @@ class AuthController extends GetxController {
             } catch (e) {}
             try {
               joinedCommnitiesOfUser.add(Community(
+                  progressList: community['progress_list'],
                   aspect: community['aspect'],
                   founderUsername: community['founderUsername'],
                   communityName: community['communityName'],

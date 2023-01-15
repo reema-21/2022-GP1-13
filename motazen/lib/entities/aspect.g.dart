@@ -56,6 +56,11 @@ const AspectSchema = CollectionSchema(
       id: 7,
       name: r'percentagePoints',
       type: IsarType.double,
+    ),
+    r'userID': PropertySchema(
+      id: 8,
+      name: r'userID',
+      type: IsarType.string,
     )
   },
   estimateSize: _aspectEstimateSize,
@@ -65,6 +70,12 @@ const AspectSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
+    r'imporvmentd': LinkSchema(
+      id: -4938134410177200613,
+      name: r'imporvmentd',
+      target: r'Imporvment',
+      single: false,
+    ),
     r'goals': LinkSchema(
       id: -1002800887951404337,
       name: r'goals',
@@ -104,6 +115,7 @@ int _aspectEstimateSize(
     }
   }
   bytesCount += 3 + object.name.length * 3;
+  bytesCount += 3 + object.userID.length * 3;
   return bytesCount;
 }
 
@@ -121,6 +133,7 @@ void _aspectSerialize(
   writer.writeBool(offsets[5], object.isSelected);
   writer.writeString(offsets[6], object.name);
   writer.writeDouble(offsets[7], object.percentagePoints);
+  writer.writeString(offsets[8], object.userID);
 }
 
 Aspect _aspectDeserialize(
@@ -129,7 +142,9 @@ Aspect _aspectDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = Aspect();
+  final object = Aspect(
+    userID: reader.readString(offsets[8]),
+  );
   object.color = reader.readLong(offsets[0]);
   object.iconCodePoint = reader.readLong(offsets[1]);
   object.iconDirection = reader.readBool(offsets[2]);
@@ -165,6 +180,8 @@ P _aspectDeserializeProp<P>(
       return (reader.readString(offset)) as P;
     case 7:
       return (reader.readDouble(offset)) as P;
+    case 8:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -175,11 +192,13 @@ Id _aspectGetId(Aspect object) {
 }
 
 List<IsarLinkBase<dynamic>> _aspectGetLinks(Aspect object) {
-  return [object.goals, object.habits];
+  return [object.imporvmentd, object.goals, object.habits];
 }
 
 void _aspectAttach(IsarCollection<dynamic> col, Id id, Aspect object) {
   object.id = id;
+  object.imporvmentd
+      .attach(col, col.isar.collection<Imporvment>(), r'imporvmentd', id);
   object.goals.attach(col, col.isar.collection<Goal>(), r'goals', id);
   object.habits.attach(col, col.isar.collection<Habit>(), r'habits', id);
 }
@@ -925,11 +944,198 @@ extension AspectQueryFilter on QueryBuilder<Aspect, Aspect, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> userIDEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> userIDGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> userIDLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> userIDBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userID',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> userIDStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> userIDEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> userIDContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userID',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> userIDMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userID',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> userIDIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userID',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> userIDIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userID',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension AspectQueryObject on QueryBuilder<Aspect, Aspect, QFilterCondition> {}
 
 extension AspectQueryLinks on QueryBuilder<Aspect, Aspect, QFilterCondition> {
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> imporvmentd(
+      FilterQuery<Imporvment> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'imporvmentd');
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> imporvmentdLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'imporvmentd', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> imporvmentdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'imporvmentd', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> imporvmentdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'imporvmentd', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> imporvmentdLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'imporvmentd', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition>
+      imporvmentdLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'imporvmentd', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterFilterCondition> imporvmentdLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'imporvmentd', lower, includeLower, upper, includeUpper);
+    });
+  }
+
   QueryBuilder<Aspect, Aspect, QAfterFilterCondition> goals(
       FilterQuery<Goal> q) {
     return QueryBuilder.apply(this, (query) {
@@ -1139,6 +1345,18 @@ extension AspectQuerySortBy on QueryBuilder<Aspect, Aspect, QSortBy> {
       return query.addSortBy(r'percentagePoints', Sort.desc);
     });
   }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByUserID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> sortByUserIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.desc);
+    });
+  }
 }
 
 extension AspectQuerySortThenBy on QueryBuilder<Aspect, Aspect, QSortThenBy> {
@@ -1249,6 +1467,18 @@ extension AspectQuerySortThenBy on QueryBuilder<Aspect, Aspect, QSortThenBy> {
       return query.addSortBy(r'percentagePoints', Sort.desc);
     });
   }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByUserID() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QAfterSortBy> thenByUserIDDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userID', Sort.desc);
+    });
+  }
 }
 
 extension AspectQueryWhereDistinct on QueryBuilder<Aspect, Aspect, QDistinct> {
@@ -1302,6 +1532,13 @@ extension AspectQueryWhereDistinct on QueryBuilder<Aspect, Aspect, QDistinct> {
   QueryBuilder<Aspect, Aspect, QDistinct> distinctByPercentagePoints() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'percentagePoints');
+    });
+  }
+
+  QueryBuilder<Aspect, Aspect, QDistinct> distinctByUserID(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userID', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1358,6 +1595,12 @@ extension AspectQueryProperty on QueryBuilder<Aspect, Aspect, QQueryProperty> {
   QueryBuilder<Aspect, double, QQueryOperations> percentagePointsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'percentagePoints');
+    });
+  }
+
+  QueryBuilder<Aspect, String, QQueryOperations> userIDProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userID');
     });
   }
 }
