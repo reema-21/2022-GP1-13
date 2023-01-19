@@ -3,11 +3,13 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
 import 'package:motazen/controllers/auth_controller.dart';
 import 'package:motazen/pages/communities_page/invite_friends_screen.dart';
 import 'package:motazen/theme.dart';
 
 import '../../controllers/community_controller.dart';
+import '../../isar_service.dart';
 
 class AboutCommunityPage extends StatefulWidget {
   final comm;
@@ -42,65 +44,85 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
             'خيارات المجتمع',
             style: TextStyle(fontSize: 20, color: Colors.black),
           )),
-      body: Column(
-        children: [
-          if (communityController.listOfCreatedCommunities
-                  .indexWhere((element) => element.id == widget.comm.id) >=
-              0)
-            InviteFriendWidget(comm: widget.comm),
-          if (communityController.listOfCreatedCommunities
-                  .indexWhere((element) => element.id == widget.comm.id) >=
-              0)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 40),
-              child: InkWell(
-                onTap: () {
-                  deleteCommunity();
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: MediaQuery.of(context).size.height * 0.07,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.red),
-                  child: const Text(
-                    'حذف المجتمع',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          if (communityController.listOfCreatedCommunities
-                  .indexWhere((element) => element.id == widget.comm.id) <
-              0)
-            Column(
-              children: [
-                const SizedBox(height: 70),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 40),
-                  child: InkWell(
-                    onTap: () {
-                      leaveCommunity();
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: MediaQuery.of(context).size.height * 0.07,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: Colors.red),
-                      child: const Text(
-                        'غادر المجتمع',
-                        style: TextStyle(color: Colors.white),
-                      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (widget.comm.isPrivate &&
+                communityController.listOfCreatedCommunities.indexWhere(
+                        (element) => element.id == widget.comm.id) >=
+                    0)
+              InviteFriendWidget(comm: widget.comm),
+            if (communityController.listOfCreatedCommunities
+                    .indexWhere((element) => element.id == widget.comm.id) >=
+                0)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+                child: InkWell(
+                  onTap: () async {
+                    await deleteCommunity();
+                    setState(() {});
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const navBar(selectedIndex: 2)));
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: MediaQuery.of(context).size.height * 0.07,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.red),
+                    child: const Text(
+                      'حذف المجتمع',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
-              ],
-            ),
-        ],
+              ),
+            if (communityController.listOfCreatedCommunities
+                    .indexWhere((element) => element.id == widget.comm.id) <
+                0)
+              Column(
+                children: [
+                  const SizedBox(height: 70),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+                    child: InkWell(
+                      onTap: () async {
+                        await leaveCommunity();
+                        setState(() {});
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const navBar(selectedIndex: 2)));
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: MediaQuery.of(context).size.height * 0.07,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: Colors.red),
+                        child: const Text(
+                          'غادر المجتمع',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -114,7 +136,8 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
         .set(false);
 
 //delete from public_communities
-
+    IsarService iser = IsarService();
+    iser.deleteCommunity(widget.comm.id);
     if (!widget.comm.isPrivate) {
       final t =
           await firestore.collection('public_communities').doc(widget.comm.id);
@@ -122,6 +145,8 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
     }
 
     // delete created communities
+    iser.deleteCommunity(widget.comm.id);
+
     communityController.listOfCreatedCommunities
         .removeWhere((element) => element.id == widget.comm.id);
     await firestore
@@ -136,10 +161,10 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
                 'founderUsername': e.founderUsername,
                 'goalName': e.goalName,
                 'isPrivate': e.isPrivate,
-                'listOfTasks': e.listOfTasks!.isNotEmpty
-                    ? e.listOfTasks!.map((e) => e.toJson()).toList()
-                    : [],
-                'tillDate': e.tillDate,
+                // 'listOfTasks': e.listOfTasks!.isNotEmpty
+                //     ? e.listOfTasks!.map((e) => e.toJson()).toList()
+                //     : [],
+                // 'tillDate': e.tillDate,
                 '_id': e.id
               })
           .toList(),
@@ -174,13 +199,13 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
     //     });
     //   }
     // }
-    Navigator.pop(context);
-    Navigator.pop(context);
-    Navigator.pop(context);
   }
 
   leaveCommunity() async {
     // delete joined community
+    IsarService iser = IsarService();
+    iser.deleteCommunity(widget.comm.id);
+
     communityController.listOfJoinedCommunities
         .removeWhere((element) => element.id == widget.comm.id);
     await firestore
@@ -196,16 +221,13 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
                 'founderUsername': e.founderUsername,
                 'goalName': e.goalName,
                 'isPrivate': e.isPrivate,
-                'listOfTasks': e.listOfTasks!.isNotEmpty
-                    ? e.listOfTasks!.map((e) => e.toJson()).toList()
-                    : [],
-                'tillDate': e.tillDate,
+                // 'listOfTasks': e.listOfTasks!.isNotEmpty
+                //     ? e.listOfTasks!.map((e) => e.toJson()).toList()
+                //     : [],
+                // 'tillDate': e.tillDate,
                 '_id': e.id
               })
           .toList(),
     });
-    Navigator.pop(context);
-    Navigator.pop(context);
-    Navigator.pop(context);
   }
 }

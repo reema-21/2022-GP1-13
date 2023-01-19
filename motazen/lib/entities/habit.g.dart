@@ -17,28 +17,33 @@ const HabitSchema = CollectionSchema(
   name: r'Habit',
   id: 3896650575830519340,
   properties: {
-    r'durationInNumber': PropertySchema(
+    r'completedForToday': PropertySchema(
       id: 0,
+      name: r'completedForToday',
+      type: IsarType.bool,
+    ),
+    r'durationInNumber': PropertySchema(
+      id: 1,
       name: r'durationInNumber',
       type: IsarType.long,
     ),
     r'durationIndString': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'durationIndString',
       type: IsarType.long,
     ),
     r'frequency': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'frequency',
       type: IsarType.string,
     ),
     r'titel': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'titel',
       type: IsarType.string,
     ),
     r'userID': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'userID',
       type: IsarType.string,
     )
@@ -82,11 +87,12 @@ void _habitSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.durationInNumber);
-  writer.writeLong(offsets[1], object.durationIndString);
-  writer.writeString(offsets[2], object.frequency);
-  writer.writeString(offsets[3], object.titel);
-  writer.writeString(offsets[4], object.userID);
+  writer.writeBool(offsets[0], object.completedForToday);
+  writer.writeLong(offsets[1], object.durationInNumber);
+  writer.writeLong(offsets[2], object.durationIndString);
+  writer.writeString(offsets[3], object.frequency);
+  writer.writeString(offsets[4], object.titel);
+  writer.writeString(offsets[5], object.userID);
 }
 
 Habit _habitDeserialize(
@@ -96,13 +102,14 @@ Habit _habitDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Habit(
-    userID: reader.readString(offsets[4]),
+    userID: reader.readString(offsets[5]),
   );
-  object.durationInNumber = reader.readLong(offsets[0]);
-  object.durationIndString = reader.readLong(offsets[1]);
-  object.frequency = reader.readString(offsets[2]);
+  object.completedForToday = reader.readBool(offsets[0]);
+  object.durationInNumber = reader.readLong(offsets[1]);
+  object.durationIndString = reader.readLong(offsets[2]);
+  object.frequency = reader.readString(offsets[3]);
   object.id = id;
-  object.titel = reader.readString(offsets[3]);
+  object.titel = reader.readString(offsets[4]);
   return object;
 }
 
@@ -114,14 +121,16 @@ P _habitDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 1:
       return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -217,6 +226,16 @@ extension HabitQueryWhere on QueryBuilder<Habit, Habit, QWhereClause> {
 }
 
 extension HabitQueryFilter on QueryBuilder<Habit, Habit, QFilterCondition> {
+  QueryBuilder<Habit, Habit, QAfterFilterCondition> completedForTodayEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'completedForToday',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<Habit, Habit, QAfterFilterCondition> durationInNumberEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -782,6 +801,18 @@ extension HabitQueryLinks on QueryBuilder<Habit, Habit, QFilterCondition> {
 }
 
 extension HabitQuerySortBy on QueryBuilder<Habit, Habit, QSortBy> {
+  QueryBuilder<Habit, Habit, QAfterSortBy> sortByCompletedForToday() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedForToday', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> sortByCompletedForTodayDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedForToday', Sort.desc);
+    });
+  }
+
   QueryBuilder<Habit, Habit, QAfterSortBy> sortByDurationInNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'durationInNumber', Sort.asc);
@@ -844,6 +875,18 @@ extension HabitQuerySortBy on QueryBuilder<Habit, Habit, QSortBy> {
 }
 
 extension HabitQuerySortThenBy on QueryBuilder<Habit, Habit, QSortThenBy> {
+  QueryBuilder<Habit, Habit, QAfterSortBy> thenByCompletedForToday() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedForToday', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Habit, Habit, QAfterSortBy> thenByCompletedForTodayDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedForToday', Sort.desc);
+    });
+  }
+
   QueryBuilder<Habit, Habit, QAfterSortBy> thenByDurationInNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'durationInNumber', Sort.asc);
@@ -918,6 +961,12 @@ extension HabitQuerySortThenBy on QueryBuilder<Habit, Habit, QSortThenBy> {
 }
 
 extension HabitQueryWhereDistinct on QueryBuilder<Habit, Habit, QDistinct> {
+  QueryBuilder<Habit, Habit, QDistinct> distinctByCompletedForToday() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'completedForToday');
+    });
+  }
+
   QueryBuilder<Habit, Habit, QDistinct> distinctByDurationInNumber() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'durationInNumber');
@@ -956,6 +1005,12 @@ extension HabitQueryProperty on QueryBuilder<Habit, Habit, QQueryProperty> {
   QueryBuilder<Habit, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Habit, bool, QQueryOperations> completedForTodayProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'completedForToday');
     });
   }
 

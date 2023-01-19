@@ -1,5 +1,3 @@
-// ignore_for_file: empty_catches
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,6 +54,14 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          TextButton(
+            onPressed: () {
+              setState(() {
+                question = (questions..shuffle()).first;
+              });
+            },
+            child: const Text('تغيير السؤال'),
+          ),
           isloading
               ? const CupertinoActivityIndicator()
               : TextButton(

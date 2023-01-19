@@ -429,4 +429,57 @@ class TaskLocalControleer extends GetxController {
     // print("here is the taskduraion value 12 after decremnt ");
     // print(totalTasksDuration);
   }
-}
+  //!For the communities joind users 
+   incrementCommunity() {
+//     print("here is the cuurent vlaue 1 ");
+// print(currentTaskDuration.value);
+// print ("here is the temp value1 ");
+// print(tem);
+    // print("here is the taskduraion value1");
+    // print(totalTasksDuration);
+    // print("here is the goals value1");
+    // print(goalduration);
+//       print (isSelected.value);
+    switch (isSelected.value) {
+      case "أيام":
+        currentTaskDuration.value = currentTaskDuration.value + 1;
+        tem.value = tempIncrementTaskDuration();
+        break;
+      case "أسابيع":
+        currentTaskDuration.value = currentTaskDuration.value + (1 * 7);
+        tem.value = tempIncrementTaskDuration();
+
+        break;
+      case "أشهر":
+        currentTaskDuration.value = currentTaskDuration.value + (1 * 30);
+        tem.value = tempIncrementTaskDuration();
+
+        break;
+      case "سنوات":
+        currentTaskDuration.value = currentTaskDuration.value + (1 * 360);
+        tem.value = tempIncrementTaskDuration();
+
+        break;
+    }
+
+//                            print("here is the cuurent vlaue 2 ");
+// print(currentTaskDuration.value);
+// print ("here is the temp value 2 ");
+// print(tem);
+    // print("here is the taskduraion value 2");
+    // print(totalTasksDuration);
+    // print("here is the goals value1");
+    // print(goalduration);
+
+//       print("here is the cuurent vlaue 5 ");
+// print(currentTaskDuration.value);
+// print ("here is the temp value 5");
+// print(tem);
+// print ("here is the taskduraion value 5");
+// print (totalTasksDuration);
+      TaskDuration.value++;
+    }
+  }
+
+
+

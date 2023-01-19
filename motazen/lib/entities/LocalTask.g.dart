@@ -22,28 +22,33 @@ const LocalTaskSchema = CollectionSchema(
       name: r'amountCompleted',
       type: IsarType.long,
     ),
-    r'duration': PropertySchema(
+    r'completedForToday': PropertySchema(
       id: 1,
+      name: r'completedForToday',
+      type: IsarType.bool,
+    ),
+    r'duration': PropertySchema(
+      id: 2,
       name: r'duration',
       type: IsarType.long,
     ),
     r'durationDescribtion': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'durationDescribtion',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'name',
       type: IsarType.string,
     ),
     r'taskCompletionPercentage': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'taskCompletionPercentage',
       type: IsarType.double,
     ),
     r'userID': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'userID',
       type: IsarType.string,
     )
@@ -94,11 +99,12 @@ void _localTaskSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.amountCompleted);
-  writer.writeLong(offsets[1], object.duration);
-  writer.writeString(offsets[2], object.durationDescribtion);
-  writer.writeString(offsets[3], object.name);
-  writer.writeDouble(offsets[4], object.taskCompletionPercentage);
-  writer.writeString(offsets[5], object.userID);
+  writer.writeBool(offsets[1], object.completedForToday);
+  writer.writeLong(offsets[2], object.duration);
+  writer.writeString(offsets[3], object.durationDescribtion);
+  writer.writeString(offsets[4], object.name);
+  writer.writeDouble(offsets[5], object.taskCompletionPercentage);
+  writer.writeString(offsets[6], object.userID);
 }
 
 LocalTask _localTaskDeserialize(
@@ -108,14 +114,15 @@ LocalTask _localTaskDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = LocalTask(
-    userID: reader.readString(offsets[5]),
+    userID: reader.readString(offsets[6]),
   );
   object.amountCompleted = reader.readLong(offsets[0]);
-  object.duration = reader.readLong(offsets[1]);
-  object.durationDescribtion = reader.readString(offsets[2]);
+  object.completedForToday = reader.readBool(offsets[1]);
+  object.duration = reader.readLong(offsets[2]);
+  object.durationDescribtion = reader.readString(offsets[3]);
   object.id = id;
-  object.name = reader.readString(offsets[3]);
-  object.taskCompletionPercentage = reader.readDouble(offsets[4]);
+  object.name = reader.readString(offsets[4]);
+  object.taskCompletionPercentage = reader.readDouble(offsets[5]);
   return object;
 }
 
@@ -129,14 +136,16 @@ P _localTaskDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 5:
+      return (reader.readDouble(offset)) as P;
+    case 6:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -289,6 +298,16 @@ extension LocalTaskQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      completedForTodayEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'completedForToday',
+        value: value,
       ));
     });
   }
@@ -955,6 +974,19 @@ extension LocalTaskQuerySortBy on QueryBuilder<LocalTask, LocalTask, QSortBy> {
     });
   }
 
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByCompletedForToday() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedForToday', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
+      sortByCompletedForTodayDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedForToday', Sort.desc);
+    });
+  }
+
   QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'duration', Sort.asc);
@@ -1030,6 +1062,19 @@ extension LocalTaskQuerySortThenBy
   QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByAmountCompletedDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'amountCompleted', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByCompletedForToday() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedForToday', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
+      thenByCompletedForTodayDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'completedForToday', Sort.desc);
     });
   }
 
@@ -1117,6 +1162,12 @@ extension LocalTaskQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LocalTask, LocalTask, QDistinct> distinctByCompletedForToday() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'completedForToday');
+    });
+  }
+
   QueryBuilder<LocalTask, LocalTask, QDistinct> distinctByDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'duration');
@@ -1164,6 +1215,12 @@ extension LocalTaskQueryProperty
   QueryBuilder<LocalTask, int, QQueryOperations> amountCompletedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'amountCompleted');
+    });
+  }
+
+  QueryBuilder<LocalTask, bool, QQueryOperations> completedForTodayProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'completedForToday');
     });
   }
 

@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:motazen/entities/task.dart';
 import 'package:motazen/models/community.dart';
 import 'package:motazen/theme.dart';
 
@@ -59,20 +58,20 @@ class AuthController extends GetxController {
           String userIDD = user['userID'];
           String firstNamee = user['firstName'];
           for (var community in createdCommunitiess) {
-            List<Task> listOfTasks = [];
+            // List<Task> listOfTasks = [];
             try {
-              for (var task in community['listOfTasks']) {
-                listOfTasks.add(Task(
-                  TaskDependency: task['TaskDependency'],
-                  amountCompleted: task['amountCompleted'],
-                  duration: task['duration'],
-                  durationDescribtion: task['durationDescribtion'],
-                  // goal: task['goal'],
-                  // id: task['id'],
-                  name: task['name'],
-                  taskCompletionPercentage: task['taskCompletionPercentage'],
-                ));
-              }
+              // for (var task in community['listOfTasks']) {
+              //   listOfTasks.add(Task(
+              //     TaskDependency: task['TaskDependency'],
+              //     amountCompleted: task['amountCompleted'],
+              //     duration: task['duration'],
+              //     durationDescribtion: task['durationDescribtion'],
+              //     // goal: task['goal'],
+              //     // id: task['id'],
+              //     name: task['name'],
+              //     taskCompletionPercentage: task['taskCompletionPercentage'],
+              //   ));
+              // }
             } catch (e) {}
 
             try {
@@ -84,27 +83,27 @@ class AuthController extends GetxController {
                   creationDate: community['creationDate'].toDate(),
                   goalName: community['goalName'],
                   isPrivate: community['isPrivate'],
-                  listOfTasks: listOfTasks,
-                  tillDate: community['tillDate'].toDate(),
+                  // listOfTasks: listOfTasks,
+                  // tillDate: community['tillDate'].toDate(),
                   id: community['_id']));
             } catch (e) {}
           }
 
           for (var community in joinedCommunitiess) {
-            List<Task> listOfTasks = [];
+            // List<Task> listOfTasks = [];
             try {
-              for (var task in community['listOfTasks']) {
-                listOfTasks.add(Task(
-                  TaskDependency: task['TaskDependency'],
-                  amountCompleted: task['amountCompleted'],
-                  duration: task['duration'],
-                  durationDescribtion: task['durationDescribtion'],
-                  // goal: task['goal'],
-                  // id: task['id'],
-                  name: task['name'],
-                  taskCompletionPercentage: task['taskCompletionPercentage'],
-                ));
-              }
+              // for (var task in community['listOfTasks']) {
+              //   listOfTasks.add(Task(
+              //     TaskDependency: task['TaskDependency'],
+              //     amountCompleted: task['amountCompleted'],
+              //     duration: task['duration'],
+              //     durationDescribtion: task['durationDescribtion'],
+              //     // goal: task['goal'],
+              //     // id: task['id'],
+              //     name: task['name'],
+              //     taskCompletionPercentage: task['taskCompletionPercentage'],
+              //   ));
+              // }
             } catch (e) {}
             try {
               joinedCommnitiesOfUser.add(Community(
@@ -115,8 +114,8 @@ class AuthController extends GetxController {
                   creationDate: community['creationDate'].toDate(),
                   goalName: community['goalName'],
                   isPrivate: community['isPrivate'],
-                  listOfTasks: listOfTasks,
-                  tillDate: community['tillDate'].toDate(),
+                  // listOfTasks: listOfTasks,
+                  // tillDate: community['tillDate'].toDate(),
                   id: community['_id']));
             } catch (e) {}
           }

@@ -1,4 +1,4 @@
-// ignore_for_file: list_remove_unrelated_type
+// ignore_for_file: list_remove_unrelated_type, unused_element
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,8 +17,8 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
     return (to.difference(from).inDays).round();
   }
 
-  String duration =
-      daysBetween(community.creationDate!, community.tillDate!).toString();
+  // String duration =
+  //     daysBetween(community.creationDate!, community.tillDate!).toString();
 
   return showDialog(
       context: context,
@@ -27,9 +27,7 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
           contentPadding: EdgeInsets.zero,
           scrollable: true,
           content: Container(
-            height: community.listOfTasks!.isEmpty
-                ? screenHeight(context) * 0.4
-                : screenHeight(context) * 0.5,
+            height: screenHeight(context) * 0.5,
             width: screenWidth(context) * 0.8,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
             child: StatefulBuilder(builder: (context, setState) {
@@ -59,33 +57,33 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                           fontSize: 18,
                         ),
                       ),
-                      Expanded(
-                        child: txt(
-                          txt: 'الفترة: $duration يوما ',
-                          fontSize: 18,
-                        ),
-                      ),
-                      community.listOfTasks!.isEmpty
-                          ? Container()
-                          : txt(
-                              txt: 'المهام: ',
-                              fontSize: 18,
-                            ),
-                      community.listOfTasks!.isEmpty
-                          ? Container()
-                          : Expanded(
-                              flex: 3,
-                              child: ListView.builder(
-                                itemCount: community.listOfTasks!.length,
-                                itemBuilder: (context, index) {
-                                  return txt(
-                                    txt:
-                                        '\u2022 ${community.listOfTasks![index].name} ',
-                                    fontSize: 18,
-                                  );
-                                },
-                              ),
-                            ),
+                      // Expanded(
+                      //   child: txt(
+                      //     txt: 'الفترة: $duration يوما ',
+                      //     fontSize: 18,
+                      //   ),
+                      // ),
+                      // community.listOfTasks!.isEmpty
+                      //     ? Container()
+                      //     : txt(
+                      //         txt: 'المهام: ',
+                      //         fontSize: 18,
+                      //       ),
+                      // community.listOfTasks!.isEmpty
+                      //     ? Container()
+                      //     : Expanded(
+                      //         flex: 3,
+                      //         child: ListView.builder(
+                      //           itemCount: community.listOfTasks!.length,
+                      //           itemBuilder: (context, index) {
+                      //             return txt(
+                      //               txt:
+                      //                   '\u2022 ${community.listOfTasks![index].name} ',
+                      //               fontSize: 18,
+                      //             );
+                      //           },
+                      //         ),
+                      //       ),
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -125,10 +123,10 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                                       isPrivate: community.isPrivate,
                                       founderUsername:
                                           community.founderUsername,
-                                      tillDate: community.tillDate,
+                                      // tillDate: community.tillDate,
                                       creationDate: community.creationDate,
                                       goalName: community.goalName,
-                                      listOfTasks: community.listOfTasks,
+                                      // listOfTasks: community.listOfTasks,
                                       id: community.id),
                                 );
                                 communityController.update();

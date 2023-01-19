@@ -96,6 +96,12 @@ const GoalSchema = CollectionSchema(
       name: r'task',
       target: r'LocalTask',
       single: false,
+    ),
+    r'Communities': LinkSchema(
+      id: 279475004078980272,
+      name: r'Communities',
+      target: r'CommunityID',
+      single: false,
     )
   },
   embeddedSchemas: {},
@@ -186,7 +192,12 @@ Id _goalGetId(Goal object) {
 }
 
 List<IsarLinkBase<dynamic>> _goalGetLinks(Goal object) {
-  return [object.goalDependency, object.aspect, object.task];
+  return [
+    object.goalDependency,
+    object.aspect,
+    object.task,
+    object.Communities
+  ];
 }
 
 void _goalAttach(IsarCollection<dynamic> col, Id id, Goal object) {
@@ -195,6 +206,8 @@ void _goalAttach(IsarCollection<dynamic> col, Id id, Goal object) {
       .attach(col, col.isar.collection<Goal>(), r'goalDependency', id);
   object.aspect.attach(col, col.isar.collection<Aspect>(), r'aspect', id);
   object.task.attach(col, col.isar.collection<LocalTask>(), r'task', id);
+  object.Communities.attach(
+      col, col.isar.collection<CommunityID>(), r'Communities', id);
 }
 
 extension GoalQueryWhereSort on QueryBuilder<Goal, Goal, QWhere> {
@@ -1175,6 +1188,62 @@ extension GoalQueryLinks on QueryBuilder<Goal, Goal, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'task', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> communities(
+      FilterQuery<CommunityID> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'Communities');
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> communitiesLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'Communities', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> communitiesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'Communities', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> communitiesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'Communities', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> communitiesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'Communities', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> communitiesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'Communities', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Goal, Goal, QAfterFilterCondition> communitiesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'Communities', lower, includeLower, upper, includeUpper);
     });
   }
 }

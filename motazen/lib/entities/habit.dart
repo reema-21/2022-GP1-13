@@ -12,7 +12,7 @@ class Habit {
   //late DateTime endDate //  i thought we can make is fixed to be today date +21
   final aspect = IsarLink<Aspect>();
   // has a relation each goal belong to one aspect
-
+  bool completedForToday = false;
   late int durationInNumber;
   late int durationIndString; //for the dropdownmenue ;
   String userID;

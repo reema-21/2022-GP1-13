@@ -25,7 +25,6 @@ class _MyHomepageState extends State<Homepage> {
       builder: (context, snapshot) {
         //create empty incase
         List<Aspect>? aspects = [];
-        //check if there are goals (check for habits later)
         if (snapshot.hasData) {
           aspects = snapshot.data;
           //add habits to list later
@@ -36,41 +35,38 @@ class _MyHomepageState extends State<Homepage> {
               //displays the visualization (wheel of life)
               Stack(alignment: Alignment.center, children: [
                 createCentralcircules(
-                  10,
+                  8,
                 ),
                 createCentralcircules(
-                  20,
+                  18,
                 ),
                 createCentralcircules(
-                  30,
+                  28,
                 ),
                 createCentralcircules(
-                  40,
+                  38,
                 ),
                 createCentralcircules(
-                  50,
+                  48,
                 ),
                 createCentralcircules(
-                  60,
+                  58,
                 ),
                 createCentralcircules(
-                  70,
-                ),
-                createCentralcircules(
-                  80,
+                  68,
                 ),
                 Container(
                   margin: const EdgeInsets.all(0.0),
                   height: imageHeight,
                   child: const WheelBackground(),
                 ),
-                life_wheel(allAspects: aspects??[]),
+                life_wheel(allAspects: aspects ?? []),
               ]),
               // displays the daily tasks list
               Flexible(
                 child: Center(
                   child: TodoCard(
-                    todo: createTodoList(aspects??[]),
+                    todo: createTodoList(aspects ?? []),
                   ),
                 ),
               ),

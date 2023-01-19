@@ -32,6 +32,7 @@ class Todo {
 class Item {
   /// {@macro item}
   Item({
+    required this.type,
     required this.duration,
     this.importance,
     this.itemGoal,
@@ -61,6 +62,8 @@ class Item {
 
   ///the importance of this item
   final int? importance;
+
+  final String type;
 }
 
 ///------------------------------------------Models for piechart---------------------------------------------

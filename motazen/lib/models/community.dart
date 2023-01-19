@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:motazen/entities/task.dart';
 
 class Community {
   String? communityName;
@@ -7,9 +6,9 @@ class Community {
   String? aspect;
   String? goalName;
   bool isPrivate;
-  DateTime? tillDate;
+  // DateTime? tillDate;
   DateTime? creationDate;
-  List<Task>? listOfTasks;
+  // List<Task>? listOfTasks;
   List<dynamic> progressList;
   String id;
 
@@ -17,10 +16,10 @@ class Community {
       {this.communityName,
       this.aspect,
       this.creationDate,
-      this.tillDate,
+      // this.tillDate,
       this.goalName,
       required this.isPrivate,
-      this.listOfTasks,
+      // this.listOfTasks,
       this.founderUsername,
       required this.progressList,
       required this.id});
@@ -31,8 +30,8 @@ class Community {
         "isPrivate": isPrivate,
         "goalName": goalName,
         "creationDate": creationDate,
-        "tillDate": tillDate,
-        "listOfTasks": listOfTasks,
+        // "tillDate": tillDate,
+        // "listOfTasks": listOfTasks,
         "founderUsername": founderUsername,
         "_id": id,
         "progress_list": progressList
@@ -46,8 +45,8 @@ class Community {
         isPrivate: snapshot['isPrivate'],
         goalName: snapshot['goalName'],
         creationDate: snapshot['creationDate'],
-        tillDate: snapshot['tillDate'],
-        listOfTasks: snapshot['listOfTasks'],
+        // tillDate: snapshot['tillDate'],
+        // listOfTasks: snapshot['listOfTasks'],
         founderUsername: snapshot['founderUsername'],
         id: snapshot['_id'],
         progressList: snapshot['progress_list']);

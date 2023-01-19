@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:motazen/pages/homepage/daily_tasks/custom_rect_tween.dart';
 import 'package:motazen/pages/homepage/daily_tasks/hero_dialog_route.dart';
+import 'package:motazen/theme.dart';
 import '../../goals_habits_tab/calculate_progress.dart';
 import '/data/models.dart';
 
@@ -175,9 +176,17 @@ class _TodoItemTile extends StatefulWidget {
 class _TodoItemTileState extends State<_TodoItemTile> {
   void _onChanged(bool? val) {
     setState(() {
-      widget.item.completed = val!;
-      CalculateProgress()
-          .updateAmountCompleted(widget.item.id, widget.item.itemGoal!);
+      if (widget.item.completed) {
+        //completed = true, then we need to decrement
+        widget.item.completed = false;
+        CalculateProgress().updateAmountCompleted(widget.item.id,
+            widget.item.itemGoal!, 'Decrement', widget.item.type);
+      } else {
+        //completed = false, then we need to increment
+        widget.item.completed = true;
+        CalculateProgress().updateAmountCompleted(widget.item.id,
+            widget.item.itemGoal!, 'Increment', widget.item.type);
+      }
     });
   }
 
@@ -187,9 +196,17 @@ class _TodoItemTileState extends State<_TodoItemTile> {
       trailing: Checkbox(
         onChanged: _onChanged,
         value: widget.item.completed,
+        activeColor: kPrimaryColor,
+        checkColor: kWhiteColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
       title: Text(
         widget.item.description,
+        style: TextStyle(
+            decoration:
+                widget.item.completed ? TextDecoration.lineThrough : null),
       ),
       leading: widget.item.icon,
     );

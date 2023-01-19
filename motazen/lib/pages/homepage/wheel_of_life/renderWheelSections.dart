@@ -36,9 +36,9 @@ class _WheelBackgroundState extends State<WheelBackground> {
                   matchTextDirection: data.iconDirection,
                 ),
                 color: Color(data.color)),
-            titlePositionPercentageOffset: 1.3,
+            titlePositionPercentageOffset: 1.4,
             badgePositionPercentageOffset: 1.14,
-            radius: 100 * 1.4, //scale the data to the size of the wheel
+            radius: 100 * 1.2, //scale the data to the size of the wheel
           );
 
           return MapEntry(index, value);
@@ -62,8 +62,6 @@ class _WheelBackgroundState extends State<WheelBackground> {
         centerSpaceRadius: 0,
         sections:
             getOutterSections(aspectList.selected, aspectList.selectedArabic),
-
-        ///
       ),
     );
   }

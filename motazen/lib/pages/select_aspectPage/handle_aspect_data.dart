@@ -2,6 +2,7 @@
 //manar
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
+import 'package:motazen/entities/imporvment.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:provider/provider.dart';
@@ -66,18 +67,24 @@ class handle_aspect {
     isar.assignPointAspect(name, point);
   }
 
-  void updateAspects(Aspect aspect) {
-    double aspectProgressSum = 0;
-    double aspectProgressPercentage = 0;
-    List<Goal> goals = aspect.goals.toList(); //the issue is probably here
-    for (var element in goals) {
-      aspectProgressSum = aspectProgressSum +
-          (element.importance * element.goalProgressPercentage);
-    }
-    aspectProgressPercentage = aspectProgressSum + aspect.percentagePoints;
+  void updateAspects(Aspect aspect, Goal goal, double previousGoalProgress) {
+    double aspectImprovement = 0;
+    double newAspectPoints = 0;
+    double aspectPreviousPoint = 0;
+    List<Imporvment> aspectPreviousPoints = aspect.imporvmentd.toList();
 
-    if (aspectProgressPercentage <= 100) {
-      IsarService().updateAspectPercentage(aspect.id, aspectProgressPercentage ,aspectProgressPercentage);
+    ///first, we need to remove this goal's pervious progress then add its new progress
+    if (aspectPreviousPoints.isEmpty || aspectPreviousPoints.length == 1) {
+      aspectPreviousPoint = aspect.percentagePoints;
+    } else {
+      aspectPreviousPoint = aspect.percentagePoints - previousGoalProgress;
+    }
+    aspectImprovement = goal.importance * goal.goalProgressPercentage;
+    newAspectPoints = aspectImprovement + aspectPreviousPoint;
+
+    if (newAspectPoints <= 100) {
+      IsarService()
+          .updateAspectPercentage(aspect.id, newAspectPoints, newAspectPoints);
     }
   }
 }

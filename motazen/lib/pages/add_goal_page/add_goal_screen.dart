@@ -73,7 +73,6 @@ class _AddGoalState extends State<AddGoal> {
     // if (!isDataSelected) {
     //   newgoal.dueDate = DateTime.utc(1989, 11, 9);
     // }
-
     newgoal.DescriptiveGoalDuration = duration;
     newgoal.goalDuration = goalDuration;
     newgoal.startData = selectedDates!.start;

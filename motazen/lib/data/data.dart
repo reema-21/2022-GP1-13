@@ -1,13 +1,15 @@
 // ignore_for_file: await_only_futures, camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:motazen/isar_service.dart';
 import '/entities/aspect.dart';
 import 'models.dart';
 
 ///create the todo list
 Todo createTodoList(List<Aspect> aspectList) {
-  //initialize lists
+  //initialize
   List<Item> itemList = [];
+  const TimeOfDay resetTime = TimeOfDay(hour: 0, minute: 0);
 
   //step1: add all tasks and habits to a list
   for (var aspect in aspectList) {
@@ -19,6 +21,7 @@ Todo createTodoList(List<Aspect> aspectList) {
             itemGoal: goal.id,
             id: task.id,
             description: task.name,
+            completed: task.completedForToday,
             icon: Icon(
               IconData(
                 aspect.iconCodePoint,
@@ -29,7 +32,8 @@ Todo createTodoList(List<Aspect> aspectList) {
               color: Color(aspect.color),
             ),
             duration: task.duration,
-            importance: goal.importance));
+            importance: goal.importance,
+            type: 'Task'));
       }
     }
 
@@ -39,6 +43,7 @@ Todo createTodoList(List<Aspect> aspectList) {
       itemList.add(Item(
         id: habit.id,
         description: habit.titel,
+        completed: habit.completedForToday,
         icon: Icon(
           IconData(
             aspect.iconCodePoint,
@@ -49,12 +54,17 @@ Todo createTodoList(List<Aspect> aspectList) {
           color: Color(aspect.color),
         ),
         duration: habit.durationInNumber,
+        type: 'Habit',
       ));
     }
   }
 
   ///step 2: rank the list
   ///------------------------(add call to ranking code here, pass the item list as a parameter)----------------------------------------
+  //reset check value each day
+  if (TimeOfDay.now() == resetTime) {
+    resetCheck(itemList);
+  }
 
   ///Step3: visualize the list
   return Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: itemList);
@@ -62,6 +72,13 @@ Todo createTodoList(List<Aspect> aspectList) {
 
 // empty todo
 const emptyTasks = Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: []);
+
+//reset check value each day
+void resetCheck(List<Item> itemList) {
+  for (var item in itemList) {
+    IsarService().reserCheck(item.id);
+  }
+}
 
 ////////////////////////////////////////Aspect Data\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 

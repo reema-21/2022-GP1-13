@@ -51,16 +51,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
     _tooltipBehavior = TooltipBehavior(enable: true);
   } // here is the array
 
-  // // create object of aspectImprovemnet each time and then add it to the array .
-  // final List<AspectImporvment> chartData = [
-  //   AspectImporvment(DateTime.now(),
-  //       35), //DateTime will start from the Date of  the selection and end with last date when and improvment happend
-  //   // the points will start from the result of the assesment and then the increasing each day untill today
-  //   AspectImporvment(DateTime.utc(2022, 12, 25), 28),
-  //   AspectImporvment(DateTime.utc(2022, 12, 29), 34),
-  //   AspectImporvment(DateTime.utc(2022, 12, 30), 32),
-  //   AspectImporvment(DateTime.utc(2023, 1, 2), 40)
-  // ];
   Icon chooseIcon(String? x) {
     Icon rightIcon = const Icon(Icons.abc);
     switch (x) {
@@ -215,9 +205,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
     }
     for (int i = 0; i < startList.length; i++) {}
 
-// print("here the lenth");
-//   print(newList.length);
-
     for (var i in startList) {
       DateTime x = i.date;
       DateTime date = DateTime.utc(x.year, x.month, x.day);
@@ -230,12 +217,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-              // ignore: prefer_const_constructors
-              icon: Icon(Icons.arrow_back_ios_new, color: kPrimaryColor),
+              icon: const Icon(Icons.arrow_back_ios_new, color: kPrimaryColor),
               onPressed: () {
-                // for (int i = 0;
-                //     i < freq.newTasksAddedInEditing.value.length;
-                //     i++)
                 Navigator.of(context).pop();
               }),
         ],

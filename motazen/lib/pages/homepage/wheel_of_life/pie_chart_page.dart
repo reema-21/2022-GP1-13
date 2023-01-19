@@ -1,12 +1,9 @@
-// ignore_for_file: camel_case_types, duplicate_ignore
-
+// ignore_for_file: camel_case_types,
 import 'package:motazen/pages/homepage/wheel_of_life/widget/pie_chart_sections.dart';
-
 import '../../../entities/aspect.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-// ignore: camel_case_types
 class life_wheel extends StatefulWidget {
   final List<Aspect> allAspects;
   const life_wheel({super.key, required this.allAspects});

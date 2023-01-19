@@ -7,7 +7,6 @@ import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
 import 'package:motazen/models/community.dart';
 import 'package:motazen/models/user.dart';
 
-import '../entities/task.dart';
 import '../models/notification_model.dart';
 import '../theme.dart';
 
@@ -56,21 +55,21 @@ class CommunityController extends GetxController {
         for (var doc in notificationQuerySnapshot.docs) {
           var notydoc = doc.data();
 
-          List<Task> listOfTasks = [];
-          if (notydoc['community'] != null) {
-            for (var task in notydoc['community']['listOfTasks']) {
-              listOfTasks.add(Task(
-                TaskDependency: task['TaskDependency'],
-                amountCompleted: task['amountCompleted'],
-                duration: task['duration'],
-                durationDescribtion: task['durationDescribtion'],
-                // goal: task['goal'],
-                // id: task['id'],
-                name: task['name'],
-                taskCompletionPercentage: task['taskCompletionPercentage'],
-              ));
-            }
-          }
+          // List<Task> listOfTasks = [];
+          // if (notydoc['community'] != null) {
+          //   for (var task in notydoc['community']['listOfTasks']) {
+          //     listOfTasks.add(Task(
+          //       TaskDependency: task['TaskDependency'],
+          //       amountCompleted: task['amountCompleted'],
+          //       duration: task['duration'],
+          //       durationDescribtion: task['durationDescribtion'],
+          //       // goal: task['goal'],
+          //       // id: task['id'],
+          //       name: task['name'],
+          //       taskCompletionPercentage: task['taskCompletionPercentage'],
+          //     ));
+          //   }
+          // }
           try {
             listOfNotifications.add(
               NotificationModel(
@@ -86,8 +85,8 @@ class CommunityController extends GetxController {
                               ['founderUsername'],
                           goalName: notydoc['community']['goalName'],
                           isPrivate: notydoc['community']['isPrivate'],
-                          listOfTasks: listOfTasks,
-                          tillDate: notydoc['community']['tillDate'].toDate(),
+                          // listOfTasks: listOfTasks,
+                          // tillDate: notydoc['community']['tillDate'].toDate(),
                           id: notydoc['community']['_id']),
                   creationDate: notydoc['creation_date'].toDate(),
                   post: notydoc['post'],
@@ -128,19 +127,19 @@ class CommunityController extends GetxController {
     } catch (e) {}
 
     for (var community in createdCommunitiess) {
-      List<Task> listOfTasks = [];
-      for (var task in community['listOfTasks']) {
-        listOfTasks.add(Task(
-          TaskDependency: task['TaskDependency'],
-          amountCompleted: task['amountCompleted'],
-          duration: task['duration'],
-          durationDescribtion: task['durationDescribtion'],
-          // goal: task['goal'],
-          // id: task['id'],
-          name: task['name'],
-          taskCompletionPercentage: task['taskCompletionPercentage'],
-        ));
-      }
+      // List<Task> listOfTasks = [];
+      // for (var task in community['listOfTasks']) {
+      //   listOfTasks.add(Task(
+      //     TaskDependency: task['TaskDependency'],
+      //     amountCompleted: task['amountCompleted'],
+      //     duration: task['duration'],
+      //     durationDescribtion: task['durationDescribtion'],
+      //     // goal: task['goal'],
+      //     // id: task['id'],
+      //     name: task['name'],
+      //     taskCompletionPercentage: task['taskCompletionPercentage'],
+      //   ));
+      // }
       listOfCreatedCommunities.add(Community(
           progressList: community['progress_list'],
           aspect: community['aspect'],
@@ -149,24 +148,24 @@ class CommunityController extends GetxController {
           creationDate: community['creationDate'].toDate(),
           goalName: community['goalName'],
           isPrivate: community['isPrivate'],
-          listOfTasks: listOfTasks,
-          tillDate: community['tillDate'].toDate(),
+          // listOfTasks: listOfTasks,
+          // tillDate: community['tillDate'].toDate(),
           id: community['_id']));
     }
     for (var community in joinedCommunitiess) {
-      List<Task> listOfTasks = [];
-      for (var task in community['listOfTasks']) {
-        listOfTasks.add(Task(
-          TaskDependency: task['TaskDependency'],
-          amountCompleted: task['amountCompleted'],
-          duration: task['duration'],
-          durationDescribtion: task['durationDescribtion'],
-          // goal: task['goal'],
-          // id: task['id'],
-          name: task['name'],
-          taskCompletionPercentage: task['taskCompletionPercentage'],
-        ));
-      }
+      // List<Task> listOfTasks = [];
+      // for (var task in community['listOfTasks']) {
+      //   listOfTasks.add(Task(
+      //     TaskDependency: task['TaskDependency'],
+      //     amountCompleted: task['amountCompleted'],
+      //     duration: task['duration'],
+      //     durationDescribtion: task['durationDescribtion'],
+      //     // goal: task['goal'],
+      //     // id: task['id'],
+      //     name: task['name'],
+      //     taskCompletionPercentage: task['taskCompletionPercentage'],
+      //   ));
+      // }
       listOfJoinedCommunities.add(Community(
           progressList: community['progress_list'],
           aspect: community['aspect'],
@@ -175,8 +174,8 @@ class CommunityController extends GetxController {
           creationDate: community['creationDate'].toDate(),
           goalName: community['goalName'],
           isPrivate: community['isPrivate'],
-          listOfTasks: listOfTasks,
-          tillDate: community['tillDate'].toDate(),
+          // listOfTasks: listOfTasks,
+          // tillDate: community['tillDate'].toDate(),
           id: community['_id']));
     }
 
@@ -203,10 +202,10 @@ class CommunityController extends GetxController {
             'founderUsername': e.founderUsername,
             'goalName': e.goalName,
             'isPrivate': e.isPrivate,
-            'listOfTasks': e.listOfTasks!.isNotEmpty
-                ? e.listOfTasks!.map((e) => e.toJson()).toList()
-                : [],
-            'tillDate': e.tillDate,
+            // 'listOfTasks': e.listOfTasks!.isNotEmpty
+            //     ? e.listOfTasks!.map((e) => e.toJson()).toList()
+            //     : [],
+            // 'tillDate': e.tillDate,
             '_id': e.id
           };
         }).toList(),
@@ -233,10 +232,10 @@ class CommunityController extends GetxController {
                 'founderUsername': community.founderUsername,
                 'goalName': community.goalName,
                 'isPrivate': community.isPrivate,
-                'listOfTasks': community.listOfTasks!.isNotEmpty
-                    ? community.listOfTasks!.map((e) => e.toJson()).toList()
-                    : [],
-                'tillDate': community.tillDate,
+                // 'listOfTasks': community.listOfTasks!.isNotEmpty
+                //     ? community.listOfTasks!.map((e) => e.toJson()).toList()
+                //     : [],
+                // 'tillDate': community.tillDate,
                 '_id': community.id
               }
             }));
@@ -254,10 +253,10 @@ class CommunityController extends GetxController {
             'founderUsername': community.founderUsername,
             'goalName': community.goalName,
             'isPrivate': community.isPrivate,
-            'listOfTasks': community.listOfTasks!.isNotEmpty
-                ? community.listOfTasks!.map((e) => e.toJson()).toList()
-                : [],
-            'tillDate': community.tillDate,
+            // 'listOfTasks': community.listOfTasks!.isNotEmpty
+            //     ? community.listOfTasks!.map((e) => e.toJson()).toList()
+            //     : [],
+            // 'tillDate': community.tillDate,
             '_id': community.id
           });
         }
@@ -291,8 +290,8 @@ class CommunityController extends GetxController {
                   // 'inviteFriendsList':
                   //     e.inviteFriendsList!.map((e) => e.toJson()).toList(),
                   'isPrivate': e.isPrivate,
-                  'listOfTasks': e.listOfTasks,
-                  'tillDate': e.tillDate,
+                  // 'listOfTasks': e.listOfTasks,
+                  // 'tillDate': e.tillDate,
                   '_id': e.id
                 })
             .toList(),
