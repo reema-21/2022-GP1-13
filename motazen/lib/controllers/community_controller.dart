@@ -15,6 +15,7 @@ class CommunityController extends GetxController {
   Map<String, dynamic> get user => _user.value;
 
   RxList<dynamic> projects = <dynamic>[].obs;
+
   RxList<Community> listOfCreatedCommunities = <Community>[].obs;
   RxList<Community> listOfJoinedCommunities = <Community>[].obs;
   RxList<NotificationModel> listOfNotifications = <NotificationModel>[].obs;
@@ -76,18 +77,18 @@ class CommunityController extends GetxController {
                   comm: notydoc['community'] == null
                       ? null
                       : Community(
-                          progressList: notydoc['community']['progress_list'],
-                          aspect: notydoc['community']['aspect'],
-                          communityName: notydoc['community']['communityName'],
-                          creationDate:
-                              notydoc['community']['creationDate'].toDate(),
-                          founderUsername: notydoc['community']
-                              ['founderUsername'],
-                          goalName: notydoc['community']['goalName'],
-                          isPrivate: notydoc['community']['isPrivate'],
-                          // listOfTasks: listOfTasks,
-                          // tillDate: notydoc['community']['tillDate'].toDate(),
-                          id: notydoc['community']['_id']),
+                      progressList: notydoc['community']['progress_list'],
+                      aspect: notydoc['community']['aspect'],
+                      communityName: notydoc['community']['communityName'],
+                      creationDate:
+                      notydoc['community']['creationDate'].toDate(),
+                      founderUsername: notydoc['community']
+                      ['founderUsername'],
+                      goalName: notydoc['community']['goalName'],
+                      isPrivate: notydoc['community']['isPrivate'],
+                      // listOfTasks: listOfTasks,
+                      // tillDate: notydoc['community']['tillDate'].toDate(),
+                      id: notydoc['community']['_id']),
                   creationDate: notydoc['creation_date'].toDate(),
                   post: notydoc['post'],
                   reply: notydoc['reply'],
@@ -268,8 +269,8 @@ class CommunityController extends GetxController {
       listOfCreatedCommunities.remove(community);
       getErrorSnackBar('Something went wrong, Please try again');
       Get.off(() => const navBar(
-            selectedIndex: 1,
-          )); // here you  maight need to change the number
+        selectedIndex: 1,
+      )); // here you  maight need to change the number
     }
   }
 
@@ -281,19 +282,19 @@ class CommunityController extends GetxController {
           .update({
         'joinedCommunities': listOfJoinedCommunities
             .map((e) => {
-                  'aspect': e.aspect,
-                  'communityName': e.communityName,
-                  'creationDate': e.creationDate,
-                  'progress_list': e.progressList,
-                  'founderUsername': e.founderUsername,
-                  'goalName': e.goalName,
-                  // 'inviteFriendsList':
-                  //     e.inviteFriendsList!.map((e) => e.toJson()).toList(),
-                  'isPrivate': e.isPrivate,
-                  // 'listOfTasks': e.listOfTasks,
-                  // 'tillDate': e.tillDate,
-                  '_id': e.id
-                })
+          'aspect': e.aspect,
+          'communityName': e.communityName,
+          'creationDate': e.creationDate,
+          'progress_list': e.progressList,
+          'founderUsername': e.founderUsername,
+          'goalName': e.goalName,
+          // 'inviteFriendsList':
+          //     e.inviteFriendsList!.map((e) => e.toJson()).toList(),
+          'isPrivate': e.isPrivate,
+          // 'listOfTasks': e.listOfTasks,
+          // 'tillDate': e.tillDate,
+          '_id': e.id
+        })
             .toList(),
       });
     } catch (e) {}

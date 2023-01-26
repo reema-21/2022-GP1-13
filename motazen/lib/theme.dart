@@ -41,7 +41,13 @@ TextStyle textButton = const TextStyle(
   color: kPrimaryColor,
   fontSize: 18,
   fontFamily: 'Frutiger',
-  fontWeight: FontWeight.w700,
+  fontWeight: FontWeight.w700);
+
+  TextStyle titleText3 = const TextStyle(
+    color: kPrimaryColor,
+    fontSize: 18,
+    fontFamily: 'Frutiger',
+    fontWeight: FontWeight.w700,
 );
 
 TextStyle textButton2 = const TextStyle(
@@ -67,10 +73,10 @@ TextStyle normalText = const TextStyle(
 
 getErrorSnackBar(String message) {
   Get.snackbar(
-    'Error',
+    'خطأ',
     message,
     titleText: txt(
-        txt: 'Error',
+        txt: 'خطأ',
         fontSize: 22,
         fontColor: Colors.white,
         fontWeight: FontWeight.bold),
@@ -103,10 +109,10 @@ getWarningSnackBar(String message) {
 
 getSuccessSnackBar(String message) {
   Get.snackbar(
-    'Success',
+    'نجح',
     message,
     titleText: txt(
-        txt: 'Success',
+        txt: 'نجح',
         fontSize: 22,
         fontColor: Colors.white,
         fontWeight: FontWeight.bold),

@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
-
+//ours
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +7,7 @@ import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
 import 'package:motazen/controllers/auth_controller.dart';
 import 'package:motazen/pages/communities_page/invite_friends_screen.dart';
 import 'package:motazen/theme.dart';
+import 'package:motazen/pages/communities_page/leave_delete_popup.dart';
 
 import '../../controllers/community_controller.dart';
 import '../../isar_service.dart';
@@ -60,15 +61,19 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 40),
                 child: InkWell(
                   onTap: () async {
-                    await deleteCommunity();
-                    setState(() {});
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const navBar(selectedIndex: 2)));
+                    shouldDelete(context).then((value) async {
+                      if (value != null) {
+                        await deleteCommunity();
+                        setState(() {});
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const navBar(selectedIndex: 2)));
+                      }
+                    });
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -95,15 +100,19 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 40),
                     child: InkWell(
                       onTap: () async {
-                        await leaveCommunity();
-                        setState(() {});
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const navBar(selectedIndex: 2)));
+                        shouldLeave(context).then((value) async {
+                          if (value != null) {
+                            await leaveCommunity();
+                            setState(() {});
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const navBar(selectedIndex: 2)));
+                          }
+                        });
                       },
                       child: Container(
                         alignment: Alignment.center,

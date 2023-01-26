@@ -325,7 +325,7 @@ class _CreateCommunityState extends State<CreateCommunity> {
                                     {firebaseAuth.currentUser!.uid: 0}
                                   ],
                                   communityName: communityNameController.text,
-                                  aspect: aspectnameInEnglish,
+                                  aspect: isSelected,
                                   isPrivate: private,
                                   founderUsername:
                                       firebaseAuth.currentUser!.displayName,
@@ -543,9 +543,15 @@ class _CreateCommunityState extends State<CreateCommunity> {
 
             case "صحتي":
               aspectnameInEnglish = "Health and Wellbeing";
+               if (pre == aspectnameInEnglish) {
+                erase = false;
+              }
               break;
             case "عائلتي وأصدقائي":
               aspectnameInEnglish = "Family and Friends";
+               if (pre == aspectnameInEnglish) {
+                erase = false;
+              }
               break;
           }
           if (erase) {

@@ -7,7 +7,7 @@ import 'package:motazen/models/post_model.dart';
 import 'package:motazen/pages/communities_page/view_photo.dart';
 import 'package:motazen/theme.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
+//ours
 class PostDesign extends StatefulWidget {
   final PostModel post;
   final dbpathToPostChnl;
@@ -97,35 +97,40 @@ class OwnMessageDesign extends StatelessWidget {
         horizontal: 3,
         vertical: 10,
       ),
-      child: Column(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          if (pst.replyingPost != null)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.start,
-              textDirection: TextDirection.rtl,
-              children: [
-                const SizedBox(
-                  width: 10,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    repliedPostScrollCallback(pst.replyingPost);
-                  },
-                  child: Container(
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width / 1.75,
-                        minWidth: MediaQuery.of(context).size.width / 1.75),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if (pst.replyingPost != null)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  textDirection: TextDirection.rtl,
+                  children: [
+                    const SizedBox(
+                      width: 10,
                     ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
-                      ),
+                    GestureDetector(
+                      onTap: () {
+                        repliedPostScrollCallback(pst.replyingPost);
+                      },
+                      child: Container(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width / 1.75,
+                            minWidth: MediaQuery.of(context).size.width / 1.75),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                          ),
                       // boxShadow: [
                       //   // BoxShadow(
                       //   //   color: Colors.grey.withOpacity(0.5),
@@ -136,7 +141,7 @@ class OwnMessageDesign extends StatelessWidget {
                       // ],
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       textDirection: TextDirection.rtl,
                       children: [
                         Text(
@@ -188,7 +193,7 @@ class OwnMessageDesign extends StatelessWidget {
                   Container(
                     constraints: BoxConstraints(
                         minHeight: MediaQuery.of(context).size.width / 5,
-                        maxWidth: MediaQuery.of(context).size.width / 1.4,
+                        maxWidth: MediaQuery.of(context).size.width / 1.5,
                         minWidth: MediaQuery.of(context).size.width / 3),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
@@ -199,7 +204,7 @@ class OwnMessageDesign extends StatelessWidget {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20),
-                          bottomLeft: Radius.circular(20)),
+                          bottomRight: Radius.circular(20)),
                       // boxShadow: [
                       //   BoxShadow(
                       //     color: Colors.grey.withOpacity(0.5),
@@ -210,54 +215,54 @@ class OwnMessageDesign extends StatelessWidget {
                       // ],
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: const [
-                                // Text(
-                                //   '${pst.author}',
-                                //   style: const TextStyle(
-                                //       color: Color.fromARGB(255, 5, 5, 5),
-                                //       fontSize: 18,
-                                //       fontWeight: FontWeight.bold),
-                                // ),
-                                SizedBox(
-                                  width: 9,
-                                ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   crossAxisAlignment: CrossAxisAlignment.center,
+                          // children: [
+                            // Row(
+                            //   children: const [
+                            //     // Text(
+                            //     //   '${pst.author}',
+                            //     //   style: const TextStyle(
+                            //     //       color: Color.fromARGB(255, 5, 5, 5),
+                            //     //       fontSize: 18,
+                            //     //       fontWeight: FontWeight.bold),
+                            //     // ),
+                            //     SizedBox(
+                            //       width: 9,
+                            //     ),
 
                                 //! in this space here we need a star to be displayed if the user reached amount of intercation
 
                                 // Icon(Icons.star , size: 18, color:  Colors.yellow,),
-                              ],
-                            ),
-                            const SizedBox(
-                              width: 3,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 2.5,
-                              height: 20,
-                              child: LinearPercentIndicator(
-                                curve: Curves.easeIn,
-                                percent:
-                                    0.5, //! this value is the user progress in the progresslist of this community . just fetch the value
+                        //       ],
+                        //     ),
+                        //     const SizedBox(
+                        //       width: 3,
+                        //     ),
+                        //     SizedBox(
+                        //       width: MediaQuery.of(context).size.width / 2.5,
+                        //       height: 20,
+                        //       child: LinearPercentIndicator(
+                        //         curve: Curves.easeIn,
+                        //         percent:
+                        //             0.5, //! this value is the user progress in the progresslist of this community . just fetch the value
 
-                                lineHeight: 10,
-                                isRTL: true,
-                                progressColor: kPrimaryColor,
-                                backgroundColor:
-                                    const Color.fromARGB(179, 119, 117, 117),
-                                barRadius: const Radius.circular(10),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
+                        //         lineHeight: 10,
+                        //         isRTL: true,
+                        //         progressColor: kPrimaryColor,
+                        //         backgroundColor:
+                        //             const Color.fromARGB(179, 119, 117, 117),
+                        //         barRadius: const Radius.circular(10),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // const SizedBox(
+                        //   height: 8,
+                        // ),
                         if (pst.text != '')
                           Text(
                             '${pst.text}',
@@ -360,7 +365,10 @@ class OwnMessageDesign extends StatelessWidget {
           ),
         ],
       ),
-    );
+   ]
+       ) 
+       );
+
   }
 }
 
@@ -509,7 +517,7 @@ class OtherMessageDesign extends StatelessWidget {
                     Container(
                       constraints: BoxConstraints(
                           minHeight: MediaQuery.of(context).size.width / 5,
-                          maxWidth: MediaQuery.of(context).size.width / 1.6,
+                          maxWidth: MediaQuery.of(context).size.width / 1.4,
                           minWidth: MediaQuery.of(context).size.width / 3),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -520,15 +528,27 @@ class OtherMessageDesign extends StatelessWidget {
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(15),
                               topRight: Radius.circular(15),
-                              bottomRight: Radius.circular(15)),
+                              bottomLeft: Radius.circular(15)),
                           boxShadow: const []),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         textDirection: TextDirection.rtl,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              
+                              
+                              Text(
+                                '${pst.author}',
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(
+                                width: 3,
+                              ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width / 2.6,
                                 height: 10,
@@ -544,16 +564,6 @@ class OtherMessageDesign extends StatelessWidget {
                                   barRadius: const Radius.circular(10),
                                 ),
                               ),
-                              const SizedBox(
-                                width: 3,
-                              ),
-                              Text(
-                                '${pst.author}',
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
                             ],
                           ),
                           const SizedBox(
@@ -566,7 +576,7 @@ class OtherMessageDesign extends StatelessWidget {
                                 color: Colors.grey[800],
                                 fontSize: 14,
                               ),
-                              textAlign: TextAlign.right,
+                              textAlign: TextAlign.start,
                             ),
                           if (pst.postType == 'image')
                             GestureDetector(

@@ -106,41 +106,47 @@ class _GoalListScreenState extends State<GoalListScreen> {
           final goals = snapshot.data;
           if (goals!.isEmpty) {
             return Center(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "ليس لديك أهداف ",
-                  style: TextStyle(color: Colors.black12, fontSize: 30),
-                ),
-                GestureDetector(
-                  child: const Icon(Icons.add, color: Colors.black12, size: 30),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return getChosenAspect(
-                        iser: widget.isr,
-                        page: 'Goal',
-                        origin: '',
-                      ); // must be the
-                    }));
-                  },
-                )
-              ],
-            )); // here add a plust button to add
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "ليس لديك أهداف ",
+                    style: TextStyle(color: Colors.black12, fontSize: 30),
+                  ),
+                  GestureDetector(
+                    child:
+                        const Icon(Icons.add, color: Colors.black12, size: 30),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return getChosenAspect(
+                              iser: widget.isr,
+                              page: 'Goal',
+                              origin: '',
+                            ); // must be the
+                          },
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
+            ); // here add a plust button to add
           }
           return ListView.builder(
               itemCount: goals.length,
               itemBuilder: (context, index) {
                 final goal = goals[index];
                 final startDate = goals[index].startData;
-                final endDate = goals[index].endDate; 
+                final endDate = goals[index].endDate;
                 // if (startDate.compareTo(temGoalDataTime) == 0) {
                 //   dueDataDescription = "لايوجد تاريخ استحقاق";
                 // } else {
                 //   temGoalDataTime = startDate;
-                  dueDataDescription =
-                     "تاريخ الاستحقاق :${intl.DateFormat.yMMMEd().format(endDate)}";
+                dueDataDescription =
+                    "تاريخ الاستحقاق :${intl.DateFormat.yMMMEd().format(endDate)}";
 
                 // }
 
@@ -184,13 +190,17 @@ class _GoalListScreenState extends State<GoalListScreen> {
                             contentPadding: const EdgeInsets.all(7),
                             onTap: () {
                               // should return me to the page with add field
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return EditGoal(
-                                  isr: widget.isr,
-                                  goalId: goal.id,
-                                ); // must be the
-                              }));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return EditGoal(
+                                      isr: widget.isr,
+                                      goalId: goal.id,
+                                    ); // must be the
+                                  },
+                                ),
+                              );
                             },
                           ),
                           const SizedBox(

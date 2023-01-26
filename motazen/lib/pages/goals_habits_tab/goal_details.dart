@@ -17,7 +17,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../../../entities/aspect.dart';
 import 'Edit_task.dart';
-
+//import 'package:motazen/CustomClipper.dart';
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class goalDetails extends StatefulWidget {
   final IsarService isr;

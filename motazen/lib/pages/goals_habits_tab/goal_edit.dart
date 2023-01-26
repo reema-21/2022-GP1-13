@@ -12,6 +12,8 @@ import 'package:provider/provider.dart';
 
 import 'package:intl/intl.dart' as intl;
 
+import 'habit_edit.dart';
+
 class EditGoal extends StatefulWidget {
   final IsarService isr;
   final int goalId;
@@ -28,8 +30,8 @@ class _EditGoalState extends State<EditGoal> {
   int goalDuration = 0;
   String goalDurationDescription = "-";
   String goalImportanceDescription = "-";
-  late DateTime endDate ; 
-  late DateTime startDate ; 
+  late DateTime endDate;
+  late DateTime startDate;
   // DateTime temGoalDataTime = DateTime.utc(1989, 11, 9);
   String dueDataDescription = "";
   List<LocalTask> goalTasks = [];
@@ -47,8 +49,8 @@ class _EditGoalState extends State<EditGoal> {
 
   getGoalInformation() async {
     goal = await widget.isr.getSepecificGoall(widget.goalId);
-endDate = goal!.endDate ; 
-startDate = goal!.startData ; 
+    endDate = goal!.endDate;
+    startDate = goal!.startData;
     setState(() {
       displayGoalNameControlller.text = goal!.titel;
       goalAspect = goal!.aspect.value!.name;
@@ -122,249 +124,379 @@ startDate = goal!.startData ;
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     var aspectList = Provider.of<WheelData>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "معلومات الهدف",
-          style: titleText,
+    return Stack(
+      children: [
+        /// box
+        Container(
+          height: height,
+          width: width,
+          color: const Color.fromARGB(255, 255, 255, 255),
         ),
-        backgroundColor: kWhiteColor,
-        iconTheme: const IconThemeData(color: kBlackColor),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return goalDetails(
-                endDate: endDate ,
-                startDate:  startDate, 
-                chosenAspectNames: aspectList.selectedArabic,
-                isr: widget.isr,
-                goalName: displayGoalNameControlller.text,
-                goalAspect: goalAspect,
-                importance: importance,
-                goalDuration: goalDuration,
-                goalDurationDescription: goalDurationDescription,
-                goalImportanceDescription: goalImportanceDescription,
-                // temGoalDataTime: temGoalDataTime,
-                dueDataDescription: dueDataDescription,
-                // weekisSelected: weekisSelected,
-                // daysisSelected: daysisSelected,
-                goalTasks: goalTasks,
-                id: widget.goalId,
-              );
-            }));
-          },
-        backgroundColor: const Color.fromARGB(255, 252, 252, 252),
-        child: const Icon(
-          Icons.edit,
-          color: Color(0xFF66BF77),
-        ),
-      ),
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      body: Column(children: [
-        Expanded(
+        //
+        // Transform.translate(
+        //   offset: const Offset(40.0, -40.0),
+        //   child: Container(
+        //     height: height * 0.54,
+        //     width: height * 0.54,
+        //     decoration: BoxDecoration(
+        //       shape: BoxShape.circle,
+        //       color: Color(0xff66BF77).withOpacity(0.1),
+        //     ),
+        //   ),
+        // ),
+        //
+        //
+        // Transform.translate(
+        //   offset: const Offset(40.0, -60.0),
+        //   child: Container(
+        //     height: height * 0.3,
+        //     width: height * 0.3,
+        //     decoration: BoxDecoration(
+        //       shape: BoxShape.circle,
+        //       color: Color(0xff0D79DC).withOpacity(0.1),
+        //     ),
+        //   ),
+        // ),
+// clipper part
+        ClipPath(
+          clipper: MyClipper(),
           child: Container(
-            padding: const EdgeInsets.all(20),
-            child: ListView(
-              children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "اسم الهدف:",
-                      style: titleText2,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      displayGoalNameControlller.text,
-                      style: subTitle,
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                 Row(
-                      children: [
-                        Text(
-                          "جانب الحياة:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          goalAspect,
-                          style: subTitle,
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                     Row(
-                      children: [
-                        Text(
-                          "تاريخ البدء:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          intl.DateFormat.yMMMEd().format(startDate),
-                          style: subTitle,
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "تاريخ الاستحقاق:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          intl.DateFormat.yMMMEd().format(endDate),
-                          style: subTitle,
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "الفترة:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          goalDurationDescription,
-                          style: subTitle,
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "الأهمية:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(goalImportanceDescription, style: subTitle)
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "المهام:",
-                          style: titleText2,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: kPrimaryColor,
-                              padding: kDefaultPadding),
-                          onPressed: goalTasks.isNotEmpty
-                              ? () {
-                                  dialogBox(context);
-                                  //the nevigator is downs
-                                }
-                              : null,
-                      child: const Text(
-                        "اعرض المهام",
-                        style: TextStyle(
-                          color: kWhiteColor,
-                          fontSize: 16,
-                          fontFamily: 'Frutiger',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-                CircularPercentIndicator(
-                  radius: 120,
-                  lineWidth: 20,
-                  circularStrokeCap: CircularStrokeCap.round,
-                  percent: goal!.goalProgressPercentage,
-                  animation: true,
-                  animationDuration: 600,
-                  progressColor: kPrimaryColor,
-                  backgroundColor: kPrimaryColor.withOpacity(0.3),
-                  center: Text(
-                    '${(goal!.goalProgressPercentage * 100).round().toString()}%',
-                    style: titleText,
-                  ),
-                )
-              ],
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            height: MediaQuery.of(context).size.height / 2,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Color(0xFF66BF77),
+                  Color(0xFF11249F),
+                ],
+              ),
             ),
           ),
         ),
-      ]),
+
+        /// scaffold
+        Scaffold(
+          /// appbar
+          appBar: AppBar(
+            title: const Text(
+              "معلومات الهدف",
+              style: TextStyle(color: Colors.white),
+            ),
+
+            ///backgroundColor: kWhiteColor,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            iconTheme: const IconThemeData(color: kWhiteColor),
+          ),
+
+          /// floating button
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniStartFloat,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return goalDetails(
+                  endDate: endDate,
+                  startDate: startDate,
+                  chosenAspectNames: aspectList.selectedArabic,
+                  isr: widget.isr,
+                  goalName: displayGoalNameControlller.text,
+                  goalAspect: goalAspect,
+                  importance: importance,
+                  goalDuration: goalDuration,
+                  goalDurationDescription: goalDurationDescription,
+                  goalImportanceDescription: goalImportanceDescription,
+                  // temGoalDataTime: temGoalDataTime,
+                  dueDataDescription: dueDataDescription,
+                  // weekisSelected: weekisSelected,
+                  // daysisSelected: daysisSelected,
+                  goalTasks: goalTasks,
+                  id: widget.goalId,
+                );
+              }));
+            },
+            backgroundColor: const Color.fromARGB(255, 252, 252, 252),
+            child: const Icon(
+              Icons.edit,
+              color: Color(0xFF66BF77),
+            ),
+          ),
+
+          /// background color
+          //backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: Colors.transparent,
+
+          /// body
+          body: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                  child: ListView(
+                    children: [
+                      Container(
+                        width: width,
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff1E1E1E).withOpacity(0.06),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "اسم الهدف:",
+                                  style: titleText2,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  displayGoalNameControlller.text,
+                                  style: subTitle,
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              children: [
+                                Text(
+                                  "جانب الحياة:",
+                                  style: titleText2,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  goalAspect,
+                                  style: subTitle,
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              children: [
+                                Text(
+                                  "تاريخ البدء:",
+                                  style: titleText2,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  intl.DateFormat.yMMMEd().format(startDate),
+                                  style: subTitle,
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              children: [
+                                Text(
+                                  "تاريخ الاستحقاق:",
+                                  style: titleText2,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  intl.DateFormat.yMMMEd().format(endDate),
+                                  style: subTitle,
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              children: [
+                                Text(
+                                  "الفترة:",
+                                  style: titleText2,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  goalDurationDescription,
+                                  style: subTitle,
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              children: [
+                                Text(
+                                  "الأهمية:",
+                                  style: titleText2,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(goalImportanceDescription, style: subTitle)
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      Container(
+                        width: width,
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff1E1E1E).withOpacity(0.06),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "المهام:",
+                              style: titleText2,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Center(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: kPrimaryColor,
+                                    padding: kDefaultPadding),
+                                onPressed: goalTasks.isNotEmpty
+                                    ? () {
+                                        dialogBox(context);
+                                        //the nevigator is downs
+                                      }
+                                    : null,
+                                child: const Text(
+                                  "اعرض المهام",
+                                  style: TextStyle(
+                                    color: kWhiteColor,
+                                    fontSize: 16,
+                                    fontFamily: 'Frutiger',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // /// btn
+                      // Row(
+                      //   children: [
+                      //     Text(
+                      //       "المهام:",
+                      //       style: titleText2,
+                      //     ),
+                      //     const SizedBox(
+                      //       width: 10,
+                      //     ),
+                      //     ElevatedButton(
+                      //       style: ElevatedButton.styleFrom(
+                      //           backgroundColor: kPrimaryColor,
+                      //           padding: kDefaultPadding),
+                      //       onPressed: goalTasks.isNotEmpty
+                      //           ? () {
+                      //               dialogBox(context);
+                      //               //the nevigator is downs
+                      //             }
+                      //           : null,
+                      //       child: const Text(
+                      //         "اعرض المهام",
+                      //         style: TextStyle(
+                      //           color: kWhiteColor,
+                      //           fontSize: 16,
+                      //           fontFamily: 'Frutiger',
+                      //           fontWeight: FontWeight.w700,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // const SizedBox(
+                      //   height: 30,
+                      // ),
+
+                      const SizedBox(height: 40),
+
+                      /// progress indicator
+                      CircularPercentIndicator(
+                        radius: 80,
+                        lineWidth: 15,
+                        circularStrokeCap: CircularStrokeCap.round,
+                        percent: goal!.goalProgressPercentage,
+                        animation: true,
+                        animationDuration: 600,
+                        progressColor: kPrimaryColor,
+                        backgroundColor: kPrimaryColor.withOpacity(0.3),
+                        center: Text(
+                          '${(goal!.goalProgressPercentage * 100).round().toString()}%',
+                          style: titleText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   dynamic dialogBox(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Text(
-              "مهام الهدف",
-              textAlign: TextAlign.right,
-              style: titleText2,
-            ),
-            content: buildView(context),
-          );
-        });
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text(
+            "مهام الهدف",
+            textAlign: TextAlign.right,
+            style: titleText2,
+          ),
+          content: buildView(context),
+        );
+      },
+    );
   }
 
   Widget buildView(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
       child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: goalTasks.length, //here is what causing the error
-          itemBuilder: (context, index) {
-            final name = goalTasks[index].name;
-            final completionPercentage =
-                goalTasks[index].taskCompletionPercentage;
-            return Card(
-                // here is the code of each item you have
-                child: Column(
+        shrinkWrap: true,
+        itemCount: goalTasks.length, //here is what causing the error
+        itemBuilder: (context, index) {
+          final name = goalTasks[index].name;
+          final completionPercentage =
+              goalTasks[index].taskCompletionPercentage;
+          return Card(
+            // here is the code of each item you have
+            child: Column(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.task, color: Color(0xFF66BF77)),
+                  leading: const Icon(
+                    Icons.task,
+                    color: Color(0xFF66BF77),
+                  ),
                   title: Padding(
                     padding: const EdgeInsets.all(0.0),
                     child: Text(
@@ -388,10 +520,12 @@ startDate = goal!.startData ;
                 ),
                 const SizedBox(
                   height: 15,
-                )
+                ),
               ],
-            ));
-          }),
+            ),
+          );
+        },
+      ),
     );
   }
 }

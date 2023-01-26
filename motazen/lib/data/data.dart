@@ -1,6 +1,7 @@
 // ignore_for_file: await_only_futures, camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:motazen/entities/goal.dart';
 import 'package:motazen/isar_service.dart';
 import '/entities/aspect.dart';
 import 'models.dart';
@@ -107,6 +108,7 @@ class WheelData with ChangeNotifier {
   List<Aspect> allAspects = [];
   List<Aspect> selected = [];
   List<String> selectedArabic = [];
+   List<Goal> goalList =[];
 
   contains(String s) {
     for (var i = 0; i < data.length; i++) {

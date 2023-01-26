@@ -80,104 +80,224 @@ class _EditGoalState extends State<EditHbit> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     var aspectList = Provider.of<WheelData>(context);
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "معلومات العادة",
-            style: titleText,
-          ),
-          backgroundColor: kWhiteColor,
-          iconTheme: const IconThemeData(color: kBlackColor),
+    return Stack(
+      children: [
+        /// box
+        Container(
+          height: height,
+          width: width,
+          color: const Color.fromARGB(255, 255, 255, 255),
         ),
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.miniStartFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return HabitDetails(
-                  isr: widget.isr,
-                  chosenAspectNames: aspectList.selectedArabic,
-                  HabitName: displayHabitNameControlller.text,
-                  habitFrequency: displayHabitfrequencyControlller.text,
-                  habitAspect: habitAspect,
-                  id: widget.HabitId,
-                  duraioninString: durationIndex,
-                  durationInInt: durationInNumber,
-                ); // must be the
-              }));
-            });
-          },
-          backgroundColor: const Color.fromARGB(255, 252, 252, 252),
-          child: const Icon(
-            Icons.edit,
-            color: Color(0xFF66BF77),
+        //
+        // Transform.translate(
+        //   offset: const Offset(40.0, -40.0),
+        //   child: Container(
+        //     height: height * 0.54,
+        //     width: height * 0.54,
+        //     decoration: BoxDecoration(
+        //       shape: BoxShape.circle,
+        //       color: Color(0xff66BF77).withOpacity(0.1),
+        //     ),
+        //   ),
+        // ),
+        //
+        // Transform.translate(
+        //   offset: const Offset(40.0, -60.0),
+        //   child: Container(
+        //     height: height * 0.3,
+        //     width: height * 0.3,
+        //     decoration: BoxDecoration(
+        //       shape: BoxShape.circle,
+        //       color: Color(0xff0D79DC).withOpacity(0.1),
+        //     ),
+        //   ),
+        // ),
+
+        ClipPath(
+          clipper: MyClipper(),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            height: MediaQuery.of(context).size.height / 2,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Color(0xFF66BF77),
+                  Color(0xFF11249F),
+                ],
+              ),
+            ),
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        body: Column(children: [
-          Expanded(
-              child: Container(
-                  padding: const EdgeInsets.all(20),
-                  child: ListView(children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      children: [
-                        const Text(
-                          "اسم العادة: ",
-                          style: TextStyle(fontSize: 23),
+
+        /// scaffold
+
+        Scaffold(
+          /// appbar
+          appBar: AppBar(
+            title: const Text(
+              "معلومات العادة",
+              style: TextStyle(color: Colors.white),
+            ),
+            //backgroundColor: kWhiteColor,
+            backgroundColor: Colors.transparent,
+            iconTheme: const IconThemeData(color: kWhiteColor),
+          ),
+
+          /// floating button
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniStartFloat,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return HabitDetails(
+                    isr: widget.isr,
+                    chosenAspectNames: aspectList.selectedArabic,
+                    HabitName: displayHabitNameControlller.text,
+                    habitFrequency: displayHabitfrequencyControlller.text,
+                    habitAspect: habitAspect,
+                    id: widget.HabitId,
+                    duraioninString: durationIndex,
+                    durationInInt: durationInNumber,
+                  ); // must be the
+                }));
+              });
+            },
+            backgroundColor: const Color.fromARGB(255, 252, 252, 252),
+            child: const Icon(
+              Icons.edit,
+              color: Color(0xFF66BF77),
+            ),
+          ),
+
+          /// backcolor
+          //backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: Colors.transparent,
+
+          /// body
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  child: ListView(
+                    children: [
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Container(
+                        width: width,
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff1E1E1E).withOpacity(0.06),
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
-                        const SizedBox(
-                          width: 10,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  "اسم العادة: ",
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                    color: Color(0xFF66BF77),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  displayHabitNameControlller.text,
+                                  style: const TextStyle(
+                                    fontSize: 22,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              children: [
+                                const Text(
+                                  "جانب الحياة:",
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                    color: Color(0xFF66BF77),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  habitAspect,
+                                  style: const TextStyle(
+                                    fontSize: 22,
+                                    color: Colors.black54,
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "عدد مرات تكرار العادة: ",
+                                  style: TextStyle(
+                                    fontSize: 23,
+                                    color: Color(0xFF66BF77),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    displayHabitfrequencyControlller.text,
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        Text(
-                          displayHabitNameControlller.text,
-                          style: const TextStyle(
-                              fontSize: 22, color: Colors.black54),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        const Text(
-                          "جانب الحياة:",
-                          style: TextStyle(fontSize: 23),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          habitAspect,
-                          style: const TextStyle(
-                              fontSize: 22, color: Colors.black54),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        const Text(
-                          "عدد مرات تكرار العادة: ",
-                          style: TextStyle(fontSize: 23),
-                        ),
-                        Text(
-                          displayHabitfrequencyControlller.text,
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(
-                              fontSize: 22, color: Colors.black54),
-                        )
-                      ],
-                    )
-                  ])))
-        ]));
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class MyClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0, size.height);
+    path.quadraticBezierTo(
+        size.width / 3, size.height / 3, size.width, size.height / 5);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return false;
   }
 }

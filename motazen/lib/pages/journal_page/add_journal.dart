@@ -214,7 +214,6 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
                     journalController.journalList.remove(widget.journal);
                     Get.back();
 
-                    Get.back();
                   } catch (e) {}
                   setState(() {
                     isDeleting = false;

@@ -22,22 +22,24 @@ Future main() async {
   /// check if the the app is in it's first run
   bool ifr = await IsFirstRun.isFirstRun();
   iser = IsarService();
-  runApp(ChangeNotifierProvider<WheelData>(
+  runApp(
+    ChangeNotifierProvider<WheelData>(
       create: (_) => WheelData(),
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          backgroundColor: kWhiteColor,
+          fontFamily: 'Frutiger',
+          appBarTheme: AppBarTheme(
             backgroundColor: kWhiteColor,
-            fontFamily: 'Frutiger',
-            appBarTheme: AppBarTheme(
-              backgroundColor: kWhiteColor,
-              iconTheme: const IconThemeData(color: kBlackColor),
-              titleTextStyle: titleText,
-              toolbarTextStyle: subTitle,
-              elevation: 0,
-            ),
-            primaryColor: kPrimaryColor,
-            buttonTheme: const ButtonThemeData(disabledColor: kDisabled)),
+            iconTheme: const IconThemeData(color: kBlackColor),
+            titleTextStyle: titleText,
+            toolbarTextStyle: subTitle,
+            elevation: 0,
+          ),
+          primaryColor: kPrimaryColor,
+          buttonTheme: const ButtonThemeData(disabledColor: kDisabled),
+        ),
         home: ifr
             ? const OnboardingPage()
             : const LogInScreen(), //add verification to check which page should be next (sign in/homepage)
@@ -45,5 +47,7 @@ Future main() async {
 
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-      )));
+      ),
+    ),
+  );
 }

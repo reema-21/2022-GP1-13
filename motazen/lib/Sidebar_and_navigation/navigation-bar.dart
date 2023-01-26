@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
-
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/notifications_screen.dart/notifications_screen.dart';
 import 'package:motazen/pages/communities_page/create_community.dart';
@@ -13,7 +12,6 @@ import 'package:motazen/pages/goals_habits_tab/goal_habits_pages.dart';
 import 'package:motazen/pages/homepage/homepage.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-
 import '../controllers/auth_controller.dart';
 import '../controllers/community_controller.dart';
 import '../data/data.dart';
@@ -23,6 +21,8 @@ import '../pages/add_habit_page/add_habit.dart';
 import '../pages/communities_page/communities.dart';
 import '../pages/journal_page/journal_screen.dart';
 import 'sidebar.dart';
+
+//ours
 
 class navBar extends StatefulWidget {
   final int selectedIndex;
@@ -67,6 +67,8 @@ class _MynavBar extends State<navBar> {
         length: selectedIndex == 1 ? 2 : 1,
         child: Scaffold(
           backgroundColor: kWhiteColor,
+
+          /// appbar
           appBar: AppBar(
               // notifications button
               elevation: 0.0,
@@ -89,40 +91,45 @@ class _MynavBar extends State<navBar> {
                             ),
                           ],
                         ),
-                        Positioned(
-                          top: -1,
-                          right: 7,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: Colors.green),
-                            alignment: Alignment.center,
-                            child: Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: StreamBuilder(
-                                stream: firestore
-                                    .collection('user')
-                                    .doc(firebaseAuth.currentUser!.uid)
-                                    .collection('notifications')
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    communityController
-                                            .notificationQuerySnapshot =
-                                        snapshot.data;
-                                    communityController.getNotifications();
-                                  }
-                                  return Text(
-                                    snapshot.hasData
-                                        ? snapshot.data!.docs.length.toString()
-                                        : '0',
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 14),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        )
+                        StreamBuilder(
+                          stream: firestore
+                              .collection('user')
+                              .doc(firebaseAuth.currentUser!.uid)
+                              .collection('notifications')
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              communityController.notificationQuerySnapshot =
+                                  snapshot.data;
+                              communityController.getNotifications();
+                            }
+                            return snapshot.hasData &&
+                                    snapshot.data!.docs.isNotEmpty
+                                ? Positioned(
+                                    top: -1,
+                                    right: 7,
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.green),
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(6.0),
+                                        child: Text(
+                                          snapshot.hasData
+                                              ? snapshot.data!.docs.length
+                                                  .toString()
+                                              : '0',
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox();
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -224,8 +231,14 @@ class _MynavBar extends State<navBar> {
                         ])
                   : const PreferredSize(
                       preferredSize: Size(0, 0), child: SizedBox())),
+
+          /// drawer
           drawer: const SideBar(),
+
+          /// body
           body: SafeArea(child: _widgetOptions[selectedIndex]),
+
+          /// bottom nav bar
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
               color: Colors.white,
