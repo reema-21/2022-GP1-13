@@ -46,12 +46,8 @@ class AssessmentQuestions {
               []; //temporary store one aspect quastion
           tempAspect = await handle_aspect()
               .getSelectedAspects(); //fetch the chosen aspect
-          // freq.PreviouseSelected.value.addAll(tempAspect);
 
           for (var i in tempAspect) {}
-
-          // List<dynamic> quastionsList =
-          //     []; //the list of all chosen aspect quastion (needs to be emptied everytime)
           if (quastionsList.isNotEmpty) {
             quastionsList.clear();
           }
@@ -83,9 +79,6 @@ class AssessmentQuestions {
                     AssessmentQuestions.answers[countr] = "0M";
                     AssessmentQuestions.AnswerdOrnot[countr] = false;
                   }
-                  // else {
-                  //   AssessmentQuestions.answers[countr++] = "1M";
-                  // }
                 }
 
                 endpoint = countr;
@@ -257,12 +250,6 @@ class AssessmentQuestions {
 
           for (int j = 0; j < freq.PreviouseSelected.value.length; j++) {}
 
-          //  print("here iam printint the answares") ;
-          //  for (int j = 0 ; j<freq.AssesmentAswers.value.length ; j++){
-          //    print(freq.AssesmentAswers.value[j]) ;
-          //  }
-          // take the common aspect and construct its quastion and answare and then add the new one
-          //First take the common one
           List<Aspect> CommoneAspect = [];
           List<Aspect> NotCommoneAspect = [];
           bool check = true;
@@ -319,9 +306,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    // print(aspectLetter) ;
-                    // print("Added");
-
                     countrr++;
                   }
                 }
@@ -341,8 +325,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -362,8 +344,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -382,8 +362,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -402,8 +380,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -422,8 +398,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -444,8 +418,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -465,8 +437,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -524,9 +494,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0M";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -558,9 +525,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0R";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -593,9 +557,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0C";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -628,9 +589,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0S";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -663,9 +621,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0E";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -697,9 +652,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0G";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -732,10 +684,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0H";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
-
                   }
                   endpoint = countr;
                 }
@@ -766,9 +714,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0F";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -823,7 +768,6 @@ class AssessmentQuestions {
             } else {
               AssessmentQuestions.AnswerdOrnot[i] = true;
             }
-            // if(freq.AssesmentAswers.value[i])
             AssessmentQuestions.answers[i] = freq.AssesmentAswers.value[i];
           }
           //get the question ;
@@ -998,9 +942,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    // print(aspectLetter) ;
-                    // print("Added");
-
                     countrr++;
                   }
                 }
@@ -1020,8 +961,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -1041,8 +980,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -1061,8 +998,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -1081,8 +1016,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -1101,8 +1034,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -1123,8 +1054,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -1144,8 +1073,6 @@ class AssessmentQuestions {
                     } else {
                       AssessmentQuestions.AnswerdOrnot[countrr] = true;
                     }
-                    //   print(aspectLetter) ;
-                    // print("Added");
                     countrr++;
                   }
                 }
@@ -1203,9 +1130,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0M";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -1237,9 +1161,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0R";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -1272,9 +1193,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0C";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -1307,9 +1225,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0S";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -1342,9 +1257,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0E";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -1376,9 +1288,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0G";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -1411,10 +1320,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0H";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
-
                   }
                   endpoint = countr;
                 }
@@ -1445,9 +1350,6 @@ class AssessmentQuestions {
                       AssessmentQuestions.answers[countr] = "0F";
                       AssessmentQuestions.AnswerdOrnot[countr] = false;
                     }
-                    // else {
-                    //   AssessmentQuestions.answers[countr++] = "1M";
-                    // }
                   }
 
                   endpoint = countr;
@@ -1518,9 +1420,6 @@ class AssessmentQuestions {
                   } else {
                     AssessmentQuestions.AnswerdOrnot[countrr] = true;
                   }
-                  // print(aspectLetter) ;
-                  // print("Added");
-
                   countrr++;
                 }
               }
@@ -1540,8 +1439,6 @@ class AssessmentQuestions {
                   } else {
                     AssessmentQuestions.AnswerdOrnot[countrr] = true;
                   }
-                  //   print(aspectLetter) ;
-                  // print("Added");
                   countrr++;
                 }
               }
@@ -1561,8 +1458,6 @@ class AssessmentQuestions {
                   } else {
                     AssessmentQuestions.AnswerdOrnot[countrr] = true;
                   }
-                  //   print(aspectLetter) ;
-                  // print("Added");
                   countrr++;
                 }
               }
@@ -1581,8 +1476,6 @@ class AssessmentQuestions {
                   } else {
                     AssessmentQuestions.AnswerdOrnot[countrr] = true;
                   }
-                  //   print(aspectLetter) ;
-                  // print("Added");
                   countrr++;
                 }
               }
@@ -1601,8 +1494,6 @@ class AssessmentQuestions {
                   } else {
                     AssessmentQuestions.AnswerdOrnot[countrr] = true;
                   }
-                  //   print(aspectLetter) ;
-                  // print("Added");
                   countrr++;
                 }
               }
@@ -1621,8 +1512,6 @@ class AssessmentQuestions {
                   } else {
                     AssessmentQuestions.AnswerdOrnot[countrr] = true;
                   }
-                  //   print(aspectLetter) ;
-                  // print("Added");
                   countrr++;
                 }
               }
@@ -1643,8 +1532,6 @@ class AssessmentQuestions {
                   } else {
                     AssessmentQuestions.AnswerdOrnot[countrr] = true;
                   }
-                  //   print(aspectLetter) ;
-                  // print("Added");
                   countrr++;
                 }
               }
@@ -1664,8 +1551,6 @@ class AssessmentQuestions {
                   } else {
                     AssessmentQuestions.AnswerdOrnot[countrr] = true;
                   }
-                  //   print(aspectLetter) ;
-                  // print("Added");
                   countrr++;
                 }
               }
@@ -1683,7 +1568,6 @@ class AssessmentQuestions {
         List<dynamic> tempQuestionList =
             []; //temporary store one aspect quastion
 
-        // List<dynamic> quastionsList =[]; //the list of all chosen aspect quastion (needs to be emptied everytime)
         if (quastionsList.isNotEmpty) {
           quastionsList.clear();
         }
@@ -1723,9 +1607,6 @@ class AssessmentQuestions {
                     AssessmentQuestions.answers[countr] = "0M";
                     AssessmentQuestions.AnswerdOrnot[countr] = false;
                   }
-                  // else {
-                  //   AssessmentQuestions.answers[countr++] = "1M";
-                  // }
                 }
 
                 endpoint = countr;
@@ -1757,9 +1638,6 @@ class AssessmentQuestions {
                     AssessmentQuestions.answers[countr] = "0R";
                     AssessmentQuestions.AnswerdOrnot[countr] = false;
                   }
-                  // else {
-                  //   AssessmentQuestions.answers[countr++] = "1M";
-                  // }
                 }
 
                 endpoint = countr;
@@ -1792,9 +1670,6 @@ class AssessmentQuestions {
                     AssessmentQuestions.answers[countr] = "0C";
                     AssessmentQuestions.AnswerdOrnot[countr] = false;
                   }
-                  // else {
-                  //   AssessmentQuestions.answers[countr++] = "1M";
-                  // }
                 }
 
                 endpoint = countr;
@@ -1827,9 +1702,6 @@ class AssessmentQuestions {
                     AssessmentQuestions.answers[countr] = "0S";
                     AssessmentQuestions.AnswerdOrnot[countr] = false;
                   }
-                  // else {
-                  //   AssessmentQuestions.answers[countr++] = "1M";
-                  // }
                 }
 
                 endpoint = countr;
@@ -1862,9 +1734,6 @@ class AssessmentQuestions {
                     AssessmentQuestions.answers[countr] = "0E";
                     AssessmentQuestions.AnswerdOrnot[countr] = false;
                   }
-                  // else {
-                  //   AssessmentQuestions.answers[countr++] = "1M";
-                  // }
                 }
 
                 endpoint = countr;
@@ -1896,9 +1765,6 @@ class AssessmentQuestions {
                     AssessmentQuestions.answers[countr] = "0G";
                     AssessmentQuestions.AnswerdOrnot[countr] = false;
                   }
-                  // else {
-                  //   AssessmentQuestions.answers[countr++] = "1M";
-                  // }
                 }
 
                 endpoint = countr;
@@ -1931,10 +1797,6 @@ class AssessmentQuestions {
                     AssessmentQuestions.answers[countr] = "0H";
                     AssessmentQuestions.AnswerdOrnot[countr] = false;
                   }
-                  // else {
-                  //   AssessmentQuestions.answers[countr++] = "1M";
-                  // }
-
                 }
                 endpoint = countr;
               }
@@ -1965,9 +1827,6 @@ class AssessmentQuestions {
                     AssessmentQuestions.answers[countr] = "0F";
                     AssessmentQuestions.AnswerdOrnot[countr] = false;
                   }
-                  // else {
-                  //   AssessmentQuestions.answers[countr++] = "1M";
-                  // }
                 }
 
                 endpoint = countr;
@@ -1980,14 +1839,6 @@ class AssessmentQuestions {
     }
     //!*****************************8888888888888888888888888888888888888888888888888
 
-// freq.AssesmentQuestions.value.addAll(quastionsList);
-// print(quastionsList.length);
-// freq.PreviouseSelected.value.clear() ;
-//         freq.PreviouseSelected.value.addAll( await handle_aspect().getSelectedAspects());
-//     return quastionsList;
-//         //! Ends of creating the quastion list //
-//       } //!=========================================================================================
-//     }
     //!Else here is for no previouse selesction
 
     else {
@@ -1996,11 +1847,9 @@ class AssessmentQuestions {
       List<dynamic> tempQuestionList = []; //temporary store one aspect quastion
       tempAspect =
           await handle_aspect().getSelectedAspects(); //fetch the chosen aspect
-      // freq.PreviouseSelected.value.addAll(tempAspect);
 
       for (var i in tempAspect) {}
 
-      // List<dynamic> quastionsList =[]; //the list of all chosen aspect quastion (needs to be emptied everytime)
       if (quastionsList.isNotEmpty) {
         quastionsList.clear();
       }
@@ -2030,9 +1879,6 @@ class AssessmentQuestions {
                 AssessmentQuestions.answers[countr] = "0M";
                 AssessmentQuestions.AnswerdOrnot[countr] = false;
               }
-              // else {
-              //   AssessmentQuestions.answers[countr++] = "1M";
-              // }
             }
 
             endpoint = countr;

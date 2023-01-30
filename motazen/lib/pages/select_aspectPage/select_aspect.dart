@@ -75,9 +75,6 @@ class _selectAspectState extends State<AspectSelection> {
         ),
         onPressed: __isSelected.contains(true)
             ? () {
-                // AssessmentQuestions()
-                //     .removeDeselectedAnswers(unselectedAspects);
-                // AssessmentQuestions.activeStep = 0;
 //call a method that add the index to the local and go to assignment page .
                 Get.to(() => AssessmentQuestionsList(
                       iser: widget.isr,

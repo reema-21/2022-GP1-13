@@ -1,5 +1,4 @@
-// ignore: duplicate_ignore
-// ignore_for_file: deprecated_member_use, unused_local_variable, unused_catch_clause, unused_catch_clause, unused_catch_clause
+// ignore_for_file: deprecated_member_use, unused_local_variable, unused_catch_clause
 
 import 'dart:math';
 

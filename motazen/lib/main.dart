@@ -8,7 +8,6 @@ import 'package:motazen/pages/login/login.dart';
 import 'package:motazen/pages/onboarding_page.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-
 import '/data/data.dart';
 import 'firebase_options.dart';
 

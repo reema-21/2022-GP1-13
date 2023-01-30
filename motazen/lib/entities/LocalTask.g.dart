@@ -77,7 +77,7 @@ const LocalTaskSchema = CollectionSchema(
   getId: _localTaskGetId,
   getLinks: _localTaskGetLinks,
   attach: _localTaskAttach,
-  version: '3.0.2',
+  version: '3.0.5',
 );
 
 int _localTaskEstimateSize(

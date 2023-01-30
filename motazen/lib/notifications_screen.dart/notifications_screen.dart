@@ -24,7 +24,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
-    // startTheTimer();
   }
 
   void startTheTimer() {

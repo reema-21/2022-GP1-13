@@ -27,7 +27,7 @@ class _AddTaskState extends State<AddTask> {
   //counter
   final TaskLocalControleer freq = Get.put(TaskLocalControleer());
 
-  //counter
+  //counter //is this code needed
   List<String> durationName = ['أيام', 'أسابيع', 'أشهر', 'سنوات'];
   bool x = false;
   List<String> TasksNamedropmenue = [];
@@ -47,7 +47,6 @@ class _AddTaskState extends State<AddTask> {
 
       y = await widget.isr.findSepecificTask(name);
       newTask.TaskDependency.add(y!); // to link task and it depends tasks ;
-      // widget.isr.saveTask(y);// to link
     });
 
     widget.isr.saveTask(newTask);
@@ -67,8 +66,7 @@ class _AddTaskState extends State<AddTask> {
         ),
         actions: [
           IconButton(
-              // ignore: prefer_const_constructors
-              icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
               onPressed: () {
                 freq.selectedTasks.value.clear();
                 Navigator.of(context).pop();
@@ -264,9 +262,6 @@ class _AddTaskState extends State<AddTask> {
                               }
                               if (value == null || value.isEmpty) {
                                 return "من فضلك ادخل اسم المهمة";
-                                // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
-                                //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
-                                // }
                               } else if (Repeated) {
                                 return "يوجد مهمة بنفس الاسم";
                               } else {
@@ -437,7 +432,8 @@ class _AddTaskState extends State<AddTask> {
                                           setState(() {
                                             // TasksNamedropmenue.add(inputTaskName.text);
 
-                                            LocalTask newTak = LocalTask(userID: IsarService.getUserID);
+                                            LocalTask newTak = LocalTask(
+                                                userID: IsarService.getUserID);
                                             newTak.name =
                                                 freq.inputTaskName.value.text;
                                             String durationDescribtion = "";
@@ -496,7 +492,6 @@ class _AddTaskState extends State<AddTask> {
                                             freq.currentTaskDuration.value = 0;
 
                                             freq.setvalue(durationName[0]);
-                                            // freq.selectedTasks.value.clear();
                                           });
                                           if (x) {
                                             Navigator.pop(context);

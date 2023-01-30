@@ -72,7 +72,6 @@ class _AddHabitState extends State<AddHabit> {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
@@ -111,8 +110,7 @@ class _AddHabitState extends State<AddHabit> {
         ),
         actions: [
           IconButton(
-            // ignore: prefer_const_constructors
-            icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
             onPressed: () async {
               final action = await AlertDialogs.yesCancelDialog(
                   context,

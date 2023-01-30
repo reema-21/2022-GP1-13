@@ -96,12 +96,6 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
                           'founderUsername': widget.comm.founderUsername,
                           'goalName': widget.comm.goalName,
                           'isPrivate': widget.comm.isPrivate,
-                          // 'listOfTasks': widget.comm.listOfTasks!.isNotEmpty
-                          //     ? widget.comm.listOfTasks!
-                          //         .map((e) => e.toJson())
-                          //         .toList()
-                          //     : [],
-                          // 'tillDate': widget.comm.tillDate,
                           '_id': widget.comm.id
                         }
                       };

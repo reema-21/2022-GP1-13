@@ -32,13 +32,16 @@ class Todo {
 class Item {
   /// {@macro item}
   Item({
-    required this.type,
-    required this.duration,
     this.importance,
+    this.dueDate,
+    this.daysCompletedTask,
+    this.rank,
+    required this.type,
+    this.duration,
     this.itemGoal,
     required this.id,
     this.description = '',
-    this.completed = false,
+    required this.completed,
     required this.icon, // tie in with aspect
   });
 
@@ -58,11 +61,30 @@ class Item {
   final Widget icon;
 
   ///the duration of this item
-  final int duration;
+  final int? duration;
 
   ///the importance of this item
-  final int? importance;
+  double? importance;
 
+  /// the dependancy of the task
+  double depandancies = 0;
+
+  /// the importance of the goal
+  double? rank = 0;
+
+  /// the time left for the goal
+  DateTime? dueDate;
+
+  /// the amout of days a user has completed a task
+  int? daysCompletedTask;
+
+  ///the normalised time criteria
+  double NT = 0;
+
+  ///the normalised time criteria
+  double timeLeft = 0;
+
+  /// is the item a task or a habit
   final String type;
 }
 

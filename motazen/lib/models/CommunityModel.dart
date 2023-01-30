@@ -10,9 +10,7 @@ class CommunityModel {
   String aspect;
   String goalName;
   bool isPrivate;
-  // String tillDate;
   String creationDate;
-  // List listOfTasks;
   String id;
   String creatorId;
   List<String> joinedUserIds;
@@ -22,9 +20,7 @@ class CommunityModel {
     required this.aspect,
     required this.goalName,
     required this.isPrivate,
-    // required this.tillDate,
     required this.creationDate,
-    // required this.listOfTasks,
     required this.id,
     required this.creatorId,
     required this.joinedUserIds,
@@ -49,9 +45,7 @@ class CommunityModel {
       aspect: aspect ?? this.aspect,
       goalName: goalName ?? this.goalName,
       isPrivate: isPrivate ?? this.isPrivate,
-      // tillDate: tillDate ?? this.tillDate,
       creationDate: creationDate ?? this.creationDate,
-      // listOfTasks: listOfTasks ?? this.listOfTasks,
       id: id ?? this.id,
       creatorId: creatorId ?? this.creatorId,
       joinedUserIds: joinedUserIds ?? this.joinedUserIds,
@@ -65,9 +59,7 @@ class CommunityModel {
       'aspect': aspect,
       'goalName': goalName,
       'isPrivate': isPrivate,
-      // 'tillDate': tillDate,
       'creationDate': creationDate,
-      // 'listOfTasks': listOfTasks,
       'id': id,
       'creatorId': creatorId,
       'joinedUserIds': joinedUserIds,
@@ -81,9 +73,7 @@ class CommunityModel {
       aspect: map['aspect'] ?? '',
       goalName: map['goalName'] ?? '',
       isPrivate: map['isPrivate'] ?? false,
-      // tillDate: map['tillDate'] ?? '',
       creationDate: map['creationDate'] ?? '',
-      // listOfTasks: List.from(map['listOfTasks']),
       id: map['id'] ?? '',
       creatorId: map['creatorId'] ?? '',
       joinedUserIds: List<String>.from(map['joinedUserIds']),
@@ -110,9 +100,7 @@ class CommunityModel {
         other.aspect == aspect &&
         other.goalName == goalName &&
         other.isPrivate == isPrivate &&
-        // other.tillDate == tillDate &&
         other.creationDate == creationDate &&
-        // listEquals(other.listOfTasks, listOfTasks) &&
         other.id == id &&
         other.creatorId == creatorId &&
         listEquals(other.joinedUserIds, joinedUserIds);
@@ -125,9 +113,7 @@ class CommunityModel {
         aspect.hashCode ^
         goalName.hashCode ^
         isPrivate.hashCode ^
-        // tillDate.hashCode ^
         creationDate.hashCode ^
-        // listOfTasks.hashCode ^
         id.hashCode ^
         creatorId.hashCode ^
         joinedUserIds.hashCode;

@@ -1,15 +1,12 @@
-// ignore_for_file: file_names, non_constant_identifier_names, await_only_futures, unused_import
+// ignore_for_file: file_names, non_constant_identifier_names, await_only_futures
 //here is manaras
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:motazen/entities/CommunityID.dart';
 import 'package:motazen/entities/LocalTask.dart';
 import 'package:motazen/entities/imporvment.dart';
-import 'package:motazen/pages/communities_page/create_community.dart';
-
 import '/entities/aspect.dart';
 import '/entities/goal.dart';
 import '/entities/habit.dart';
-
 import 'package:isar/isar.dart';
 
 class IsarService {
@@ -388,14 +385,14 @@ class IsarService {
   }
 
 //update the aspect points
-  void updateAspectPercentage(int id, double percentage, double newSum) async {
+  void updateAspectPercentage(int id, double newSum) async {
     final isar = await db;
     Aspect? updatedAspect = await isar.aspects
         .filter()
         .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
         .idEqualTo(id)
         .findFirst();
-    updatedAspect!.percentagePoints = percentage;
+    updatedAspect!.percentagePoints = newSum;
     Imporvment newImprove = Imporvment(userID: IsarService.getUserID);
     newImprove.date = DateTime.utc(2023, 1, 17);
     newImprove.sum = newSum;
@@ -428,7 +425,7 @@ class IsarService {
   }
 
   //updates the completion percentage of a task
-  void updateTaskPercentage(int id, double percentage) async {
+  Future<void> updateTaskPercentage(int id, double percentage) async {
     final isar = await db;
     LocalTask? completedTask = await isar.localTasks
         .filter()
@@ -440,38 +437,22 @@ class IsarService {
   }
 
   //change the state of completeForToday
-  void completeForToday(int id, String type) async {
+  Future<void> completeForTodayTask(int id) async {
     final isar = await db;
-    switch (type) {
-      case 'Task':
-        LocalTask? selected = await isar.localTasks
-            .filter()
-            .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
-            .idEqualTo(id)
-            .findFirst();
-        //increment prgress
-        selected!.amountCompleted = selected.amountCompleted + 1;
-        //crossout task
-        selected.completedForToday = true;
-        //update task
-        await isar.writeTxnSync(() => isar.localTasks.putSync(selected));
-        break;
-
-      case 'Habit':
-        Habit? selected = await isar.habits
-            .filter()
-            .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
-            .idEqualTo(id)
-            .findFirst();
-        //crossout task
-        selected!.completedForToday = true;
-        //update habit
-        await isar.writeTxnSync(() => isar.habits.putSync(selected));
-        break;
-    }
+    LocalTask? selected = await isar.localTasks
+        .filter()
+        .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
+        .idEqualTo(id)
+        .findFirst();
+    //increment prgress
+    selected!.amountCompleted = selected.amountCompleted + 1;
+    //crossout task
+    selected.completedForToday = true;
+    //update task
+    await isar.writeTxnSync(() => isar.localTasks.putSync(selected));
   }
 
-  void undoCompleteForToday(int id) async {
+  Future<void> undoCompleteForTodayTask(int id) async {
     final isar = await db;
     LocalTask? selectedLocalTask = await isar.localTasks
         .filter()
@@ -485,8 +466,35 @@ class IsarService {
     await isar.writeTxnSync(() => isar.localTasks.putSync(selectedLocalTask));
   }
 
+  //change the state of completeForToday for a habit
+  Future<void> completeForTodayHabit(int id) async {
+    final isar = await db;
+    Habit? selected = await isar.habits
+        .filter()
+        .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
+        .idEqualTo(id)
+        .findFirst();
+    //crossout habit
+    selected!.completedForToday = true;
+    //update habit
+    await isar.writeTxnSync(() => isar.habits.putSync(selected));
+  }
+
+  Future<void> undoCompleteForTodayHabit(int id) async {
+    final isar = await db;
+    Habit? selected = await isar.habits
+        .filter()
+        .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
+        .idEqualTo(id)
+        .findFirst();
+    //uncross a habit
+    selected!.completedForToday = false;
+    //update habit
+    await isar.writeTxnSync(() => isar.habits.putSync(selected));
+  }
+
   //resert check
-  void reserCheck(int id) async {
+  Future<void> reserCheck(int id) async {
     final isar = await db;
     LocalTask? selectedLocalTask = await isar.localTasks
         .filter()
@@ -499,7 +507,7 @@ class IsarService {
   }
 
   //updates the completion percentage of a goal
-  void updateGoalPercentage(int id, double percentage) async {
+  Future<void> updateGoalPercentage(int id, double percentage) async {
     final isar = await db;
     Goal? completedGoal = await isar.goals
         .filter()

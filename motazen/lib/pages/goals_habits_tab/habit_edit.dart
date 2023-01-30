@@ -92,31 +92,6 @@ class _EditGoalState extends State<EditHbit> {
           width: width,
           color: const Color.fromARGB(255, 255, 255, 255),
         ),
-        //
-        // Transform.translate(
-        //   offset: const Offset(40.0, -40.0),
-        //   child: Container(
-        //     height: height * 0.54,
-        //     width: height * 0.54,
-        //     decoration: BoxDecoration(
-        //       shape: BoxShape.circle,
-        //       color: Color(0xff66BF77).withOpacity(0.1),
-        //     ),
-        //   ),
-        // ),
-        //
-        // Transform.translate(
-        //   offset: const Offset(40.0, -60.0),
-        //   child: Container(
-        //     height: height * 0.3,
-        //     width: height * 0.3,
-        //     decoration: BoxDecoration(
-        //       shape: BoxShape.circle,
-        //       color: Color(0xff0D79DC).withOpacity(0.1),
-        //     ),
-        //   ),
-        // ),
-
         ClipPath(
           clipper: MyClipper(),
           child: Container(

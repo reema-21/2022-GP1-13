@@ -47,8 +47,6 @@ class Life_wheelState extends State<life_wheel> {
                 centerSpaceRadius: 0,
                 sections: PieChartSections()
                     .getSections(touchedIndex, widget.allAspects),
-
-                ///
               ),
             ),
           ),

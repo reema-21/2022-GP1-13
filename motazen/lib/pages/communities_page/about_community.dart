@@ -170,44 +170,10 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
                 'founderUsername': e.founderUsername,
                 'goalName': e.goalName,
                 'isPrivate': e.isPrivate,
-                // 'listOfTasks': e.listOfTasks!.isNotEmpty
-                //     ? e.listOfTasks!.map((e) => e.toJson()).toList()
-                //     : [],
-                // 'tillDate': e.tillDate,
                 '_id': e.id
               })
           .toList(),
     });
-    //removing from joined users
-    // for (int i = 0; i < authController.usersList.length; i++) {
-    //   if (authController.usersList[i].joinedCommunities != null &&
-    //       authController.usersList[i].joinedCommunities!
-    //               .indexWhere((element) => element.id == widget.comm.id) >=
-    //           0) {
-    //     authController.usersList[i].joinedCommunities!
-    //         .removeWhere((element) => element.id == widget.comm.id);
-    //     firestore
-    //         .collection('user')
-    //         .doc(authController.usersList[i].userID)
-    //         .update({
-    //       'joinedCommunities': authController.usersList[i].joinedCommunities!
-    //           .map((e) => {
-    //                 'aspect': e.aspect,
-    //                 'communityName': e.communityName,
-    //                 'creationDate': e.creationDate,
-    //                 'founderUsername': e.founderUsername,
-    //                 'goalName': e.goalName,
-    //                 'isPrivate': e.isPrivate,
-    //                 'listOfTasks': e.listOfTasks!.isNotEmpty
-    //                     ? e.listOfTasks!.map((e) => e.toJson()).toList()
-    //                     : [],
-    //                 'tillDate': e.tillDate,
-    //                 '_id': e.id
-    //               })
-    //           .toList(),
-    //     });
-    //   }
-    // }
   }
 
   leaveCommunity() async {
@@ -230,10 +196,6 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
                 'founderUsername': e.founderUsername,
                 'goalName': e.goalName,
                 'isPrivate': e.isPrivate,
-                // 'listOfTasks': e.listOfTasks!.isNotEmpty
-                //     ? e.listOfTasks!.map((e) => e.toJson()).toList()
-                //     : [],
-                // 'tillDate': e.tillDate,
                 '_id': e.id
               })
           .toList(),

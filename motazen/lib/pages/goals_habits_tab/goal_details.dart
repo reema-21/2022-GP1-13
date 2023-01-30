@@ -17,7 +17,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../../../entities/aspect.dart';
 import 'Edit_task.dart';
-//import 'package:motazen/CustomClipper.dart';
+
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class goalDetails extends StatefulWidget {
   final IsarService isr;
@@ -30,11 +30,8 @@ class goalDetails extends StatefulWidget {
   final String goalImportanceDescription;
   final DateTime endDate;
   final DateTime startDate;
-  // final DateTime temGoalDataTime;
 
   final String dueDataDescription;
-  // final bool weekisSelected;
-  // final bool daysisSelected;
   final int id;
   final List<LocalTask> goalTasks;
   const goalDetails({
@@ -46,10 +43,7 @@ class goalDetails extends StatefulWidget {
     required this.goalDuration,
     required this.goalDurationDescription,
     required this.goalImportanceDescription,
-    // required this.temGoalDataTime,
     required this.dueDataDescription,
-    // required this.weekisSelected,
-    // required this.daysisSelected,
     required this.endDate,
     required this.startDate,
     this.chosenAspectNames,
@@ -71,8 +65,6 @@ class _goalDetailsState extends State<goalDetails> {
   final TaskLocalControleer freq = Get.put(TaskLocalControleer());
 
   final formKey = GlobalKey<FormState>();
-  // DateTime selectedDate = DateTime.utc(1989, 11, 9);
-  // DateTime? noDateChosenForThisGoal;
   int goalDuration = 0;
   List<LocalTask> goalTasks = [];
   List<LocalTask> oldgoalTasks = [];
@@ -85,14 +77,10 @@ class _goalDetailsState extends State<goalDetails> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   final _goalNmaeController = TextEditingController();
   final _goalaspectController = TextEditingController();
-
   final _dueDateController = TextEditingController();
-  // bool isDataSelected = false;
-  // bool? _checkBox = false;
-  // bool? _ListtileCheckBox = false;
-
   String? isSelected;
   String aspectnameInEnglish = "";
+
   @override
   void initState() {
     goalDuration = widget.goalDuration;
@@ -107,14 +95,10 @@ class _goalDetailsState extends State<goalDetails> {
       oldgoalTasks.add(x);
     }
     freq.checkTotalTaskDuration.value = sum;
-    // oldgoalTasks=widget.goalTasks;
     checkGoalDuration = widget.goalDuration;
-
-    // if (!(widget.goalDuration == 0)) {
-    //   duration = widget.goalDurationDescription;
-    // }
     _goalNmaeController.text = widget.goalName;
     importance = widget.importance;
+
     for (int i = 0; i < widget.chosenAspectNames!.length; i++) {
       String name = widget.chosenAspectNames![i];
       if (name.contains(widget.goalAspect)) {
@@ -150,13 +134,6 @@ class _goalDetailsState extends State<goalDetails> {
         aspectnameInEnglish = "Family and Friends";
         break;
     }
-    // _checkBox = widget.daysisSelected;
-    // _ListtileCheckBox = widget.weekisSelected;
-    //you made this comment so that you can cover the date when there is no date and then you select one
-    // if (!widget.dueDataDescription.contains("لايوجد تاريخ استحقاق")) {
-    //   selectedDate = widget.temGoalDataTime;
-    //   isDataSelected = true;
-    // }
     getTasks().then((value) {
       for (var i in value) {
         TaskData t = TaskData();
@@ -269,7 +246,6 @@ class _goalDetailsState extends State<goalDetails> {
           ),
           actions: [
             IconButton(
-                // ignore: prefer_const_constructors
                 icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
                 onPressed: () async {
                   final action = await AlertDialogs.yesCancelDialog(
@@ -298,7 +274,6 @@ class _goalDetailsState extends State<goalDetails> {
                         oldgoalTasks[i]
                             .TaskDependency
                             .add(y!); // to link task and it depends tasks ;
-                        // widget.isr.saveTask(y);// to link
                       });
 
                       widget.isr.saveTask(oldgoalTasks[i]);
@@ -403,312 +378,12 @@ class _goalDetailsState extends State<goalDetails> {
                             border: OutlineInputBorder(),
                           ),
                         ),
-                      )
-
-                      // DropdownButtonFormField(
-
-                      //   value: isSelected,
-                      //   items: aspectList.selectedArabic
-                      //       .map((e) => DropdownMenuItem(
-                      //             value: e,
-                      //             child: Text(e),
-                      //           ))
-                      //       .toList(),
-                      //   onChanged: (val) {
-                      //     setState(() {
-                      //       isSelected = val as String;
-                      //       switch (isSelected) {
-                      //         case "أموالي":
-                      //           aspectnameInEnglish = "money and finances";
-                      //           break;
-                      //         case "متعتي":
-                      //           aspectnameInEnglish = "Fun and Recreation";
-                      //           break;
-                      //         case "مهنتي":
-                      //           aspectnameInEnglish = "career";
-                      //           break;
-                      //         case "علاقاتي":
-                      //           aspectnameInEnglish = "Significant Other";
-                      //           break;
-                      //         case "بيئتي":
-                      //           aspectnameInEnglish = "Physical Environment";
-                      //           break;
-                      //         case "ذاتي":
-                      //           aspectnameInEnglish = "Personal Growth";
-                      //           break;
-
-                      //         case "صحتي":
-                      //           aspectnameInEnglish = "Health and Wellbeing";
-                      //           break;
-                      //         case "عائلتي وأصدقائي":
-                      //           aspectnameInEnglish = "Family and Friends";
-                      //           break;
-                      //       }
-                      //     });
-                      //   },
-                      //   icon: const Icon(
-                      //     Icons.arrow_drop_down_circle,
-                      //     color: Color(0xFF66BF77),
-                      //   ),
-                      //   isDense: true,
-                      //   validator: (value) {
-                      //     print("here ere her");
-                      //     if(value != widget.goalAspect) {
-                      //       'من فضلك اختر جانب الحياة المناسب للهدف';
-                      //                                   value  = widget.goalAspect ;
-
-                      //     }
-
-                      //     else
-                      //        null;
-                      //   },
-                      //   decoration: const InputDecoration(
-                      //     labelText: "جوانب الحياة ",
-                      //     prefixIcon: Icon(
-                      //       Icons.pie_chart,
-                      //       color: Color(0xFF66BF77),
-                      //     ),
-                      //     border: UnderlineInputBorder(),
-                      //   ),
-                      // ),
-                      ,
+                      ),
                       const SizedBox(
                         height: 25,
                       ),
                       //due date .
                       durationWidget(context),
-
-//                     DateTimeFormField(
-//                         //you chaneg in here =============================================
-//                         initialValue: isDataSelected
-//                             ? selectedDate
-//                             : noDateChosenForThisGoal,
-//                         //make it with time write now there is a way for only date
-//                         decoration: const InputDecoration(
-//                           hintStyle: TextStyle(color: Colors.black45),
-//                           errorStyle: TextStyle(color: Colors.redAccent),
-//                           border: OutlineInputBorder(),
-//                           suffixIcon: Icon(Icons.event_note),
-//                           labelText: 'تاريخ الاستحقاق',
-//                         ),
-//                         firstDate: DateTime.now().add(const Duration(days: 1)),
-//                         lastDate: DateTime.now()
-//                             .add(const Duration(days: 360)), //oneYear
-//                         initialDate:
-//                             DateTime.now().add(const Duration(days: 20)),
-//                         autovalidateMode: AutovalidateMode.always,
-//                         validator: (value) {
-//                           if (value != null &&
-//                               ((value.difference(DateTime.now()).inDays + 1) <
-//                                   freq.checkTotalTaskDuration.value)) {
-//                             return " قيمة فترة المهام ستصبح أعلى من فترة الهدف , فضلاً أدخل تاريخ استحقاق اّخر";
-//                           }
-//                           // else if (!(RegExp(r'^[[\u0621-\u064A\040]]+$').hasMatch(value))){
-//                           //   return "اسم الهدف يحتوي عى حروف فقط";
-
-//                           // }
-//                           // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
-//                           //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
-//                           // }
-//                           else {
-//                             return null;
-//                           }
-//                         },
-//                         onDateSelected: (DateTime value) {
-//                           setState(() {
-//                             selectedDate = value;
-//                             goal?.dueDate = value;
-
-//                             isDataSelected = true;
-
-//                             ///to change the duration description  ;
-//                             if (_checkBox == true) {
-//                               int durationInNumber = selectedDate
-//                                       .difference(DateTime.now())
-//                                       .inDays +
-//                                   1;
-//                               duration = durationInNumber.toString();
-//                               duration = "$duration يوماً ";
-
-//                               goalDuration = durationInNumber;
-//                               checkGoalDuration = durationInNumber;
-//                               // print("h")
-
-//                             }
-//                             if (_ListtileCheckBox == true) {
-//                               int durationInNumber = selectedDate
-//                                       .difference(DateTime.now())
-//                                       .inDays +
-//                                   1;
-//                               goalDuration = durationInNumber;
-//                               durationInNumber = durationInNumber;
-
-//                               double numberOfWork = (durationInNumber / 7);
-//                               int numberOfWork2 = numberOfWork.floor();
-//                               int numberofDyas = durationInNumber % 7;
-//                               duration = "$numberOfWork2 أسبوع";
-//                               if (numberofDyas != 0) {
-//                                 duration = "$duration و $numberofDyasيوماً ";
-//                               }
-//                             }
-//                           }
-
-//                               // }
-//                               );
-//                         }),
-//                     const SizedBox(
-//                       height: 10,
-//                     ),
-//                     Row(
-//                       children: [
-//                         const Text("الفترة  :"),
-//                         const SizedBox(
-//                           width: 5,
-//                         ),
-//                         Expanded(
-//                           child: Container(
-//                               height: 40,
-//                               decoration: BoxDecoration(
-//                                   border: Border.all(
-//                                       color: const Color.fromARGB(
-//                                           255, 124, 121, 121))),
-//                               child: Padding(
-//                                 padding: const EdgeInsets.all(8.0),
-//                                 child: Text(duration,
-//                                     style: const TextStyle(
-//                                         color: Color.fromARGB(96, 0, 0, 0))),
-//                               )),
-//                         ),
-//                       ],
-//                     ),
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.start,
-//                       children: [
-//                         SizedBox(
-//                           height: 50,
-//                           width: 150,
-//                           child: CheckboxListTile(
-//                             checkColor:
-//                                 const Color.fromARGB(255, 255, 250, 250),
-//                             activeColor: const Color(0xFF66BF77),
-//                             value: _checkBox,
-//                             onChanged: (val) {
-//                               setState(() {
-//                                 _checkBox = val;
-//                                 if (noDateChosenForThisGoal == null &&
-//                                     !isDataSelected) {
-//                                   ScaffoldMessenger.of(context).showSnackBar(
-//                                       SnackBar(
-//                                           duration:
-//                                               const Duration(milliseconds: 500),
-//                                           backgroundColor:
-//                                               Colors.yellow.shade300,
-//                                           content: Row(
-//                                             children: const [
-//                                               Icon(
-//                                                 Icons.error,
-//                                                 color: Color.fromARGB(
-//                                                     255, 0, 0, 0),
-//                                               ),
-//                                               SizedBox(width: 20),
-//                                               Expanded(
-//                                                 child: Text(
-//                                                     "أدخل تاريخ الاستحقاق أولًا",
-//                                                     style: TextStyle(
-//                                                         color: Colors.black)),
-//                                               )
-//                                             ],
-//                                           )));
-//                                   _checkBox = false;
-//                                 } else if (val == true) {
-//                                   int durationInNumber = selectedDate
-//                                           .difference(DateTime.now())
-//                                           .inDays +
-//                                       1;
-//                                   duration = durationInNumber.toString();
-//                                   duration = "$duration يوماً ";
-
-//                                   goalDuration = durationInNumber;
-//                                   checkGoalDuration = durationInNumber;
-//                                   _ListtileCheckBox = false;
-//                                 } else if (_ListtileCheckBox == false) {
-//                                   goalDuration = 0;
-//                                   duration =
-//                                       "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
-//                                 }
-//                               });
-//                             },
-//                             title: const Text(" بالأيام"),
-//                             controlAffinity: ListTileControlAffinity.leading,
-//                           ),
-//                         ),
-//                         SizedBox(
-//                           height: 50,
-//                           width: 150,
-//                           child: CheckboxListTile(
-//                             checkColor:
-//                                 const Color.fromARGB(255, 255, 250, 250),
-//                             activeColor: const Color(0xFF66BF77),
-//                             value: _ListtileCheckBox,
-//                             onChanged: (val) {
-//                               setState(() {
-//                                 _ListtileCheckBox = val;
-// //you add is.. to the old condition
-//                                 if (!isDataSelected) {
-//                                   ScaffoldMessenger.of(context).showSnackBar(
-//                                       SnackBar(
-//                                           duration:
-//                                               const Duration(milliseconds: 500),
-//                                           backgroundColor:
-//                                               Colors.yellow.shade300,
-//                                           content: Row(
-//                                             children: const [
-//                                               Icon(
-//                                                 Icons.error,
-//                                                 color: Color.fromARGB(
-//                                                     255, 0, 0, 0),
-//                                               ),
-//                                               SizedBox(width: 20),
-//                                               Expanded(
-//                                                 child: Text(
-//                                                     "أدخل تاريخ الاستحقاق أولًا",
-//                                                     style: TextStyle(
-//                                                         color: Colors.black)),
-//                                               )
-//                                             ],
-//                                           )));
-//                                   _ListtileCheckBox = false;
-//                                 } else if (val == true) {
-//                                   int durationInNumber = selectedDate
-//                                           .difference(DateTime.now())
-//                                           .inDays +
-//                                       1;
-//                                   goalDuration = durationInNumber;
-//                                   checkGoalDuration = durationInNumber;
-
-//                                   double numberOfWork = (durationInNumber / 7);
-//                                   int numberOfWork2 = numberOfWork.floor();
-//                                   int numberofDyas = durationInNumber % 7;
-//                                   duration = "$numberOfWork2 أسبوع";
-//                                   if (numberofDyas != 0) {
-//                                     duration =
-//                                         "$duration و $numberofDyasيوماً ";
-//                                   }
-
-//                                   _checkBox = false;
-//                                 } else if (_checkBox == false) {
-//                                   goalDuration = 0;
-//                                   duration =
-//                                       "فضلاَ،اختر الطريقة الأمثل لحساب فترةالهدف من الأسفل";
-//                                 }
-//                               });
-//                             },
-//                             title: const Text(" بالأسابيع"),
-//                             controlAffinity: ListTileControlAffinity.leading,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
                       const SizedBox(
                         height: 10,
                       ),

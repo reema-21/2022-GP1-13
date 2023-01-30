@@ -70,9 +70,6 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
           contentPadding: EdgeInsets.zero,
           scrollable: true,
           content: Container(
-            // height: community.listOfTasks!.isEmpty
-            //     ? screenHeight(context) * 0.4
-            //     : screenHeight(context) * 0.5,
             height: screenHeight(context) * 0.4,
             width: screenWidth(context) * 0.8,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(50)),
@@ -230,14 +227,6 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                 onPressed: () async {
                                                   if (formKey.currentState!
                                                       .validate()) {
-//fetch the goal
-//  Goal? choseGoal =
-//                                   Goal(userID: IsarService.getUserID);
-//                               IsarService iser =
-//                                   IsarService(); // initialize local storage
-//                               choseGoal = await iser.getgoal(
-//                                 isSelected.,
-//                               ); // here iam fetching the goal information from isar to assign it to the communties
                                                     //-----------------------------------
                                                     CommunityID newCom =
                                                         CommunityID(
@@ -272,13 +261,11 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                           founderUsername:
                                                               community
                                                                   .founderUsername,
-                                                          // tillDate: community.tillDate,
                                                           creationDate:
                                                               community
                                                                   .creationDate,
                                                           goalName: community
                                                               .goalName,
-                                                          // listOfTasks: community.listOfTasks,
                                                           id: community.id),
                                                     );
                                                     communityController
@@ -292,9 +279,6 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                         comm: communityController
                                                             .listOfJoinedCommunities
                                                             .last));
-
-                                                    //   }
-                                                    //  } : null,
                                                   }
                                                 },
 

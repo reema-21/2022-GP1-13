@@ -19,7 +19,6 @@ const kButtonMargin = EdgeInsets.all(30.0);
 
 // FIREBASE
 var firebaseAuth = FirebaseAuth.instance;
-// var firebaseStorage = FirebaseStorage.instance;
 var firestore = FirebaseFirestore.instance;
 
 TextStyle titleText = const TextStyle(
@@ -38,16 +37,16 @@ TextStyle subTitle = const TextStyle(
     fontFamily: 'Frutiger',
     fontWeight: FontWeight.w500);
 TextStyle textButton = const TextStyle(
-  color: kPrimaryColor,
-  fontSize: 18,
-  fontFamily: 'Frutiger',
-  fontWeight: FontWeight.w700);
-
-  TextStyle titleText3 = const TextStyle(
     color: kPrimaryColor,
     fontSize: 18,
     fontFamily: 'Frutiger',
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w700);
+
+TextStyle titleText3 = const TextStyle(
+  color: kPrimaryColor,
+  fontSize: 18,
+  fontFamily: 'Frutiger',
+  fontWeight: FontWeight.w700,
 );
 
 TextStyle textButton2 = const TextStyle(

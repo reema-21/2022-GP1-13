@@ -32,13 +32,10 @@ class _EditGoalState extends State<EditGoal> {
   String goalImportanceDescription = "-";
   late DateTime endDate;
   late DateTime startDate;
-  // DateTime temGoalDataTime = DateTime.utc(1989, 11, 9);
   String dueDataDescription = "";
   List<LocalTask> goalTasks = [];
   Goal? goal;
   bool isLoading = false;
-  // bool weekisSelected = false;
-  // bool daysisSelected = false;
 
   @override
   void initState() {
@@ -82,13 +79,6 @@ class _EditGoalState extends State<EditGoal> {
           goalAspect = "عائلتي وأصدقائي";
           break;
       }
-      //take the otherfeild incase there we not noll
-      // if (goal!.dueDate.compareTo(temGoalDataTime) == 0) {
-      //   dueDataDescription = "لايوجد تاريخ استحقاق";
-      // } else {
-      //   temGoalDataTime = goal!.dueDate;
-      //   dueDataDescription = intl.DateFormat.yMMMEd().format(temGoalDataTime);
-      // }
       importance = goal!.importance;
 
       switch (importance) {
@@ -109,15 +99,6 @@ class _EditGoalState extends State<EditGoal> {
       if (goalDuration != 0) {
         goalDurationDescription = goal!.DescriptiveGoalDuration;
       }
-
-      // if (goalDuration != 0) {
-      //   if (goalDurationDescription.contains("أسبوع")) {
-      //     weekisSelected = true;
-      //   } else {
-      //     //you had a condition  to check whether it contains يوم in here now it is deleted
-      //     daysisSelected = true;
-      //   }
-      // }
       goalTasks = goal!.task.toList();
     });
   }
@@ -136,31 +117,6 @@ class _EditGoalState extends State<EditGoal> {
           width: width,
           color: const Color.fromARGB(255, 255, 255, 255),
         ),
-        //
-        // Transform.translate(
-        //   offset: const Offset(40.0, -40.0),
-        //   child: Container(
-        //     height: height * 0.54,
-        //     width: height * 0.54,
-        //     decoration: BoxDecoration(
-        //       shape: BoxShape.circle,
-        //       color: Color(0xff66BF77).withOpacity(0.1),
-        //     ),
-        //   ),
-        // ),
-        //
-        //
-        // Transform.translate(
-        //   offset: const Offset(40.0, -60.0),
-        //   child: Container(
-        //     height: height * 0.3,
-        //     width: height * 0.3,
-        //     decoration: BoxDecoration(
-        //       shape: BoxShape.circle,
-        //       color: Color(0xff0D79DC).withOpacity(0.1),
-        //     ),
-        //   ),
-        // ),
 // clipper part
         ClipPath(
           clipper: MyClipper(),
@@ -189,8 +145,6 @@ class _EditGoalState extends State<EditGoal> {
               "معلومات الهدف",
               style: TextStyle(color: Colors.white),
             ),
-
-            ///backgroundColor: kWhiteColor,
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             iconTheme: const IconThemeData(color: kWhiteColor),
@@ -213,10 +167,7 @@ class _EditGoalState extends State<EditGoal> {
                   goalDuration: goalDuration,
                   goalDurationDescription: goalDurationDescription,
                   goalImportanceDescription: goalImportanceDescription,
-                  // temGoalDataTime: temGoalDataTime,
                   dueDataDescription: dueDataDescription,
-                  // weekisSelected: weekisSelected,
-                  // daysisSelected: daysisSelected,
                   goalTasks: goalTasks,
                   id: widget.goalId,
                 );
@@ -230,7 +181,6 @@ class _EditGoalState extends State<EditGoal> {
           ),
 
           /// background color
-          //backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           backgroundColor: Colors.transparent,
 
           /// body
@@ -397,43 +347,6 @@ class _EditGoalState extends State<EditGoal> {
                           ],
                         ),
                       ),
-
-                      // /// btn
-                      // Row(
-                      //   children: [
-                      //     Text(
-                      //       "المهام:",
-                      //       style: titleText2,
-                      //     ),
-                      //     const SizedBox(
-                      //       width: 10,
-                      //     ),
-                      //     ElevatedButton(
-                      //       style: ElevatedButton.styleFrom(
-                      //           backgroundColor: kPrimaryColor,
-                      //           padding: kDefaultPadding),
-                      //       onPressed: goalTasks.isNotEmpty
-                      //           ? () {
-                      //               dialogBox(context);
-                      //               //the nevigator is downs
-                      //             }
-                      //           : null,
-                      //       child: const Text(
-                      //         "اعرض المهام",
-                      //         style: TextStyle(
-                      //           color: kWhiteColor,
-                      //           fontSize: 16,
-                      //           fontFamily: 'Frutiger',
-                      //           fontWeight: FontWeight.w700,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-                      // const SizedBox(
-                      //   height: 30,
-                      // ),
-
                       const SizedBox(height: 40),
 
                       /// progress indicator

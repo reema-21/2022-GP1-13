@@ -44,7 +44,7 @@ const ImporvmentSchema = CollectionSchema(
   getId: _imporvmentGetId,
   getLinks: _imporvmentGetLinks,
   attach: _imporvmentAttach,
-  version: '3.0.2',
+  version: '3.0.5',
 );
 
 int _imporvmentEstimateSize(

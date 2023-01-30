@@ -10,7 +10,6 @@ import '../models/user.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
-  // Rx<bool> isAuthUpdating = false.obs;
   RxList<Userr> usersList = <Userr>[].obs;
   late Rx<Userr> currentUser = Userr().obs;
   Rx<int> loginAttempts = 0.obs;
@@ -27,7 +26,6 @@ class AuthController extends GetxController {
     super.onReady();
     _user = Rx<User?>(_auth.currentUser);
     _user.bindStream(_auth.authStateChanges());
-    // ever(_user, loginRedirect);
   }
 
   @override
@@ -72,7 +70,7 @@ class AuthController extends GetxController {
               //     taskCompletionPercentage: task['taskCompletionPercentage'],
               //   ));
               // }
-            } catch (e) {}
+            } catch (e) {} //is this code needed
 
             try {
               createdCommnitiesOfUser.add(Community(
@@ -83,8 +81,6 @@ class AuthController extends GetxController {
                   creationDate: community['creationDate'].toDate(),
                   goalName: community['goalName'],
                   isPrivate: community['isPrivate'],
-                  // listOfTasks: listOfTasks,
-                  // tillDate: community['tillDate'].toDate(),
                   id: community['_id']));
             } catch (e) {}
           }
@@ -104,7 +100,7 @@ class AuthController extends GetxController {
               //     taskCompletionPercentage: task['taskCompletionPercentage'],
               //   ));
               // }
-            } catch (e) {}
+            } catch (e) {} //is this code needed
             try {
               joinedCommnitiesOfUser.add(Community(
                   progressList: community['progress_list'],
@@ -114,8 +110,6 @@ class AuthController extends GetxController {
                   creationDate: community['creationDate'].toDate(),
                   goalName: community['goalName'],
                   isPrivate: community['isPrivate'],
-                  // listOfTasks: listOfTasks,
-                  // tillDate: community['tillDate'].toDate(),
                   id: community['_id']));
             } catch (e) {}
           }
@@ -136,21 +130,4 @@ class AuthController extends GetxController {
     } catch (e) {}
     update();
   }
-
-  // loginRedirect(var user) async {
-  //   bool firstRun = await IsFirstRun.isFirstRun();
-  //   Timer(Duration(seconds: isLoging ? 0 : 2), () {
-  //     if (user == null) {
-  //       isLoging = false;
-  //       update();
-  //       firstRun
-  //           ? Get.offAll(() => const StartNow())
-  //           : Get.offAll(() => const Login());
-  //     } else {
-  //       isLoging = true;
-  //       update();
-  //       Get.to(() => const Q1());
-  //     }
-  //   });
-  // }
 }

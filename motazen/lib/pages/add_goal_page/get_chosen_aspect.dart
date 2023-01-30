@@ -43,9 +43,8 @@ class _showsState extends State<getChosenAspect> {
               var aspectList = Provider.of<WheelData>(context);
               //prepare the parameter of add goal
               List<String> chosenAspectNames = [];
-              //a list of selected aspects
 
-              // List<Aspect>? updatedAspects = snapshot.data?[0];
+              //a list of selected aspects
               aspectList.selected = snapshot.data?[1] ?? [];
 
               List<Aspect>? updatedAspects = snapshot.data?[1] ?? [];

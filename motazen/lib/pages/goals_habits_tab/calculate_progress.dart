@@ -5,46 +5,63 @@ import '../../isar_service.dart';
 import '../select_aspectPage/handle_aspect_data.dart';
 
 class CalculateProgress {
-  void updateAmountCompleted(
-      int taskId, int goalId, String operation, String type) {
-    if (operation == 'Increment') {
-      IsarService().completeForToday(taskId, type);
-    } else if (operation == 'Decrement') {
-      IsarService().undoCompleteForToday(taskId);
+  Future<void> updateAmountCompleted(
+      int taskId, int? goalId, String operation, String type) async {
+    String methodToBeUsed = '$operation $type';
+    print(methodToBeUsed);
+
+    switch (methodToBeUsed) {
+      case 'Increment Task':
+        await IsarService().completeForTodayTask(taskId);
+        calculateTaskPercentage(taskId, goalId!);
+        break;
+      case 'Decrement Task':
+        await IsarService().undoCompleteForTodayTask(taskId);
+        calculateTaskPercentage(taskId, goalId!);
+        break;
+      case 'Increment Habit':
+        await IsarService().completeForTodayHabit(taskId);
+        break;
+      case 'Decrement Habit':
+        await IsarService().undoCompleteForTodayHabit(taskId);
+        break;
+      default:
+        print('Error: the method does not exist');
     }
-    calculateTaskPercentage(taskId, goalId);
   }
 
   Future<void> calculateTaskPercentage(int taskId, int goalId) async {
-    //later make sure that if the percentage is 1 then the task is complete
     LocalTask? completedTask = await IsarService().getSepecificTask(taskId);
     Goal? goal = await IsarService().getSepecificGoall(goalId);
     double completionPercentage =
         completedTask!.amountCompleted / completedTask.duration;
-    //check if the task has been completed
-    if (completionPercentage < 1) {
+    //check if the value is within range
+    if (completionPercentage < 1 || completionPercentage == 1) {
       IsarService().updateTaskPercentage(taskId, completionPercentage);
-      calculateGoalPercentage(goal);
+      calculateGoalPercentage(goal, goal!.goalProgressPercentage);
     }
   }
 
-  Future<void> calculateGoalPercentage(Goal? goal) async {
+  Future<void> calculateGoalPercentage(
+      Goal? goal, double previousProgress) async {
     double totalDaysCompleted = 0;
     int totalGoalDuration = 0;
     double totalGoalProgress = 0;
-    double previousProgress =
-        goal!.goalProgressPercentage; //save the progress before the change
-    List<LocalTask> allTasks = goal.task.toList(); //the issue is probably here
+
+    //save the previous goal progress
+    List<LocalTask> allTasks = goal!.task.toList();
     for (var element in allTasks) {
       totalDaysCompleted = totalDaysCompleted + element.amountCompleted;
       totalGoalDuration = totalGoalDuration + element.duration;
     }
     totalGoalProgress = totalDaysCompleted / totalGoalDuration;
-    //it still passes when it's grater than 1 (bug)
-    if (totalGoalProgress < 1.00) {
+
+    //check if the progress is within range
+    if (totalGoalProgress < 1 || totalGoalProgress == 1) {
       IsarService().updateGoalPercentage(goal.id, totalGoalProgress);
       Aspect? aspect = await IsarService().getAspectByGoal(goal.id);
-      handle_aspect().updateAspects(aspect!, goal, previousProgress);
+      handle_aspect()
+          .updateAspects(aspect!, goal, previousProgress, totalGoalProgress);
     }
   }
 }

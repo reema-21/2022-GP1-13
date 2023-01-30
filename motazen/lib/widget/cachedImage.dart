@@ -26,14 +26,8 @@ CachedNetworkImage cachedImage(
           width: width,
           decoration: BoxDecoration(
             borderRadius: isProfilePicture ? null : BorderRadius.circular(20),
-            // border: isProfilePicture
-            //     ? Border.all(width: 2, color: const Color(secondaryColor))
-            //     : Border.all(width: 0),
             shape: isProfilePicture ? BoxShape.circle : BoxShape.rectangle,
-            // color: const Color(mainColor),
           ),
-          // child:
-          //     Center(child: SvgPicture.asset('assets/svgs/add_image_icon.svg')),
         );
       }
       return Container(
@@ -41,14 +35,8 @@ CachedNetworkImage cachedImage(
         width: width,
         decoration: BoxDecoration(
           borderRadius: isProfilePicture ? null : BorderRadius.circular(20),
-          // border: isProfilePicture
-          //     ? Border.all(width: 2, color: const Color(secondaryColor))
-          //     : Border.all(width: 0),
           shape: isProfilePicture ? BoxShape.circle : BoxShape.rectangle,
         ),
-        // child: const Center(
-        //   child: CircularProgressIndicator(color: Color(secondaryColor)),
-        // ),
       );
     },
     errorWidget: (context, url, error) => Container(
@@ -56,13 +44,8 @@ CachedNetworkImage cachedImage(
       width: width,
       decoration: BoxDecoration(
         borderRadius: isProfilePicture ? null : BorderRadius.circular(20),
-        // border: isProfilePicture
-        //     ? Border.all(width: 2, color: const Color(secondaryColor))
-        //     : Border.all(width: 0),
         shape: isProfilePicture ? BoxShape.circle : BoxShape.rectangle,
-        // color: const Color(mainColor),
       ),
-      // child: Center(child: SvgPicture.asset('assets/svgs/add_image_icon.svg')),
     ),
   );
 }
@@ -72,7 +55,6 @@ Container profileImageContainer(double? height, double? width, String url) {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        // border: Border.all(width: 2, color: const Color(secondaryColor)),
         shape: BoxShape.circle,
         image: DecorationImage(
           image: NetworkImage(url),

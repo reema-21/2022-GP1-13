@@ -3,13 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:motazen/isar_service.dart';
+import 'package:motazen/pages/homepage/daily_tasks/ranking_algorithm.dart';
 import '/entities/aspect.dart';
 import 'models.dart';
 
 ///create the todo list
 Todo createTodoList(List<Aspect> aspectList) {
   //initialize
-  List<Item> itemList = [];
+  List<Item> taskItemList = [];
+  List<Item> habitItemList = [];
   const TimeOfDay resetTime = TimeOfDay(hour: 0, minute: 0);
 
   //step1: add all tasks and habits to a list
@@ -18,57 +20,79 @@ Todo createTodoList(List<Aspect> aspectList) {
     for (var goal in aspect.goals.toList()) {
       //retrive the goal's tasks
       for (var task in goal.task.toList()) {
-        itemList.add(Item(
-            itemGoal: goal.id,
-            id: task.id,
+        //initialtize the importance to 0
+        double importance = 0;
+
+        //map the importance to the value used in the ranking equation
+        switch (goal.importance) {
+          case 1:
+            importance = 0.25;
+            break;
+          case 2:
+            importance = 0.5;
+            break;
+          case 3:
+            importance = 0.75;
+            break;
+        }
+
+        //create the dependancy graph
+        Rank().createDepGraph(task);
+
+        //ceate task items
+        taskItemList.add(Item(
             description: task.name,
             completed: task.completedForToday,
+            duration: task.duration,
+            itemGoal: goal.id,
+            id: task.id,
             icon: Icon(
-              IconData(
-                aspect.iconCodePoint,
-                fontFamily: aspect.iconFontFamily,
-                fontPackage: aspect.iconFontPackage,
-                matchTextDirection: aspect.iconDirection,
-              ),
+              IconData(aspect.iconCodePoint,
+                  fontFamily: aspect.iconFontFamily,
+                  fontPackage: aspect.iconFontPackage,
+                  matchTextDirection: aspect.iconDirection),
               color: Color(aspect.color),
             ),
-            duration: task.duration,
-            importance: goal.importance,
-            type: 'Task'));
+            type: 'Task',
+            daysCompletedTask: task.amountCompleted,
+            dueDate: goal.endDate,
+            importance: importance));
       }
     }
 
     //retrieve the aspect's habits
     for (var habit in aspect.habits.toList()) {
-      /// the code is not going inside bc the habits are not being retieved!!!!!!
-      itemList.add(Item(
+      //create habit items
+      habitItemList.add(Item(
+        type: 'Habit',
         id: habit.id,
         description: habit.titel,
         completed: habit.completedForToday,
         icon: Icon(
-          IconData(
-            aspect.iconCodePoint,
-            fontFamily: aspect.iconFontFamily,
-            fontPackage: aspect.iconFontPackage,
-            matchTextDirection: aspect.iconDirection,
-          ),
+          IconData(aspect.iconCodePoint,
+              fontFamily: aspect.iconFontFamily,
+              fontPackage: aspect.iconFontPackage,
+              matchTextDirection: aspect.iconDirection),
           color: Color(aspect.color),
         ),
-        duration: habit.durationInNumber,
-        type: 'Habit',
       ));
     }
   }
 
   ///step 2: rank the list
   ///------------------------(add call to ranking code here, pass the item list as a parameter)----------------------------------------
+  List<Item> rankedList = Rank().calculateRank(taskItemList);
+
   //reset check value each day
+  //Note:still not tested
   if (TimeOfDay.now() == resetTime) {
-    resetCheck(itemList);
+    resetCheck(taskItemList);
+    resetCheck(habitItemList);
   }
 
   ///Step3: visualize the list
-  return Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: itemList);
+  return Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: rankedList);
+  //create another todo
 }
 
 // empty todo
@@ -108,7 +132,7 @@ class WheelData with ChangeNotifier {
   List<Aspect> allAspects = [];
   List<Aspect> selected = [];
   List<String> selectedArabic = [];
-   List<Goal> goalList =[];
+  List<Goal> goalList = [];
 
   contains(String s) {
     for (var i = 0; i < data.length; i++) {

@@ -85,7 +85,6 @@ class TaskLocalControleer extends GetxController {
     for (int i = 0; i < selectedTasks.value.length; i++) {
       TaskForDependency.TaskDependency.add(selectedTasks.value[i]);
     }
-    // TaskForDependency.TaskDependency = selectedTasks.value ;
 
     allTaskForDepency.value.add(TaskForDependency);
 
@@ -157,8 +156,6 @@ class TaskLocalControleer extends GetxController {
     totalTasksDuration.value = totalDurtion;
     checkTotalTaskDuration.value = totalDurtion;
     isSelected.value = selectedType;
-    // print("here is the taskduraion valuesetIntionals");
-    // print(totalTasksDuration);
   }
 
   void storeStatusOpen(bool isOpen) {
@@ -174,15 +171,6 @@ class TaskLocalControleer extends GetxController {
   }
 
   increment(num goalduration) {
-//     print("here is the cuurent vlaue 1 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value1 ");
-// print(tem);
-    // print("here is the taskduraion value1");
-    // print(totalTasksDuration);
-    // print("here is the goals value1");
-    // print(goalduration);
-//       print (isSelected.value);
     switch (isSelected.value) {
       case "أيام":
         currentTaskDuration.value = currentTaskDuration.value + 1;
@@ -204,15 +192,6 @@ class TaskLocalControleer extends GetxController {
 
         break;
     }
-
-//                            print("here is the cuurent vlaue 2 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 2 ");
-// print(tem);
-    // print("here is the taskduraion value 2");
-    // print(totalTasksDuration);
-    // print("here is the goals value1");
-    // print(goalduration);
 
     if (tem > goalduration) {
       Get.snackbar(
@@ -245,12 +224,6 @@ class TaskLocalControleer extends GetxController {
 
           break;
       }
-//                           print("here is the cuurent vlaue 3 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 3");
-// print(tem);
-      // print("here is the taskduraion value 3");
-      // print(totalTasksDuration);
     } else if (currentTaskDuration.value > goalduration) {
       switch (isSelected.value) {
         case "أيام":
@@ -273,14 +246,9 @@ class TaskLocalControleer extends GetxController {
 
           break;
       }
-//                           print("here is the cuurent vlaue 4 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 4");
-// print(tem);
-      // print("here is the taskduraion value 4");
-      // print(totalTasksDuration);
-      storeStatusOpen(
-          false); /////////////////////////////////////////////////////////////////////////////////////////
+      storeStatusOpen(false);
+
+      /////////////////////////////////////////////////////////////////////////////////////////
 
       Get.snackbar(
           "", "لا يمكن زيادة الفترة ، فترة المهام ستصبح أعلى من فترة الهدف ",
@@ -291,35 +259,17 @@ class TaskLocalControleer extends GetxController {
           duration: const Duration(milliseconds: 1200),
           snackPosition: SnackPosition.BOTTOM);
     } else {
-//       print("here is the cuurent vlaue 5 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 5");
-// print(tem);
-// print ("here is the taskduraion value 5");
-// print (totalTasksDuration);
       TaskDuration.value++;
     }
   }
 
   setdefult() {
-// print("here is the cuurent vlaue 6 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 6");
-// print(tem);
-    // print("here is the taskduraion value 6");
-    // print(totalTasksDuration);
     TaskDuration.value = 0;
     tem.value = tem.value - currentTaskDuration.value;
     currentTaskDuration.value = 0;
   }
 
   dcrement() {
-//  print("here is the cuurent vlaue 7");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 7");
-// print(tem);
-    // print("here is the taskduraion value 7");
-    // print(totalTasksDuration);
     if (TaskDuration.value <= 0) {
       Get.snackbar("", "قيمة الفترة لا يمكن أن يكون أقل من واحد ",
           icon: const Icon(Icons.error),
@@ -343,7 +293,6 @@ class TaskLocalControleer extends GetxController {
 
           break;
         case "أشهر":
-          // tem.value =(tem-currentTaskDuration.value).abs();
           tem.value = tem.value - (1 * 30);
 
           currentTaskDuration.value = currentTaskDuration.value - (1 * 30);
@@ -356,12 +305,6 @@ class TaskLocalControleer extends GetxController {
 
           break;
       }
-//             print("here is the cuurent vlaue 8 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 8");
-// print(tem);
-      // print("here is the taskduraion value 8 after decremnt");
-      // print(totalTasksDuration);
     }
   }
 
@@ -371,16 +314,7 @@ class TaskLocalControleer extends GetxController {
     return tem;
   }
 
-// int tempdcrementTaskDuration(){
-//   int tem  = totalTasksDuration.value ;
-//   tem = (tem-currentTaskDuration.value).abs();
-//   return tem ;
-// }
   incrementTaskDuration() {
-// print("here is the cuurent vlaue 9 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 9");
-// print(tem);
     if (isEdit.value) {
       totalTasksDuration.value = 0;
       checkTotalTaskDuration.value = 0;
@@ -390,56 +324,22 @@ class TaskLocalControleer extends GetxController {
         checkTotalTaskDuration.value =
             checkTotalTaskDuration.value + goalTask.value[i].duration;
       }
-      // print("here is the taskduraion valu e 9 EDITED ");
-      // print(totalTasksDuration);
     } else {
-      // print("here is the value of the current vali to be added to thatotla ");
-      // print(currentTaskDuration.value);
-      // print("here is the taskduraion valu e 9");
-      // print(totalTasksDuration);
       totalTasksDuration.value =
           totalTasksDuration.value + currentTaskDuration.value;
       checkTotalTaskDuration.value =
           checkTotalTaskDuration.value + currentTaskDuration.value;
-
-      // print("here is the cuurent vlaue 10 ");
-      // print(currentTaskDuration.value);
-      // print ("here is the temp value 10");
-      // print(tem);
-      // print("here is the taskduraion value 10");
-      // print(totalTasksDuration);
     }
   }
 
   dcrementTaskDuration(int deletedTaskDuration) {
-//  print("here is the cuurent vlaue 11 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 11");
-// print(tem);
-    // print("here is the taskduraion value 11");
-    // print(totalTasksDuration);
     totalTasksDuration.value = totalTasksDuration.value - deletedTaskDuration;
     checkTotalTaskDuration.value =
         checkTotalTaskDuration.value - deletedTaskDuration;
-
-// print("here is the cuurent vlaue 12 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 12 ");
-// print(tem);
-    // print("here is the taskduraion value 12 after decremnt ");
-    // print(totalTasksDuration);
   }
-  //!For the communities joind users 
-   incrementCommunity() {
-//     print("here is the cuurent vlaue 1 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value1 ");
-// print(tem);
-    // print("here is the taskduraion value1");
-    // print(totalTasksDuration);
-    // print("here is the goals value1");
-    // print(goalduration);
-//       print (isSelected.value);
+
+  //!For the communities joind users
+  incrementCommunity() {
     switch (isSelected.value) {
       case "أيام":
         currentTaskDuration.value = currentTaskDuration.value + 1;
@@ -461,25 +361,6 @@ class TaskLocalControleer extends GetxController {
 
         break;
     }
-
-//                            print("here is the cuurent vlaue 2 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 2 ");
-// print(tem);
-    // print("here is the taskduraion value 2");
-    // print(totalTasksDuration);
-    // print("here is the goals value1");
-    // print(goalduration);
-
-//       print("here is the cuurent vlaue 5 ");
-// print(currentTaskDuration.value);
-// print ("here is the temp value 5");
-// print(tem);
-// print ("here is the taskduraion value 5");
-// print (totalTasksDuration);
-      TaskDuration.value++;
-    }
+    TaskDuration.value++;
   }
-
-
-
+}

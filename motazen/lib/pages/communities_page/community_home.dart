@@ -99,7 +99,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
       replyingPost = null;
       _post = '';
     });
-    // print('object');
   }
 
   _likeTheText(PostModel pst, String link) {
@@ -120,7 +119,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
         'user_name': user.displayName,
       });
     }
-    // print('object');
   }
 
   _unlikeTheText(PostModel pst, String link) {
@@ -142,8 +140,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
         ds.reference.delete();
       }
     });
-
-    // print('object');
   }
 
   File? ImageFile;
@@ -155,7 +151,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
       setState(() {
         isSendingImage = true;
       });
-      // uploadImage();
     }
   }
 
@@ -263,7 +258,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                     .child('post')
                     .onValue,
                 builder: (context, snapshot) {
-                  // print('snapshot=> $snapshot');
                   List<PostModel> postList = [];
                   if (snapshot.hasData &&
                       snapshot.data != null &&
@@ -297,7 +291,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                       }
                     }
 
-                    // print(postList.isEmpty);
                     return ScrollablePositionedList.builder(
                       physics: const BouncingScrollPhysics(),
                       reverse: true,

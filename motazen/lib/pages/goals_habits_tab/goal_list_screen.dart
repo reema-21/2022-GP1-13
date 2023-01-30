@@ -141,10 +141,6 @@ class _GoalListScreenState extends State<GoalListScreen> {
                 final goal = goals[index];
                 final startDate = goals[index].startData;
                 final endDate = goals[index].endDate;
-                // if (startDate.compareTo(temGoalDataTime) == 0) {
-                //   dueDataDescription = "لايوجد تاريخ استحقاق";
-                // } else {
-                //   temGoalDataTime = startDate;
                 dueDataDescription =
                     "تاريخ الاستحقاق :${intl.DateFormat.yMMMEd().format(endDate)}";
 

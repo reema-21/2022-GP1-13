@@ -19,7 +19,6 @@ class ResetForm extends StatefulWidget {
 class _ResetFormState extends State<ResetForm> {
   final _resetformKey = GlobalKey<FormState>();
   TextEditingController reset_pass_email = TextEditingController();
-  // FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -2,11 +2,9 @@
 //manar
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
-import 'package:motazen/entities/imporvment.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:provider/provider.dart';
-
 import '../../data/data.dart';
 import '/entities/aspect.dart';
 import '../../data/models.dart';
@@ -67,24 +65,26 @@ class handle_aspect {
     isar.assignPointAspect(name, point);
   }
 
-  void updateAspects(Aspect aspect, Goal goal, double previousGoalProgress) {
+  void updateAspects(Aspect aspect, Goal goal, double previousGoalProgress,
+      double newGoalProgress) {
     double aspectImprovement = 0;
     double newAspectPoints = 0;
-    double aspectPreviousPoint = 0;
-    List<Imporvment> aspectPreviousPoints = aspect.imporvmentd.toList();
+    double aspectCurrentPoint = aspect.percentagePoints;
 
-    ///first, we need to remove this goal's pervious progress then add its new progress
-    if (aspectPreviousPoints.isEmpty || aspectPreviousPoints.length == 1) {
-      aspectPreviousPoint = aspect.percentagePoints;
-    } else {
-      aspectPreviousPoint = aspect.percentagePoints - previousGoalProgress;
-    }
-    aspectImprovement = goal.importance * goal.goalProgressPercentage;
-    newAspectPoints = aspectImprovement + aspectPreviousPoint;
+    ///Remove previous goal progress if any for a more accurate result
+    aspectCurrentPoint =
+        aspectCurrentPoint - (goal.importance * previousGoalProgress);
 
+    ///save the improvement (change in points) for the linechart
+    ///Note: does it need to be stored every time, the list becomes too big
+    aspectImprovement = goal.importance * newGoalProgress;
+
+    //calculate the new points value
+    newAspectPoints = aspectImprovement + aspectCurrentPoint;
+
+    //only save the current value if it's within range
     if (newAspectPoints <= 100) {
-      IsarService()
-          .updateAspectPercentage(aspect.id, newAspectPoints, newAspectPoints);
+      IsarService().updateAspectPercentage(aspect.id, newAspectPoints);
     }
   }
 }
@@ -128,8 +128,7 @@ class _initializeAspectsState extends State<initializeAspects> {
 
 //////////////////////////////// fetch aspects from local storage then///////////////////////
 class getAllAspects extends StatefulWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  final page;
+  final String page;
   const getAllAspects({super.key, required this.page});
   @override
   State<getAllAspects> createState() => _getAllAspectsState();

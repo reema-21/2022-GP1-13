@@ -108,7 +108,7 @@ const GoalSchema = CollectionSchema(
   getId: _goalGetId,
   getLinks: _goalGetLinks,
   attach: _goalAttach,
-  version: '3.0.2',
+  version: '3.0.5',
 );
 
 int _goalEstimateSize(

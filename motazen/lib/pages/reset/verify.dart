@@ -41,7 +41,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
   //=====================timer
   int _counter = 60;
   String sentOTP = '';
-  // late Timer _timer;
   late Timer _timer;
   void _startTimer() {
     _counter = 60;
@@ -151,9 +150,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   //==this button a verify otp function
                   if (otpformkey.currentState!.validate()) {
                     verifyEmail();
-                  } else {
-                    // Fluttertoast.showToast(msg: "Invalid OTP.");
-                  }
+                  } else {}
                 },
                 child: const PrimaryButton(
                   buttonText: 'تأكيد',
@@ -242,31 +239,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
     }
   }
 
-  // void sendOtp() async {
-  //   if (widget.email.isNotEmpty) {
-  //     var res =
-  //         await emailAuth.sendOtp(recipientMail: widget.email, otpLength: 6);
-  //     if (res) {
-  //       AllDialogues.hideloading();
-  //       Fluttertoast.showToast(
-  //           msg: "تم إرسال الرمز عبر بريدك الإلكتروني الخاص",
-  //           toastLength: Toast.LENGTH_LONG);
-  //       _startTimer();
-  //     } else {
-  //       setState(() {
-  //         _counter = 00;
-  //       });
-  //       _timer.cancel();
-  //       AllDialogues.hideloading();
-  //       Fluttertoast.showToast(msg: "حدث خطأ");
-  //     }
-  //   } else {
-  //     AllDialogues.hideloading();
-  //     Fluttertoast.showToast(
-  //         msg: "هذا البريد الإلكتروني غير مسجل في تطبيق متزن");
-  //   }
-  // }
-
 //====verify otp=======
 //this function  verify the users email from singup form.
   void verifyEmail() async {
@@ -299,7 +271,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
       await saveSignUpFormData(widget.first_name, widget.user_name,
           widget.email, widget.pass, userCredential.user!.uid);
       Fluttertoast.showToast(msg: "تم التحقق من بريدك الإلكتروني");
-      // await FirebaseAuth.instance.signOut();
       AllDialogues.hideloading();
       Get.to(() => const initializeAspects());
     } on FirebaseAuthException catch (e) {

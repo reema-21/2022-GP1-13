@@ -59,30 +59,6 @@ class _CreateCommunityState extends State<CreateCommunity> {
   // Initial Selected Value
   String aspect = 'Finance';
 
-  // List<Community> listOfUsers = [
-  //   'user1',
-  //   'user2',
-  //   'user3',
-  //   'user4',
-  //   'user5',
-  //   'user6',
-  //   'user7',
-  //   'user8',
-  //   'user9',
-  //   'user10'
-  // ];
-
-  // List of items in our dropdown menu
-  // var items = [
-  //   'Finance',
-  //   'Family',
-  //   'Fun',
-  //   'Career',
-  //   'Health',
-  //   'Enviroment',
-  //   'Relationships',
-  //   'Pesonal Growth',
-  // ];
   @override
   void dispose() {
     communityNameController.dispose();
@@ -159,7 +135,6 @@ class _CreateCommunityState extends State<CreateCommunity> {
                     ),
                     isPrivateWidget(context),
 
-                    // inviteFriendsWidget(context),
                     SizedBox(
                       height: screenHeight(context) * 0.01,
                     ),
@@ -257,50 +232,6 @@ class _CreateCommunityState extends State<CreateCommunity> {
                       ]),
                     )),
 
-                    // Padding(
-                    //   padding: const EdgeInsets.only(top: 12, bottom: 5),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.start,
-                    //     children: [
-                    //       txt(txt: "المدة", fontSize: 16),
-                    //     ],
-                    //   ),
-                    // ),
-                    // durationWidget(context),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(top: 12, bottom: 8),
-                    //   child: Row(
-                    //     textDirection: TextDirection.rtl,
-                    //     children: [
-                    //       txt(txt: "أضف مهمة:", fontSize: 16),
-                    //       SizedBox(
-                    //         width: Get.width * 0.05,
-                    //       ),
-                    //       InkWell(
-                    //         onTap: () {
-                    //           if (difference != 0) {
-                    //             Get.to(() => AddTask(
-                    //                 goalTask: const [],
-                    //                 isr: IsarService(),
-                    //                 goalDurtion: difference));
-                    //           } else {
-                    //             getWarningSnackBar('Please select duration first');
-                    //           }
-                    //         },
-                    //         child: const CircleAvatar(
-                    //           backgroundColor: kPrimaryColor,
-                    //           radius: 12,
-                    //           child: Center(
-                    //               child: Icon(
-                    //             Icons.add,
-                    //             size: 16,
-                    //             color: Colors.white,
-                    //           )),
-                    //         ),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
                     SizedBox(
                       height: screenHeight(context) * 0.05,
                     ),
@@ -329,12 +260,8 @@ class _CreateCommunityState extends State<CreateCommunity> {
                                   isPrivate: private,
                                   founderUsername:
                                       firebaseAuth.currentUser!.displayName,
-                                  // tillDate: duration,
                                   creationDate: DateTime.now(),
                                   goalName: goalName,
-                                  // listOfTasks: taskControleer.goalTask.value.isEmpty
-                                  //     ? []
-                                  //     : taskControleer.goalTask.value,
                                   id: commID);
                               communityController.listOfCreatedCommunities
                                   .insert(0, createdComm);
@@ -346,13 +273,6 @@ class _CreateCommunityState extends State<CreateCommunity> {
                               CommunityID newCom =
                                   CommunityID(userID: IsarService.getUserID);
                               newCom.CommunityId = commID;
-
-                              // iser.CreateCommunity(newCom);
-
-// CommunityID?newCommunity =
-//         await iser.findCommunity(commID);
-//         print("here is the value of the community id");
-//         print(newCommunity!.id);
                               choseGoal!.Communities.add(newCom);
                               iser.createGoal(choseGoal);
 
@@ -543,13 +463,13 @@ class _CreateCommunityState extends State<CreateCommunity> {
 
             case "صحتي":
               aspectnameInEnglish = "Health and Wellbeing";
-               if (pre == aspectnameInEnglish) {
+              if (pre == aspectnameInEnglish) {
                 erase = false;
               }
               break;
             case "عائلتي وأصدقائي":
               aspectnameInEnglish = "Family and Friends";
-               if (pre == aspectnameInEnglish) {
+              if (pre == aspectnameInEnglish) {
                 erase = false;
               }
               break;
@@ -691,9 +611,6 @@ class _CreateCommunityState extends State<CreateCommunity> {
             padding: const EdgeInsets.all(8),
             child: Container(
               padding: const EdgeInsets.all(5),
-              // decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(12),
-              //     border: Border.all()),
               child: Row(
                 children: [
                   txt(

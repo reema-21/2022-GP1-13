@@ -93,7 +93,7 @@ const AspectSchema = CollectionSchema(
   getId: _aspectGetId,
   getLinks: _aspectGetLinks,
   attach: _aspectAttach,
-  version: '3.0.2',
+  version: '3.0.5',
 );
 
 int _aspectEstimateSize(

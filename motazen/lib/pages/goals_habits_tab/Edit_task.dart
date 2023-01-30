@@ -107,7 +107,6 @@ class _EditTaskState extends State<EditTask> {
     //you migh need to link it to the goal .
 
     List<LocalTask> currentDependy = task!.TaskDependency.toList();
-// task!.TaskDependency.clear();
     currentDependy = task!.TaskDependency.toList();
     if (freq.selectedTasks.value.isEmpty) {
       for (var i in currentDependy) {
@@ -140,7 +139,6 @@ class _EditTaskState extends State<EditTask> {
 
         y = await widget.isr.findSepecificTask(name);
         task!.TaskDependency.add(y!); // to link task and it depends tasks ;
-        // widget.isr.saveTask(y);// to link
       });
     }
 
@@ -162,7 +160,6 @@ class _EditTaskState extends State<EditTask> {
 
       y = await widget.isr.findSepecificTask(name);
       newTask.TaskDependency.add(y!); // to link task and it depends tasks ;
-      // widget.isr.saveTask(y);// to link
     });
 
     List<LocalTask> t = newTask.TaskDependency.toList();
@@ -308,25 +305,11 @@ class _EditTaskState extends State<EditTask> {
                                         case "أيام":
                                           taskduration = freq
                                               .goalTask.value[index].duration;
-                                          //  print("here is the info");
-                                          //  print(currentTaskduraions);
-                                          //  print(selectedtype);
-                                          //  print(totalDurtion);
-                                          //  print(taskduration);
-                                          //  print ("end of the info ");
-
                                           break;
                                         case "أسابيع":
                                           taskduration = freq.goalTask
                                                   .value[index].duration ~/
                                               7;
-                                          //  print("here is the info");
-                                          //                                        print(currentTaskduraions);
-                                          //                                        print(selectedtype);
-                                          //                                        print(totalDurtion);
-                                          //                                        print(taskduration);
-                                          //                                        print ("end of the info ");
-
                                           break;
                                         case "أشهر":
                                           taskduration = freq.goalTask
@@ -367,21 +350,7 @@ class _EditTaskState extends State<EditTask> {
                                             i++) {
                                           freq.selectedTasks.value
                                               .add(dependency[i].name);
-
-                                          // for(var i in freq.allTaskForDepency.value){
-                                          //   if(i.name == freq.inputTaskName.value.text){
-                                          //     i.TaskDependency.clear() ;
-                                          //     for(var j in freq.selectedTasks.value){
-                                          //       i.TaskDependency.add(j);
-                                          //     }
-                                          //     print("here i am printing the value of the task depency after editing");
-                                          //     print(i.TaskDependency);
-                                          //     break ;
-                                          //   }
-                                          // }
                                         }
-                                        //   freq.goalTask.value
-                                        // freq.TasksMenue.value = freq.goalTask.value.removeAt(index) ;
                                       });
                                       showDialog(
                                           barrierDismissible: true,
@@ -434,9 +403,6 @@ class _EditTaskState extends State<EditTask> {
                                                         if (value == null ||
                                                             value.isEmpty) {
                                                           return "من فضلك ادخل اسم المهمة";
-                                                          // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
-                                                          //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
-                                                          // }
                                                         } else if (Repeated) {
                                                           return "يوجد مهمة بنفس الاسم";
                                                         } else {
@@ -641,10 +607,6 @@ class _EditTaskState extends State<EditTask> {
                                                       ],
                                                     ),
                                                     DropDownMultiSelect(
-                                                      // icon: const Icon(
-                                                      //   Icons.arrow_drop_down_circle,
-                                                      //   color: Color(0xFF66BF77),
-                                                      // ),
                                                       options:
                                                           freq.TasksMenue.value,
                                                       //need to be righted
@@ -770,11 +732,6 @@ class _EditTaskState extends State<EditTask> {
                                                                           freq.EditedTasksInEditing
                                                                               .value
                                                                               .add(freq.goalTask.value[index]);
-                                                                          // print("here i will try to see why it not working");
-                                                                          // print(freq.goalTask.value[index].name);
-                                                                          // print(freq.goalTask.value[index].duration);
-                                                                          // print(freq.goalTask.value[index].TaskDependency);
-
                                                                           freq.TaskDuration.value =
                                                                               0;
 
@@ -788,7 +745,6 @@ class _EditTaskState extends State<EditTask> {
 
                                                                           freq.currentTaskDuration.value =
                                                                               0;
-                                                                          // freq.selectedTasks.value.clear();
 
                                                                           freq.setvalue(
                                                                               durationName[0]);
@@ -956,9 +912,6 @@ class _EditTaskState extends State<EditTask> {
                               }
                               if (value == null || value.isEmpty) {
                                 return "من فضلك ادخل اسم المهمة";
-                                // else if (!RegExp(r'^[ء-ي]+$').hasMatch(value)) {
-                                //   return "    ا سم الهدف يحب ان يحتوي على حروف فقط";
-                                // }
                               } else if (Repeated) {
                                 return "يوجد مهمة بنفس الاسم";
                               } else {
@@ -1127,7 +1080,8 @@ class _EditTaskState extends State<EditTask> {
                                     ? () {
                                         if (formKey.currentState!.validate()) {
                                           setState(() {
-                                            LocalTask newTak = LocalTask(userID: IsarService.getUserID);
+                                            LocalTask newTak = LocalTask(
+                                                userID: IsarService.getUserID);
                                             newTak.name =
                                                 freq.inputTaskName.value.text;
                                             String durationDescribtion = "";
@@ -1169,10 +1123,6 @@ class _EditTaskState extends State<EditTask> {
                                             }
                                             AddTheEnterdTask(newTak,
                                                 freq.selectedTasks.value);
-                                            // freq.TasksMenue.value.add(freq
-                                            //     .inputTaskName
-                                            //     .value
-                                            //     .text); //ad the enterd to the tasks to the dependncy tasks .
                                             setState(() {
                                               x = freq.addTask(
                                                   freq.inputTaskName.value.text,

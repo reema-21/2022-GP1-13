@@ -156,8 +156,7 @@ class _AddHabitState extends State<HabitDetails> {
         ),
         actions: [
           IconButton(
-              // ignore: prefer_const_constructors
-              icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
               onPressed: () async {
                 final action = await AlertDialogs.yesCancelDialog(
                     context,
@@ -235,65 +234,7 @@ class _AddHabitState extends State<HabitDetails> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-              )
-              // DropdownButtonFormField(
-              //   value: isSelected,
-              //   items: aspectList.selectedArabic
-              //       .map((e) => DropdownMenuItem(
-              //             value: e,
-              //             child: Text(e),
-              //           ))
-              //       .toList(),
-              //   onChanged: (val) {
-              //     setState(() {
-              //       isSelected = val as String;
-              //       switch (isSelected) {
-              //         case "أموالي":
-              //           aspectnameInEnglish = "money and finances";
-              //           break;
-              //         case "متعتي":
-              //           aspectnameInEnglish = "Fun and Recreation";
-              //           break;
-              //         case "مهنتي":
-              //           aspectnameInEnglish = "career";
-              //           break;
-              //         case "علاقاتي":
-              //           aspectnameInEnglish = "Significant Other";
-              //           break;
-              //         case "بيئتي":
-              //           aspectnameInEnglish = "Physical Environment";
-              //           break;
-              //         case "ذاتي":
-              //           aspectnameInEnglish = "Personal Growth";
-              //           break;
-
-              //         case "صحتي":
-              //           aspectnameInEnglish = "Health and Wellbeing";
-              //           break;
-              //         case "عائلتي وأصدقائي":
-              //           aspectnameInEnglish = "Family and Friends";
-              //           break;
-              //       }
-              //     });
-              //   },
-              //   icon: const Icon(
-              //     Icons.arrow_drop_down_circle,
-              //     color: Color(0xFF66BF77),
-              //   ),
-              //   validator: (value) => value == null
-              //       ? 'من فضلك اختر جانب الحياة المناسب للعادة'
-              //       : null,
-              //   decoration: const InputDecoration(
-              //     labelText: "جوانب الحياة ",
-              //     prefixIcon: Icon(
-              //       Icons.pie_chart,
-              //       color: Color(0xFF66BF77),
-              //     ),
-              //     border: UnderlineInputBorder(),
-              //   ),
-              // ),
-
-              ,
+              ),
               const SizedBox(
                 height: 25,
               ),

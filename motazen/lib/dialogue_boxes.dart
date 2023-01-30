@@ -48,7 +48,6 @@ class AllDialogues {
       {String title = "!حدث خطأ",
       String discription = "حدث خطأ أثناء إدخال البيانات",
       String buttonText = "حسنًا",
-      // String path = "assets/errorimages/error.png",
       double size = 60}) {
     Get.dialog(
       Dialog(
@@ -63,8 +62,6 @@ class AllDialogues {
                 SizedBox(
                   width: size,
                   height: size,
-                  // decoration: BoxDecoration(
-                  //     image: DecorationImage(image: AssetImage(path))
                   child: const Icon(Icons.error),
                 ),
                 const SizedBox(

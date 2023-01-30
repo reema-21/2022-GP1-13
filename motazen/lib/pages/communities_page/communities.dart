@@ -132,50 +132,13 @@ class _CommunitiesState extends State<Communities> {
       child: StatefulBuilder(builder: (context, setState) {
         return Column(
           children: [
-            // SizedBox(
-            //   height: screenHeight(context) * 0.025,
-            // ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //     // InkWell(
-            //     //   onTap: () {
-            //     //     // setState(() {
-            //     //     //   createdCommunitiesSelected = true;
-            //     //     //   joinedCommunitiesSelected = false;
-            //     //     // });
-            //     //   },
-            //     //   child: greenTextContainer(context,
-            //     //       text: 'مجتمعات بدأتها',
-            //     //       isSelected: createdCommunitiesSelected),
-            //     // ),
-            //     // InkWell(
-            //     //   onTap: () {
-            //     //     setState(() {
-            //     //       createdCommunitiesSelected = false;
-            //     //       joinedCommunitiesSelected = true;
-            //     //     });
-            //     //   },
-            //     //   child: greenTextContainer(context,
-            //     //       text: 'مجتمعات انضممت لها',
-            //     //       isSelected: joinedCommunitiesSelected),
-            //     // ),
-            //   ],
-            // ),
             SizedBox(
               height: screenHeight(context) * 0.01,
             ),
-            // createdCommunitiesSelected
-            //     ?
-
             CommunityTile(
                 communityController.listOfCreatedCommunities.value +
                     communityController.listOfJoinedCommunities.value,
                 firebaseAuth.currentUser!.displayName)
-            //     :
-
-            // CommunityTile(communityController.listOfJoinedCommunities.value,
-            //     firebaseAuth.currentUser!.displayName)
           ],
         );
       }),
@@ -184,7 +147,8 @@ class _CommunitiesState extends State<Communities> {
 
   Expanded publicCommuntiesGrid(BuildContext context) {
     var aspectList = Provider.of<WheelData>(context);
-    aspectList.selectedArabic.forEach((element) {});
+    aspectList.selectedArabic
+        .forEach((element) {}); //what's this code used for??
     return Expanded(
         child: Column(
       children: [
@@ -259,20 +223,6 @@ class _CommunitiesState extends State<Communities> {
                                 0) &&
                         aspectList.selectedArabic
                             .contains(community['aspect'])) {
-                      // List<Task> listOfTasks = [];
-                      // for (var task in community['listOfTasks']) {
-                      //   listOfTasks.add(Task(
-                      //     TaskDependency: task['TaskDependency'],
-                      //     amountCompleted: task['amountCompleted'],
-                      //     duration: task['duration'],
-                      //     durationDescribtion: task['durationDescribtion'],
-                      //     // goal: task['goal'],
-                      //     // id: task['id'],
-                      //     name: task['name'],
-                      //     taskCompletionPercentage:
-                      //         task['taskCompletionPercentage'],
-                      //   ));
-                      // }
                       publicCommunities.add(Community(
                           progressList: community['progress_list'],
                           aspect: community['aspect'],
@@ -281,8 +231,6 @@ class _CommunitiesState extends State<Communities> {
                           creationDate: community['creationDate'].toDate(),
                           goalName: community['goalName'],
                           isPrivate: community['isPrivate'],
-                          // listOfTasks: listOfTasks,
-                          // tillDate: community['tillDate'].toDate(),
                           id: community['_id']));
                     }
                   }
@@ -315,21 +263,8 @@ class _CommunitiesState extends State<Communities> {
                       }
                     }
                   }
-                  // publicCommunities = TempList;
                   return publicCommunities.isNotEmpty
-                      ?
-                      //  GridView.builder(
-                      // itemCount: publicCommunities.length,
-                      // shrinkWrap: true,
-                      // padding: const EdgeInsets.all(20),
-                      // gridDelegate:
-                      //     SliverGridDelegateWithFixedCrossAxisCount(
-                      //   crossAxisCount: 2,
-                      //   childAspectRatio: (1 / 1.3),
-                      //   crossAxisSpacing: screenWidth(context) * 0.05,
-                      //   mainAxisSpacing: screenHeight(context) * 0.03,
-                      // ),
-                      ListView.builder(
+                      ? ListView.builder(
                           shrinkWrap: true,
                           itemCount: publicCommunities.length,
                           itemBuilder: (context, index) {
@@ -418,51 +353,6 @@ class _CommunitiesState extends State<Communities> {
                                   ],
                                 ),
                               ),
-
-                              // Column(
-                              //   children: [
-                              //     Expanded(
-                              //       child: Container(
-                              //         decoration: BoxDecoration(
-                              //           boxShadow: [
-                              //             BoxShadow(
-                              //               color: Colors.grey.withOpacity(0.5),
-                              //               spreadRadius: 0,
-                              //               blurRadius: 5,
-                              //               offset: const Offset(0,
-                              //                   5), // changes position of shadow
-                              //             ),
-                              //           ],
-                              //           borderRadius:
-                              //               BorderRadius.circular(4.0),
-                              //           color: const Color(0xFFEAEAEF),
-                              //           border: Border.all(
-                              //             width: 2.4,
-                              //             color: const Color(0xFFD4D4DE),
-                              //           ),
-                              //           image: const DecorationImage(
-                              //             image: NetworkImage(
-                              //               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcnTCrjKmRCJDwebeZdr5iVQ_9QFHwtLEJsQ&usqp=CAU',
-                              //             ),
-                              //             fit: BoxFit.fill,
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     SizedBox(
-                              //       height: screenHeight(context) * 0.02,
-                              //     ),
-                              //     txt(
-                              //       txt: publicCommunities[index]
-                              //           .communityName
-                              //           .toString(),
-                              //       fontColor: const Color(0xFF7CB1D1),
-                              //       letterSpacing: 0.0015,
-                              //       fontWeight: FontWeight.bold,
-                              //       fontSize: 14,
-                              //     )
-                              //   ],
-                              // ),
                             );
                           },
                         )
@@ -554,82 +444,8 @@ Widget CommunityTile(final community, final currentUserFounderName) {
           );
           Color aspectColor =
               Color(aspectList.selected[selsectAspectIndex].color);
-          //switch to get the icon .
-          //      switch (CommunityAspect) {
-          //   //Must include all the aspect characters and specify an icon for that
-          //   case "Health and Wellbeing":
-          //     {
-          //       // statements;
-          //       aspectIcon = Icon(Icons.spa);
-          //       aspectColor= Color(0xFFffd400);
-          //     }
-          //     break;
-
-          //   case "career":
-          //     {
-          //       //statements;
-          //       aspectIcon=Icon(Icons.work);
-          //       aspectColor=Color(0xff0065A3);
-          //     }
-          //     break;
-          //   case "Family and Friends":
-          //     {
-          //       //statements;
-          //       aspectIcon=Icon(Icons.person);
-          //       aspectColor=Color(0xFFff9100);
-          //     }
-          //     break;
-
-          //   case "Significant Other":
-          //     {
-          //       //statements;
-          //       aspectIcon =Icon(
-          //         Icons.favorite,
-          //        );
-          //        aspectColor= Color(0xffff4949);
-
-          //     }
-          //     break;
-          //   case "Physical Environment":
-          //     {
-          //       //statements;
-          //      aspectIcon=Icon(
-          //         Icons.home,
-          //       );
-          //       aspectColor=Color(0xFF9E19F0);
-          //     }
-          //     break;
-          //   case "money and finances":
-          //     {
-          //       //statements;
-          //      aspectIcon= Icon(
-          //         Icons.attach_money,
-          //       );
-          //       aspectColor=Color(0xff54e360);
-          //     }
-          //     break;
-          //   case "Personal Growth":
-          //     {
-          //       //statements;
-          //       aspectIcon= Icon(
-          //         Icons.psychology,
-          //       );
-          //       aspectColor= Color(0xFF2CDDCB);
-          //     }
-          //     break;
-          //   case "Fun and Recreation":
-          //     {
-          //       //statements;
-          //       aspectIcon= Icon(
-          //         Icons.games,
-          //       );
-          //       aspectColor = Color(0xff008adf);
-          //     }
-          //     break;
-          // }
 
           //switch to get the colors .
-
           bool isAdmin =
               community[index].founderUsername == currentUserFounderName;
           return GestureDetector(

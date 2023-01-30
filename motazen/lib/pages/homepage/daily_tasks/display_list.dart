@@ -180,12 +180,12 @@ class _TodoItemTileState extends State<_TodoItemTile> {
         //completed = true, then we need to decrement
         widget.item.completed = false;
         CalculateProgress().updateAmountCompleted(widget.item.id,
-            widget.item.itemGoal!, 'Decrement', widget.item.type);
+            widget.item.itemGoal, 'Decrement', widget.item.type);
       } else {
         //completed = false, then we need to increment
         widget.item.completed = true;
         CalculateProgress().updateAmountCompleted(widget.item.id,
-            widget.item.itemGoal!, 'Increment', widget.item.type);
+            widget.item.itemGoal, 'Increment', widget.item.type);
       }
     });
   }

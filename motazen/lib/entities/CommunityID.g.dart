@@ -39,7 +39,7 @@ const CommunityIDSchema = CollectionSchema(
   getId: _communityIDGetId,
   getLinks: _communityIDGetLinks,
   attach: _communityIDAttach,
-  version: '3.0.2',
+  version: '3.0.5',
 );
 
 int _communityIDEstimateSize(
