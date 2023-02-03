@@ -8,7 +8,6 @@ class CalculateProgress {
   Future<void> updateAmountCompleted(
       int taskId, int? goalId, String operation, String type) async {
     String methodToBeUsed = '$operation $type';
-    print(methodToBeUsed);
 
     switch (methodToBeUsed) {
       case 'Increment Task':
@@ -26,7 +25,6 @@ class CalculateProgress {
         await IsarService().undoCompleteForTodayHabit(taskId);
         break;
       default:
-        print('Error: the method does not exist');
     }
   }
 

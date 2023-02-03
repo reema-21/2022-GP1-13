@@ -69,7 +69,8 @@ class AllDialogues {
                 ),
                 Text(
                   title,
-                  style: Get.textTheme.headline6,
+                  style:
+                      Get.textTheme.headline6, //Note: change depricated element
                 ),
                 const SizedBox(
                   height: 20.0,

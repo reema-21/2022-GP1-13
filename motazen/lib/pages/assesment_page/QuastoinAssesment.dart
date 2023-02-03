@@ -44,6 +44,7 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
   //Start of the slider Range  = the answers of the quastion //
   @override
   void initState() {
+    super.initState();
     AssessmentQuestions.currentChosenAnswer = double.parse(AssessmentQuestions
             .answers[AssessmentQuestions.activeStep]
             .substring(

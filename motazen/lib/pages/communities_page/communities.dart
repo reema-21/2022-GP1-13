@@ -147,8 +147,8 @@ class _CommunitiesState extends State<Communities> {
 
   Expanded publicCommuntiesGrid(BuildContext context) {
     var aspectList = Provider.of<WheelData>(context);
-    aspectList.selectedArabic
-        .forEach((element) {}); //what's this code used for??
+    for (var element
+        in aspectList.selectedArabic) {} //what's this code used for??
     return Expanded(
         child: Column(
       children: [
@@ -248,8 +248,8 @@ class _CommunitiesState extends State<Communities> {
                       }
                     }
                   }
-                  //sort accroding to percentagePoints
 
+                  //sort accroding to percentagePoints
                   final sortedAspects = aspectList.allAspects;
                   sortedAspects.sort(
                     (a, b) => b.percentagePoints.compareTo(a.percentagePoints),

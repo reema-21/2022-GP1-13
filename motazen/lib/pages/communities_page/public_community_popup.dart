@@ -143,40 +143,47 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                               const SizedBox(
                                                 height: 15,
                                               ),
-                                              //------
-                                              DropdownButtonFormField(
-                                                menuMaxHeight: 200,
-                                                key: UniqueKey(),
-                                                value: null,
-                                                items: goalsName
-                                                    .map((e) =>
-                                                        DropdownMenuItem(
-                                                          value: e,
-                                                          child: Text(e.titel),
-                                                        ))
-                                                    .toList(),
-                                                onChanged: (val) {
-                                                  isSelected = val!;
-                                                },
-                                                icon: const Icon(
-                                                  Icons.arrow_drop_down_circle,
-                                                  color: Color(0xFF66BF77),
-                                                ),
-                                                validator: (value) => value ==
-                                                        null
-                                                    ? 'من فضلك اختر الهدف المناسب للمجتمع'
-                                                    : null,
-                                                decoration:
-                                                    const InputDecoration(
-                                                  labelText: "الأهدف ",
-                                                  prefixIcon: Icon(
-                                                    Icons.pie_chart,
-                                                    color: Color(0xFF66BF77),
-                                                  ),
-                                                  border:
-                                                      UnderlineInputBorder(),
-                                                ),
-                                              ),
+                                              goalsName.isEmpty
+                                                  ? const Text(
+                                                      " ليس لديك أهداف متعلقة بهذا الجانب",
+                                                    )
+                                                  : DropdownButtonFormField(
+                                                      menuMaxHeight: 200,
+                                                      key: UniqueKey(),
+                                                      value: null,
+                                                      items: goalsName
+                                                          .map((e) =>
+                                                              DropdownMenuItem(
+                                                                value: e,
+                                                                child: Text(
+                                                                    e.titel),
+                                                              ))
+                                                          .toList(),
+                                                      onChanged: (val) {
+                                                        isSelected = val!;
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons
+                                                            .arrow_drop_down_circle,
+                                                        color:
+                                                            Color(0xFF66BF77),
+                                                      ),
+                                                      validator: (value) =>
+                                                          value == null
+                                                              ? 'من فضلك اختر الهدف المناسب للمجتمع'
+                                                              : null,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        labelText: "الأهدف ",
+                                                        prefixIcon: Icon(
+                                                          Icons.pie_chart,
+                                                          color:
+                                                              Color(0xFF66BF77),
+                                                        ),
+                                                        border:
+                                                            UnderlineInputBorder(),
+                                                      ),
+                                                    ),
                                               const SizedBox(
                                                 height: 30,
                                               ),
@@ -226,7 +233,8 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                 //stateproblen
                                                 onPressed: () async {
                                                   if (formKey.currentState!
-                                                      .validate()) {
+                                                          .validate() &&
+                                                      goalsName.isNotEmpty) {
                                                     //-----------------------------------
                                                     CommunityID newCom =
                                                         CommunityID(
@@ -279,6 +287,8 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                         comm: communityController
                                                             .listOfJoinedCommunities
                                                             .last));
+                                                  } else {
+                                                    Navigator.pop(context);
                                                   }
                                                 },
 

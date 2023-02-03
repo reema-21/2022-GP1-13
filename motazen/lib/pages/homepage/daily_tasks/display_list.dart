@@ -51,7 +51,7 @@ class TodoCard extends StatelessWidget {
                     children: <Widget>[
                       _TodoTitle(title: todo.description),
                       const SizedBox(
-                        height: 8,
+                        height: 2,
                       ),
                       const Divider(),
                       _TodoItemsBox(items: todo.items),
@@ -205,6 +205,10 @@ class _TodoItemTileState extends State<_TodoItemTile> {
       title: Text(
         widget.item.description,
         style: TextStyle(
+            color: widget.item.type == 'Task' &&
+                    widget.item.dueDate!.isBefore(DateTime.now())
+                ? Colors.red
+                : Colors.black,
             decoration:
                 widget.item.completed ? TextDecoration.lineThrough : null),
       ),
