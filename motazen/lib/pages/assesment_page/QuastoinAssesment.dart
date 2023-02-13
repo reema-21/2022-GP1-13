@@ -97,7 +97,6 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
               label: AssessmentQuestions.currentChosenAnswer
                   .round()
                   .toString(), // to show the lable number
-              // ignore: dead_code
               onChanged: AssessmentQuestions
                       .AnswerdOrnot[AssessmentQuestions.activeStep]
                   ? (double value) {
@@ -151,7 +150,6 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                 style: titleText,
               ),
               Text('ادخل اجابتك بإستخدام المؤشر', style: subTitle),
-              Text('10 (ينطبق دائما) - 1 (نادراً ما ينطبق)', style: subTitle),
             ]),
         toolbarHeight: 120,
       ),
@@ -246,13 +244,23 @@ class _WheelOfLifeAssessmentPage extends State<WheelOfLifeAssessmentPage> {
                             Row(
                               textDirection: TextDirection.ltr,
                               children: [
-                                buildSlideLable(10),
+                                Column(
+                                  children: [
+                                    Text('10', style: subTitle),
+                                    Text('(ينطبق دائما)', style: subTitle)
+                                  ],
+                                ),
                                 Expanded(
                                   child: setQuestionAnswer(),
 
                                   /// it takes a widget as a child
                                 ),
-                                buildSlideLable(1),
+                                Column(
+                                  children: [
+                                    Text('1', style: subTitle),
+                                    Text('(نادراً ما ينطبق)', style: subTitle)
+                                  ],
+                                ),
                               ],
                             ),
                             //--------------------------------------here is what you tried -----------------//

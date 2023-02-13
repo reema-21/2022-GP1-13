@@ -20,6 +20,10 @@ Todo createTodoList(List<Aspect> aspectList) {
     for (var goal in aspect.goals.toList()) {
       //retrive the goal's tasks
       for (var task in goal.task.toList()) {
+        //skip completed tasks
+        if (task.taskCompletionPercentage == 1) {
+          continue;
+        }
         //initialtize the importance to 0
         double importance = 0;
 
@@ -84,7 +88,7 @@ Todo createTodoList(List<Aspect> aspectList) {
   List<Item> rankedList = Rank().calculateRank(taskItemList);
 
   //reset check value each day
-  //Note:still not tested
+  //Note:does not work properly
   if (TimeOfDay.now() == resetTime) {
     resetCheck(taskItemList);
     resetCheck(habitItemList);
@@ -92,7 +96,6 @@ Todo createTodoList(List<Aspect> aspectList) {
 
   ///Step3: visualize the list
   return Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: rankedList);
-  //create another todo
 }
 
 // empty todo
@@ -101,6 +104,7 @@ const emptyTasks = Todo(id: 'todo-tag-1', description: 'مهام اليوم', it
 //reset check value each day
 void resetCheck(List<Item> itemList) {
   for (var item in itemList) {
+    print('inside reset');
     IsarService().reserCheck(item.id);
   }
 }

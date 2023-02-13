@@ -26,7 +26,7 @@ dependencies:
   google_nav_bar: ^5.0.6
   line_icons: ^2.0.1
   firebase_auth: ^4.2.5
-  google_fonts: ^3.0.1
+  google_fonts: ^4.0.3
   searchfield: ^0.7.2
   textfield_search: ^0.10.0
   flutter_multi_select_items: ^0.4.2
@@ -61,6 +61,15 @@ dev_dependencies:
   isar_generator: ^3.0.2
   build_runner: ^2.1.11
   flutter_lints: ^2.0.0
+  flutter_native_splash: ^2.2.17
+
+flutter_native_splash:
+ image: assets/images/Motazen_splash.png
+ color: "#000000"
+ android: true
+ android_gravity: fill
+ ios: true
+ fill: true  
 
 flutter:
   generate: true

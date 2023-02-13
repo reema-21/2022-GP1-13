@@ -97,205 +97,182 @@ class _CreateCommunityState extends State<CreateCommunity> {
         backgroundColor: kWhiteColor,
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: //Wrap it with form
                 Form(
               key: formKey,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      textDirection: TextDirection.rtl,
-                      children: [
-                        const Spacer(),
-                        txt(
-                          txt: 'انشاء مجتمع',
-                          fontSize: 32,
-                          fontColor: kPrimaryColor,
-                        ),
-                        const Spacer(
-                          flex: 2,
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: screenHeight(context) * 0.03,
-                    ),
-                    textformField(
-                        hint: "اسم المجتمع",
-                        controller: communityNameController),
+              child:
+                  Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Text(
+                  'انشاء مجتمع',
+                  style: titleText,
+                ),
+                SizedBox(
+                  height: screenHeight(context) * 0.03,
+                ),
+                textformField(
+                    hint: "اسم المجتمع", controller: communityNameController),
+                const Padding(
+                    padding: EdgeInsets.only(top: 8, bottom: 8),
+                    child: Text(
+                      'نوع المجتمع',
+                      style: TextStyle(fontSize: 16),
+                    )),
+                isPrivateWidget(context),
+
+                SizedBox(
+                  height: screenHeight(context) * 0.01,
+                ),
+                // take the new ones
+                const Padding(
+                  padding: EdgeInsets.only(top: 8, bottom: 8),
+                  child: Text(
+                    'جانب الحياة',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                aspectWidget(context),
+                SizedBox(
+                  height: screenHeight(context) * 0.01,
+                ),
+                SingleChildScrollView(
+                    child: Padding(
+                  padding: mediaQuery.viewInsets,
+                  child: Column(children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 8, bottom: 8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          txt(txt: "نوع المجتمع", fontSize: 16),
+                        children: const [
+                          Text('الهدف', style: TextStyle(fontSize: 16)),
                         ],
                       ),
                     ),
-                    isPrivateWidget(context),
-
-                    SizedBox(
-                      height: screenHeight(context) * 0.01,
-                    ),
-                    // take the new ones
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12, bottom: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          txt(txt: "جانب الحياة", fontSize: 16),
-                        ],
-                      ),
-                    ),
-                    aspectWidget(context),
-                    SizedBox(
-                      height: screenHeight(context) * 0.01,
-                    ),
-                    SingleChildScrollView(
-                        child: Padding(
-                      padding: mediaQuery.viewInsets,
-                      child:
-                          Column(textDirection: TextDirection.rtl, children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12, bottom: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              txt(txt: " الهدف", fontSize: 16),
-                            ],
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          if (!enabled) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                duration: const Duration(milliseconds: 500),
+                                backgroundColor: Colors.yellow.shade300,
+                                content: Row(
+                                  children: const [
+                                    Icon(
+                                      Icons.error,
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                    ),
+                                    SizedBox(width: 20),
+                                    Expanded(
+                                      child: Text("اختر جانب الحياة أولا",
+                                          style:
+                                              TextStyle(color: Colors.black)),
+                                    )
+                                  ],
+                                )));
+                          }
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(
+                            color: Colors.grey,
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              if (!enabled) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        backgroundColor: Colors.yellow.shade300,
-                                        content: Row(
-                                          children: const [
-                                            Icon(
-                                              Icons.error,
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                            ),
-                                            SizedBox(width: 20),
-                                            Expanded(
-                                              child: Text(
-                                                  "اختر جانب الحياة أولا",
-                                                  style: TextStyle(
-                                                      color: Colors.black)),
-                                            )
-                                          ],
-                                        )));
-                              }
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Colors.grey,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    // shouldEnabled = true;
+                                  });
+                                },
+                                child: const Icon(
+                                  Icons.task,
+                                  color: kPrimaryColor,
+                                ),
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8),
-                                  child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        // shouldEnabled = true;
-                                      });
-                                    },
-                                    child: const Icon(
-                                      Icons.task,
-                                      color: kPrimaryColor,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ((goalName == null ||
-                                              goalNameController.text == "") &&
-                                          enabled)
-                                      ? goalWidget(context)
-                                      : chosenGoal(context),
-                                ),
-                                const SizedBox(width: 10),
-                              ],
+                            Expanded(
+                              child: ((goalName == null ||
+                                          goalNameController.text == "") &&
+                                      enabled)
+                                  ? goalWidget(context)
+                                  : chosenGoal(context),
                             ),
-                          ),
+                            const SizedBox(width: 10),
+                          ],
                         ),
-                      ]),
-                    )),
-
-                    SizedBox(
-                      height: screenHeight(context) * 0.05,
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () async {
-                            String commID =
-                                '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
-                            if (formKey.currentState!.validate()) {
-                              Goal? choseGoal =
-                                  Goal(userID: IsarService.getUserID);
-                              IsarService iser =
-                                  IsarService(); // initialize local storage
-                              choseGoal = await iser.getgoal(
-                                goalName!,
-                              ); // here iam fetching the goal information from isar to assign it to the communties
-
-                              final createdComm = Community(
-                                  progressList: [
-                                    {firebaseAuth.currentUser!.uid: 0}
-                                  ],
-                                  communityName: communityNameController.text,
-                                  aspect: isSelected,
-                                  isPrivate: private,
-                                  founderUsername:
-                                      firebaseAuth.currentUser!.displayName,
-                                  creationDate: DateTime.now(),
-                                  goalName: goalName,
-                                  id: commID);
-                              communityController.listOfCreatedCommunities
-                                  .insert(0, createdComm);
-                              communityController.update();
-                              communityController.createCommunity(
-                                invitedUsers: [],
-                                community: createdComm,
-                              );
-                              CommunityID newCom =
-                                  CommunityID(userID: IsarService.getUserID);
-                              newCom.CommunityId = commID;
-                              choseGoal!.Communities.add(newCom);
-                              iser.createGoal(choseGoal);
-
-                              Get.back();
-                              Get.to(CommunityHomePage(comm: createdComm));
-                            }
-                          },
-                          child: Container(
-                            height: screenHeight(context) * 0.05,
-                            width: screenWidth(context) * 0.4,
-                            decoration: BoxDecoration(
-                                color: kPrimaryColor,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                                child: txt(
-                                    txt: 'انشاء',
-                                    fontSize: 16,
-                                    fontColor: Colors.white)),
-                          ),
-                        )
-                      ],
-                    )
                   ]),
+                )),
+
+                SizedBox(
+                  height: screenHeight(context) * 0.05,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        String commID =
+                            '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
+                        if (formKey.currentState!.validate()) {
+                          Goal? choseGoal = Goal(userID: IsarService.getUserID);
+                          IsarService iser =
+                              IsarService(); // initialize local storage
+                          choseGoal = await iser.getgoal(
+                            goalName!,
+                          ); // here iam fetching the goal information from isar to assign it to the communties
+
+                          final createdComm = Community(
+                              progressList: [
+                                {firebaseAuth.currentUser!.uid: 0}
+                              ],
+                              communityName: communityNameController.text,
+                              aspect: isSelected,
+                              isPrivate: private,
+                              founderUsername:
+                                  firebaseAuth.currentUser!.displayName,
+                              creationDate: DateTime.now(),
+                              goalName: goalName,
+                              id: commID);
+                          communityController.listOfCreatedCommunities
+                              .insert(0, createdComm);
+                          communityController.update();
+                          communityController.createCommunity(
+                            invitedUsers: [],
+                            community: createdComm,
+                          );
+                          CommunityID newCom =
+                              CommunityID(userID: IsarService.getUserID);
+                          newCom.CommunityId = commID;
+                          choseGoal!.Communities.add(newCom);
+                          iser.createGoal(choseGoal);
+
+                          Get.back();
+                          Get.to(CommunityHomePage(comm: createdComm));
+                        }
+                      },
+                      child: Container(
+                        height: screenHeight(context) * 0.05,
+                        width: screenWidth(context) * 0.4,
+                        decoration: BoxDecoration(
+                            color: kPrimaryColor,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                            child: txt(
+                                txt: 'انشاء',
+                                fontSize: 16,
+                                fontColor: Colors.white)),
+                      ),
+                    )
+                  ],
+                )
+              ]),
             ),
           ),
         ),

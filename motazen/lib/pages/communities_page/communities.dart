@@ -54,20 +54,16 @@ class _CommunitiesState extends State<Communities> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: kWhiteColor,
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              const Spacer(
-                flex: 2,
-              ),
-              txt(
-                txt: 'مجتمعاتي',
-                fontSize: 32,
-                fontColor: kPrimaryColor,
-              ),
-              const Spacer()
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'المجتمعات',
+              style: titleText,
+            ),
           ),
           SizedBox(
             height: screenHeight(context) * 0.03,
@@ -89,7 +85,7 @@ class _CommunitiesState extends State<Communities> {
                           color: isMyCommunitySelected
                               ? kPrimaryColor
                               : kPrimaryColor.withOpacity(0.5),
-                          text: 'مجتمعات انا ضمنها'),
+                          text: 'مجتمعاتي'),
                     ),
                     SizedBox(
                       width: screenWidth(context) * 0.02,
@@ -147,8 +143,6 @@ class _CommunitiesState extends State<Communities> {
 
   Expanded publicCommuntiesGrid(BuildContext context) {
     var aspectList = Provider.of<WheelData>(context);
-    for (var element
-        in aspectList.selectedArabic) {} //what's this code used for??
     return Expanded(
         child: Column(
       children: [
@@ -168,7 +162,7 @@ class _CommunitiesState extends State<Communities> {
                     isFilterClicked = !isFilterClicked;
                   });
                 },
-                child: const Text('Filter'))
+                child: const Text('تصفية'))
           ],
         ),
         if (isFilterClicked)
@@ -193,12 +187,21 @@ class _CommunitiesState extends State<Communities> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.green),
-                      color: whichFilter[index] ? Colors.green : Colors.white,
+                      border: Border.all(
+                          color: Color(aspectList.selected[index].color)),
+                      color: whichFilter[index]
+                          ? Color(aspectList.selected[index].color)
+                              .withOpacity(0.8)
+                          : Colors.white,
                     ),
                     height: 5,
-                    child:
-                        Center(child: Text(aspectList.selectedArabic[index])),
+                    child: Center(
+                        child: Text(
+                      aspectList.selectedArabic[index],
+                      style: TextStyle(
+                          color:
+                              whichFilter[index] ? kWhiteColor : kBlackColor),
+                    )),
                   ),
                 );
               },

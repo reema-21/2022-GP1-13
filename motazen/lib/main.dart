@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:is_first_run/is_first_run.dart';
 import 'package:motazen/isar_service.dart';
@@ -12,11 +13,13 @@ import '/data/data.dart';
 import 'firebase_options.dart';
 
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding); //create splash
   Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform); // initialize the DB
   IsarService iser = IsarService(); // initialize local storage
   iser.openIsar();
+  FlutterNativeSplash.remove();
 
   /// check if the the app is in it's first run
   bool ifr = await IsFirstRun.isFirstRun();

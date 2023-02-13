@@ -32,24 +32,31 @@ class Rank {
   void calculateNT(List<Item> tasks) {
     double timeLeft;
     double maxTime;
+    double diff;
     if (tasks.isEmpty) {
       return;
     }
     for (var task in tasks) {
-      //first we need to calculate the time left for each task
-      timeLeft = (task.duration! - task.daysCompletedTask!) /
-          task.dueDate!.difference(DateTime.now()).inDays.toDouble();
+      //find how many days are left till the due date
+      if (task.dueDate!.difference(DateTime.now()).inDays.toDouble() == 0) {
+        diff = task.dueDate!.difference(DateTime.now()).inMinutes.toDouble() /
+            24 /
+            60;
+      } else {
+        diff = task.dueDate!.difference(DateTime.now()).inDays.toDouble();
+      }
+
+      //Calculate the time left for each task
+      timeLeft = (task.duration! - task.daysCompletedTask!) / diff;
       //save the time left (in the actual code we probably need to save thid data in isar
       task.timeLeft = timeLeft;
     }
 
     ///Find the task with the most time left
-    ///(Note: there are case where timeLeft = infinity)
     Item taskWithMaxT = tasks.reduce(
         (item1, item2) => item1.timeLeft > item2.timeLeft ? item1 : item2);
     //save the maximum time left
     maxTime = taskWithMaxT.timeLeft;
-
     //Next we need to normalize the data
     for (var task in tasks) {
       task.NT = task.timeLeft / maxTime;
@@ -78,14 +85,14 @@ class Rank {
       if (task.dueDate!.isBefore(now)) {
         task.rank = 1;
       } else {
-        task.rank = weight * task.importance! +
-            -weight * task.NT +
-            weight * task.depandancies;
+        task.rank = (weight * task.importance!) +
+            (weight * task.NT) +
+            (weight * task.depandancies);
       }
     }
 
     ///Note: this is a temporary solution, ideally
-    ///I would only delete the removed item
+    ///I would only delete the removed item only
     graph.clear();
     //sort list
     return tasks.sorted(

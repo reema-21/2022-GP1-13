@@ -34,13 +34,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
+    return Container(
+      constraints: const BoxConstraints.expand(),
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/Notification_page.png'),
+              fit: BoxFit.cover)),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         drawer: const SideBar(),
         appBar: AppBar(
-          backgroundColor: kWhiteColor,
+          backgroundColor: kWhiteColor.withOpacity(0),
           iconTheme: const IconThemeData(color: Colors.black),
           elevation: 0.0,
           actions: <Widget>[
@@ -58,36 +62,24 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 tooltip: 'View Requests'),
           ],
         ),
-        backgroundColor: kWhiteColor,
+        backgroundColor: kWhiteColor.withOpacity(0),
         body: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(
-              children: [
-                const Spacer(),
-                txt(
-                  txt: 'إشعاراتي',
-                  fontSize: 32,
-                  fontColor: kPrimaryColor,
-                ),
-                const Spacer(
-                  flex: 2,
-                )
-              ],
+            Text(
+              'إشعاراتي',
+              style: titleText,
             ),
             SizedBox(
               height: screenHeight(context) * 0.03,
             ),
             Obx(() {
               return communityController.listOfNotifications.isEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.all(30.0),
+                  ? const Padding(
+                      padding: EdgeInsets.all(30.0),
                       child: Center(
-                        child: txt(
-                            txt: 'لا يوجد اشعارات',
-                            fontSize: 18,
-                            fontColor: kPrimaryColor),
+                        child: Text('لا يوجد اشعارات'),
                       ))
                   : Expanded(
                       child: StreamBuilder(
