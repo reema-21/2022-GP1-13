@@ -77,7 +77,7 @@ class _MynavBar extends State<navBar> {
                   onTap: (() {
                     Get.to(const NotificationsScreen());
                   }),
-                  child: Container(
+                  child: SizedBox(
                     width: 72,
                     child: Stack(
                       alignment: Alignment.center,

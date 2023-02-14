@@ -1,15 +1,16 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
-
+//new
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:motazen/models/post_model.dart';
 import 'package:motazen/pages/communities_page/view_photo.dart';
 import 'package:motazen/theme.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 //ours
 class PostDesign extends StatefulWidget {
+  final CommunityId;
   final PostModel post;
   final dbpathToPostChnl;
   final commentCallback;
@@ -17,6 +18,7 @@ class PostDesign extends StatefulWidget {
   final repliedPostScrollCallback;
   const PostDesign(
       {Key? key,
+      required this.CommunityId,
       required this.post,
       required this.dbpathToPostChnl,
       this.commentCallback,
@@ -29,29 +31,98 @@ class PostDesign extends StatefulWidget {
 }
 
 class _PostDesignState extends State<PostDesign> {
+  late Future<dynamic> dbFuture;
+  Future<dynamic> getData() async {
+    //here i just check if the community data is null meaning it is a private community
+    dynamic CommunityDoc;
+    CommunityDoc = await firestore
+        .collection('public_communities')
+        .doc(widget.CommunityId)
+        .get();
+    if (CommunityDoc.data() == null) {
+      CommunityDoc = await firestore
+          .collection('private_communities')
+          .doc(widget.CommunityId)
+          .get();
+    }
+    final CuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+
+    return CuurentCommunityDoc;
+  }
+
+  @override
+  initState() {
+    dbFuture = getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final authid = widget.post.authorId;
-    final cuser = FirebaseAuth.instance.currentUser!.uid;
-    if (authid == cuser) {
-      return OwnMessageDesign(
-        pst: widget.post,
-        postLink: widget.dbpathToPostChnl,
-        commentCallback: widget.commentCallback,
-        likeCallback: widget.likeCallback,
-        authID: cuser,
-        repliedPostScrollCallback: widget.repliedPostScrollCallback,
-      );
-    } else {
-      return OtherMessageDesign(
-        pst: widget.post,
-        postLink: widget.dbpathToPostChnl,
-        commentCallback: widget.commentCallback,
-        likeCallback: widget.likeCallback,
-        authID: cuser,
-        repliedPostScrollCallback: widget.repliedPostScrollCallback,
-      );
-    }
+    return FutureBuilder(
+        future: dbFuture,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Container(); // your widget while loading //! here we must use any indicator
+          }
+
+          if (snapshot.hasData) {
+            final data = snapshot.data; //your Map<String,dynamic>
+            List Communitiess = [];
+            Communitiess = data['progress_list'];
+            late double authProgress;
+            for (int i = 0; i < Communitiess.length; i++) {
+              if (Communitiess[i][widget.post.authorId] != null) {
+                authProgress = Communitiess[i][widget.post.authorId]
+                    .toDouble(); // the casting is a must cause if it is zero it will reutrn int
+                break;
+              }
+            }
+            final authid = widget.post.authorId;
+            final cuser = FirebaseAuth.instance.currentUser!.uid;
+            if (authid == cuser) {
+              return OwnMessageDesign(
+                pst: widget.post,
+                postLink: widget.dbpathToPostChnl,
+                commentCallback: widget.commentCallback,
+                likeCallback: widget.likeCallback,
+                authID: cuser,
+                repliedPostScrollCallback: widget.repliedPostScrollCallback,
+              );
+            } else {
+              return OtherMessageDesign(
+                  pst: widget.post,
+                  postLink: widget.dbpathToPostChnl,
+                  commentCallback: widget.commentCallback,
+                  likeCallback: widget.likeCallback,
+                  authID: cuser,
+                  repliedPostScrollCallback: widget.repliedPostScrollCallback,
+                  progressValue: authProgress);
+            }
+          } else {
+            final authid = widget.post.authorId;
+            final cuser = FirebaseAuth.instance.currentUser!.uid;
+            if (authid == cuser) {
+              return OwnMessageDesign(
+                pst: widget.post,
+                postLink: widget.dbpathToPostChnl,
+                commentCallback: widget.commentCallback,
+                likeCallback: widget.likeCallback,
+                authID: cuser,
+                repliedPostScrollCallback: widget.repliedPostScrollCallback,
+              );
+            } else {
+              return OtherMessageDesign(
+                pst: widget.post,
+                postLink: widget.dbpathToPostChnl,
+                commentCallback: widget.commentCallback,
+                likeCallback: widget.likeCallback,
+                authID: cuser,
+                repliedPostScrollCallback: widget.repliedPostScrollCallback,
+                progressValue: 0.0,
+              );
+            }
+          }
+        });
   }
 }
 
@@ -134,6 +205,14 @@ class OwnMessageDesign extends StatelessWidget {
                                 topLeft: Radius.circular(15),
                                 topRight: Radius.circular(15),
                               ),
+                              // boxShadow: [
+                              //   // BoxShadow(
+                              //   //   color: Colors.grey.withOpacity(0.5),
+                              //   //   spreadRadius: 5,
+                              //   //   blurRadius: 7,
+                              //   //   offset: Offset(0, 3), // changes position of shadow
+                              //   // ),
+                              // ],
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -204,10 +283,64 @@ class OwnMessageDesign extends StatelessWidget {
                                   topLeft: Radius.circular(20),
                                   topRight: Radius.circular(20),
                                   bottomRight: Radius.circular(20)),
+                              // boxShadow: [
+                              //   BoxShadow(
+                              //     color: Colors.grey.withOpacity(0.5),
+                              //     spreadRadius: 5,
+                              //     blurRadius: 7,
+                              //     offset: Offset(0, 3), // changes position of shadow
+                              //   ),
+                              // ],
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                //   crossAxisAlignment: CrossAxisAlignment.center,
+                                // children: [
+                                // Row(
+                                //   children: const [
+                                //     // Text(
+                                //     //   '${pst.author}',
+                                //     //   style: const TextStyle(
+                                //     //       color: Color.fromARGB(255, 5, 5, 5),
+                                //     //       fontSize: 18,
+                                //     //       fontWeight: FontWeight.bold),
+                                //     // ),
+                                //     SizedBox(
+                                //       width: 9,
+                                //     ),
+
+                                //! in this space here we need a star to be displayed if the user reached amount of intercation
+
+                                // Icon(Icons.star , size: 18, color:  Colors.yellow,),
+                                //       ],
+                                //     ),
+                                //     const SizedBox(
+                                //       width: 3,
+                                //     ),
+                                //     SizedBox(
+                                //       width: MediaQuery.of(context).size.width / 2.5,
+                                //       height: 20,
+                                //       child: LinearPercentIndicator(
+                                //         curve: Curves.easeIn,
+                                //         percent:
+                                //             0.5, //! this value is the user progress in the progresslist of this community . just fetch the value
+
+                                //         lineHeight: 10,
+                                //         isRTL: true,
+                                //         progressColor: kPrimaryColor,
+                                //         backgroundColor:
+                                //             const Color.fromARGB(179, 119, 117, 117),
+                                //         barRadius: const Radius.circular(10),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // const SizedBox(
+                                //   height: 8,
+                                // ),
                                 if (pst.text != '')
                                   Text(
                                     '${pst.text}',
@@ -277,6 +410,15 @@ class OwnMessageDesign extends StatelessWidget {
                                 onTap: () {
                                   likeCallback(pst,
                                       '$postLink/${pst.time.toString()}${pst.authorId}/');
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => CommentPage(
+                                  //               minAgo: minAgo,
+                                  //               unit: unit,
+                                  //               dbPathToComment:
+                                  //                   '$postLink/${pst.time.toString()}${pst.authorId}/comment/',
+                                  //             )));
                                 },
                                 child: Icon(
                                   size: 20,
@@ -311,6 +453,7 @@ class OwnMessageDesign extends StatelessWidget {
 class OtherMessageDesign extends StatelessWidget {
   const OtherMessageDesign(
       {Key? key,
+      required this.progressValue,
       required this.commentCallback,
       required this.likeCallback,
       required this.pst,
@@ -323,6 +466,7 @@ class OtherMessageDesign extends StatelessWidget {
   final commentCallback;
   final likeCallback;
   final authID;
+  final progressValue;
   final repliedPostScrollCallback;
 
   @override
@@ -461,7 +605,7 @@ class OtherMessageDesign extends StatelessWidget {
                         textDirection: TextDirection.rtl,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 '${pst.author}',
@@ -473,19 +617,24 @@ class OtherMessageDesign extends StatelessWidget {
                               const SizedBox(
                                 width: 3,
                               ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width / 2.6,
-                                height: 10,
-                                child: LinearPercentIndicator(
-                                  curve: Curves.easeIn,
-                                  percent:
-                                      0.5, //! this value is the user progress in the progresslist of this community . just fetch the value
-                                  lineHeight: 10,
-                                  isRTL: true,
+                              Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: CircularPercentIndicator(
+                                  radius: 20,
+                                  lineWidth: 10,
+                                  circularStrokeCap: CircularStrokeCap.round,
+                                  percent: progressValue,
                                   progressColor: kPrimaryColor,
                                   backgroundColor:
-                                      const Color.fromARGB(255, 119, 117, 117),
-                                  barRadius: const Radius.circular(10),
+                                      kPrimaryColor.withOpacity(0.3),
+                                  center: Text(
+                                    '${(progressValue * 100).round().toString()}',
+                                    style: const TextStyle(
+                                      //           color: Colors.black,
+                                      fontSize: 10,
+                                      //           fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -494,13 +643,17 @@ class OtherMessageDesign extends StatelessWidget {
                             height: 8,
                           ),
                           if (pst.text != '')
-                            Text(
-                              '${pst.text}',
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.start,
+                            Row(
+                              children: [
+                                Text(
+                                  '${pst.text}',
+                                  style: TextStyle(
+                                    color: Colors.grey[800],
+                                    fontSize: 14,
+                                  ),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ],
                             ),
                           if (pst.postType == 'image')
                             GestureDetector(

@@ -1,5 +1,5 @@
 // ignore_for_file: invalid_use_of_protected_member, non_constant_identifier_names
-
+//new
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'package:motazen/controllers/community_controller.dart';
 import 'package:motazen/pages/communities_page/community_home.dart';
 import 'package:motazen/pages/communities_page/public_community_popup.dart';
 import 'package:motazen/theme.dart';
+
 import 'package:provider/provider.dart';
 import '../../data/data.dart';
 import '../../entities/aspect.dart';

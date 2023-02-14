@@ -104,7 +104,6 @@ const emptyTasks = Todo(id: 'todo-tag-1', description: 'مهام اليوم', it
 //reset check value each day
 void resetCheck(List<Item> itemList) {
   for (var item in itemList) {
-    print('inside reset');
     IsarService().reserCheck(item.id);
   }
 }

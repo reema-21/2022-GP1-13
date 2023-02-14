@@ -1,5 +1,5 @@
 // ignore_for_file: list_remove_unrelated_type, non_constant_identifier_names, no_leading_underscores_for_local_identifiers
-
+//new
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/community_controller.dart';
@@ -250,7 +250,69 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
 
                                                     community.progressList.add({
                                                       firebaseAuth
-                                                          .currentUser!.uid: 0
+                                                              .currentUser!.uid:
+                                                          isSelected
+                                                              .goalProgressPercentage
+                                                    });
+
+                                                    await firestore
+                                                        .collection(
+                                                            'public_communities')
+                                                        .doc(community.id)
+                                                        .set({
+                                                      'aspect':
+                                                          community.aspect,
+                                                      'communityName': community
+                                                          .communityName,
+                                                      'creationDate': community
+                                                          .creationDate,
+                                                      'progress_list': community
+                                                          .progressList,
+                                                      'founderUsername':
+                                                          community
+                                                              .founderUsername,
+                                                      'goalName':
+                                                          community.goalName,
+                                                      'isPrivate':
+                                                          community.isPrivate,
+                                                      '_id': community.id
+                                                    });
+
+                                                    dynamic userDoc;
+                                                    userDoc = await firestore
+                                                        .collection(
+                                                            'public_communities')
+                                                        .doc(community.id)
+                                                        .get();
+                                                    final userData = userDoc
+                                                        .data()! as dynamic;
+                                                    List createdCommunitiess =
+                                                        [];
+                                                    createdCommunitiess =
+                                                        userData[
+                                                            'progress_list'];
+
+                                                    await firestore
+                                                        .collection(
+                                                            'public_communities')
+                                                        .doc(community.id)
+                                                        .update({
+                                                      'aspect':
+                                                          community.aspect,
+                                                      'communityName': community
+                                                          .communityName,
+                                                      'creationDate': community
+                                                          .creationDate,
+                                                      'progress_list': userData[
+                                                          'progress_list'],
+                                                      'founderUsername':
+                                                          community
+                                                              .founderUsername,
+                                                      'goalName':
+                                                          community.goalName,
+                                                      'isPrivate':
+                                                          community.isPrivate,
+                                                      '_id': community.id
                                                     });
                                                     communityController
                                                         .listOfJoinedCommunities
@@ -292,7 +354,7 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                   }
                                                 },
 
-                                                child: const Text("انتهيت"),
+                                                child: const Text("انضمام"),
                                               )
                                             ])),
                                           ));

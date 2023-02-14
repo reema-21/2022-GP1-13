@@ -516,7 +516,7 @@ packages:
     source: hosted
     version: "0.4.2"
   flutter_native_splash:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_native_splash
       sha256: "048bd1f1dc0e5ea25899f702815934d9a9e916fe23451c320e7dd94d5e3ad933"
@@ -539,6 +539,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      sha256: "6c68e1fad129b4b807b2218ef4cf7f7f6f61c5ec8861c990dc2278d9d03cb09f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_spinbox:
     dependency: "direct main"
     description:

@@ -27,6 +27,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   @override
   initState() {
+    super.initState();
     List<Goal> NotStartedGoalList = widget.aspect.goals
         .toList()
         .where((element) => element.goalProgressPercentage == 0)

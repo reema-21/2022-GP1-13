@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, depend_on_referenced_packages, empty_catches
-
+//new
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -193,15 +193,40 @@ class CommunityController extends GetxController {
             'founderUsername': community.founderUsername,
             'goalName': community.goalName,
             'isPrivate': community.isPrivate,
+            // 'listOfTasks': community.listOfTasks!.isNotEmpty
+            //     ? community.listOfTasks!.map((e) => e.toJson()).toList()
+            //     : [],
+            // 'tillDate': community.tillDate,
+            '_id': community.id
+          });
+        } else {
+          //!here add to the private_communities collection
+          await firestore
+              .collection('private_communities')
+              .doc(community.id)
+              .set({
+            'aspect': community.aspect,
+            'communityName': community.communityName,
+            'creationDate': community.creationDate,
+            'progress_list': community.progressList,
+            'founderUsername': community.founderUsername,
+            'goalName': community.goalName,
+            'isPrivate': community.isPrivate,
+            // 'listOfTasks': community.listOfTasks!.isNotEmpty
+            //     ? community.listOfTasks!.map((e) => e.toJson()).toList()
+            //     : [],
+            // 'tillDate': community.tillDate,
             '_id': community.id
           });
         }
       });
       futureGroup.close();
-      getSuccessSnackBar('New community created successfully');
+      getSuccessSnackBar('تم انشاء المجتمع بنجاح');
+      // Get.off(() => const navBar());
     } catch (e) {
       listOfCreatedCommunities.remove(community);
-      getErrorSnackBar('Something went wrong, Please try again');
+      getErrorSnackBar('حدث خطأ ما ،عاود التسجيل مرة أخرى ');
+
       Get.off(() => const navBar(
             selectedIndex: 1,
           )); // here you  might need to change the number

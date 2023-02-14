@@ -1,5 +1,5 @@
 // ignore_for_file: file_names, camel_case_types, unused_import
-
+//new
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
@@ -227,18 +227,25 @@ class _CreateCommunityState extends State<CreateCommunity> {
                           choseGoal = await iser.getgoal(
                             goalName!,
                           ); // here iam fetching the goal information from isar to assign it to the communties
-
                           final createdComm = Community(
                               progressList: [
-                                {firebaseAuth.currentUser!.uid: 0}
+                                //!here you changes it form being a zero when start to the value of the goalProgress
+                                {
+                                  firebaseAuth.currentUser!.uid:
+                                      choseGoal!.goalProgressPercentage
+                                }
                               ],
                               communityName: communityNameController.text,
                               aspect: isSelected,
                               isPrivate: private,
                               founderUsername:
                                   firebaseAuth.currentUser!.displayName,
+                              // tillDate: duration,
                               creationDate: DateTime.now(),
                               goalName: goalName,
+                              // listOfTasks: taskControleer.goalTask.value.isEmpty
+                              //     ? []
+                              //     : taskControleer.goalTask.value,
                               id: commID);
                           communityController.listOfCreatedCommunities
                               .insert(0, createdComm);
@@ -250,7 +257,14 @@ class _CreateCommunityState extends State<CreateCommunity> {
                           CommunityID newCom =
                               CommunityID(userID: IsarService.getUserID);
                           newCom.CommunityId = commID;
-                          choseGoal!.Communities.add(newCom);
+
+                          // iser.CreateCommunity(newCom);
+
+// CommunityID?newCommunity =
+//         await iser.findCommunity(commID);
+//         print("here is the value of the community id");
+//         print(newCommunity!.id);
+                          choseGoal.Communities.add(newCom);
                           iser.createGoal(choseGoal);
 
                           Get.back();

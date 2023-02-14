@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:motazen/theme.dart';
+
+import '../select_aspectPage/handle_aspect_data.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -32,7 +35,7 @@ class SettingScreen extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.edit),
             title: const Text('إعادة التقييم'),
-            onTap: () => null,
+            onTap: () => Get.to(() => const initializeAspects()),
           ),
         ],
       ),

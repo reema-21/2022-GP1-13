@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, library_private_types_in_public_api, non_constant_identifier_names, no_leading_underscores_for_local_identifiers
-
+//new
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -299,6 +299,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                       initialScrollIndex: initialIndex,
                       itemBuilder: (context, index) {
                         return PostDesign(
+                            CommunityId: widget.comm.id,
                             post: postList[index],
                             dbpathToPostChnl:
                                 'post_channels/${widget.comm.id}/post',

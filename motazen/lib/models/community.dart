@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+//new
 class Community {
   String? communityName;
   String? founderUsername;

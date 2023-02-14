@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:motazen/entities/CommunityID.dart';
 import 'package:motazen/entities/LocalTask.dart';
 import 'package:motazen/entities/imporvment.dart';
+import 'package:motazen/theme.dart';
 import '/entities/aspect.dart';
 import '/entities/goal.dart';
 import '/entities/habit.dart';
@@ -516,6 +517,96 @@ class IsarService {
         .findFirst();
     completedGoal!.goalProgressPercentage = percentage;
     await isar.writeTxnSync(() => isar.goals.putSync(completedGoal));
+    if (completedGoal.Communities.isNotEmpty) {
+      List<dynamic> publicCommunities = completedGoal.Communities.toList();
+
+      //!there is a chance of an error if the community is private there will be
+      //so here we first need to know if this goal is shared in private or puublic community and the fetch the progress list in the right collection :)
+//first get the community id
+
+      for (int v = 0; v < publicCommunities.length; v++) {
+        //first get the community by id
+
+        dynamic CommunityDoc;
+        CommunityDoc = await firestore
+            .collection('public_communities')
+            .doc(publicCommunities[v].CommunityId)
+            .get();
+        if (CommunityDoc.data() != null) {
+          final CuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+
+          final user = FirebaseAuth.instance.currentUser!.uid;
+          List Communitiess = [];
+          Communitiess = CuurentCommunityDoc['progress_list'];
+          for (int i = 0; i < Communitiess.length; i++) {
+            if (Communitiess[i][user] != null) {
+              CuurentCommunityDoc['progress_list'][i][user] = percentage;
+
+              await firestore
+                  .collection('public_communities')
+                  .doc(publicCommunities[v].CommunityId)
+                  .update({
+                'progress_list': CuurentCommunityDoc['progress_list'],
+              });
+            }
+          }
+        } else {
+          //meanig it is a private community
+          CommunityDoc = await firestore
+              .collection('private_communities')
+              .doc(publicCommunities[v].CommunityId)
+              .get();
+          final CuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+
+          final user = FirebaseAuth.instance.currentUser!.uid;
+          List Communitiess = [];
+          Communitiess = CuurentCommunityDoc['progress_list'];
+          for (int i = 0; i < Communitiess.length; i++) {
+            if (Communitiess[i][user] != null) {
+              CuurentCommunityDoc['progress_list'][i][user] = percentage;
+
+              await firestore
+                  .collection('private_communities')
+                  .doc(publicCommunities[v].CommunityId)
+                  .update({
+                'progress_list': CuurentCommunityDoc['progress_list'],
+              });
+            }
+          }
+        }
+        //   CommunityDoc = await firestore
+        // .collection('public_communities')
+        // .doc(publicCommunities[v].CommunityId)
+        // .get();
+        //   final CuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+        //        print("i got it right ") ;
+
+        //     final user = FirebaseAuth.instance.currentUser!.uid;
+        //  List Communitiess = [];
+        // Communitiess = CuurentCommunityDoc['progress_list'];
+        // for (int i = 0  ; i<Communitiess.length ; i++){
+        //   if(Communitiess[i][user] != null){
+
+        // CuurentCommunityDoc['progress_list'][i][user]=percentage;
+        // print("i am here now ");
+
+        // await firestore
+        // .collection('public_communities')
+        // .doc(publicCommunities[v].CommunityId)
+        //   .update({
+
+        //     'progress_list':CuurentCommunityDoc['progress_list'] ,
+
+        //   });
+
+        //   }
+        // }
+      }
+    }
+    // 1- check if the goal is shared in any community
+    // for now you should first fetch the community doc
+    // find the user index
+    // update the value
   }
 
 //Delete //
