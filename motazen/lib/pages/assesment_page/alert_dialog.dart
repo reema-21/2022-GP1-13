@@ -18,7 +18,7 @@ class AlertDialogs {
           title: Text(
             title,
           ),
-          content: Text(body, textDirection: TextDirection.rtl),
+          content: Text(body),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(DialogsAction.cancel),

@@ -147,11 +147,7 @@ class _getAllAspectsState extends State<getAllAspects> {
                 aspectList.allAspects = snapshot.data!;
                 switch (widget.page) {
                   case 'Home':
-                    return getChosenAspect(
-                      iser: IsarService(),
-                      page: 'Home',
-                      origin: '',
-                    );
+                    return const getChosenAspect();
                   default:
                     throw 'Error404: page not found';
                 }

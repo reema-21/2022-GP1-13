@@ -16,7 +16,7 @@ import '../../../entities/aspect.dart';
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class HabitDetails extends StatefulWidget {
   final IsarService isr;
-  final List<String>? chosenAspectNames;
+  final List<Aspect>? chosenAspectNames;
   final String HabitName;
   final String habitFrequency;
   final String habitAspect;
@@ -65,9 +65,9 @@ class _AddHabitState extends State<HabitDetails> {
     durationInInt = widget.durationInInt;
     isDuration = durations[widget.duraioninString];
     for (int i = 0; i < widget.chosenAspectNames!.length; i++) {
-      String name = widget.chosenAspectNames![i];
+      String name = widget.chosenAspectNames![i].name;
       if (name.contains(widget.habitAspect)) {
-        isSelected = widget.chosenAspectNames![i];
+        isSelected = widget.chosenAspectNames![i].name;
       }
     }
     _goalaspectController.text = isSelected!;

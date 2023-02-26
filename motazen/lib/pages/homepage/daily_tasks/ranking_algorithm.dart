@@ -1,6 +1,6 @@
 import 'package:directed_graph/directed_graph.dart';
-import 'package:motazen/data/models.dart';
 import 'package:motazen/entities/LocalTask.dart';
+import 'package:motazen/models/todo_model.dart';
 import 'package:sorted/sorted.dart';
 
 class Rank {
@@ -100,7 +100,33 @@ class Rank {
   }
 
 /////////////////////ordering habits by frequency//////////////
-  // List<Item> orderHabits() {
+  List<Item> orderHabits(List<Item> habits) {
+    double durationInDays = 0;
 
-  // }
+    for (var habit in habits) {
+      switch (habit.duration) {
+        case 0:
+          //repeated during a day
+          durationInDays = 365;
+          break;
+        case 1:
+          //repeated during a week
+          durationInDays = 54; //!approxiamet value, revise later
+          break;
+        case 2:
+          //repeated during a month
+          durationInDays = 12;
+          break;
+        case 3:
+          //repeated during a year
+          durationInDays = 1;
+          break;
+      }
+      //find the total repution
+      habit.rank = (habit.repetition! * durationInDays);
+    }
+
+    return habits.sorted(
+        [SortedComparable<Item, double>((habit) => habit.rank!, invert: true)]);
+  }
 }

@@ -360,8 +360,6 @@ class _EditTaskState extends State<EditTask> {
                                             return AlertDialog(
                                                 title: const Text(
                                                   "تعديل المهمة",
-                                                  textDirection:
-                                                      TextDirection.rtl,
                                                 ),
                                                 content: Form(
                                                   key: formKey,

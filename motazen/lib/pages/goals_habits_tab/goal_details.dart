@@ -21,7 +21,6 @@ import 'Edit_task.dart';
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class goalDetails extends StatefulWidget {
   final IsarService isr;
-  final List<String>? chosenAspectNames;
   final String goalName;
   final String goalAspect;
   final int importance; //for the importance if any
@@ -30,7 +29,7 @@ class goalDetails extends StatefulWidget {
   final String goalImportanceDescription;
   final DateTime endDate;
   final DateTime startDate;
-
+  final List<Aspect> selected;
   final String dueDataDescription;
   final int id;
   final List<LocalTask> goalTasks;
@@ -46,9 +45,9 @@ class goalDetails extends StatefulWidget {
     required this.dueDataDescription,
     required this.endDate,
     required this.startDate,
-    this.chosenAspectNames,
     required this.id,
     required this.goalTasks,
+    required this.selected,
   });
 
   @override
@@ -79,7 +78,6 @@ class _goalDetailsState extends State<goalDetails> {
   final _goalaspectController = TextEditingController();
   final _dueDateController = TextEditingController();
   String? isSelected;
-  String aspectnameInEnglish = "";
 
   @override
   void initState() {
@@ -98,42 +96,14 @@ class _goalDetailsState extends State<goalDetails> {
     checkGoalDuration = widget.goalDuration;
     _goalNmaeController.text = widget.goalName;
     importance = widget.importance;
-
-    for (int i = 0; i < widget.chosenAspectNames!.length; i++) {
-      String name = widget.chosenAspectNames![i];
+    for (int i = 0; i < widget.selected.length; i++) {
+      String name = widget.selected[i].name;
       if (name.contains(widget.goalAspect)) {
-        isSelected = widget.chosenAspectNames![i];
+        isSelected = widget.selected[i].name;
       }
     }
     _goalaspectController.text = isSelected!;
 
-    switch (isSelected) {
-      case "أموالي":
-        aspectnameInEnglish = "money and finances";
-        break;
-      case "متعتي":
-        aspectnameInEnglish = "Fun and Recreation";
-        break;
-      case "مهنتي":
-        aspectnameInEnglish = "career";
-        break;
-      case "علاقاتي":
-        aspectnameInEnglish = "Significant Other";
-        break;
-      case "بيئتي":
-        aspectnameInEnglish = "Physical Environment";
-        break;
-      case "ذاتي":
-        aspectnameInEnglish = "Personal Growth";
-        break;
-
-      case "صحتي":
-        aspectnameInEnglish = "Health and Wellbeing";
-        break;
-      case "عائلتي وأصدقائي":
-        aspectnameInEnglish = "Family and Friends";
-        break;
-    }
     getTasks().then((value) {
       for (var i in value) {
         TaskData t = TaskData();
@@ -152,8 +122,7 @@ class _goalDetailsState extends State<goalDetails> {
     goal = await widget.isr.getSepecificGoall(widget.id);
     goal?.titel = _goalNmaeController.text;
     goal?.importance = importance;
-    Aspect? selected =
-        await widget.isr.findSepecificAspect(aspectnameInEnglish);
+    Aspect? selected = await widget.isr.findSepecificAspect(isSelected!);
     goal?.aspect.value = selected;
     selected!.goals.add(goal!);
     widget.isr.createAspect(selected);
@@ -210,7 +179,6 @@ class _goalDetailsState extends State<goalDetails> {
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<WheelData>(context);
-
     return Scaffold(
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniStartFloat,
@@ -532,7 +500,6 @@ class _goalDetailsState extends State<goalDetails> {
                               start: widget.startDate, end: widget.endDate),
 // make here the goal selectd in datails '
                       context: context,
-                      textDirection: TextDirection.rtl,
                       firstDate:
                           DateTime.now().subtract(const Duration(days: 0)),
                       lastDate: DateTime(2100),
@@ -558,23 +525,19 @@ class _goalDetailsState extends State<goalDetails> {
                               duration: const Duration(milliseconds: 1000),
                               backgroundColor:
                                   const Color.fromARGB(255, 243, 9, 9),
-                              content: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.error,
-                                      color: Color.fromARGB(255, 0, 0, 0),
-                                    ),
-                                    SizedBox(width: 20),
-                                    Expanded(
-                                      child: Text(
-                                          "فترة الهدف ستصبح أقل من فترة المهام المدخلة",
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    )
-                                  ],
-                                ),
+                              content: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.error,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                  SizedBox(width: 20),
+                                  Expanded(
+                                    child: Text(
+                                        "فترة الهدف ستصبح أقل من فترة المهام المدخلة",
+                                        style: TextStyle(color: Colors.black)),
+                                  )
+                                ],
                               )));
                         } else {
                           goalDuration = newDate.duration.inDays;

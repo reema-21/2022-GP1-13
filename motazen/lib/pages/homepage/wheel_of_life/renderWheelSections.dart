@@ -60,8 +60,8 @@ class _WheelBackgroundState extends State<WheelBackground> {
         ),
         sectionsSpace: 0,
         centerSpaceRadius: 0,
-        sections:
-            getOutterSections(aspectList.selected, aspectList.selectedArabic),
+        sections: getOutterSections(
+            aspectList.selected, aspectList.getSelectedNames()),
       ),
     );
   }

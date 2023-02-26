@@ -53,29 +53,29 @@ class _EditGoalState extends State<EditGoal> {
       goalAspect = goal!.aspect.value!.name;
 
       switch (goalAspect) {
-        case "money and finances":
+        case "أموالي":
           goalAspect = "أموالي";
           break;
-        case "Fun and Recreation":
+        case "متعتي":
           goalAspect = "متعتي";
           break;
-        case "career":
+        case "مهنتي":
           goalAspect = "مهنتي";
           break;
-        case "Significant Other":
+        case "علاقتي":
           goalAspect = "علاقاتي";
           break;
-        case "Physical Environment":
+        case "بيئتي":
           goalAspect = "بيئتي";
           break;
-        case "Personal Growth":
+        case "ذاتي":
           goalAspect = "ذاتي";
           break;
 
-        case "Health and Wellbeing":
+        case "صحتي":
           goalAspect = "صحتي";
           break;
-        case "Family and Friends":
+        case "عائلتي واصدقائي":
           goalAspect = "عائلتي وأصدقائي";
           break;
       }
@@ -159,8 +159,8 @@ class _EditGoalState extends State<EditGoal> {
                 return goalDetails(
                   endDate: endDate,
                   startDate: startDate,
-                  chosenAspectNames: aspectList.selectedArabic,
                   isr: widget.isr,
+                  selected: aspectList.selected,
                   goalName: displayGoalNameControlller.text,
                   goalAspect: goalAspect,
                   importance: importance,

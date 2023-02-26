@@ -1,9 +1,11 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:motazen/data/data.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
 import '/entities/habit.dart';
 
@@ -14,8 +16,7 @@ import '../../entities/aspect.dart';
 //alertof completion //tasks // getbeck to the list page // goal dependency
 class AddHabit extends StatefulWidget {
   final IsarService isr;
-  final List<String>? chosenAspectNames;
-  const AddHabit({super.key, required this.isr, this.chosenAspectNames});
+  const AddHabit({super.key, required this.isr});
 
   @override
   State<AddHabit> createState() => _AddHabitState();
@@ -45,7 +46,6 @@ class _AddHabitState extends State<AddHabit> {
   }
 
   Habit newhabit = Habit(userID: IsarService.getUserID);
-  String aspectnameInEnglish = "";
   int seletedduration = 0;
   _AddHabit() async {
     newhabit.titel = _habitName;
@@ -53,8 +53,7 @@ class _AddHabitState extends State<AddHabit> {
     newhabit.durationInNumber = freq.frequency.toInt();
     duratioSelected = freq.frequency.string + duratioSelected;
     newhabit.frequency = duratioSelected;
-    Aspect? selected =
-        await widget.isr.findSepecificAspect(aspectnameInEnglish);
+    Aspect? selected = await widget.isr.findSepecificAspect(isSelected!);
     newhabit.aspect.value = selected;
 
     widget.isr.createHabit(newhabit);
@@ -64,7 +63,7 @@ class _AddHabitState extends State<AddHabit> {
     freq.frequency = 1.obs;
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return const navBar(
-        // can you make it go to the habits tap ??
+        //Note: can you make it go to the habits tap ??
         selectedIndex: 1,
       );
     }));
@@ -72,6 +71,7 @@ class _AddHabitState extends State<AddHabit> {
 
   @override
   Widget build(BuildContext context) {
+    var aspectList = Provider.of<WheelData>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
@@ -170,8 +170,9 @@ class _AddHabitState extends State<AddHabit> {
 
                   DropdownButtonFormField(
                     value: isSelected,
-                    items: widget.chosenAspectNames
-                        ?.map((e) => DropdownMenuItem(
+                    items: aspectList
+                        .getSelectedNames()
+                        .map((e) => DropdownMenuItem(
                               value: e,
                               child: Text(e),
                             ))
@@ -180,33 +181,6 @@ class _AddHabitState extends State<AddHabit> {
                       setState(
                         () {
                           isSelected = val as String;
-                          switch (isSelected) {
-                            case "أموالي":
-                              aspectnameInEnglish = "money and finances";
-                              break;
-                            case "متعتي":
-                              aspectnameInEnglish = "Fun and Recreation";
-                              break;
-                            case "مهنتي":
-                              aspectnameInEnglish = "career";
-                              break;
-                            case "علاقاتي":
-                              aspectnameInEnglish = "Significant Other";
-                              break;
-                            case "بيئتي":
-                              aspectnameInEnglish = "Physical Environment";
-                              break;
-                            case "ذاتي":
-                              aspectnameInEnglish = "Personal Growth";
-                              break;
-
-                            case "صحتي":
-                              aspectnameInEnglish = "Health and Wellbeing";
-                              break;
-                            case "عائلتي وأصدقائي":
-                              aspectnameInEnglish = "Family and Friends";
-                              break;
-                          }
                         },
                       );
                     },

@@ -30,7 +30,7 @@ Future main() async {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          backgroundColor: kWhiteColor,
+          colorScheme: const ColorScheme.light(primary: kPrimaryColor),
           fontFamily: 'Frutiger',
           appBarTheme: AppBarTheme(
             backgroundColor: kWhiteColor,
@@ -39,7 +39,6 @@ Future main() async {
             toolbarTextStyle: subTitle,
             elevation: 0,
           ),
-          primaryColor: kPrimaryColor,
           buttonTheme: const ButtonThemeData(disabledColor: kDisabled),
         ),
         home: ifr

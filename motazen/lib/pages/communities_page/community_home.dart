@@ -45,7 +45,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
   bool isActiveCommunity = true;
   bool loadfinished = false;
   String _post = '';
-  TextEditingController _postController = TextEditingController();
+  final TextEditingController _postController = TextEditingController();
   final ItemScrollController itemScrollController = ItemScrollController();
   final _dbRef = FirebaseDatabase.instance;
   PostModel? replyingPost;
@@ -254,18 +254,17 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
             Expanded(
               child: StreamBuilder(
                 stream: _dbRef
-                    .ref('post_channels/${widget.comm.id}')
+                    .ref('post_channels/${widget.comm.id}') //!the issue is here
                     .child('post')
                     .onValue,
                 builder: (context, snapshot) {
                   List<PostModel> postList = [];
                   if (snapshot.hasData &&
                       snapshot.data != null &&
-                      (snapshot.data! as DatabaseEvent).snapshot.value !=
-                          null) {
-                    final myPosts = Map<dynamic, dynamic>.from(
-                        (snapshot.data! as DatabaseEvent).snapshot.value
-                            as Map<dynamic, dynamic>);
+                      (snapshot.data!).snapshot.value != null) {
+                    final myPosts = Map<dynamic, dynamic>.from((snapshot.data!)
+                        .snapshot
+                        .value as Map<dynamic, dynamic>);
                     myPosts.forEach((key, value) {
                       final currentPost = Map<String, dynamic>.from(value);
 
@@ -413,7 +412,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.start,
-                            textDirection: TextDirection.rtl,
                             children: [
                               const SizedBox(width: 8),
                               Container(
@@ -443,7 +441,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  textDirection: TextDirection.rtl,
                                   children: [
                                     Text(
                                       '${replyingPost!.author}',
@@ -508,7 +505,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.start,
-                            textDirection: TextDirection.rtl,
                             children: [
                               const SizedBox(width: 8),
                               Container(
@@ -577,7 +573,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                               )),
                           Expanded(
                             child: TextField(
-                              textDirection: TextDirection.rtl,
                               style: const TextStyle(
                                   color: Colors.black, fontSize: 17),
                               cursorColor: Colors.black,

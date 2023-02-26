@@ -210,72 +210,68 @@ class _InviteFriendWidgetState extends State<InviteFriendWidget> {
   Padding inviteFriendssearchField(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 12),
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: SearchField(
-          searchInputDecoration:
-              const InputDecoration(border: InputBorder.none),
-          focusNode: inviteFriendsFocusNode,
-          controller: inviteFriendsController,
-          onSuggestionTap: (p0) {
-            newSelectedUsersList.clear();
-            setState(() {
-              inviteFriendsFocusNode.unfocus();
-              shouldEnabled = false;
-            });
+      child: SearchField(
+        searchInputDecoration: const InputDecoration(border: InputBorder.none),
+        focusNode: inviteFriendsFocusNode,
+        controller: inviteFriendsController,
+        onSuggestionTap: (p0) {
+          newSelectedUsersList.clear();
+          setState(() {
+            inviteFriendsFocusNode.unfocus();
+            shouldEnabled = false;
+          });
 
-            for (var user in authController.usersList) {
-              if (user.email == p0.searchKey) {
-                selectedUsers.add(user);
-                break;
-              }
+          for (var user in authController.usersList) {
+            if (user.email == p0.searchKey) {
+              selectedUsers.add(user);
+              break;
             }
+          }
 
-            newSelectedUsersList = selectedUsers.toSet().toList();
-            for (var user in newSelectedUsersList) {
-              if (user.userID == firebaseAuth.currentUser!.uid) {
-                newSelectedUsersList.remove(user);
-              }
+          newSelectedUsersList = selectedUsers.toSet().toList();
+          for (var user in newSelectedUsersList) {
+            if (user.userID == firebaseAuth.currentUser!.uid) {
+              newSelectedUsersList.remove(user);
             }
-          },
-          suggestions: ((authController.usersList)
-                ..removeWhere((e) =>
-                    e.userID == firebaseAuth.currentUser!.uid ||
-                    (e.createdCommunities != null &&
-                        e.createdCommunities!.isNotEmpty &&
-                        e.createdCommunities!.indexWhere(
-                                (element) => element.id == widget.comm.id) >=
-                            0) ||
-                    (e.joinedCommunities != null &&
-                        e.joinedCommunities!.isNotEmpty &&
-                        e.joinedCommunities!.indexWhere(
-                                (element) => element.id == widget.comm.id) >=
-                            0)))
-              .map(
-                (e) => SearchFieldListItem(
-                  e.email!,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        txt(txt: e.email!, fontSize: 16),
-                      ],
-                    ),
+          }
+        },
+        suggestions: ((authController.usersList)
+              ..removeWhere((e) =>
+                  e.userID == firebaseAuth.currentUser!.uid ||
+                  (e.createdCommunities != null &&
+                      e.createdCommunities!.isNotEmpty &&
+                      e.createdCommunities!.indexWhere(
+                              (element) => element.id == widget.comm.id) >=
+                          0) ||
+                  (e.joinedCommunities != null &&
+                      e.joinedCommunities!.isNotEmpty &&
+                      e.joinedCommunities!.indexWhere(
+                              (element) => element.id == widget.comm.id) >=
+                          0)))
+            .map(
+              (e) => SearchFieldListItem(
+                e.email!,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      txt(txt: e.email!, fontSize: 16),
+                    ],
                   ),
                 ),
-              )
-              .toList(),
-          suggestionState: Suggestion.expand,
-          textInputAction: TextInputAction.next,
-          hint: 'مثلا: مستحدم1, مستخدم2...',
-          hasOverlay: false,
-          searchStyle: TextStyle(
-            fontSize: 18,
-            color: Colors.black.withOpacity(0.8),
-          ),
-          itemHeight: screenHeight(context) * 0.07,
+              ),
+            )
+            .toList(),
+        suggestionState: Suggestion.expand,
+        textInputAction: TextInputAction.next,
+        hint: 'مثلا: مستحدم1, مستخدم2...',
+        hasOverlay: false,
+        searchStyle: TextStyle(
+          fontSize: 18,
+          color: Colors.black.withOpacity(0.8),
         ),
+        itemHeight: screenHeight(context) * 0.07,
       ),
     );
   }

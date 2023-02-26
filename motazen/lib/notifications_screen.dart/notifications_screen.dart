@@ -30,38 +30,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   Future<List<Goal>> getgoals(String aspect) async {
     IsarService iser = IsarService(); // initialize local storage
-    Aspect? chosenAspect = Aspect(userID: IsarService.getUserID);
-    String aspectnameInEnglish = "";
-    switch (aspect) {
-      case "أموالي":
-        aspectnameInEnglish = "money and finances";
-        break;
-      case "متعتي":
-        aspectnameInEnglish = "Fun and Recreation";
-
-        break;
-      case "مهنتي":
-        aspectnameInEnglish = "career";
-
-        break;
-      case "علاقاتي":
-        aspectnameInEnglish = "Significant Other";
-
-        break;
-      case "بيئتي":
-        aspectnameInEnglish = "Physical Environment";
-        break;
-      case "ذاتي":
-        aspectnameInEnglish = "Personal Growth";
-        break;
-      case "صحتي":
-        aspectnameInEnglish = "Health and Wellbeing";
-        break;
-      case "عائلتي وأصدقائي":
-        aspectnameInEnglish = "Family and Friends";
-        break;
-    }
-    chosenAspect = await iser.getSepecificAspect(aspectnameInEnglish);
+    Aspect? chosenAspect =
+        Aspect(userID: IsarService.getUserID); //Note: what is this used for
+    chosenAspect = await iser.getSepecificAspect(aspect);
 
     List<Goal> goalList = chosenAspect!.goals.toList();
     return goalList;
@@ -594,134 +565,127 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
     String timeAgo = "منذ ${minAgo.toString()} $unit ";
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: Colors.grey.shade300, width: 1)),
-                      child: CircleAvatar(
-                        backgroundImage: const AssetImage(
-                            "assets/images/Profile Image.webp"),
-                        radius: 58,
-                        child: Stack(children: [
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: CircleAvatar(
-                                radius: 10,
-                                backgroundColor: Colors.white70,
-                                child: Image(
-                                    image: notification.notificationType ==
-                                            "invite"
-                                        ? const AssetImage(
-                                            "assets/images/invite.png")
-                                        : notification.notificationType ==
-                                                "reply"
-                                            ? const AssetImage(
-                                                "assets/images/reply.png")
-                                            : const AssetImage(
-                                                "assets/images/like.png")) //"Icon made by Muhammad_Usman  from www.flaticon.com""Icon made by Circlon Tech from www.flaticon.com"
-                                ),
-                          ),
-                        ]),
-                      )
-                      // ClipRRect(
-                      //     borderRadius: BorderRadius.circular(50),
-                      //     child: Icon(
-                      //       Icons.account_circle_rounded,
-                      //       size: 30,
-                      //       color: Colors.grey,
-                      //     )),
-                      ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Flexible(
-                    child: RichText(
-                        text: TextSpan(children: [
-                      TextSpan(
-                          text: notification.comm != null
-                              ? notification.comm.founderUsername
-                              : notification.userName,
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
-                      TextSpan(
-                          text: content,
-                          style: const TextStyle(color: Colors.black)),
-                      TextSpan(
-                          text: notification.comm != null
-                              ? notification.comm.communityName
-                              : "",
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
-                      const TextSpan(text: "  "),
-                      TextSpan(
-                        text: timeAgo,
-                        style: TextStyle(
-                            color: Colors.grey.shade500, fontSize: 12),
-                      )
-                    ])),
-                  )
-                ],
-              ),
-            ),
-            (notification.post != null &&
-                    notification.post['image_url'] != null)
-                ? SizedBox(
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                Container(
                     width: 50,
                     height: 50,
-                    child: ClipRRect(
-                        child: CachedNetworkImage(
-                      imageUrl: notification.post['image_url'],
-                    )),
-                  )
-                : Row(
-                    children: [
-                      notification.notificationType == 'invite'
-                          ? Row(
-                              children: [
-                                const SizedBox(width: 8),
-                                InkWell(
-                                  onTap: (() {
-                                    acceptInvitaion(notification, aspectList);
-                                  }),
-                                  child: const Icon(
-                                    Icons.check_circle_outline_rounded,
-                                    color: kPrimaryColor,
-                                    size: 35.0,
-                                  ),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border:
+                            Border.all(color: Colors.grey.shade300, width: 1)),
+                    child: CircleAvatar(
+                      backgroundImage:
+                          const AssetImage("assets/images/Profile Image.webp"),
+                      radius: 58,
+                      child: Stack(children: [
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: CircleAvatar(
+                              radius: 10,
+                              backgroundColor: Colors.white70,
+                              child: Image(
+                                  image: notification.notificationType ==
+                                          "invite"
+                                      ? const AssetImage(
+                                          "assets/images/invite.png")
+                                      : notification.notificationType == "reply"
+                                          ? const AssetImage(
+                                              "assets/images/reply.png")
+                                          : const AssetImage(
+                                              "assets/images/like.png")) //"Icon made by Muhammad_Usman  from www.flaticon.com""Icon made by Circlon Tech from www.flaticon.com"
+                              ),
+                        ),
+                      ]),
+                    )
+                    // ClipRRect(
+                    //     borderRadius: BorderRadius.circular(50),
+                    //     child: Icon(
+                    //       Icons.account_circle_rounded,
+                    //       size: 30,
+                    //       color: Colors.grey,
+                    //     )),
+                    ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Flexible(
+                  child: RichText(
+                      text: TextSpan(children: [
+                    TextSpan(
+                        text: notification.comm != null
+                            ? notification.comm.founderUsername
+                            : notification.userName,
+                        style: const TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: content,
+                        style: const TextStyle(color: Colors.black)),
+                    TextSpan(
+                        text: notification.comm != null
+                            ? notification.comm.communityName
+                            : "",
+                        style: const TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold)),
+                    const TextSpan(text: "  "),
+                    TextSpan(
+                      text: timeAgo,
+                      style:
+                          TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                    )
+                  ])),
+                )
+              ],
+            ),
+          ),
+          (notification.post != null && notification.post['image_url'] != null)
+              ? SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: ClipRRect(
+                      child: CachedNetworkImage(
+                    imageUrl: notification.post['image_url'],
+                  )),
+                )
+              : Row(
+                  children: [
+                    notification.notificationType == 'invite'
+                        ? Row(
+                            children: [
+                              const SizedBox(width: 8),
+                              InkWell(
+                                onTap: (() {
+                                  acceptInvitaion(notification, aspectList);
+                                }),
+                                child: const Icon(
+                                  Icons.check_circle_outline_rounded,
+                                  color: kPrimaryColor,
+                                  size: 35.0,
                                 ),
-                                const SizedBox(width: 10),
-                                InkWell(
-                                  onTap: () {
-                                    rejectInvitaion(notification);
-                                  },
-                                  child: const Icon(
-                                    Icons.cancel_outlined,
-                                    color: Colors.grey,
-                                    size: 35.0,
-                                  ),
+                              ),
+                              const SizedBox(width: 10),
+                              InkWell(
+                                onTap: () {
+                                  rejectInvitaion(notification);
+                                },
+                                child: const Icon(
+                                  Icons.cancel_outlined,
+                                  color: Colors.grey,
+                                  size: 35.0,
                                 ),
-                              ],
-                            )
-                          : const Text("")
-                    ],
-                  )
-          ],
-        ),
+                              ),
+                            ],
+                          )
+                        : const Text("")
+                  ],
+                )
+        ],
       ),
     );
   }

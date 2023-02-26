@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>919398316951-6c9psjrk065q8tpqv2jj92fr8os5rfss.apps.googleusercontent.com</string>
+	<string>919398316951-psonnl7243i6sal154uf5mkbp1chnsdq.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.919398316951-6c9psjrk065q8tpqv2jj92fr8os5rfss</string>
+	<string>com.googleusercontent.apps.919398316951-psonnl7243i6sal154uf5mkbp1chnsdq</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCcVzPFn39F-qaYStG-UqDW3EUO_X5huNQ</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>io.flutter.flutter.app</string>
+	<string>com.testing.motazen</string>
 	<key>PROJECT_ID</key>
 	<string>motazen-f2cc8</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:919398316951:ios:2064b403117e16e21962d2</string>
+	<string>1:919398316951:ios:100a1072ac6343df1962d2</string>
+	<key>DATABASE_URL</key>
+	<string>https://motazen-f2cc8-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>
 </plist>

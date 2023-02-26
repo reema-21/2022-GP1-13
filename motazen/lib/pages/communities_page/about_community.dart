@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names
 //ours //new
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +65,7 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
                       if (value != null) {
                         await deleteCommunity();
                         setState(() {});
-                        Navigator.pop(context);
+                        Navigator.pop(context); //Note: why is it duplicated
                         Navigator.pop(context);
                         Navigator.pushReplacement(
                             context,
@@ -180,79 +180,63 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
     // delete joined community
     IsarService iser = IsarService();
     iser.deleteCommunity(widget.comm.id);
-// here you want to add code to delete the member id from the list in the public/private collections 
-    // so first check if it is private or public and then do the rest 
-        dynamic CommunityDoc;
+// here you want to add code to delete the member id from the list in the public/private collections
+    // so first check if it is private or public and then do the rest
+    dynamic CommunityDoc;
 
-    if(widget.comm.isPrivate ){
- CommunityDoc = await firestore
-        .collection('private_communities')
-        .doc(widget.comm.id)
-        .get();
-        
-      if (CommunityDoc.data() != null ) {
-    final CurrentCommunityDoc = CommunityDoc.data() as dynamic;
+    if (widget.comm.isPrivate) {
+      CommunityDoc = await firestore
+          .collection('private_communities')
+          .doc(widget.comm.id)
+          .get();
 
-  List Communitiess = [];
-  
-  Communitiess = CurrentCommunityDoc['progress_list'];
-  for (int i = 0  ; i<Communitiess.length ; i++){
-      if(Communitiess[i][firebaseAuth.currentUser!.uid] != null){
-    Communitiess.removeAt(i);
-  
-   
-    
-    await firestore
-    .collection('private_communities')
-    .doc(widget.comm.id)
-      .update({
-       
-  'progress_list':CurrentCommunityDoc['progress_list'] ,
-  
-       
-  
-     
-      });
-    break; 
-  
+      if (CommunityDoc.data() != null) {
+        final CurrentCommunityDoc = CommunityDoc.data() as dynamic;
+
+        List Communitiess = [];
+
+        Communitiess = CurrentCommunityDoc['progress_list'];
+        for (int i = 0; i < Communitiess.length; i++) {
+          if (Communitiess[i][firebaseAuth.currentUser!.uid] != null) {
+            Communitiess.removeAt(i);
+
+            await firestore
+                .collection('private_communities')
+                .doc(widget.comm.id)
+                .update({
+              'progress_list': CurrentCommunityDoc['progress_list'],
+            });
+            break;
+          }
+        }
       }
-    }
-}
+    } else {
+      //means it is public
+      CommunityDoc = await firestore
+          .collection('public_communities')
+          .doc(widget.comm.id)
+          .get();
 
-    }else{ //means it is public 
-CommunityDoc = await firestore
-        .collection('public_communities')
-        .doc(widget.comm.id)
-        .get();
-        
-      if (CommunityDoc.data() != null ) {
-    final CurrentCommunityDoc = CommunityDoc.data() as dynamic;
+      if (CommunityDoc.data() != null) {
+        final CurrentCommunityDoc = CommunityDoc.data() as dynamic;
 
-  List Communitiess = [];
-  
-  Communitiess = CurrentCommunityDoc['progress_list'];
-  for (int i = 0  ; i<Communitiess.length ; i++){
-      if(Communitiess[i][firebaseAuth.currentUser!.uid] != null){
-    Communitiess.removeAt(i);
-  
-   
-    
-    await firestore
-    .collection('public_communities')
-    .doc(widget.comm.id)
-      .update({
-       
-  'progress_list':CurrentCommunityDoc['progress_list'] ,
-  
-       
-  
-     
-      });
-    break; 
-  
+        List Communitiess = [];
+
+        Communitiess = CurrentCommunityDoc['progress_list'];
+        for (int i = 0; i < Communitiess.length; i++) {
+          if (Communitiess[i][firebaseAuth.currentUser!.uid] != null) {
+            Communitiess.removeAt(i);
+
+            await firestore
+                .collection('public_communities')
+                .doc(widget.comm.id)
+                .update({
+              'progress_list': CurrentCommunityDoc['progress_list'],
+            });
+            break;
+          }
+        }
       }
-    }
-}
     }
     communityController.listOfJoinedCommunities
         .removeWhere((element) => element.id == widget.comm.id);

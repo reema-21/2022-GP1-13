@@ -49,29 +49,29 @@ class _EditGoalState extends State<EditHbit> {
       print(displayHabitNameControlller.text);
       habitAspect = habit!.aspect.value!.name;
       switch (habitAspect) {
-        case "money and finances":
+        case "أموالي":
           habitAspect = "أموالي";
           break;
-        case "Fun and Recreation":
+        case "متعتي":
           habitAspect = "متعتي";
           break;
-        case "career":
+        case "مهنتي":
           habitAspect = "مهنتي";
           break;
-        case "Significant Other":
+        case "علاقتي":
           habitAspect = "علاقاتي";
           break;
-        case "Physical Environment":
+        case "بيئتي":
           habitAspect = "بيئتي";
           break;
-        case "Personal Growth":
+        case "ذاتي":
           habitAspect = "ذاتي";
           break;
 
-        case "Health and Wellbeing":
+        case "صحتي":
           habitAspect = "صحتي";
           break;
-        case "Family and Friends":
+        case "عائلتي واصدقائي":
           habitAspect = "عائلتي وأصدقائي";
           break;
       }
@@ -134,13 +134,13 @@ class _EditGoalState extends State<EditHbit> {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return HabitDetails(
                     isr: widget.isr,
-                    chosenAspectNames: aspectList.selectedArabic,
                     HabitName: displayHabitNameControlller.text,
                     habitFrequency: displayHabitfrequencyControlller.text,
                     habitAspect: habitAspect,
                     id: widget.HabitId,
                     duraioninString: durationIndex,
                     durationInInt: durationInNumber,
+                    chosenAspectNames: aspectList.selected,
                   ); // must be the
                 }));
               });

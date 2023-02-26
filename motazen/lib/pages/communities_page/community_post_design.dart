@@ -180,7 +180,6 @@ class OwnMessageDesign extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.end,
-                      textDirection: TextDirection.rtl,
                       children: [
                         const SizedBox(
                           width: 10,
@@ -216,7 +215,6 @@ class OwnMessageDesign extends StatelessWidget {
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
-                              textDirection: TextDirection.rtl,
                               children: [
                                 Text(
                                   '${pst.replyingPost['author']}',
@@ -259,7 +257,6 @@ class OwnMessageDesign extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.start,
-                    textDirection: TextDirection.rtl,
                     children: [
                       const SizedBox(width: 8),
                       Column(
@@ -428,8 +425,8 @@ class OwnMessageDesign extends StatelessWidget {
                                   color: pst.likes.contains(authID)
                                       ? Colors.blue
                                       : const Color.fromARGB(97, 66, 66, 66),
-                                ),
-                              ),
+                                ), //if the post was by user return null
+                              ), //!Note: why use ink well?
                               const SizedBox(
                                 width: 2,
                               ),
@@ -437,7 +434,7 @@ class OwnMessageDesign extends StatelessWidget {
                                 '${pst.likes.length}',
                                 style: TextStyle(
                                     color: Colors.grey[500], fontSize: 18),
-                              ),
+                              ), //if the post was by user return null
                             ],
                           )
                         ],
@@ -526,7 +523,6 @@ class OtherMessageDesign extends StatelessWidget {
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        textDirection: TextDirection.rtl,
                         children: [
                           Row(
                             children: [
@@ -602,7 +598,6 @@ class OtherMessageDesign extends StatelessWidget {
                           boxShadow: const []),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        textDirection: TextDirection.rtl,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -628,7 +623,7 @@ class OtherMessageDesign extends StatelessWidget {
                                   backgroundColor:
                                       kPrimaryColor.withOpacity(0.3),
                                   center: Text(
-                                    '${(progressValue * 100).round().toString()}',
+                                    (progressValue * 100).round().toString(),
                                     style: const TextStyle(
                                       //           color: Colors.black,
                                       fontSize: 10,

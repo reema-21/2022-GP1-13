@@ -2,11 +2,13 @@
 //manar
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/LocalTask.dart';
+import 'package:motazen/pages/add_goal_page/add_goal_screen.dart';
 import 'package:motazen/pages/goals_habits_tab/goal_edit.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
+import '../../data/data.dart';
 import '/entities/goal.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:intl/intl.dart' as intl;
@@ -23,82 +25,9 @@ class _GoalListScreenState extends State<GoalListScreen> {
   DateTime temGoalDataTime = DateTime.utc(1989, 11, 9);
   late String dueDataDescription;
 
-  Icon chooseIcon(String? x) {
-    Icon rightIcon = const Icon(Icons.abc);
-    switch (x) {
-      //Must include all the aspect characters and specify an icon for that
-      case "Health and Wellbeing":
-        {
-          // statements;
-          rightIcon = const Icon(Icons.spa, color: Color(0xFFffd400));
-        }
-        break;
-
-      case "career":
-        {
-          //statements;
-          rightIcon = const Icon(Icons.work, color: Color(0xff0065A3));
-        }
-        break;
-      case "Family and Friends":
-        {
-          //statements;
-          rightIcon = const Icon(Icons.person, color: Color(0xFFff9100));
-        }
-        break;
-
-      case "Significant Other":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.favorite,
-            color: Color(0xffff4949),
-          );
-        }
-        break;
-      case "Physical Environment":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.home,
-            color: Color(0xFF9E19F0),
-          );
-        }
-        break;
-      case "money and finances":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.attach_money,
-            color: Color(0xff54e360),
-          );
-        }
-        break;
-      case "Personal Growth":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.psychology,
-            color: Color(0xFF2CDDCB),
-          );
-        }
-        break;
-      case "Fun and Recreation":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.games,
-            color: Color(0xff008adf),
-          );
-        }
-        break;
-    }
-
-    return rightIcon;
-  }
-
   @override
   Widget build(BuildContext context) {
+    var aspectList = Provider.of<WheelData>(context);
     return StreamBuilder<List<Goal>>(
       stream: IsarService().getAllGoals(),
       builder: (context, snapshot) {
@@ -121,11 +50,10 @@ class _GoalListScreenState extends State<GoalListScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return getChosenAspect(
-                              iser: widget.isr,
-                              page: 'Goal',
-                              origin: '',
-                            ); // must be the
+                            return AddGoal(
+                              isr: widget.isr,
+                              goalsTasks: const [],
+                            );
                           },
                         ),
                       );
@@ -176,7 +104,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
                               },
                             ),
                             tileColor: Colors.white,
-                            leading: chooseIcon(aspectName),
+                            leading: aspectList.getSelectedIcon(aspectName!),
                             subtitle:
                                 Text(dueDataDescription), // if not null added
                             title: Padding(

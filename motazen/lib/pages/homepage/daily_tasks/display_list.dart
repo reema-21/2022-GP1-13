@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:motazen/models/todo_model.dart';
 import 'package:motazen/pages/homepage/daily_tasks/custom_rect_tween.dart';
 import 'package:motazen/pages/homepage/daily_tasks/hero_dialog_route.dart';
 import 'package:motazen/theme.dart';
 import '../../goals_habits_tab/calculate_progress.dart';
-import '/data/models.dart';
 
 /// {@template todo_card}
 /// Card that display a [Todo]'s content.
@@ -49,11 +49,6 @@ class TodoCard extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
-                      _TodoTitle(title: todo.description),
-                      const SizedBox(
-                        height: 2,
-                      ),
-                      const Divider(),
                       _TodoItemsBox(items: todo.items),
                     ],
                   ),
@@ -63,27 +58,6 @@ class TodoCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// {@template todo_title}
-/// Title of a [Todo].
-/// {@endtemplate}
-class _TodoTitle extends StatelessWidget {
-  /// {@macro todo_title}
-  const _TodoTitle({
-    Key? key,
-    required this.title,
-  }) : super(key: key);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
     );
   }
 }
@@ -116,11 +90,6 @@ class _TodoPopupCard extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _TodoTitle(title: todo.description),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    const Divider(),
                     _TodoItemsBox(items: todo.items),
                   ],
                 ),

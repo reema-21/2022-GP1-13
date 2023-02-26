@@ -2,12 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:motazen/data/data.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/entities/imporvment.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/homepage/wheel_of_life/widget/AspectGoalList.dart';
 import 'package:motazen/pages/homepage/wheel_of_life/widget/AspectHabitList.dart';
 import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../../entities/goal.dart';
 
@@ -52,116 +54,11 @@ class _ProgressScreenState extends State<ProgressScreen> {
     _tooltipBehavior = TooltipBehavior(enable: true);
   } // here is the array
 
-  Icon chooseIcon(String? x) {
-    Icon rightIcon = const Icon(Icons.abc);
-    switch (x) {
-      //Must include all the aspect characters and specify an icon for that
-      case "Health and Wellbeing":
-        {
-          // statements;
-          rightIcon = const Icon(Icons.spa, color: Color(0xFFffd400));
-        }
-        break;
-
-      case "career":
-        {
-          //statements;
-          rightIcon = const Icon(Icons.work, color: Color(0xff0065A3));
-        }
-        break;
-      case "Family and Friends":
-        {
-          //statements;
-          rightIcon = const Icon(Icons.person, color: Color(0xFFff9100));
-        }
-        break;
-
-      case "Significant Other":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.favorite,
-            color: Color(0xffff4949),
-          );
-        }
-        break;
-      case "Physical Environment":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.home,
-            color: Color(0xFF9E19F0),
-          );
-        }
-        break;
-      case "money and finances":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.attach_money,
-            color: Color(0xff54e360),
-          );
-        }
-        break;
-      case "Personal Growth":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.psychology,
-            color: Color(0xFF2CDDCB),
-          );
-        }
-        break;
-      case "Fun and Recreation":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.games,
-            color: Color(0xff008adf),
-          );
-        }
-        break;
-    }
-
-    return rightIcon;
-  }
-
-  String AspectName(String name) {
-    String nameInArabic = "";
-    switch (name) {
-      case "money and finances":
-        nameInArabic = "أموالي";
-        break;
-      case "Fun and Recreation":
-        nameInArabic = "متعتي";
-        break;
-      case "career":
-        nameInArabic = "مهنتي";
-        break;
-      case "Significant Other":
-        nameInArabic = "علاقاتي";
-        break;
-      case "Physical Environment":
-        nameInArabic = "بيئتي";
-        break;
-      case "Personal Growth":
-        nameInArabic = "ذاتي";
-        break;
-
-      case "Health and Wellbeing":
-        nameInArabic = "صحتي";
-        break;
-      case "Family and Friends":
-        nameInArabic = "عائلتي وأصدقائي";
-        break;
-    }
-    return nameInArabic;
-  }
-
   List<Color> gradientColors = [const Color(0xff23b6e6), Colors.green.shade300];
 
   @override
   Widget build(BuildContext context) {
+    var aspectList = Provider.of<WheelData>(context);
     List<AspectImporvment> chartData = [];
 
     List<Imporvment> tempList = [];
@@ -224,9 +121,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
               }),
         ],
 
-        leading: chooseIcon(widget.aspect.name),
+        leading: aspectList.getSelectedIcon(widget.aspect.name),
         title: Text(
-          AspectName(widget.aspect.name),
+          widget.aspect.name,
           style: titleText2,
         ),
         automaticallyImplyLeading: true, // need color
@@ -360,7 +257,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
                       child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
-                            textDirection: TextDirection.rtl,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

@@ -1,12 +1,13 @@
 // ignore_for_file: file_names, non_constant_identifier_names, unused_local_variable
 
 import 'package:flutter/material.dart';
+import 'package:motazen/data/data.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
+import 'package:provider/provider.dart';
 import '../../../../entities/goal.dart';
 import '../../../goals_habits_tab/goal_edit.dart';
 
@@ -27,107 +28,32 @@ class _AspectGoal extends State<AspectGoal> {
     super.initState();
   }
 
-  Icon chooseIcon(String? x) {
-    Icon rightIcon = const Icon(Icons.abc);
-
-    switch (x) {
-      //Must include all the aspect characters and specify an icon for that
-      case "Health and Wellbeing":
-        {
-          // statements;
-          rightIcon = const Icon(Icons.spa, color: Color(0xFFffd400));
-        }
-        break;
-
-      case "career":
-        {
-          //statements;
-          rightIcon = const Icon(Icons.work, color: Color(0xff0065A3));
-        }
-        break;
-      case "Family and Friends":
-        {
-          //statements;
-          rightIcon = const Icon(Icons.person, color: Color(0xFFff9100));
-        }
-        break;
-
-      case "Significant Other":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.favorite,
-            color: Color(0xffff4949),
-          );
-        }
-        break;
-      case "Physical Environment":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.home,
-            color: Color(0xFF9E19F0),
-          );
-        }
-        break;
-      case "money and finances":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.attach_money,
-            color: Color(0xff54e360),
-          );
-        }
-        break;
-      case "Personal Growth":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.psychology,
-            color: Color(0xFF2CDDCB),
-          );
-        }
-        break;
-      case "Fun and Recreation":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.games,
-            color: Color(0xff008adf),
-          );
-        }
-        break;
-    }
-
-    return rightIcon;
-  }
-
   String AspectName(String name) {
     String nameInArabic = "";
     switch (name) {
-      case "money and finances":
+      case "أموالي":
         nameInArabic = "أموالي";
         break;
-      case "Fun and Recreation":
+      case "متعتي":
         nameInArabic = "متعتي";
         break;
-      case "career":
+      case "مهنتي":
         nameInArabic = "مهنتي";
         break;
-      case "Significant Other":
+      case "علاقتي":
         nameInArabic = "علاقاتي";
         break;
-      case "Physical Environment":
+      case "بيئتي":
         nameInArabic = "بيئتي";
         break;
-      case "Personal Growth":
+      case "ذاتي":
         nameInArabic = "ذاتي";
         break;
 
-      case "Health and Wellbeing":
+      case "صحتي":
         nameInArabic = "صحتي";
         break;
-      case "Family and Friends":
+      case "عائلتي واصدقائي":
         nameInArabic = "عائلتي وأصدقائي";
         break;
     }
@@ -136,6 +62,7 @@ class _AspectGoal extends State<AspectGoal> {
 
   @override
   Widget build(BuildContext context) {
+    var aspectList = Provider.of<WheelData>(context);
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -149,7 +76,7 @@ class _AspectGoal extends State<AspectGoal> {
               const SizedBox(
                 width: 10,
               ),
-              chooseIcon(widget.aspect.name),
+              aspectList.getSelectedIcon(widget.aspect.name),
             ],
           ),
           automaticallyImplyLeading: true, // need color

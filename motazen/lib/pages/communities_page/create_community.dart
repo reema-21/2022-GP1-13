@@ -41,7 +41,6 @@ class _CreateCommunityState extends State<CreateCommunity> {
   bool enabled = false;
   bool private = true;
   String? isSelected;
-  String aspectnameInEnglish = "";
   bool public = false;
   DateTime duration = DateTime.now();
   int difference = 0;
@@ -57,7 +56,7 @@ class _CreateCommunityState extends State<CreateCommunity> {
   }
 
   // Initial Selected Value
-  String aspect = 'Finance';
+  String aspect = 'أموالي';
 
   @override
   void dispose() {
@@ -70,224 +69,220 @@ class _CreateCommunityState extends State<CreateCommunity> {
   Widget build(BuildContext context) {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        drawer: const SideBar(),
-        appBar: AppBar(
-          backgroundColor: kWhiteColor,
-          iconTheme: const IconThemeData(color: Colors.black),
-          elevation: 0.0,
-          actions: <Widget>[
-            IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const RotatedBox(
-                  quarterTurns: 2,
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.black,
-                  ),
-                ),
-                tooltip: 'View Requests'),
-          ],
-        ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      drawer: const SideBar(),
+      appBar: AppBar(
         backgroundColor: kWhiteColor,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: //Wrap it with form
-                Form(
-              key: formKey,
-              child:
-                  Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text(
-                  'انشاء مجتمع',
-                  style: titleText,
+        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const RotatedBox(
+                quarterTurns: 2,
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
                 ),
-                SizedBox(
-                  height: screenHeight(context) * 0.03,
-                ),
-                textformField(
-                    hint: "اسم المجتمع", controller: communityNameController),
-                const Padding(
-                    padding: EdgeInsets.only(top: 8, bottom: 8),
-                    child: Text(
-                      'نوع المجتمع',
-                      style: TextStyle(fontSize: 16),
-                    )),
-                isPrivateWidget(context),
-
-                SizedBox(
-                  height: screenHeight(context) * 0.01,
-                ),
-                // take the new ones
-                const Padding(
+              ),
+              tooltip: 'View Requests'),
+        ],
+      ),
+      backgroundColor: kWhiteColor,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: //Wrap it with form
+              Form(
+            key: formKey,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                'انشاء مجتمع',
+                style: titleText,
+              ),
+              SizedBox(
+                height: screenHeight(context) * 0.03,
+              ),
+              textformField(
+                  hint: "اسم المجتمع", controller: communityNameController),
+              const Padding(
                   padding: EdgeInsets.only(top: 8, bottom: 8),
                   child: Text(
-                    'جانب الحياة',
+                    'نوع المجتمع',
                     style: TextStyle(fontSize: 16),
+                  )),
+              isPrivateWidget(context),
+
+              SizedBox(
+                height: screenHeight(context) * 0.01,
+              ),
+              // take the new ones
+              const Padding(
+                padding: EdgeInsets.only(top: 8, bottom: 8),
+                child: Text(
+                  'جانب الحياة',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              aspectWidget(context),
+              SizedBox(
+                height: screenHeight(context) * 0.01,
+              ),
+              SingleChildScrollView(
+                  child: Padding(
+                padding: mediaQuery.viewInsets,
+                child: Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: const [
+                        Text('الهدف', style: TextStyle(fontSize: 16)),
+                      ],
+                    ),
                   ),
-                ),
-                aspectWidget(context),
-                SizedBox(
-                  height: screenHeight(context) * 0.01,
-                ),
-                SingleChildScrollView(
-                    child: Padding(
-                  padding: mediaQuery.viewInsets,
-                  child: Column(children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        if (!enabled) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: const Duration(milliseconds: 500),
+                              backgroundColor: Colors.yellow.shade300,
+                              content: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.error,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                  SizedBox(width: 20),
+                                  Expanded(
+                                    child: Text("اختر جانب الحياة أولا",
+                                        style: TextStyle(color: Colors.black)),
+                                  )
+                                ],
+                              )));
+                        }
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                      ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: const [
-                          Text('الهدف', style: TextStyle(fontSize: 16)),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  // shouldEnabled = true;
+                                });
+                              },
+                              child: const Icon(
+                                Icons.task,
+                                color: kPrimaryColor,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: ((goalName == null ||
+                                        goalNameController.text == "") &&
+                                    enabled)
+                                ? goalWidget(context)
+                                : chosenGoal(context),
+                          ),
+                          const SizedBox(width: 10),
                         ],
                       ),
                     ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (!enabled) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                duration: const Duration(milliseconds: 500),
-                                backgroundColor: Colors.yellow.shade300,
-                                content: Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.error,
-                                      color: Color.fromARGB(255, 0, 0, 0),
-                                    ),
-                                    SizedBox(width: 20),
-                                    Expanded(
-                                      child: Text("اختر جانب الحياة أولا",
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                    )
-                                  ],
-                                )));
-                          }
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    // shouldEnabled = true;
-                                  });
-                                },
-                                child: const Icon(
-                                  Icons.task,
-                                  color: kPrimaryColor,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: ((goalName == null ||
-                                          goalNameController.text == "") &&
-                                      enabled)
-                                  ? goalWidget(context)
-                                  : chosenGoal(context),
-                            ),
-                            const SizedBox(width: 10),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ]),
-                )),
+                  ),
+                ]),
+              )),
 
-                SizedBox(
-                  height: screenHeight(context) * 0.05,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () async {
-                        String commID =
-                            '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
-                        if (formKey.currentState!.validate()) {
-                          Goal? choseGoal = Goal(userID: IsarService.getUserID);
-                          IsarService iser =
-                              IsarService(); // initialize local storage
-                          choseGoal = await iser.getgoal(
-                            goalName!,
-                          ); // here iam fetching the goal information from isar to assign it to the communties
-                          final createdComm = Community(
-                              progressList: [
-                                //!here you changes it form being a zero when start to the value of the goalProgress
-                                {
-                                  firebaseAuth.currentUser!.uid:
-                                      choseGoal!.goalProgressPercentage
-                                }
-                              ],
-                              communityName: communityNameController.text,
-                              aspect: isSelected,
-                              isPrivate: private,
-                              founderUsername:
-                                  firebaseAuth.currentUser!.displayName,
-                              // tillDate: duration,
-                              creationDate: DateTime.now(),
-                              goalName: goalName,
-                              // listOfTasks: taskControleer.goalTask.value.isEmpty
-                              //     ? []
-                              //     : taskControleer.goalTask.value,
-                              id: commID);
-                          communityController.listOfCreatedCommunities
-                              .insert(0, createdComm);
-                          communityController.update();
-                          communityController.createCommunity(
-                            invitedUsers: [],
-                            community: createdComm,
-                          );
-                          CommunityID newCom =
-                              CommunityID(userID: IsarService.getUserID);
-                          newCom.CommunityId = commID;
+              SizedBox(
+                height: screenHeight(context) * 0.05,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      String commID =
+                          '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
+                      if (formKey.currentState!.validate()) {
+                        Goal? choseGoal = Goal(userID: IsarService.getUserID);
+                        IsarService iser =
+                            IsarService(); // initialize local storage
+                        choseGoal = await iser.getgoal(
+                          goalName!,
+                        ); // here iam fetching the goal information from isar to assign it to the communties
+                        final createdComm = Community(
+                            progressList: [
+                              //!here you changes it form being a zero when start to the value of the goalProgress
+                              {
+                                firebaseAuth.currentUser!.uid:
+                                    choseGoal!.goalProgressPercentage
+                              }
+                            ],
+                            communityName: communityNameController.text,
+                            aspect: isSelected,
+                            isPrivate: private,
+                            founderUsername:
+                                firebaseAuth.currentUser!.displayName,
+                            // tillDate: duration,
+                            creationDate: DateTime.now(),
+                            goalName: goalName,
+                            // listOfTasks: taskControleer.goalTask.value.isEmpty
+                            //     ? []
+                            //     : taskControleer.goalTask.value,
+                            id: commID);
+                        communityController.listOfCreatedCommunities
+                            .insert(0, createdComm);
+                        communityController.update();
+                        communityController.createCommunity(
+                          invitedUsers: [],
+                          community: createdComm,
+                        );
+                        CommunityID newCom =
+                            CommunityID(userID: IsarService.getUserID);
+                        newCom.CommunityId = commID;
 
-                          // iser.CreateCommunity(newCom);
+                        // iser.CreateCommunity(newCom);
 
 // CommunityID?newCommunity =
 //         await iser.findCommunity(commID);
 //         print("here is the value of the community id");
 //         print(newCommunity!.id);
-                          choseGoal.Communities.add(newCom);
-                          iser.createGoal(choseGoal);
+                        choseGoal.Communities.add(newCom);
+                        iser.createGoal(choseGoal);
 
-                          Get.back();
-                          Get.to(CommunityHomePage(comm: createdComm));
-                        }
-                      },
-                      child: Container(
-                        height: screenHeight(context) * 0.05,
-                        width: screenWidth(context) * 0.4,
-                        decoration: BoxDecoration(
-                            color: kPrimaryColor,
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Center(
-                            child: txt(
-                                txt: 'انشاء',
-                                fontSize: 16,
-                                fontColor: Colors.white)),
-                      ),
-                    )
-                  ],
-                )
-              ]),
-            ),
+                        Get.back();
+                        Get.to(CommunityHomePage(comm: createdComm));
+                      }
+                    },
+                    child: Container(
+                      height: screenHeight(context) * 0.05,
+                      width: screenWidth(context) * 0.4,
+                      decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                          child: txt(
+                              txt: 'انشاء',
+                              fontSize: 16,
+                              fontColor: Colors.white)),
+                    ),
+                  )
+                ],
+              )
+            ]),
           ),
         ),
       ),
@@ -398,7 +393,8 @@ class _CreateCommunityState extends State<CreateCommunity> {
     var aspectList = Provider.of<WheelData>(context);
     return DropdownButtonFormField(
       value: isSelected,
-      items: aspectList.selectedArabic
+      items: aspectList
+          .getSelectedNames()
           .map((e) => DropdownMenuItem(
                 value: e,
                 child: Text(e),
@@ -409,58 +405,51 @@ class _CreateCommunityState extends State<CreateCommunity> {
         bool erase = true;
         setState(() {
           isSelected = val as String;
-          String pre = aspectnameInEnglish;
+          String pre = aspect;
           enabled = true;
+          //Note: suggestion, using a dictionary list w/ aspect anmes as keys and erase as
+          //index might improve performance. check the select aspect page for reference
           switch (isSelected) {
-            case "أموالي":
-              aspectnameInEnglish = "money and finances";
-              if (pre == aspectnameInEnglish) {
+            case 'أموالي':
+              if (pre == 'أموالي') {
                 //if user changes the chose aspect clear the  goal name feild erase = true ;
                 erase = false;
               }
 
               break;
-            case "متعتي":
-              aspectnameInEnglish = "Fun and Recreation";
-              if (pre == aspectnameInEnglish) {
+            case 'متعتي':
+              if (pre == 'متعتي') {
                 erase = false;
               }
               break;
-            case "مهنتي":
-              aspectnameInEnglish = "career";
-              if (pre == aspectnameInEnglish) {
+            case 'مهنتي':
+              if (pre == 'مهنتي') {
                 erase = false;
               }
               break;
-            case "علاقاتي":
-              aspectnameInEnglish = "Significant Other";
-              if (pre == aspectnameInEnglish) {
+            case 'علاقاتي':
+              if (pre == 'علاقاتي') {
                 erase = false;
               }
               break;
-            case "بيئتي":
-              aspectnameInEnglish = "Physical Environment";
-
-              if (pre == aspectnameInEnglish) {
+            case 'بيئتي':
+              if (pre == 'بيئتي') {
                 erase = false;
               }
               break;
-            case "ذاتي":
-              aspectnameInEnglish = "Personal Growth";
-              if (pre == aspectnameInEnglish) {
+            case 'ذاتي':
+              if (pre == 'ذاتي') {
                 erase = false;
               }
               break;
 
-            case "صحتي":
-              aspectnameInEnglish = "Health and Wellbeing";
-              if (pre == aspectnameInEnglish) {
+            case 'صحتي':
+              if (pre == 'صحتي') {
                 erase = false;
               }
               break;
-            case "عائلتي وأصدقائي":
-              aspectnameInEnglish = "Family and Friends";
-              if (pre == aspectnameInEnglish) {
+            case 'عائلتي وأصدقائي':
+              if (pre == 'عائلتي وأصدقائي') {
                 erase = false;
               }
               break;
@@ -503,7 +492,6 @@ class _CreateCommunityState extends State<CreateCommunity> {
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 10),
       child: TextFormField(
-        textDirection: TextDirection.rtl,
         enabled: isEnabled,
         controller: controller,
         validator: (value) {
@@ -514,7 +502,6 @@ class _CreateCommunityState extends State<CreateCommunity> {
           }
         },
         decoration: InputDecoration(
-          hintTextDirection: TextDirection.rtl,
           labelText: hint,
           suffixIcon: suffixIcon,
           border: const OutlineInputBorder(),
@@ -580,7 +567,7 @@ class _CreateCommunityState extends State<CreateCommunity> {
   Future<List<Goal>> getgoals() async {
     IsarService iser = IsarService(); // initialize local storage
     Aspect? chosenAspect = Aspect(userID: IsarService.getUserID);
-    chosenAspect = await iser.getSepecificAspect(aspectnameInEnglish);
+    chosenAspect = await iser.getSepecificAspect(isSelected!);
     return chosenAspect!.goals.toList();
   }
 

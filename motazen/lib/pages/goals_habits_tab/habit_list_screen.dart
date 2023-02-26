@@ -16,80 +16,6 @@ class HabitListScreen extends StatefulWidget {
 }
 
 class _HabitListScreenState extends State<HabitListScreen> {
-  Icon chooseIcon(String? x) {
-    Icon rightIcon = const Icon(Icons.abc);
-    switch (x) {
-      //Must include all the aspect characters and specify an icon for that
-      case "Health and Wellbeing":
-        {
-          // statements;
-          rightIcon = const Icon(Icons.spa, color: Color(0xFFffd400));
-        }
-        break;
-
-      case "career":
-        {
-          //statements;
-          rightIcon = const Icon(Icons.work, color: Color(0xff0065A3));
-        }
-        break;
-      case "Family and Friends":
-        {
-          //statements;
-          rightIcon = const Icon(Icons.person, color: Color(0xFFff9100));
-        }
-        break;
-
-      case "Significant Other":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.favorite,
-            color: Color(0xffff4949),
-          );
-        }
-        break;
-      case "Physical Environment":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.home,
-            color: Color(0xFF9E19F0),
-          );
-        }
-        break;
-      case "money and finances":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.attach_money,
-            color: Color(0xff54e360),
-          );
-        }
-        break;
-      case "Personal Growth":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.psychology,
-            color: Color(0xFF2CDDCB),
-          );
-        }
-        break;
-      case "Fun and Recreation":
-        {
-          //statements;
-          rightIcon = const Icon(
-            Icons.games,
-            color: Color(0xff008adf),
-          );
-        }
-        break;
-    }
-
-    return rightIcon;
-  }
-
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<WheelData>(context);
@@ -114,7 +40,6 @@ class _HabitListScreenState extends State<HabitListScreen> {
                         MaterialPageRoute(builder: (context) {
                       return AddHabit(
                         isr: widget.isr,
-                        chosenAspectNames: aspectList.selectedArabic,
                       ); // must be the
                     }));
                   },
@@ -151,7 +76,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                       tileColor: (index % 2 == 0)
                           ? Colors.white
                           : const Color.fromARGB(33, 102, 191, 118),
-                      leading: chooseIcon(aspectName),
+                      leading: aspectList.getSelectedIcon(aspectName!),
                       subtitle:
                           Text("التكرار : $startData"), // if not null added
                       title: Padding(

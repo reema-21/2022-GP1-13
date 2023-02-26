@@ -387,7 +387,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               builder: (BuildContext context) =>
                                   const getAllAspects(
                                     page: 'Home',
-                                  )));
+                                  ))); //Note: why do we get all aspects everytime?
                     }).onError((error, stackTrace) {});
                   }
                   // username

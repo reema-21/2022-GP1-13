@@ -1,4 +1,4 @@
-// ignore_for_file: list_remove_unrelated_type, non_constant_identifier_names, no_leading_underscores_for_local_identifiers
+// ignore_for_file: non_constant_identifier_names, no_leading_underscores_for_local_identifiers
 //new
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,37 +25,7 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
   Future<List<Goal>> getgoals(String aspect) async {
     IsarService iser = IsarService(); // initialize local storage
     Aspect? chosenAspect = Aspect(userID: IsarService.getUserID);
-    String aspectnameInEnglish = "";
-    switch (aspect) {
-      case "أموالي":
-        aspectnameInEnglish = "money and finances";
-        break;
-      case "متعتي":
-        aspectnameInEnglish = "Fun and Recreation";
-
-        break;
-      case "مهنتي":
-        aspectnameInEnglish = "career";
-
-        break;
-      case "علاقاتي":
-        aspectnameInEnglish = "Significant Other";
-
-        break;
-      case "بيئتي":
-        aspectnameInEnglish = "Physical Environment";
-        break;
-      case "ذاتي":
-        aspectnameInEnglish = "Personal Growth";
-        break;
-      case "صحتي":
-        aspectnameInEnglish = "Health and Wellbeing";
-        break;
-      case "عائلتي وأصدقائي":
-        aspectnameInEnglish = "Family and Friends";
-        break;
-    }
-    chosenAspect = await iser.getSepecificAspect(aspectnameInEnglish);
+    chosenAspect = await iser.getSepecificAspect(aspect);
 
     List<Goal> goalList = chosenAspect!.goals.toList();
     return goalList;

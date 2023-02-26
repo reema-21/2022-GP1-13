@@ -29,43 +29,42 @@ class _showsState extends State<getChosenAspectH> {
           builder: ((context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               List? aspects = snapshot.data;
-              List<String> chosenAspectNames = [];
+              List<String> selected = [];
               for (int i = 0; i < aspects!.length; i++) {
                 Aspect x = aspects[i];
                 String nameInArabic = "";
                 switch (x.name) {
-                  case "money and finances":
+                  case "أموالي":
                     nameInArabic = "أموالي";
                     break;
-                  case "Fun and Recreation":
+                  case "متعتي":
                     nameInArabic = "متعتي";
                     break;
-                  case "career":
+                  case "مهنتي":
                     nameInArabic = "مهنتي";
                     break;
-                  case "Significant Other":
+                  case "علاقتي":
                     nameInArabic = "علاقاتي";
                     break;
-                  case "Physical Environment":
+                  case "بيئتي":
                     nameInArabic = "بيئتي";
                     break;
-                  case "Personal Growth":
+                  case "ذاتي":
                     nameInArabic = "ذاتي";
                     break;
 
-                  case "Health and Wellbeing":
+                  case "صحتي":
                     nameInArabic = "صحتي";
                     break;
-                  case "Family and Friends":
+                  case "عائلتي واصدقائي":
                     nameInArabic = "عائلتي وأصدقائي";
                     break;
                 }
 
-                chosenAspectNames.add(nameInArabic);
+                selected.add(nameInArabic);
               }
               return AddHabit(
                 isr: widget.iser,
-                chosenAspectNames: chosenAspectNames,
               );
             } else {
               return const CircularProgressIndicator();

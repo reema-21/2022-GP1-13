@@ -48,7 +48,7 @@ class _CommunitiesState extends State<Communities> {
 
   userDataUpdate() async {
     await communityController.getUserData();
-    setState(() {});
+    setState(() {}); //!Note: why is there an empty set state
   }
 
   @override
@@ -148,7 +148,6 @@ class _CommunitiesState extends State<Communities> {
         child: Column(
       children: [
         Row(
-          textDirection: TextDirection.rtl,
           children: [
             IconButton(
                 onPressed: () {
@@ -172,7 +171,7 @@ class _CommunitiesState extends State<Communities> {
             child: GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: aspectList.selectedArabic.length,
+              itemCount: aspectList.selected.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                   crossAxisSpacing: 3.0,
@@ -198,7 +197,7 @@ class _CommunitiesState extends State<Communities> {
                     height: 5,
                     child: Center(
                         child: Text(
-                      aspectList.selectedArabic[index],
+                      aspectList.selected[index].name,
                       style: TextStyle(
                           color:
                               whichFilter[index] ? kWhiteColor : kBlackColor),
@@ -225,8 +224,7 @@ class _CommunitiesState extends State<Communities> {
                                     .indexWhere((element) =>
                                         element.id == community['_id']) >=
                                 0) &&
-                        aspectList.selectedArabic
-                            .contains(community['aspect'])) {
+                        aspectList.selected.contains(community['aspect'])) {
                       publicCommunities.add(Community(
                           progressList: community['progress_list'],
                           aspect: community['aspect'],
@@ -240,9 +238,9 @@ class _CommunitiesState extends State<Communities> {
                   }
                   if (whichFilter.contains(true)) {
                     List<String> selectedFilters = [];
-                    for (int i = 0; i < aspectList.selectedArabic.length; i++) {
+                    for (int i = 0; i < aspectList.selected.length; i++) {
                       if (whichFilter[i] == true) {
-                        selectedFilters.add(aspectList.selectedArabic[i]);
+                        selectedFilters.add(aspectList.selected[i].name);
                       }
                     }
                     for (int i = publicCommunities.length - 1; i >= 0; i--) {
@@ -379,21 +377,21 @@ class _CommunitiesState extends State<Communities> {
 
   String getArabicAspectFromEnglish(String english) {
     switch (english) {
-      case "money and finances":
+      case "أموالي":
         return "أموالي";
-      case "Fun and Recreation":
+      case "متعتي":
         return "متعتي";
-      case "career":
+      case "مهنتي":
         return "مهنتي";
-      case "Significant Other":
+      case "علاقتي":
         return "علاقاتي";
-      case "Physical Environment":
+      case "بيئتي":
         return "بيئتي";
-      case "Personal Growth":
+      case "ذاتي":
         return "ذاتي";
-      case "Health and Wellbeing":
+      case "صحتي":
         return "صحتي";
-      case "Family and Friends":
+      case "عائلتي واصدقائي":
         return "عائلتي وأصدقائي";
     }
     return '';
