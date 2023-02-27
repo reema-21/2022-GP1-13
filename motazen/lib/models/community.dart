@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-//new
+
 class Community {
   String? communityName;
   String? founderUsername;
@@ -16,10 +16,8 @@ class Community {
       {this.communityName,
       this.aspect,
       this.creationDate,
-      // this.tillDate,
       this.goalName,
       required this.isPrivate,
-      // this.listOfTasks,
       this.founderUsername,
       required this.progressList,
       required this.id});
@@ -30,8 +28,6 @@ class Community {
         "isPrivate": isPrivate,
         "goalName": goalName,
         "creationDate": creationDate,
-        // "tillDate": tillDate,
-        // "listOfTasks": listOfTasks,
         "founderUsername": founderUsername,
         "_id": id,
         "progress_list": progressList
@@ -45,8 +41,6 @@ class Community {
         isPrivate: snapshot['isPrivate'],
         goalName: snapshot['goalName'],
         creationDate: snapshot['creationDate'],
-        // tillDate: snapshot['tillDate'],
-        // listOfTasks: snapshot['listOfTasks'],
         founderUsername: snapshot['founderUsername'],
         id: snapshot['_id'],
         progressList: snapshot['progress_list']);

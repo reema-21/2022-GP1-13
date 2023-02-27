@@ -17,9 +17,6 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
     return (to.difference(from).inDays).round();
   }
 
-  // String duration =
-  //     daysBetween(community.creationDate!, community.tillDate!).toString();
-
   return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -38,52 +35,21 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: txt(
-                          txt: community.communityName.toString(),
-                          fontSize: 22,
-                        ),
+                        child: Text(community.communityName.toString(),
+                            style: const TextStyle(fontSize: 22)),
                       ),
                       Expanded(
-                        child: txt(
-                          txt:
-                              '${community.founderUsername.toString()} دعاك الى الانضمام الى ${community.communityName.toString()}',
-                          maxLines: 3,
-                          fontSize: 18,
-                        ),
+                        child: Text(
+                            '${community.founderUsername.toString()} دعاك الى الانضمام الى ${community.communityName.toString()}',
+                            maxLines: 3,
+                            style: const TextStyle(fontSize: 18)),
                       ),
                       Expanded(
-                        child: txt(
-                          txt: 'قبول: ${community.aspect.toString()}',
-                          fontSize: 18,
+                        child: Text(
+                          'قبول: ${community.aspect.toString()}',
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ),
-                      // Expanded(
-                      //   child: txt(
-                      //     txt: 'الفترة: $duration يوما ',
-                      //     fontSize: 18,
-                      //   ),
-                      // ),
-                      // community.listOfTasks!.isEmpty
-                      //     ? Container()
-                      //     : txt(
-                      //         txt: 'المهام: ',
-                      //         fontSize: 18,
-                      //       ),
-                      // community.listOfTasks!.isEmpty
-                      //     ? Container()
-                      //     : Expanded(
-                      //         flex: 3,
-                      //         child: ListView.builder(
-                      //           itemCount: community.listOfTasks!.length,
-                      //           itemBuilder: (context, index) {
-                      //             return txt(
-                      //               txt:
-                      //                   '\u2022 ${community.listOfTasks![index].name} ',
-                      //               fontSize: 18,
-                      //             );
-                      //           },
-                      //         ),
-                      //       ),
                       Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -104,11 +70,12 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                                 decoration: BoxDecoration(
                                     color: Colors.red,
                                     borderRadius: BorderRadius.circular(5)),
-                                child: Center(
-                                    child: txt(
-                                        txt: 'رفض',
-                                        fontSize: 16,
-                                        fontColor: Colors.white)),
+                                child: const Center(
+                                    child: Text(
+                                  'رفض',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                )),
                               ),
                             ),
                             InkWell(
@@ -151,11 +118,12 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                                 decoration: BoxDecoration(
                                     color: kPrimaryColor,
                                     borderRadius: BorderRadius.circular(5)),
-                                child: Center(
-                                    child: txt(
-                                        txt: 'قبول',
-                                        fontSize: 16,
-                                        fontColor: Colors.white)),
+                                child: const Center(
+                                    child: Text(
+                                  'قبول',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                )),
                               ),
                             ),
                           ],

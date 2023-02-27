@@ -1,5 +1,4 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/isar_service.dart';

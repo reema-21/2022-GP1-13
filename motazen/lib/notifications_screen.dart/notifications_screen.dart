@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/community_controller.dart';
@@ -114,9 +113,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              communityController.notificationQuerySnapshot =
-                                  snapshot.data;
-                              communityController.getNotifications();
+                              communityController.getNotifications(
+                                  aspectList.selected, snapshot.data);
                             }
                             return ListView.builder(
                                 itemCount: communityController
@@ -236,7 +234,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                           '${communityController.listOfNotifications[index].notificationType}');
                                                 }
                                               }
-                                              //-----
                                             }),
                                             backgroundColor:
                                                 const Color(0xFFFE4A49),
@@ -286,222 +283,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                     ? communityController
                                                         .listOfJoinedCommunities[inB]
                                                     : null;
-                                            if (comm != null) {
-                                              communityController.removeNotification(
-                                                  creationDateOfCommunity:
-                                                      communityController
-                                                          .listOfNotifications[
-                                                              index]
-                                                          .creationDate,
-                                                  type:
-                                                      '${communityController.listOfNotifications[index].notificationType}');
-                                              Get.to(CommunityHomePage(
-                                                  comm: comm,
-                                                  cameFromNotification:
-                                                      communityController
-                                                          .listOfNotifications[
-                                                              index]
-                                                          .post));
-                                            }
+                                          } else if (communityController
+                                                  .listOfNotifications[index]
+                                                  .notificationType ==
+                                              'invite') {
+                                            //! here add a code to provide details for now no click
                                           } else {
-                                            communityController
-                                                .listOfNotifications
-                                                .remove(communityController
-                                                    .listOfNotifications[index]
-                                                    .comm);
-                                            communityController
-                                                .removeNotification(
-                                                    creationDateOfCommunity:
-                                                        communityController
-                                                            .listOfNotifications[
-                                                                index]
-                                                            .creationDate,
-                                                    type: 'invite');
-                                            communityController.update();
+                                            //! here add code for clicking on the alert if you want to add deatails
                                           }
                                         },
                                       ));
                                 });
-                            //!----------------------------------------------!//
-                            //                           ListView.builder(
-                            //                             itemCount:
-                            //                                 communityController.listOfNotifications.length,
-                            //                             itemBuilder: (context, index) {
-                            //                               return Padding(
-                            //                                 padding:
-                            //                                     const EdgeInsets.fromLTRB(8, 16, 8, 16),
-                            //                                 child: Container(
-                            //                                   height: screenHeight(context) * 0.2,
-                            //                                   width: screenWidth(context),
-                            //                                   decoration: BoxDecoration(
-                            //                                       boxShadow: [
-                            //                                         BoxShadow(
-                            //                                           color: Colors.grey.withOpacity(0.5),
-                            //                                           spreadRadius: 3,
-                            //                                           blurRadius: 5,
-                            //                                           offset: const Offset(0,
-                            //                                               3), // changes position of shadow
-                            //                                         ),
-                            //                                       ],
-                            //                                       color: Colors.white,
-                            //                                       borderRadius: BorderRadius.circular(16)),
-                            //                                   child: Padding(
-                            //                                     padding: const EdgeInsets.all(16.0),
-                            //                                     child: Column(
-                            //                                       mainAxisAlignment:
-                            //                                           MainAxisAlignment.spaceEvenly,
-                            //                                       crossAxisAlignment:
-                            //                                           CrossAxisAlignment.start,
-                            //                                       children: [
-                            //                                         //taking community name
-                            //                                         if (communityController
-                            //                                                 .listOfNotifications[index]
-                            //                                                 .comm !=
-                            //                                             null)
-                            //                                           txt(
-                            //                                               txt: communityController
-                            //                                                   .listOfNotifications[index]
-                            //                                                   .comm
-                            //                                                   .communityName
-                            //                                                   .toString(),
-                            //                                               fontSize: 24),
-                            // // know the type of the notification where a reply or a like or an invitaion
-                            //                                         if (communityController
-                            //                                                     .listOfNotifications[index]
-                            //                                                     .notificationType ==
-                            //                                                 'reply' ||
-                            //                                             communityController
-                            //                                                     .listOfNotifications[index]
-                            //                                                     .notificationType ==
-                            //                                                 'like')
-                            //                                           txt(
-                            //                                               txt: communityController
-                            //                                                   .listOfNotifications[index]
-                            //                                                   .userName
-                            //                                                   .toString(),
-                            //                                               fontSize: 24),
-                            //                                         if (communityController
-                            //                                                 .listOfNotifications[index]
-                            //                                                 .notificationType ==
-                            //                                             'invite')
-                            //                                           txt(
-                            //                                               txt:
-                            //                                                   '${communityController.listOfNotifications[index].comm.founderUsername.toString()} يدعوك للإنضمام إالى ${communityController.listOfNotifications[index].comm.communityName.toString()}',
-                            //                                               fontSize: 18),
-                            //                                         if (communityController
-                            //                                                 .listOfNotifications[index]
-                            //                                                 .notificationType ==
-                            //                                             'reply')
-                            //                                           txt(
-                            //                                               txt:
-                            //                                                   '${communityController.listOfNotifications[index].userName.toString()}  قام بالرد على الرسالة "${communityController.listOfNotifications[index].reply}"',
-                            //                                               fontSize: 18),
-                            //                                         if (communityController
-                            //                                                 .listOfNotifications[index]
-                            //                                                 .notificationType ==
-                            //                                             'like')
-                            //                                           txt(
-                            //                                               txt:
-                            //                                                   '${communityController.listOfNotifications[index].userName.toString()} قام بالتشجيع للرسالة "${communityController.listOfNotifications[index].post['text']}"',
-                            //                                               fontSize: 18),
-                            //                                         Row(
-                            //                                           mainAxisAlignment:
-                            //                                               MainAxisAlignment.center,
-                            //                                           children: [
-                            //                                             InkWell(
-                            //                                               onTap: () {
-                            //                                                 if (communityController
-                            //                                                         .listOfNotifications[
-                            //                                                             index]
-                            //                                                         .notificationType ==
-                            //                                                     'invite') {
-                            //                                                   notificationDetailsPopup(
-                            //                                                       context,
-                            //                                                       community:
-                            //                                                           communityController
-                            //                                                               .listOfNotifications[
-                            //                                                                   index]
-                            //                                                               .comm);
-                            //                                                 } else if (communityController
-                            //                                                             .listOfNotifications[
-                            //                                                                 index]
-                            //                                                             .notificationType ==
-                            //                                                         'reply' ||
-                            //                                                     communityController
-                            //                                                             .listOfNotifications[
-                            //                                                                 index]
-                            //                                                             .notificationType ==
-                            //                                                         'like') {
-                            //                                                   final inA = communityController
-                            //                                                       .listOfCreatedCommunities
-                            //                                                       .indexWhere((e) =>
-                            //                                                           e.id ==
-                            //                                                           communityController
-                            //                                                               .listOfNotifications[
-                            //                                                                   index]
-                            //                                                               .notificationOfTheCommunity);
-                            //                                                   final inB = communityController
-                            //                                                       .listOfJoinedCommunities
-                            //                                                       .indexWhere((e) =>
-                            //                                                           e.id ==
-                            //                                                           communityController
-                            //                                                               .listOfNotifications[
-                            //                                                                   index]
-                            //                                                               .notificationOfTheCommunity);
-                            //                                                   final comm = inA >= 0
-                            //                                                       ? communityController
-                            //                                                               .listOfCreatedCommunities[
-                            //                                                           inA]
-                            //                                                       : inB >= 0
-                            //                                                           ? communityController
-                            //                                                               .listOfJoinedCommunities[inB]
-                            //                                                           : null;
-                            //                                                   if (comm != null) {
-                            //                                                     communityController.removeNotification(
-                            //                                                         creationDateOfCommunity:
-                            //                                                             communityController
-                            //                                                                 .listOfNotifications[
-                            //                                                                     index]
-                            //                                                                 .creationDate,
-                            //                                                         type:
-                            //                                                             '${communityController.listOfNotifications[index].notificationType}');
-                            //                                                     Get.to(CommunityHomePage(
-                            //                                                         comm: comm,
-                            //                                                         cameFromNotification:
-                            //                                                             communityController
-                            //                                                                 .listOfNotifications[
-                            //                                                                     index]
-                            //                                                                 .post));
-                            //                                                   }
-                            //                                                 }
-                            //                                               },
-                            //                                               child: Container(
-                            //                                                 height: screenHeight(context) *
-                            //                                                     0.05,
-                            //                                                 width:
-                            //                                                     screenWidth(context) * 0.4,
-                            //                                                 decoration: BoxDecoration(
-                            //                                                     color: kPrimaryColor,
-                            //                                                     borderRadius:
-                            //                                                         BorderRadius.circular(
-                            //                                                             5)),
-                            //                                                 child: Center(
-                            //                                                     child: txt(
-                            //                                                         txt: 'التفاصيل',
-                            //                                                         fontSize: 16,
-                            //                                                         fontColor:
-                            //                                                             Colors.white)),
-                            //                                               ),
-                            //                                             ),
-                            //                                           ],
-                            //                                         ),
-                            //                                       ],
-                            //                                     ),
-                            //                                   ),
-                            //                                 ),
-                            //                               );
-                            //                             },
-                            //                           );
                           },
                         ),
                       );
@@ -538,6 +330,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       case "invite":
         // String CommunityName = notification.comm.communityName.toString() ;
         content = "  يدعوك للإنضمام إلى مجتمع ";
+
+        break;
+      case "alert":
+        content = " لايمكنك دعوة ${notification.userName} لمجتمع ";
 
         break;
     }
@@ -598,8 +394,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                       : notification.notificationType == "reply"
                                           ? const AssetImage(
                                               "assets/images/reply.png")
-                                          : const AssetImage(
-                                              "assets/images/like.png")) //"Icon made by Muhammad_Usman  from www.flaticon.com""Icon made by Circlon Tech from www.flaticon.com"
+                                          : notification.notificationType ==
+                                                  "like"
+                                              ? const AssetImage(
+                                                  "assets/images/like.png")
+                                              : const AssetImage(
+                                                  "assets/images/warning.png")) //"Icon made by Muhammad_Usman  from www.flaticon.com""Icon made by Circlon Tech from www.flaticon.com"
                               ),
                         ),
                       ]),
@@ -619,9 +419,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   child: RichText(
                       text: TextSpan(children: [
                     TextSpan(
-                        text: notification.comm != null
+                        text: notification.comm != null &&
+                                notification.notificationType != "alert"
                             ? notification.comm.founderUsername
-                            : notification.userName,
+                            : notification.comm == null
+                                ? notification.userName
+                                : "",
                         style: const TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold)),
                     TextSpan(

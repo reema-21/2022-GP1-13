@@ -3,6 +3,7 @@ import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/models/todo_model.dart';
 import 'package:motazen/pages/homepage/daily_tasks/ranking_algorithm.dart';
+import 'package:motazen/pages/settings/tasklist_variables.dart';
 
 //set the reset time
 const TimeOfDay resetTime = TimeOfDay(hour: 0, minute: 0);
@@ -61,6 +62,7 @@ Todo createTaskTodoList(List<Aspect> aspectList) {
             importance: importance));
       }
     }
+    totalTaskNumbers = taskItemList.length;
   }
 
   ///step 2: rank the list
@@ -74,7 +76,18 @@ Todo createTaskTodoList(List<Aspect> aspectList) {
   }
 
   ///Step3: visualize the list
-  return Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: rankedList);
+  totalTaskNumbers = rankedList.length;
+  rankedList = List.from(rankedList.reversed);
+  return Todo(
+      //هنا تغيير عددهم
+      id: 'todo-tag-1',
+      items: rankedList.length < toShowTaskNumber
+          ? rankedList
+          : defaultTasklist
+              ? rankedList
+              : toShowTaskNumber == 0
+                  ? []
+                  : rankedList.sublist(0, toShowTaskNumber));
 } //end of create task list
 
 Todo createHabitTodoList(List<Aspect> aspectList) {
@@ -101,6 +114,7 @@ Todo createHabitTodoList(List<Aspect> aspectList) {
         duration: habit.durationIndString,
         repetition: habit.durationInNumber,
       ));
+      totalTaskNumbers = habitItemList.length;
     }
   }
 
@@ -115,11 +129,22 @@ Todo createHabitTodoList(List<Aspect> aspectList) {
   }
 
   ///Step3: visualize the list
-  return Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: orderedList);
+  totalTaskNumbers = orderedList.length;
+  orderedList = List.from(orderedList.reversed);
+  return Todo(
+      //هنا تغيير عددهم
+      id: 'todo-tag-1',
+      items: orderedList.length < toShowTaskNumber
+          ? orderedList
+          : defaultTasklist
+              ? orderedList
+              : toShowTaskNumber == 0
+                  ? []
+                  : orderedList.sublist(0, toShowTaskNumber));
 } //end of create list
 
 // empty todo
-const emptyTasks = Todo(id: 'todo-tag-1', description: 'مهام اليوم', items: []);
+const emptyTasks = Todo(id: 'todo-tag-1', items: []);
 
 //reset check value each day
 void resetCheck(List<Item> itemList) {

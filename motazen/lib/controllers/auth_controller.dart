@@ -1,11 +1,10 @@
-// ignore_for_file: empty_catches
-//new
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:motazen/models/community.dart';
 import 'package:motazen/theme.dart';
-
 import '../models/user.dart';
 
 class AuthController extends GetxController {
@@ -43,12 +42,16 @@ class AuthController extends GetxController {
           List createdCommunitiess = [];
           try {
             createdCommunitiess = user['createdCommunities'];
-          } catch (e) {}
+          } catch (e) {
+            log('error: $e');
+          }
 
           List joinedCommunitiess = [];
           try {
             joinedCommunitiess = user['joinedCommunities'];
-          } catch (e) {}
+          } catch (e) {
+            log('error: $e');
+          }
           String userNamee = user['userName'];
           String emaill = user['email'];
           Timestamp signInDatee = user['signInDate'];
@@ -56,21 +59,9 @@ class AuthController extends GetxController {
           String userIDD = user['userID'];
           String firstNamee = user['firstName'];
           for (var community in createdCommunitiess) {
-            // List<Task> listOfTasks = [];
-            try {
-              // for (var task in community['listOfTasks']) {
-              //   listOfTasks.add(Task(
-              //     TaskDependency: task['TaskDependency'],
-              //     amountCompleted: task['amountCompleted'],
-              //     duration: task['duration'],
-              //     durationDescribtion: task['durationDescribtion'],
-              //     // goal: task['goal'],
-              //     // id: task['id'],
-              //     name: task['name'],
-              //     taskCompletionPercentage: task['taskCompletionPercentage'],
-              //   ));
-              // }
-            } catch (e) {} //is this code needed
+            try {} catch (e) {
+              log('error: $e');
+            }
 
             try {
               createdCommnitiesOfUser.add(Community(
@@ -82,25 +73,15 @@ class AuthController extends GetxController {
                   goalName: community['goalName'],
                   isPrivate: community['isPrivate'],
                   id: community['_id']));
-            } catch (e) {}
+            } catch (e) {
+              log('error: $e');
+            }
           }
 
           for (var community in joinedCommunitiess) {
-            // List<Task> listOfTasks = [];
-            try {
-              // for (var task in community['listOfTasks']) {
-              //   listOfTasks.add(Task(
-              //     TaskDependency: task['TaskDependency'],
-              //     amountCompleted: task['amountCompleted'],
-              //     duration: task['duration'],
-              //     durationDescribtion: task['durationDescribtion'],
-              //     // goal: task['goal'],
-              //     // id: task['id'],
-              //     name: task['name'],
-              //     taskCompletionPercentage: task['taskCompletionPercentage'],
-              //   ));
-              // }
-            } catch (e) {} //is this code needed
+            try {} catch (e) {
+              log('error: $e');
+            }
             try {
               joinedCommnitiesOfUser.add(Community(
                   progressList: community['progress_list'],
@@ -111,7 +92,9 @@ class AuthController extends GetxController {
                   goalName: community['goalName'],
                   isPrivate: community['isPrivate'],
                   id: community['_id']));
-            } catch (e) {}
+            } catch (e) {
+              log('error: $e');
+            }
           }
 
           usersList.add(
@@ -127,7 +110,9 @@ class AuthController extends GetxController {
           );
         }
       });
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
     update();
   }
 }

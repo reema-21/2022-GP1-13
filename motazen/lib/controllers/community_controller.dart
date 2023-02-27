@@ -1,14 +1,13 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, depend_on_referenced_packages, empty_catches
-//new
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
 import 'package:motazen/models/community.dart';
 import 'package:motazen/models/user.dart';
-
 import '../models/notification_model.dart';
 import '../theme.dart';
+import 'dart:developer';
 
 class CommunityController extends GetxController {
   final Rx<Map<String, dynamic>> _user = Rx<Map<String, dynamic>>({});
@@ -19,74 +18,128 @@ class CommunityController extends GetxController {
   RxList<Community> listOfCreatedCommunities = <Community>[].obs;
   RxList<Community> listOfJoinedCommunities = <Community>[].obs;
   RxList<NotificationModel> listOfNotifications = <NotificationModel>[].obs;
-  RxList shoppingList = [].obs;
-  Rx<bool> isProfilePhotoUpdating = false.obs;
-  Rx<bool> isProfileComplete = false.obs;
-  Rx<bool> isPremiumUser = false.obs;
   Rx<String> name = ''.obs;
-  Rx<String> email = ''.obs;
-  Rx<String> sex = ''.obs;
-  Rx<String> memberSince = ''.obs;
-  Rx<String> trainingSession = ''.obs;
-  Rx<DateTime> birthday = DateTime.now().obs;
-  Rx<String> gender = ''.obs;
-  Rx<String> profilePhoto = ''.obs;
-  Rx<String> height = ''.obs;
-  Rx<String> startWeight = ''.obs;
-  Rx<String> currentWeight = ''.obs;
-  Rx<String> goalWeight = ''.obs;
-  Rx<String> goal = ''.obs;
-  Rx<String> activityLevel = ''.obs;
-  var notificationQuerySnapshot;
 
-  final Rx<String> _uid = "".obs;
+  FutureGroup futureGroup = FutureGroup();
 
-  updateUserData(String uid) async {
-    _uid.value = uid;
-    await getUserData();
-  }
-
-  getNotifications() async {
-    try {
-      listOfNotifications.clear();
-    } catch (e) {}
+//* retrieves the user's notifications from firebase
+  getNotifications(List selectedAspect, var notificationQuerySnapshot) async {
+    //! I commented the code for clearing the list to check if it's usefull or not
+    // try {
+    //   listOfNotifications.clear();
+    // } catch (e) {
+    //   log('error: $e');
+    // }
 
     try {
       if (notificationQuerySnapshot.docs.isNotEmpty) {
-        for (var doc in notificationQuerySnapshot.docs) {
-          var notydoc = doc.data();
-          try {
-            listOfNotifications.add(
-              NotificationModel(
-                  comm: notydoc['community'] == null
-                      ? null
-                      : Community(
-                          progressList: notydoc['community']['progress_list'],
-                          aspect: notydoc['community']['aspect'],
-                          communityName: notydoc['community']['communityName'],
-                          creationDate:
-                              notydoc['community']['creationDate'].toDate(),
-                          founderUsername: notydoc['community']
-                              ['founderUsername'],
-                          goalName: notydoc['community']['goalName'],
-                          isPrivate: notydoc['community']['isPrivate'],
-                          id: notydoc['community']['_id']),
-                  creationDate: notydoc['creation_date'].toDate(),
-                  post: notydoc['post'],
-                  reply: notydoc['reply'],
-                  userName: notydoc['user_name'],
-                  notificationType: notydoc['type'] ?? "invite",
-                  notificationOfTheCommunity: notydoc['community_link']),
-            );
-          } catch (e) {}
-        }
+        for (var notification in notificationQuerySnapshot.docs) {
+          //retrieve the notification's data
+          var notificationData = notification.data();
+
+          //check if the user has the aspect of the notification
+          bool selected = false;
+
+          //? why do you check if the community index is not null? is related to notification types?
+          // yes , there is fore types of notification the (like and replay types) don't have community but the (alert and the invite types) have
+          //so here i want to do the code down for only the invite type
+          //! in this case, use the type attribute (I believe there is one)
+          if (notificationData['community'] != null) {
+            for (var aspect in selectedAspect) {
+              if (aspect.name == notificationData['community']['aspect']) {
+                selected = true;
+                break;
+              } //end if
+            } //end loop (selectedAspect)
+
+            //if the aspect of the community has not been selected, enter the if statement
+            if (!selected) {
+              //Step1: delete the notification
+
+              await notification.delete(); //! check if this works <3
+
+              //Step2: send an alert to the sender
+              //! this step should be implemented in a different method and then called here for maintainability And readability
+              //retrieve current user's data
+              final user = FirebaseAuth.instance.currentUser;
+
+              //create a notification object for the alert
+              final communityNotification = {
+                'creation_date': DateTime.now(),
+                'type': 'alert',
+                'community': {
+                  'progress_list': notificationData['community']
+                      ['progress_list'],
+                  'aspect': notificationData['community']['aspect'],
+                  'communityName': notificationData['community']
+                      ['communityName'],
+                  'creationDate': notificationData['community']['creationDate'],
+                  'founderUsername': notificationData['community']
+                      ['founderUsername'],
+                  'goalName': notificationData['community']['goalName'],
+                  'isPrivate': notificationData['community']['isPrivate'],
+                  '_id': notificationData['community']['_id']
+                },
+                'user_name': user?.displayName
+              };
+
+              //send the notification to the other user
+              futureGroup.add(firestore
+                  .collection('user')
+                  .doc(notificationData['community']['progress_list'][0]
+                      .toString()
+                      .substring(
+                          1,
+                          notificationData['community']['progress_list'][0]
+                              .toString()
+                              .indexOf(':')))
+                  .collection('notifications')
+                  .add(communityNotification));
+              continue;
+            } //end if for !isSelected
+          } // end if for (notificationData['community'] != null)
+
+          //add the notification to the list of notification to be displayed
+          listOfNotifications.add(
+            NotificationModel(
+                comm: notificationData['community'] == null
+                    ? null
+                    : Community(
+                        progressList: notificationData['community']
+                            ['progress_list'],
+                        aspect: notificationData['community']['aspect'],
+                        communityName: notificationData['community']
+                            ['communityName'],
+                        creationDate: notificationData['community']
+                                ['creationDate']
+                            .toDate(),
+                        founderUsername: notificationData['community']
+                            ['founderUsername'],
+                        goalName: notificationData['community']['goalName'],
+                        isPrivate: notificationData['community']['isPrivate'],
+                        id: notificationData['community']['_id']),
+                creationDate: notificationData['creation_date'].toDate(),
+                post: notificationData['post'],
+                reply: notificationData['reply'],
+                userName: notificationData['user_name'],
+                notificationType: notificationData['type'] ?? "invite",
+                notificationOfTheCommunity: notificationData['community_link']),
+          );
+        } //end the notifications loop
+
+        //sort the notifications list by date
         listOfNotifications
             .sort((b, a) => a.creationDate.compareTo(b.creationDate));
-      } else {}
-    } catch (e) {}
+      }
+    } catch (e) {
+      log('error: $e');
+    }
+
+    //call the update mehtod to update the controller's data
     update();
   }
 
+//retreive's the user's community data
   getUserData() async {
     listOfJoinedCommunities.clear();
     listOfCreatedCommunities.clear();
@@ -103,11 +156,15 @@ class CommunityController extends GetxController {
     List createdCommunitiess = [];
     try {
       createdCommunitiess = userData['createdCommunities'];
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
     List joinedCommunitiess = [];
     try {
       joinedCommunitiess = userData['joinedCommunities'];
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
 
     for (var community in createdCommunitiess) {
       listOfCreatedCommunities.add(Community(
@@ -135,12 +192,11 @@ class CommunityController extends GetxController {
     update();
   }
 
+//create a community
   createCommunity({
     required Community community,
     required List<Userr> invitedUsers,
   }) async {
-    FutureGroup futureGroup = FutureGroup();
-
     try {
       await firestore
           .collection('user')
@@ -193,10 +249,6 @@ class CommunityController extends GetxController {
             'founderUsername': community.founderUsername,
             'goalName': community.goalName,
             'isPrivate': community.isPrivate,
-            // 'listOfTasks': community.listOfTasks!.isNotEmpty
-            //     ? community.listOfTasks!.map((e) => e.toJson()).toList()
-            //     : [],
-            // 'tillDate': community.tillDate,
             '_id': community.id
           });
         } else {
@@ -212,17 +264,12 @@ class CommunityController extends GetxController {
             'founderUsername': community.founderUsername,
             'goalName': community.goalName,
             'isPrivate': community.isPrivate,
-            // 'listOfTasks': community.listOfTasks!.isNotEmpty
-            //     ? community.listOfTasks!.map((e) => e.toJson()).toList()
-            //     : [],
-            // 'tillDate': community.tillDate,
             '_id': community.id
           });
         }
       });
       futureGroup.close();
       getSuccessSnackBar('تم انشاء المجتمع بنجاح');
-      // Get.off(() => const navBar());
     } catch (e) {
       listOfCreatedCommunities.remove(community);
       getErrorSnackBar('حدث خطأ ما ،عاود التسجيل مرة أخرى ');
@@ -252,7 +299,9 @@ class CommunityController extends GetxController {
                 })
             .toList(),
       });
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
     Get.back();
   }
 
@@ -271,6 +320,8 @@ class CommunityController extends GetxController {
           ds.reference.delete();
         }
       });
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
   }
 }

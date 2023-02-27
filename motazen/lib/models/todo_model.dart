@@ -10,15 +10,11 @@ class Todo {
   /// {@macro todo}
   const Todo({
     required this.id,
-    required this.description,
     required this.items,
   });
 
   /// The id of this todo.
   final String id;
-
-  /// The description of this todo.
-  final String description;
 
   /// A list of [Item]s for sub-todos.
   final List<Item> items;

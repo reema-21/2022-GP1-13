@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+//*Colors
+
 const kPrimaryColor = Color(0xFF66BF77);
 const kSecondaryColor = Color(0xFF595E70);
 const kDarkGreyColor = Color(0xFFA8A8A8);
@@ -14,13 +16,16 @@ const kTextFieldColor = Color(0xFF979797);
 const kDisabled = Color(0xffE2E2E2);
 const kAlertColor = Color(0xff009fe3);
 
+//*Magin and padding
 const kDefaultPadding = EdgeInsets.symmetric(horizontal: 30);
 const kButtonMargin = EdgeInsets.all(30.0);
 
+//!this should not be here
 // FIREBASE
 var firebaseAuth = FirebaseAuth.instance;
 var firestore = FirebaseFirestore.instance;
 
+//* Widget theme variables
 TextStyle titleText = const TextStyle(
     color: kPrimaryColor,
     fontSize: 32,
@@ -69,6 +74,8 @@ TextStyle normalText = const TextStyle(
   fontFamily: 'Frutiger',
   fontWeight: FontWeight.w700,
 );
+
+//* Widget theme methods
 
 getErrorSnackBar(String message) {
   Get.snackbar(

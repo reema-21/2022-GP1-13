@@ -82,6 +82,12 @@ class Rank {
 
     //calculate the rank
     for (var task in tasks) {
+      //check items should be displayed at the bottom of the list
+      if (task.completed) {
+        task.rank = 0;
+        continue;
+      }
+      //items past due should be displayed at the top of the list
       if (task.dueDate!.isBefore(now)) {
         task.rank = 1;
       } else {
@@ -101,29 +107,34 @@ class Rank {
 
 /////////////////////ordering habits by frequency//////////////
   List<Item> orderHabits(List<Item> habits) {
-    double durationInDays = 0;
+    double duration = 0;
 
     for (var habit in habits) {
       switch (habit.duration) {
         case 0:
           //repeated during a day
-          durationInDays = 365;
+          duration = 365;
           break;
         case 1:
           //repeated during a week
-          durationInDays = 54; //!approxiamet value, revise later
+          duration = 54; //!approxiamet value, revise later
           break;
         case 2:
           //repeated during a month
-          durationInDays = 12;
+          duration = 12;
           break;
         case 3:
           //repeated during a year
-          durationInDays = 1;
+          duration = 1;
           break;
       }
-      //find the total repution
-      habit.rank = (habit.repetition! * durationInDays);
+      //check items should be displayed at the bottom of the list
+      if (habit.completed) {
+        habit.rank = 0;
+      } else {
+        //find the total repution
+        habit.rank = (habit.repetition! * duration);
+      }
     }
 
     return habits.sorted(
