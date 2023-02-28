@@ -70,7 +70,6 @@ class _AspectGoal extends State<AspectGoal> {
             children: [
               Text(
                 AspectName(widget.aspect.name),
-                textDirection: TextDirection.rtl,
                 style: titleText2,
               ),
               const SizedBox(
@@ -137,11 +136,11 @@ class _AspectGoal extends State<AspectGoal> {
                         ),
                         LinearPercentIndicator(
                           animation: true,
+                          isRTL: true,
                           animationDuration: 600,
                           curve: Curves.easeIn,
                           percent: goal.goalProgressPercentage,
                           lineHeight: 7,
-                          isRTL: true,
                           progressColor: kPrimaryColor,
                           backgroundColor: kPrimaryColor.withOpacity(0.3),
                           barRadius: const Radius.circular(10),

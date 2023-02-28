@@ -419,6 +419,7 @@ class _EditGoalState extends State<EditGoal> {
                   ),
                 ),
                 LinearPercentIndicator(
+                  isRTL: true,
                   animation: true,
                   animationDuration: 600,
                   curve: Curves.easeIn,
@@ -426,7 +427,6 @@ class _EditGoalState extends State<EditGoal> {
                   ///check later why the value isn't updated
                   percent: completionPercentage,
                   lineHeight: 7,
-                  isRTL: true,
                   progressColor: kPrimaryColor,
                   backgroundColor: kPrimaryColor.withOpacity(0.3),
                   barRadius: const Radius.circular(10),

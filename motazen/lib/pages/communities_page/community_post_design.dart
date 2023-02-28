@@ -279,64 +279,10 @@ class OwnMessageDesign extends StatelessWidget {
                                   topLeft: Radius.circular(20),
                                   topRight: Radius.circular(20),
                                   bottomRight: Radius.circular(20)),
-                              // boxShadow: [
-                              //   BoxShadow(
-                              //     color: Colors.grey.withOpacity(0.5),
-                              //     spreadRadius: 5,
-                              //     blurRadius: 7,
-                              //     offset: Offset(0, 3), // changes position of shadow
-                              //   ),
-                              // ],
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //   crossAxisAlignment: CrossAxisAlignment.center,
-                                // children: [
-                                // Row(
-                                //   children: const [
-                                //     // Text(
-                                //     //   '${pst.author}',
-                                //     //   style: const TextStyle(
-                                //     //       color: Color.fromARGB(255, 5, 5, 5),
-                                //     //       fontSize: 18,
-                                //     //       fontWeight: FontWeight.bold),
-                                //     // ),
-                                //     SizedBox(
-                                //       width: 9,
-                                //     ),
-
-                                //! in this space here we need a star to be displayed if the user reached amount of intercation
-
-                                // Icon(Icons.star , size: 18, color:  Colors.yellow,),
-                                //       ],
-                                //     ),
-                                //     const SizedBox(
-                                //       width: 3,
-                                //     ),
-                                //     SizedBox(
-                                //       width: MediaQuery.of(context).size.width / 2.5,
-                                //       height: 20,
-                                //       child: LinearPercentIndicator(
-                                //         curve: Curves.easeIn,
-                                //         percent:
-                                //             0.5, //! this value is the user progress in the progresslist of this community . just fetch the value
-
-                                //         lineHeight: 10,
-                                //         isRTL: true,
-                                //         progressColor: kPrimaryColor,
-                                //         backgroundColor:
-                                //             const Color.fromARGB(179, 119, 117, 117),
-                                //         barRadius: const Radius.circular(10),
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
-                                // const SizedBox(
-                                //   height: 8,
-                                // ),
                                 if (pst.text != '')
                                   Text(
                                     '${pst.text}',
