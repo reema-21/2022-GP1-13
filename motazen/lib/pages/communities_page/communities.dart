@@ -123,8 +123,6 @@ class _CommunitiesState extends State<Communities> {
   }
 
   Expanded myCommunitiesSelectedContainer(BuildContext context) {
-    bool joinedCommunitiesSelected = true;
-    bool createdCommunitiesSelected = true;
     return Expanded(
       child: StatefulBuilder(builder: (context, setState) {
         return Column(

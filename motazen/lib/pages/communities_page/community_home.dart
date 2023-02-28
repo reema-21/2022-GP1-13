@@ -245,149 +245,110 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: StreamBuilder(
-                stream: _dbRef
-                    .ref('post_channels/${widget.comm.id}') //!the issue is here
-                    .child('post')
-                    .onValue,
-                builder: (context, snapshot) {
-                  List<PostModel> postList = [];
-                  if (snapshot.hasData &&
-                      snapshot.data != null &&
-                      (snapshot.data!).snapshot.value != null) {
-                    final myPosts = Map<dynamic, dynamic>.from((snapshot.data!)
-                        .snapshot
-                        .value as Map<dynamic, dynamic>);
-                    myPosts.forEach((key, value) {
-                      final currentPost = Map<String, dynamic>.from(value);
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: StreamBuilder(
+                  stream: _dbRef
+                      .ref('post_channels/${widget.comm.id}')
+                      .child('post')
+                      .onValue,
+                  builder: (context, snapshot) {
+                    List<PostModel> postList = [];
+                    if (snapshot.hasData &&
+                        snapshot.data != null &&
+                        (snapshot.data!).snapshot.value != null) {
+                      final myPosts = Map<dynamic, dynamic>.from(
+                          (snapshot.data!).snapshot.value
+                              as Map<dynamic, dynamic>);
+                      myPosts.forEach((key, value) {
+                        final currentPost = Map<String, dynamic>.from(value);
 
-                      postList.add(PostModel(
-                          author: currentPost['author'],
-                          authorId: currentPost['author_id'],
-                          text: currentPost['text'],
-                          time: currentPost['time'],
-                          likes: currentPost['likes'] ?? [],
-                          comments: currentPost['comment'] ?? [],
-                          replyingPost: currentPost['replied_post'],
-                          postType: currentPost['post_type'] ?? 'text',
-                          imageURL: currentPost['image_url']));
-                    });
-                    if (postList.length > 1) {
-                      postList.sort((b, a) => a.time.compareTo(b.time));
-                      if (initialCome && widget.cameFromNotification != null) {
-                        initialIndex = postList.indexWhere((element) =>
-                            element.authorId ==
-                                widget.cameFromNotification['author_id'] &&
-                            element.time ==
-                                widget.cameFromNotification['time']);
+                        postList.add(PostModel(
+                            author: currentPost['author'],
+                            authorId: currentPost['author_id'],
+                            text: currentPost['text'],
+                            time: currentPost['time'],
+                            likes: currentPost['likes'] ?? [],
+                            comments: currentPost['comment'] ?? [],
+                            replyingPost: currentPost['replied_post'],
+                            postType: currentPost['post_type'] ?? 'text',
+                            imageURL: currentPost['image_url']));
+                      });
+                      if (postList.length > 1) {
+                        postList.sort((b, a) => a.time.compareTo(b.time));
+                        if (initialCome &&
+                            widget.cameFromNotification != null) {
+                          initialIndex = postList.indexWhere((element) =>
+                              element.authorId ==
+                                  widget.cameFromNotification['author_id'] &&
+                              element.time ==
+                                  widget.cameFromNotification['time']);
+                        }
                       }
-                    }
 
-                    return ScrollablePositionedList.builder(
-                      physics: const BouncingScrollPhysics(),
-                      reverse: true,
-                      itemCount: postList.length,
-                      itemScrollController: itemScrollController,
-                      initialScrollIndex: initialIndex,
-                      itemBuilder: (context, index) {
-                        return PostDesign(
-                            CommunityId: widget.comm.id,
-                            post: postList[index],
-                            dbpathToPostChnl:
-                                'post_channels/${widget.comm.id}/post',
-                            commentCallback: (PostModel pst) {
-                              setState(() {
-                                isReplying = true;
-                                replyingPost = pst;
+                      return ScrollablePositionedList.builder(
+                        physics: const BouncingScrollPhysics(),
+                        reverse: true,
+                        itemCount: postList.length,
+                        itemScrollController: itemScrollController,
+                        initialScrollIndex: initialIndex,
+                        itemBuilder: (context, index) {
+                          return PostDesign(
+                              communityId: widget.comm.id,
+                              post: postList[index],
+                              dbpathToPostChnl:
+                                  'post_channels/${widget.comm.id}/post',
+                              commentCallback: (PostModel pst) {
+                                setState(() {
+                                  isReplying = true;
+                                  replyingPost = pst;
+                                });
+                              },
+                              likeCallback: (PostModel pst, String link) {
+                                if (pst.likes.contains(
+                                    FirebaseAuth.instance.currentUser!.uid)) {
+                                  _unlikeTheText(pst, link);
+                                } else {
+                                  _likeTheText(pst, link);
+                                }
+                              },
+                              repliedPostScrollCallback: (final pst) {
+                                itemScrollController.scrollTo(
+                                    index: postList.indexWhere((element) =>
+                                        element.authorId == pst['author_id'] &&
+                                        element.time == pst['time']),
+                                    duration: const Duration(seconds: 1),
+                                    curve: Curves.easeInOutCubic);
                               });
-                            },
-                            likeCallback: (PostModel pst, String link) {
-                              if (pst.likes.contains(
-                                  FirebaseAuth.instance.currentUser!.uid)) {
-                                _unlikeTheText(pst, link);
-                              } else {
-                                _likeTheText(pst, link);
-                              }
-                            },
-                            repliedPostScrollCallback: (final pst) {
-                              itemScrollController.scrollTo(
-                                  index: postList.indexWhere((element) =>
-                                      element.authorId == pst['author_id'] &&
-                                      element.time == pst['time']),
-                                  duration: const Duration(seconds: 1),
-                                  curve: Curves.easeInOutCubic);
-                            });
-                      },
-                    );
-                  } else {
-                    return const Center(
-                      child: Text(
-                        'قل مرحبا...',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 21,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    );
-                  }
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            if (!loadfinished)
-              Container(
-                height: 70,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: const Center(
-                  child: CircularProgressIndicator(),
+                        },
+                      );
+                    } else {
+                      return const Center(
+                        child: Text(
+                          'قل مرحبا...',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 21,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
-            if (!isActiveCommunity && loadfinished)
-              Container(
-                height: 70,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.redAccent,
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: const Center(
-                  child: Text('The Community is deleted'),
-                ),
+              const SizedBox(
+                height: 15,
               ),
-            if (isActiveCommunity && loadfinished)
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                child: Container(
+              if (!loadfinished)
+                Container(
+                  height: 70,
+                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -401,238 +362,285 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                       ),
                     ],
                   ),
-                  child: Column(
-                    children: [
-                      if (isReplying)
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 3,
-                            vertical: 10,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const SizedBox(width: 8),
-                              Container(
-                                constraints: BoxConstraints(
-                                    maxWidth:
-                                        MediaQuery.of(context).size.width / 1.4,
-                                    minWidth:
-                                        MediaQuery.of(context).size.width /
-                                            1.4),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: const Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${replyingPost!.author}',
-                                      style: const TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    if (replyingPost!.text != '')
-                                      Text(
-                                        '${replyingPost!.text}',
-                                        style: TextStyle(
-                                          color: Colors.grey[800],
-                                          fontSize: 12,
-                                        ),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    if (replyingPost!.postType == 'image')
-                                      Container(
-                                          constraints: BoxConstraints(
-                                            maxHeight: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                3,
-                                          ),
-                                          child: CachedNetworkImage(
-                                            imageUrl: replyingPost!.imageURL,
-                                            placeholder: (context, url) =>
-                                                const CircularProgressIndicator(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
-                                          ))
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isReplying = false;
-                                      isSendingImage = false;
-                                      replyingPost = null;
-                                    });
-                                  },
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.green,
-                                    size: 30,
-                                  ))
-                            ],
-                          ),
-                        ),
-                      if (isSendingImage)
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 3,
-                            vertical: 10,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const SizedBox(width: 8),
-                              Container(
-                                constraints: BoxConstraints(
-                                    maxWidth:
-                                        MediaQuery.of(context).size.width /
-                                            1.4),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: const Offset(
-                                          0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: Container(
-                                    constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.width /
-                                              1.75,
-                                    ),
-                                    child: Image.file(ImageFile!)),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      isSendingImage = false;
-                                      ImageFile = null;
-                                    });
-                                  },
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.green,
-                                    size: 30,
-                                  ))
-                            ],
-                          ),
-                        ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          IconButton(
-                              onPressed: () async {
-                                await getImage();
-                              },
-                              icon: Transform.rotate(
-                                angle: 1600 * 3.14,
-                                child: const Icon(
-                                  Icons.attach_file,
-                                  color: Colors.green,
-                                  size: 30,
-                                ),
-                              )),
-                          Expanded(
-                            child: TextField(
-                              style: const TextStyle(
-                                  color: Colors.black, fontSize: 17),
-                              cursorColor: Colors.black,
-                              controller: _postController,
-                              decoration: InputDecoration(
-                                hintText: 'أرسل شيئا...',
-                                hintStyle: TextStyle(
-                                    color: Colors.grey[400], fontSize: 16),
-                                filled: true,
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                                contentPadding: const EdgeInsets.all(10),
-                              ),
-                              textCapitalization: TextCapitalization.sentences,
-                              minLines: 1,
-                              maxLines: 5,
-                              onChanged: (value) {
-                                setState(() {
-                                  _post = value;
-                                });
-                              },
-                            ),
-                          ),
-                          IconButton(
-                              onPressed: _post == '' && ImageFile == null
-                                  ? null
-                                  : ImageFile == null
-                                      ? () {
-                                          setState(() {
-                                            isReplying = false;
-                                            _postController.clear();
-                                            _addPost();
-                                          });
-                                        }
-                                      : () {
-                                          setState(() {
-                                            isReplying = false;
-                                            _postController.clear();
-                                            isSendingImage = false;
-                                            uploadImage();
-                                          });
-                                        },
-                              icon: Icon(
-                                Icons.send,
-                                color: _postController.text == '' &&
-                                        ImageFile == null
-                                    ? Colors.grey
-                                    : Colors.green,
-                                size: 30,
-                              ))
-                        ],
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              if (!isActiveCommunity && loadfinished)
+                Container(
+                  height: 70,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent,
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
                       ),
                     ],
                   ),
+                  child: const Center(
+                    child: Text('The Community is deleted'),
+                  ),
                 ),
-              )
-          ],
+              if (isActiveCommunity && loadfinished)
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset:
+                              const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        if (isReplying)
+                          Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 3,
+                              vertical: 10,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 8),
+                                Container(
+                                  constraints: BoxConstraints(
+                                      maxWidth:
+                                          MediaQuery.of(context).size.width /
+                                              1.4,
+                                      minWidth:
+                                          MediaQuery.of(context).size.width /
+                                              1.4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: const Offset(
+                                            0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${replyingPost!.author}',
+                                        style: const TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      if (replyingPost!.text != '')
+                                        Text(
+                                          '${replyingPost!.text}',
+                                          style: TextStyle(
+                                            color: Colors.grey[800],
+                                            fontSize: 12,
+                                          ),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                      if (replyingPost!.postType == 'image')
+                                        Container(
+                                            constraints: BoxConstraints(
+                                              maxHeight: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                            ),
+                                            child: CachedNetworkImage(
+                                              imageUrl: replyingPost!.imageURL,
+                                              placeholder: (context, url) =>
+                                                  const CircularProgressIndicator(),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                            ))
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        isReplying = false;
+                                        isSendingImage = false;
+                                        replyingPost = null;
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.close,
+                                      color: Colors.green,
+                                      size: 30,
+                                    ))
+                              ],
+                            ),
+                          ),
+                        if (isSendingImage)
+                          Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 3,
+                              vertical: 10,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 8),
+                                Container(
+                                  constraints: BoxConstraints(
+                                      maxWidth:
+                                          MediaQuery.of(context).size.width /
+                                              1.4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 5,
+                                        blurRadius: 7,
+                                        offset: const Offset(
+                                            0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  child: Container(
+                                      constraints: BoxConstraints(
+                                        maxHeight:
+                                            MediaQuery.of(context).size.width /
+                                                1.75,
+                                      ),
+                                      child: Image.file(ImageFile!)),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        isSendingImage = false;
+                                        ImageFile = null;
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.close,
+                                      color: Colors.green,
+                                      size: 30,
+                                    ))
+                              ],
+                            ),
+                          ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            IconButton(
+                                onPressed: () async {
+                                  await getImage();
+                                },
+                                icon: Transform.rotate(
+                                  angle: 1600 * 3.14,
+                                  child: const Icon(
+                                    Icons.attach_file,
+                                    color: Colors.green,
+                                    size: 30,
+                                  ),
+                                )),
+                            Expanded(
+                              child: TextField(
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 17),
+                                cursorColor: Colors.black,
+                                controller: _postController,
+                                decoration: InputDecoration(
+                                  hintText: 'أرسل شيئا...',
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey[400], fontSize: 16),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  contentPadding: const EdgeInsets.all(10),
+                                ),
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                minLines: 1,
+                                maxLines: 5,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _post = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            IconButton(
+                                onPressed: _post == '' && ImageFile == null
+                                    ? null
+                                    : ImageFile == null
+                                        ? () {
+                                            setState(() {
+                                              isReplying = false;
+                                              _postController.clear();
+                                              _addPost();
+                                            });
+                                          }
+                                        : () {
+                                            setState(() {
+                                              isReplying = false;
+                                              _postController.clear();
+                                              isSendingImage = false;
+                                              uploadImage();
+                                            });
+                                          },
+                                icon: Icon(
+                                  Icons.send,
+                                  color: _postController.text == '' &&
+                                          ImageFile == null
+                                      ? Colors.grey
+                                      : Colors.green,
+                                  size: 30,
+                                ))
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );

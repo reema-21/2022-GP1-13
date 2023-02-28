@@ -259,30 +259,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                           index]
                                                       .notificationType ==
                                                   'like') {
-                                            final inA = communityController
-                                                .listOfCreatedCommunities
-                                                .indexWhere((e) =>
-                                                    e.id ==
-                                                    communityController
-                                                        .listOfNotifications[
-                                                            index]
-                                                        .notificationOfTheCommunity);
-                                            final inB = communityController
-                                                .listOfJoinedCommunities
-                                                .indexWhere((e) =>
-                                                    e.id ==
-                                                    communityController
-                                                        .listOfNotifications[
-                                                            index]
-                                                        .notificationOfTheCommunity);
-                                            final comm = inA >= 0
-                                                ? communityController
-                                                        .listOfCreatedCommunities[
-                                                    inA]
-                                                : inB >= 0
-                                                    ? communityController
-                                                        .listOfJoinedCommunities[inB]
-                                                    : null;
                                           } else if (communityController
                                                   .listOfNotifications[index]
                                                   .notificationType ==
@@ -494,8 +470,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   acceptInvitaion(NotificationModel notification, aspectList) {
-    final _goalaspectController = TextEditingController();
-    _goalaspectController.text = notification.comm.goalName!;
+    final goalaspectController = TextEditingController();
+    goalaspectController.text = notification.comm.goalName!;
 
     final formKey = GlobalKey<FormState>();
     Goal isSelected = Goal(userID: IsarService.getUserID);

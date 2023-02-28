@@ -7,7 +7,9 @@ import 'package:motazen/pages/settings/tasklist_variables.dart';
 
 //set the reset time
 const TimeOfDay resetTime = TimeOfDay(hour: 0, minute: 0);
-
+//!note: in each set state for the task, both lists are displated multiple times
+//! and when the habit list is check the set state does not occur
+int counter = 0;
 //*create the todo list
 Todo createTaskTodoList(List<Aspect> aspectList) {
   //initialize
@@ -62,7 +64,6 @@ Todo createTaskTodoList(List<Aspect> aspectList) {
             importance: importance));
       }
     }
-    totalTaskNumbers = taskItemList.length;
   }
 
   ///step 2: rank the list
@@ -77,7 +78,6 @@ Todo createTaskTodoList(List<Aspect> aspectList) {
 
   ///Step3: visualize the list
   totalTaskNumbers = rankedList.length;
-  rankedList = List.from(rankedList.reversed);
   return Todo(
       //هنا تغيير عددهم
       id: 'todo-tag-1',
@@ -114,7 +114,6 @@ Todo createHabitTodoList(List<Aspect> aspectList) {
         duration: habit.durationIndString,
         repetition: habit.durationInNumber,
       ));
-      totalTaskNumbers = habitItemList.length;
     }
   }
 
@@ -129,18 +128,7 @@ Todo createHabitTodoList(List<Aspect> aspectList) {
   }
 
   ///Step3: visualize the list
-  totalTaskNumbers = orderedList.length;
-  orderedList = List.from(orderedList.reversed);
-  return Todo(
-      //هنا تغيير عددهم
-      id: 'todo-tag-1',
-      items: orderedList.length < toShowTaskNumber
-          ? orderedList
-          : defaultTasklist
-              ? orderedList
-              : toShowTaskNumber == 0
-                  ? []
-                  : orderedList.sublist(0, toShowTaskNumber));
+  return Todo(id: 'todo-tag-1', items: orderedList);
 } //end of create list
 
 // empty todo

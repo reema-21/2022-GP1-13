@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -106,7 +108,9 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
                         journal,
                       );
                       Get.back();
-                    } catch (e) {}
+                    } catch (e) {
+                      log('error: $e');
+                    }
                     setState(() {
                       isloading = false;
                     });
@@ -213,8 +217,9 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
                     await journalRef.delete();
                     journalController.journalList.remove(widget.journal);
                     Get.back();
-
-                  } catch (e) {}
+                  } catch (e) {
+                    log('error: $e');
+                  }
                   setState(() {
                     isDeleting = false;
                   });

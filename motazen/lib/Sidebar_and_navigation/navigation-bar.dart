@@ -7,6 +7,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/notifications_screen.dart/notifications_screen.dart';
+import 'package:motazen/pages/add_goal_page/add_goal_screen.dart';
 import 'package:motazen/pages/communities_page/create_community.dart';
 import 'package:motazen/pages/goals_habits_tab/goal_habits_pages.dart';
 import 'package:motazen/pages/homepage/homepage.dart';
@@ -15,7 +16,6 @@ import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/community_controller.dart';
 import '../data/data.dart';
-import '../pages/add_goal_page/get_chosen_aspect.dart';
 import '../pages/add_goal_page/task_controller.dart';
 import '../pages/add_habit_page/add_habit.dart';
 import '../pages/communities_page/communities.dart';
@@ -120,12 +120,9 @@ class _MynavBar extends State<navBar> {
                                               padding:
                                                   const EdgeInsets.all(6.0),
                                               child: Text(
-                                                // (snapshot.hasData & (communityController.listOfNotifications.isNotEmpty) )
-                                                //       ?
                                                 communityController
                                                     .listOfNotifications.length
                                                     .toString(),
-                                                // : '',
                                                 style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 14),
@@ -133,25 +130,6 @@ class _MynavBar extends State<navBar> {
                                             ),
                                           )
                                         : const SizedBox())
-                                //   Container(
-                                //     decoration: const BoxDecoration(
-                                //         shape: BoxShape.circle,
-                                //         color: Colors.green),
-                                //     alignment: Alignment.center,
-                                //     child: Padding(
-                                //       padding: const EdgeInsets.all(6.0),
-                                //       child: Text(
-                                //       (snapshot.hasData & (communityController.listOfNotifications.isNotEmpty) )
-                                //             ? communityController.listOfNotifications.length
-                                //                 .toString()
-                                //             : '',
-                                //         style: const TextStyle(
-                                //             color: Colors.white,
-                                //             fontSize: 14),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // )
                                 : const SizedBox();
                           },
                         ),
@@ -183,10 +161,10 @@ class _MynavBar extends State<navBar> {
                                               style: alertText,
                                             ),
                                             onPressed: () {
-                                              Get.to(
-                                                  () => const getChosenAspect(
-                                                        origin: '',
-                                                      ));
+                                              Get.to(() => AddGoal(
+                                                    isr: IsarService(),
+                                                    goalsTasks: const [],
+                                                  ));
                                             },
                                           ),
                                           const SizedBox(

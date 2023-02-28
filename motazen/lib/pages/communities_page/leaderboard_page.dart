@@ -173,7 +173,6 @@ class _CommunityLeaderboardPageState extends State<CommunityLeaderboardPage> {
                     if (snapshot.data.length != 0) {
                       final data = snapshot.data;
                       List<Widget> listItems = [];
-                      int i = 1;
                       data.forEach((post) {
                         listItems.add(Container(
                             height: 75,

@@ -20,8 +20,6 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
 
   // here i am trying to get the list of goal form the same aspect as the community
 
-  TextEditingController goalNameController = TextEditingController();
-
   Future<List<Goal>> getgoals(String aspect) async {
     IsarService iser = IsarService(); // initialize local storage
     Aspect? chosenAspect = Aspect(userID: IsarService.getUserID);
@@ -256,11 +254,6 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                         .get();
                                                     final userData = userDoc
                                                         .data()! as dynamic;
-                                                    List createdCommunitiess =
-                                                        [];
-                                                    createdCommunitiess =
-                                                        userData[
-                                                            'progress_list'];
 
                                                     await firestore
                                                         .collection(

@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
 import 'package:motazen/pages/settings/numberof_shown_task.dart';
 import 'package:motazen/pages/settings/profile_edit.dart';
-import 'package:motazen/primary_button.dart';
-
 import '../../Sidebar_and_navigation/navigation-bar.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -60,16 +59,16 @@ class SettingScreen extends StatelessWidget {
                 thickness: 2,
               ),
               const SizedBox(height: 10),
-              buildAccountOptionRow(
+              BuildAccountOptionRow(
                 title: "تعديل الحساب الشخصي",
                 onClick: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EditProfilePage()));
+                          builder: (context) => const EditProfilePage()));
                 },
               ),
-              buildAccountOptionRow(
+              BuildAccountOptionRow(
                 title: "خانة احتياط",
                 onClick: () {},
               ),
@@ -94,7 +93,7 @@ class SettingScreen extends StatelessWidget {
                 thickness: 2,
               ),
               const SizedBox(height: 10),
-              buildAccountOptionRow(
+              BuildAccountOptionRow(
                 title: "إعادة التقييم",
                 onClick: () {
                   showDialog(
@@ -110,7 +109,7 @@ class SettingScreen extends StatelessWidget {
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       const Text(
                                         "هل أنت متأكد من إعادة التقييم؟ بيانات جوانب الحياة سوف تحذف.",
@@ -121,9 +120,9 @@ class SettingScreen extends StatelessWidget {
                                       const SizedBox(height: 22),
                                       Row(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                            CrossAxisAlignment.center,
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         children: <Widget>[
                                           MaterialButton(
                                             color: Colors.red,
@@ -133,13 +132,13 @@ class SettingScreen extends StatelessWidget {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                      const initializeAspects()));
+                                                          const initializeAspects()));
                                             },
                                             height: 45,
                                             minWidth: 70,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                              BorderRadius.circular(50),
+                                                  BorderRadius.circular(50),
                                             ),
                                             child: const Text(
                                               "نعم، متأكد",
@@ -153,14 +152,14 @@ class SettingScreen extends StatelessWidget {
                                             color: Colors.green,
                                             onPressed: () {
                                               Navigator.of(context,
-                                                  rootNavigator: true)
+                                                      rootNavigator: true)
                                                   .pop();
                                             },
                                             height: 45,
                                             minWidth: 70,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                              BorderRadius.circular(50),
+                                                  BorderRadius.circular(50),
                                             ),
                                             child: const Text(
                                               "لا، تراجع",
@@ -177,7 +176,7 @@ class SettingScreen extends StatelessWidget {
                       });
                 },
               ),
-              buildAccountOptionRow(
+              BuildAccountOptionRow(
                 title: "التحكم بعدد المهام المستعرضة",
                 onClick: () {
                   Navigator.push(
@@ -186,11 +185,6 @@ class SettingScreen extends StatelessWidget {
                           builder: (context) => const NumberOfShownTaskPage()));
                 },
               ),
-              // const SizedBox(height: 50),
-              // const Center(
-              //   child: PrimaryButton(buttonText: 'sign out'),
-              // ),
-              // const SizedBox(height: 15),
             ],
           ),
         ),
@@ -220,43 +214,21 @@ class SettingScreen extends StatelessWidget {
   }
 }
 
-class buildAccountOptionRow extends StatefulWidget {
-  const buildAccountOptionRow({super.key, this.title, this.onClick});
-  final title;
-  final onClick;
+class BuildAccountOptionRow extends StatefulWidget {
+  const BuildAccountOptionRow({super.key, required this.title, this.onClick});
+  final String title;
+  final dynamic onClick;
 
   @override
-  State<buildAccountOptionRow> createState() => _buildAccountOptionRowState();
+  State<BuildAccountOptionRow> createState() => _BuildAccountOptionRowState();
 }
 
-class _buildAccountOptionRowState extends State<buildAccountOptionRow> {
+class _BuildAccountOptionRowState extends State<BuildAccountOptionRow> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         widget.onClick();
-        // showDialog(
-        //     context: context,
-        //     builder: (BuildContext context) {
-        //       return AlertDialog(
-        //         title: Text(title),
-        //         content: Column(
-        //           mainAxisSize: MainAxisSize.min,
-        //           children: [
-        //             Text("Option 1"),
-        //             Text("Option 2"),
-        //             Text("Option 3"),
-        //           ],
-        //         ),
-        //         actions: [
-        //           ElevatedButton(
-        //               onPressed: () {
-        //                 Navigator.of(context).pop();
-        //               },
-        //               child: Text("Close")),
-        //         ],
-        //       );
-        //     });
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -278,53 +250,3 @@ class _buildAccountOptionRowState extends State<buildAccountOptionRow> {
     );
   }
 }
-
-
-
-
-
-// //---------------------------------------------
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       /// appbar
-//       appBar: AppBar(
-//         backgroundColor: kPrimaryColor,
-//         elevation: 0.0,
-//         centerTitle: false,
-//         automaticallyImplyLeading: false,
-//         leadingWidth: 0.0,
-//         title: const Text(
-//           'الإعدادات',
-//           style: TextStyle(
-//             color: kWhiteColor,
-//             fontSize: 26,
-//           ),
-//         ),
-//       ),
-//
-//       /// body
-//       body: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         mainAxisAlignment: MainAxisAlignment.start,
-//         children: [
-//           const SizedBox(height: 10),
-//           ListTile(
-//             leading: const Icon(Icons.edit),
-//             title: const Text('إعادة التقييم'),
-//             onTap: () => Get.to(() => const initializeAspects()),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-//
-// //-------------------------------------------------------------
-// class SettingsPage extends StatefulWidget {
-//   @override
-//   _SettingsPageState createState() => _SettingsPageState();
-// }
-//
-// class _SettingsPageState extends State<SettingsPage> {
-//   @override

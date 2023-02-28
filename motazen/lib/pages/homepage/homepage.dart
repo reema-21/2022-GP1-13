@@ -79,10 +79,10 @@ class _MyHomepageState extends State<Homepage> {
                       ),
                       tabs: [
                         Tab(
-                          child: Text("عاداتي"),
+                          child: Text("مهامي"),
                         ),
                         Tab(
-                          child: Text("مهامي"),
+                          child: Text("عاداتي"),
                         ),
                       ]),
                 ),
@@ -90,8 +90,8 @@ class _MyHomepageState extends State<Homepage> {
                 Flexible(
                   child: Center(
                     child: TabBarView(children: [
-                      TodoCard(todo: createHabitTodoList(aspects ?? [])),
-                      TodoCard(todo: createTaskTodoList(aspects ?? []))
+                      TodoCard(todo: createTaskTodoList(aspects ?? [])),
+                      TodoCard(todo: createHabitTodoList(aspects ?? []))
                     ]),
                   ),
                 ),

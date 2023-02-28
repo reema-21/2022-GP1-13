@@ -76,7 +76,7 @@ class Item {
   int? daysCompletedTask;
 
   ///the normalised time criteria
-  double NT = 0;
+  double nt = 0;
 
   ///the normalised time criteria
   double timeLeft = 0;

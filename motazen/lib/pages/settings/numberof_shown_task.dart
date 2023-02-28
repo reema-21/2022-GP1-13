@@ -20,7 +20,10 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
       appBar: AppBar(
         shadowColor: Colors.white,
         backgroundColor: Colors.white,
-        title: const Text('عدد المهام المستعرضة'),
+        title: const Text(
+          'عدد المهام المستعرضة',
+          overflow: TextOverflow.visible,
+        ),
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -88,19 +91,12 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(18.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: const [
-                                Text(
-                                  ':',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                Text('التحكم بعدد المهام المستعرضة في القائمة:',
-                                    style: TextStyle(fontSize: 16))
-                              ],
-                            ),
+                          const Padding(
+                            padding: EdgeInsets.all(18.0),
+                            child: Text(
+                                'التحكم بعدد المهام المستعرضة في القائمة:',
+                                overflow: TextOverflow.visible,
+                                style: TextStyle(fontSize: 16)),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20, top: 10),
@@ -111,6 +107,8 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
                                 InkWell(
                                   onTap: () {
                                     setState(() {
+                                      //? is this condition really nessacerry? what if
+                                      //? I want to increase the number of displayed items before adding new items
                                       if (taskToShow < totalTaskNumbers) {
                                         taskToShow++;
                                       } else if (totalTaskNumbers == 0) {
@@ -138,7 +136,7 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
                                 Container(
                                   alignment: Alignment.center,
                                   width:
-                                  MediaQuery.of(context).size.width / 2.8,
+                                      MediaQuery.of(context).size.width / 2.8,
                                   height: 40,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
@@ -194,15 +192,15 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                          const navBar(selectedIndex: 0)));
+                                              const navBar(selectedIndex: 0)));
                                 } else {
                                   Fluttertoast.showToast(
-                                      msg:
-                                      "للتغيير عليك بإدخال قيمة",
+                                      msg: "للتغيير عليك بإدخال قيمة",
                                       toastLength: Toast.LENGTH_LONG);
                                 }
                               },
-                              child: const PrimaryButton(buttonText: "حفظ التغييرات"),
+                              child: const PrimaryButton(
+                                  buttonText: "حفظ التغييرات"),
                             ),
                           ),
                         ],

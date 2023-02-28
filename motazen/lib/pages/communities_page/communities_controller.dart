@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -28,7 +30,9 @@ class CommunitiesController extends GetxController {
       }
 
       communitiesList.assignAll(helperList);
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
     isGettingCommunities(false);
   }
 

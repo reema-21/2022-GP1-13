@@ -59,7 +59,7 @@ class Rank {
     maxTime = taskWithMaxT.timeLeft;
     //Next we need to normalize the data
     for (var task in tasks) {
-      task.NT = task.timeLeft / maxTime;
+      task.nt = task.timeLeft / maxTime;
     }
   }
 
@@ -92,7 +92,7 @@ class Rank {
         task.rank = 1;
       } else {
         task.rank = (weight * task.importance!) +
-            (weight * task.NT) +
+            (weight * task.nt) +
             (weight * task.depandancies);
       }
     }

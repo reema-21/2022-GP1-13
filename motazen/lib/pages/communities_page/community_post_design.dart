@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
-//new
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +8,8 @@ import 'package:motazen/pages/communities_page/view_photo.dart';
 import 'package:motazen/theme.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-//ours
 class PostDesign extends StatefulWidget {
-  final CommunityId;
+  final communityId;
   final PostModel post;
   final dbpathToPostChnl;
   final commentCallback;
@@ -18,7 +17,7 @@ class PostDesign extends StatefulWidget {
   final repliedPostScrollCallback;
   const PostDesign(
       {Key? key,
-      required this.CommunityId,
+      required this.communityId,
       required this.post,
       required this.dbpathToPostChnl,
       this.commentCallback,
@@ -34,20 +33,20 @@ class _PostDesignState extends State<PostDesign> {
   late Future<dynamic> dbFuture;
   Future<dynamic> getData() async {
     //here i just check if the community data is null meaning it is a private community
-    dynamic CommunityDoc;
-    CommunityDoc = await firestore
+    dynamic communityDoc;
+    communityDoc = await firestore
         .collection('public_communities')
-        .doc(widget.CommunityId)
+        .doc(widget.communityId)
         .get();
-    if (CommunityDoc.data() == null) {
-      CommunityDoc = await firestore
+    if (communityDoc.data() == null) {
+      communityDoc = await firestore
           .collection('private_communities')
-          .doc(widget.CommunityId)
+          .doc(widget.communityId)
           .get();
     }
-    final CuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+    final cuurentcommunityDoc = communityDoc.data()! as dynamic;
 
-    return CuurentCommunityDoc;
+    return cuurentcommunityDoc;
   }
 
   @override
@@ -67,12 +66,12 @@ class _PostDesignState extends State<PostDesign> {
 
           if (snapshot.hasData) {
             final data = snapshot.data; //your Map<String,dynamic>
-            List Communitiess = [];
-            Communitiess = data['progress_list'];
+            List communitiess = [];
+            communitiess = data['progress_list'];
             late double authProgress;
-            for (int i = 0; i < Communitiess.length; i++) {
-              if (Communitiess[i][widget.post.authorId] != null) {
-                authProgress = Communitiess[i][widget.post.authorId]
+            for (int i = 0; i < communitiess.length; i++) {
+              if (communitiess[i][widget.post.authorId] != null) {
+                authProgress = communitiess[i][widget.post.authorId]
                     .toDouble(); // the casting is a must cause if it is zero it will reutrn int
                 break;
               }
@@ -487,257 +486,257 @@ class OtherMessageDesign extends StatelessWidget {
         }
       }
     }
-    return Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 3,
-          vertical: 10,
-        ),
-        child: Column(
-          children: [
-            if (pst.replyingPost != null)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      repliedPostScrollCallback(pst.replyingPost);
-                    },
-                    child: Container(
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width / 1.75,
-                          minWidth: MediaQuery.of(context).size.width / 1.75),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                '${pst.replyingPost['author']}',
-                                style: const TextStyle(
-                                    color: Color.fromARGB(255, 5, 5, 5),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                width: 9,
-                              ),
-
-                              //! in this space here we need a star to be displayed if the user reached amount of intercation
-                            ],
-                          ),
-                          if (pst.replyingPost['text'] != '')
-                            Text(
-                              pst.replyingPost['text'].length > 30
-                                  ? '...${pst.replyingPost['text'].substring(0, 30)}'
-                                  : '${pst.replyingPost['text']}',
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                                fontSize: 12,
-                              ),
-                              textAlign: TextAlign.right,
-                            ),
-                          if (pst.replyingPost['post_type'] == 'image')
-                            Container(
-                                constraints: BoxConstraints(
-                                  maxHeight:
-                                      MediaQuery.of(context).size.width / 5,
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl: pst.replyingPost['image_url'],
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                ))
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  width: 8,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+    return SafeArea(
+      child: Container(
+          margin: const EdgeInsets.symmetric(
+            horizontal: 3,
+            vertical: 10,
+          ),
+          child: Column(
+            children: [
+              if (pst.replyingPost != null)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      constraints: BoxConstraints(
-                          minHeight: MediaQuery.of(context).size.width / 5,
-                          maxWidth: MediaQuery.of(context).size.width / 1.4,
-                          minWidth: MediaQuery.of(context).size.width / 3),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        repliedPostScrollCallback(pst.replyingPost);
+                      },
+                      child: Container(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width / 1.75,
+                            minWidth: MediaQuery.of(context).size.width / 1.75),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
                           borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                              bottomLeft: Radius.circular(15)),
-                          boxShadow: const []),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '${pst.author}',
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                width: 3,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(0.0),
-                                child: CircularPercentIndicator(
-                                  radius: 20,
-                                  lineWidth: 10,
-                                  circularStrokeCap: CircularStrokeCap.round,
-                                  percent: progressValue,
-                                  progressColor: kPrimaryColor,
-                                  backgroundColor:
-                                      kPrimaryColor.withOpacity(0.3),
-                                  center: Text(
-                                    (progressValue * 100).round().toString(),
-                                    style: const TextStyle(
-                                      //           color: Colors.black,
-                                      fontSize: 10,
-                                      //           fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
                           ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          if (pst.text != '')
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
                             Row(
                               children: [
                                 Text(
-                                  '${pst.text}',
-                                  style: TextStyle(
-                                    color: Colors.grey[800],
-                                    fontSize: 14,
-                                  ),
-                                  textAlign: TextAlign.end,
+                                  '${pst.replyingPost['author']}',
+                                  style: const TextStyle(
+                                      color: Color.fromARGB(255, 5, 5, 5),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
                                 ),
+                                const SizedBox(
+                                  width: 9,
+                                ),
+
+                                //! in this space here we need a star to be displayed if the user reached amount of intercation
                               ],
                             ),
-                          if (pst.postType == 'image')
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            viewPhoto(imgURL: pst.imageURL)));
-                              },
-                              child: Container(
+                            if (pst.replyingPost['text'] != '')
+                              Text(
+                                pst.replyingPost['text'].length > 30
+                                    ? '...${pst.replyingPost['text'].substring(0, 30)}'
+                                    : '${pst.replyingPost['text']}',
+                                style: TextStyle(
+                                  color: Colors.grey[800],
+                                  fontSize: 12,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+                            if (pst.replyingPost['post_type'] == 'image')
+                              Container(
                                   constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.width /
-                                              1.25),
+                                    maxHeight:
+                                        MediaQuery.of(context).size.width / 5,
+                                  ),
                                   child: CachedNetworkImage(
-                                    imageUrl: pst.imageURL,
+                                    imageUrl: pst.replyingPost['image_url'],
                                     placeholder: (context, url) =>
                                         const CircularProgressIndicator(),
                                     errorWidget: (context, url, error) =>
                                         const Icon(Icons.error),
-                                  )),
-                            ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${minAgo.toString()} $unit ago',
-                                style: TextStyle(
-                                    color: Colors.grey[500], fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ],
+                                  ))
+                          ],
+                        ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                  ],
+                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                            minHeight: MediaQuery.of(context).size.width / 5,
+                            maxWidth: MediaQuery.of(context).size.width / 1.4,
+                            minWidth: MediaQuery.of(context).size.width / 3),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                                bottomLeft: Radius.circular(15)),
+                            boxShadow: const []),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            InkWell(
-                              onTap: () {
-                                likeCallback(pst,
-                                    '$postLink/${pst.time.toString()}${pst.authorId}/');
-                              },
-                              child: Icon(
-                                size: 20,
-                                pst.likes.contains(authID)
-                                    ? Icons.thumb_up
-                                    : Icons.thumb_up_alt_outlined,
-                                color: pst.likes.contains(authID)
-                                    ? Colors.blue
-                                    : const Color.fromARGB(97, 66, 66, 66),
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '${pst.author}',
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  width: 3,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(0.0),
+                                  child: CircularPercentIndicator(
+                                    radius: 20,
+                                    lineWidth: 10,
+                                    circularStrokeCap: CircularStrokeCap.round,
+                                    percent: progressValue,
+                                    progressColor: kPrimaryColor,
+                                    backgroundColor:
+                                        kPrimaryColor.withOpacity(0.3),
+                                    center: Text(
+                                      (progressValue * 100).round().toString(),
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(
-                              width: 2,
+                              height: 8,
                             ),
-                            Text(
-                              '${pst.likes.length}',
-                              style: TextStyle(
-                                  color: Colors.grey[500], fontSize: 18),
-                            ),
-                            const SizedBox(
-                              width: 6,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                commentCallback(pst);
-                              },
-                              child: const Icon(
-                                Icons.reply,
-                                color: Color.fromARGB(97, 66, 66, 66),
-                                size: 20,
+                            if (pst.text != '')
+                              Row(
+                                children: [
+                                  Text(
+                                    '${pst.text}',
+                                    style: TextStyle(
+                                      color: Colors.grey[800],
+                                      fontSize: 14,
+                                    ),
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ],
                               ),
+                            if (pst.postType == 'image')
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              viewPhoto(imgURL: pst.imageURL)));
+                                },
+                                child: Container(
+                                    constraints: BoxConstraints(
+                                        maxHeight:
+                                            MediaQuery.of(context).size.width /
+                                                1.25),
+                                    child: CachedNetworkImage(
+                                      imageUrl: pst.imageURL,
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    )),
+                              ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${minAgo.toString()} $unit ago',
+                                  style: TextStyle(
+                                      color: Colors.grey[500], fontSize: 12),
+                                ),
+                              ],
                             ),
                           ],
-                        )
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ],
-        ));
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  likeCallback(pst,
+                                      '$postLink/${pst.time.toString()}${pst.authorId}/');
+                                },
+                                child: Icon(
+                                  size: 20,
+                                  pst.likes.contains(authID)
+                                      ? Icons.thumb_up
+                                      : Icons.thumb_up_alt_outlined,
+                                  color: pst.likes.contains(authID)
+                                      ? Colors.blue
+                                      : const Color.fromARGB(97, 66, 66, 66),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 2,
+                              ),
+                              Text(
+                                '${pst.likes.length}',
+                                style: TextStyle(
+                                    color: Colors.grey[500], fontSize: 18),
+                              ),
+                              const SizedBox(
+                                width: 6,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  commentCallback(pst);
+                                },
+                                child: const Icon(
+                                  Icons.reply,
+                                  color: Color.fromARGB(97, 66, 66, 66),
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          )),
+    );
   }
 }

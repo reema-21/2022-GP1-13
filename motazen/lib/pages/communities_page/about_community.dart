@@ -148,8 +148,7 @@ class _AboutCommunityPageState extends State<AboutCommunityPage> {
     IsarService iser = IsarService();
     iser.deleteCommunity(widget.comm.id);
     if (!widget.comm.isPrivate) {
-      final t =
-          await firestore.collection('public_communities').doc(widget.comm.id);
+      final t = firestore.collection('public_communities').doc(widget.comm.id);
       await t.delete();
     }
 

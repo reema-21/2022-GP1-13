@@ -9,7 +9,7 @@ import '../../dialogue_boxes.dart';
 import '../select_aspectPage/handle_aspect_data.dart';
 
 final ButtonStyle style =
-ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+    ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
 class SettingsUI extends StatelessWidget {
   const SettingsUI({super.key});
@@ -66,9 +66,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
             if (!(firstnameController.text.isNotEmpty ||
                 usernameController.text.isNotEmpty ||
                 emailController.text.isNotEmpty ||
-                passwordController.text.isNotEmpty))
+                passwordController.text.isNotEmpty)) {
               Navigator.pop(context);
-            else {
+            } else {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -261,7 +261,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         return 'فضلًا ادخل بريدك الإلكتروني';
                       }
                       if (!RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z]+\.com+")
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z]+\.com+")
                           .hasMatch(value)) {
                         return "البريد الإلكتروني غير صحيح";
                       }
@@ -385,9 +385,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                              const getAllAspects(
-                                page: 'Home',
-                              )));
+                                  const getAllAspects(
+                                    page: 'Home',
+                                  )));
                     }).onError((error, stackTrace) {});
                   }
                   // username
@@ -399,11 +399,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       AllDialogues.showErrorDialog(
                           title: "!هذا المستخدم مسجل سابقًا",
                           discription:
-                          " مسجل سابقًا، سجّل باسم مستخدم جديد ${usernameController.text} ");
+                              " مسجل سابقًا، سجّل باسم مستخدم جديد ${usernameController.text} ");
                     } else {
                       ref.doc(userID!.uid.toString()).update({
                         'userName':
-                        usernameController.text.toString().toLowerCase(),
+                            usernameController.text.toString().toLowerCase(),
                       }).then((value) {
                         Fluttertoast.showToast(msg: "تم بنجاح");
                         usernameController.text = '';
@@ -412,9 +412,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                const getAllAspects(
-                                  page: 'Home',
-                                )));
+                                    const getAllAspects(
+                                      page: 'Home',
+                                    )));
                       }).onError((error, stackTrace) {});
                     }
                   }
@@ -423,13 +423,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   if (emailController.text.isNotEmpty &&
                       _emailKey.currentState!.validate()) {
                     final validEmail =
-                    await emailIdCheck(emailController.text.toLowerCase());
+                        await emailIdCheck(emailController.text.toLowerCase());
                     AllDialogues.hideloading();
                     if (!validEmail) {
                       AllDialogues.showErrorDialog(
                           title: "!البريد الإلكتروني موجود مُسبقًا",
                           discription:
-                          " مسجل مسبقًا, الرجاء التسجيل ببريد آخر ${emailController.text} البريد الإلكتروني  ");
+                              " مسجل مسبقًا, الرجاء التسجيل ببريد آخر ${emailController.text} البريد الإلكتروني  ");
                     } else {
                       userID!
                           .updateEmail(emailController.text.toString())
@@ -444,9 +444,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                  const getAllAspects(
-                                    page: 'Home',
-                                  )));
+                                      const getAllAspects(
+                                        page: 'Home',
+                                      )));
                         }).onError((error, stackTrace) {});
                       });
                     }
@@ -466,9 +466,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                              const getAllAspects(
-                                page: 'Home',
-                              )));
+                                  const getAllAspects(
+                                    page: 'Home',
+                                  )));
                     }).onError((error, stackTrace) {});
                   }
                 },

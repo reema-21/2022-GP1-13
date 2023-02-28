@@ -254,12 +254,6 @@ class _CreateCommunityState extends State<CreateCommunity> {
                             CommunityID(userID: IsarService.getUserID);
                         newCom.CommunityId = commID;
 
-                        // iser.CreateCommunity(newCom);
-
-// CommunityID?newCommunity =
-//         await iser.findCommunity(commID);
-//         print("here is the value of the community id");
-//         print(newCommunity!.id);
                         choseGoal.Communities.add(newCom);
                         iser.createGoal(choseGoal);
 
