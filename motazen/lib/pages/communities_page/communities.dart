@@ -48,7 +48,7 @@ class _CommunitiesState extends State<Communities> {
 
   userDataUpdate() async {
     await communityController.getUserData();
-    setState(() {}); //!Note: why is there an empty set state
+    setState(() {});
   }
 
   @override
@@ -98,11 +98,14 @@ class _CommunitiesState extends State<Communities> {
                           isMyCommunitySelected = false;
                         });
                       },
-                      child: communityScreenTabContainer(context,
-                          color: isSearchCommunitySelected
-                              ? kPrimaryColor
-                              : kPrimaryColor.withOpacity(0.5),
-                          text: 'المجتمعات العامة'),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: communityScreenTabContainer(context,
+                            color: isSearchCommunitySelected
+                                ? kPrimaryColor
+                                : kPrimaryColor.withOpacity(0.5),
+                            text: 'المجتمعات العامة'),
+                      ),
                     ),
                   ],
                 ),

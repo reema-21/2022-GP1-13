@@ -422,10 +422,10 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                                   constraints: BoxConstraints(
                                       maxWidth:
                                           MediaQuery.of(context).size.width /
-                                              1.4,
+                                              1.41,
                                       minWidth:
                                           MediaQuery.of(context).size.width /
-                                              1.4),
+                                              1.41),
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 20,
                                     vertical: 10,
@@ -450,6 +450,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                                     children: [
                                       Text(
                                         '${replyingPost!.author}',
+                                        overflow: TextOverflow.visible,
                                         style: const TextStyle(
                                             color: Colors.red,
                                             fontSize: 15,

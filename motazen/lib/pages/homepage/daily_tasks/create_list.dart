@@ -9,7 +9,6 @@ import 'package:motazen/pages/settings/tasklist_variables.dart';
 const TimeOfDay resetTime = TimeOfDay(hour: 0, minute: 0);
 //!note: in each set state for the task, both lists are displated multiple times
 //! and when the habit list is check the set state does not occur
-int counter = 0;
 //*create the todo list
 Todo createTaskTodoList(List<Aspect> aspectList) {
   //initialize

@@ -30,6 +30,8 @@ Future main() async {
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
           colorScheme: const ColorScheme.light(primary: kPrimaryColor),
           fontFamily: 'Frutiger',
           appBarTheme: AppBarTheme(

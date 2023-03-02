@@ -6,9 +6,7 @@ class Community {
   String? aspect;
   String? goalName;
   bool isPrivate;
-  // DateTime? tillDate;
   DateTime? creationDate;
-  // List<Task>? listOfTasks;
   List<dynamic> progressList;
   String id;
 

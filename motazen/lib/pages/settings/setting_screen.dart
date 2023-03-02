@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motazen/pages/communities_page/bages/display_badges.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
 import 'package:motazen/pages/settings/numberof_shown_task.dart';
 import 'package:motazen/pages/settings/profile_edit.dart';
@@ -70,7 +71,18 @@ class SettingScreen extends StatelessWidget {
               ),
               BuildAccountOptionRow(
                 title: "خانة احتياط",
-                onClick: () {},
+                onClick: () {
+                  //move to the bages page
+                  //! the placement of navigate is placed here temporarly it will be moved later
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return BadgesPage();
+                      },
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 40),
               Row(

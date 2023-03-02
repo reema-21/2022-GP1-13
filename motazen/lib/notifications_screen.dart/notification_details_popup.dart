@@ -90,10 +90,8 @@ Future<dynamic> notificationDetailsPopup(BuildContext context,
                                       isPrivate: community.isPrivate,
                                       founderUsername:
                                           community.founderUsername,
-                                      // tillDate: community.tillDate,
                                       creationDate: community.creationDate,
                                       goalName: community.goalName,
-                                      // listOfTasks: community.listOfTasks,
                                       id: community.id),
                                 );
                                 communityController.update();

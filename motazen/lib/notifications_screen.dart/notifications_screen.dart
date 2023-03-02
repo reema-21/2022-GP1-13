@@ -612,10 +612,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               isPrivate: notification.comm.isPrivate,
                               founderUsername:
                                   notification.comm.founderUsername,
-                              // tillDate: community.tillDate,
                               creationDate: notification.comm.creationDate,
                               goalName: notification.comm.goalName,
-                              // listOfTasks: community.listOfTasks,
                               id: notification.comm.id),
                         );
                         communityController.update();
