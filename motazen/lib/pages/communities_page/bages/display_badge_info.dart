@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motazen/theme.dart';
-
+//
 class BadgeInfo extends StatelessWidget {
   const BadgeInfo({super.key, required this.badge});
 
