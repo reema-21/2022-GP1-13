@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/data.dart';
+import '../../../controllers/aspect_controller.dart';
 import '../../../entities/aspect.dart';
 
 class WheelBackground extends StatefulWidget {
@@ -49,7 +49,7 @@ class _WheelBackgroundState extends State<WheelBackground> {
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
 
     //render the background of the wheel
     return PieChart(

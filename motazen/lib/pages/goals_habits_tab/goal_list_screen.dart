@@ -8,7 +8,7 @@ import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-import '../../data/data.dart';
+import '../../controllers/aspect_controller.dart';
 import '/entities/goal.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:intl/intl.dart' as intl;
@@ -27,7 +27,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     return StreamBuilder<List<Goal>>(
       stream: IsarService().getAllGoals(),
       builder: (context, snapshot) {
@@ -72,80 +72,97 @@ class _GoalListScreenState extends State<GoalListScreen> {
                 dueDataDescription =
                     "تاريخ الاستحقاق :${intl.DateFormat.yMMMEd().format(endDate)}";
 
-                // }
-
                 final aspectName = goal.aspect.value?.name;
                 return Container(
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(10)),
                   margin: const EdgeInsets.only(bottom: 4, right: 4, left: 4),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Card(
-                      elevation: 5,
-                      // here is the code of each item you have
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          ListTile(
-                            trailing: TextButton(
-                              child: const Icon(Icons.delete),
+                  child: Card(
+                    elevation: 5,
+                    // here is the code of each item you have
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ListTile(
+                          trailing: TextButton(
+                              child:
+                                  Icon(Icons.delete, color: Colors.grey[500]),
                               onPressed: () async {
-                                final action = await AlertDialogs.yesCancelDialog(
-                                    context,
-                                    ' هل انت متاكد من حذف هذا الهدف  ',
-                                    'بالنقر على "تاكيد"لن تتمكن من استرجاع الهدف  ');
-                                if (action == DialogsAction.yes) {
-                                  List<LocalTask> goalstasks =
-                                      goal.task.toList();
+                                if (goal.Communities.isEmpty) {
+                                  final action = await AlertDialogs.yesCancelDialog(
+                                      context,
+                                      ' هل انت متاكد من حذف هذا الهدف  ',
+                                      'بالنقر على "تاكيد"لن تتمكن من استرجاع الهدف  ');
+                                  if (action == DialogsAction.yes) {
+                                    List<LocalTask> goalstasks =
+                                        goal.task.toList();
 
-                                  widget.isr.deleteGoal(goal);
-                                } else {}
-                              },
-                            ),
-                            tileColor: Colors.white,
-                            leading: aspectList.getSelectedIcon(aspectName!),
-                            subtitle:
-                                Text(dueDataDescription), // if not null added
-                            title: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Text(goal.titel),
-                            ),
-                            contentPadding: const EdgeInsets.all(7),
-                            onTap: () {
-                              // should return me to the page with add field
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return EditGoal(
-                                      isr: widget.isr,
-                                      goalId: goal.id,
-                                    ); // must be the
-                                  },
-                                ),
-                              );
-                            },
+                                    widget.isr.deleteGoal(goal);
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          //! i think we need bettee
+                                          duration: const Duration(seconds: 1),
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 196, 48, 37),
+                                          content: Row(
+                                            children: const [
+                                              Icon(
+                                                Icons.error,
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(width: 20),
+                                              Expanded(
+                                                child: Text(
+                                                    "لا يمكن حذف هذا الهدف  "),
+                                              )
+                                            ],
+                                          )));
+                                }
+                              }),
+                          tileColor: Colors.white,
+                          leading: aspectList.getSelectedIcon(aspectName!),
+                          subtitle:
+                              Text(dueDataDescription), // if not null added
+                          title: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(goal.titel),
                           ),
-                          const SizedBox(
-                            height: 2,
-                          ),
-                          LinearPercentIndicator(
-                            animation: true,
-                            animationDuration: 600,
-                            curve: Curves.easeIn,
-                            percent: goal.goalProgressPercentage,
-                            lineHeight: 7,
-                            isRTL: true,
-                            progressColor: kPrimaryColor,
-                            backgroundColor: kPrimaryColor.withOpacity(0.3),
-                            barRadius: const Radius.circular(10),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                        ],
-                      ),
+                          contentPadding: const EdgeInsets.all(7),
+                          onTap: () {
+                            // should return me to the page with add field
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return EditGoal(
+                                    isr: widget.isr,
+                                    goalId: goal.id,
+                                  ); // must be the
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 2,
+                        ),
+                        LinearPercentIndicator(
+                          animation: true,
+                          animationDuration: 600,
+                          curve: Curves.easeIn,
+                          percent: goal.goalProgressPercentage,
+                          lineHeight: 7,
+                          isRTL: true,
+                          progressColor: kPrimaryColor,
+                          backgroundColor: kPrimaryColor.withOpacity(0.3),
+                          barRadius: const Radius.circular(10),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                      ],
                     ),
                   ),
                 );

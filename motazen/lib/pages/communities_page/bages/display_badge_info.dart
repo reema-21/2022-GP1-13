@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:motazen/theme.dart';
-//;;
+
 class BadgeInfo extends StatelessWidget {
   const BadgeInfo({super.key, required this.badge});
 
-  final badge;
+  final dynamic badge;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: Text(
           badge['name'], // أوسمتي
           style: titleText,
         ), //badge name
-        //! add as a variable later
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.green,
+                ));
+          },
+        ),
       ),
       backgroundColor: Colors.white,
       body: Center(
@@ -28,23 +40,22 @@ class BadgeInfo extends StatelessWidget {
               ),
 
               Container(
-                  width: 150.0,
-                  height: 150.0,
+                  width: 180.0,
+                  height: 180.0,
                   decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
                           color: kPrimaryColor.withOpacity(0.3),
                           spreadRadius: 0,
-                          blurRadius: 10,
-                          offset: const Offset(
-                              -2, -2), // changes position of shadow
+                          blurRadius: 100,
+                          offset:
+                              const Offset(0, 0), // changes position of shadow
                         ),
                       ],
                       shape: BoxShape.circle,
                       image: DecorationImage(
                           fit: BoxFit.fill,
-                          image: AssetImage(
-                              "assets/images/BADGE${badge['name']}.png")))), //user image
+                          image: AssetImage(badge['badgePath'])))), //user image
               //achievement image
               const SizedBox(
                 height: 50,

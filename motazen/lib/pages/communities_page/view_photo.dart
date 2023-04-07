@@ -1,5 +1,5 @@
 // ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
-
+//REEMAS
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -39,7 +39,8 @@ class _viewPhotoState extends State<viewPhoto> {
                   child: SizedBox(
                       height: 50,
                       width: 50,
-                      child: CircularProgressIndicator())),
+                      child:
+                          CircularProgressIndicator())), //! replace with shimmer effects
             ),
           ),
         ],

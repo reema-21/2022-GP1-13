@@ -2,14 +2,15 @@
 //manar
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:motazen/data/data.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/entities/LocalTask.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:motazen/pages/goals_habits_tab/taskClass.dart';
+import 'package:motazen/models/taskClass.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/pages/add_goal_page/taskLocal_controller.dart';
+import 'package:motazen/controllers/taskLocal_controller.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
 import '../../entities/aspect.dart';
 import '../../theme.dart';
@@ -26,6 +27,8 @@ class AddGoal extends StatefulWidget {
 }
 
 class _AddGoalState extends State<AddGoal> {
+  DateRangePickerController newSelectedDate = DateRangePickerController();
+
   final formKey = GlobalKey<FormState>();
   late String _goalName;
   DateTimeRange? selectedDates;
@@ -37,6 +40,7 @@ class _AddGoalState extends State<AddGoal> {
   final _goalNmaeController = TextEditingController();
   final _dueDateController = TextEditingController();
   final TaskLocalControleer freq = Get.put(TaskLocalControleer());
+  bool isFirstclick = true;
 
   String? isSelected;
   @override
@@ -61,7 +65,7 @@ class _AddGoalState extends State<AddGoal> {
     Aspect? selected = await widget.isr.findSepecificAspect(isSelected!);
     newgoal.aspect.value = selected; // link aspect to the goal
     selected!.goals.add(newgoal);
-    widget.isr.createAspect(selected); //Note: what is it used for
+    // widget.isr.createAspect(selected); //Note: what is it used for
     newgoal.DescriptiveGoalDuration = duration;
     newgoal.goalDuration = goalDuration;
     newgoal.startData = selectedDates!.start;
@@ -81,6 +85,7 @@ class _AddGoalState extends State<AddGoal> {
       newgoal.task.add(y); // to link the task to the goal
       widget.isr.saveTask(y);
     }
+    await widget.isr.addAspectGoalLink(newgoal, selected);
     widget.isr.createGoal(newgoal);
     freq.TaskDuration = 0.obs;
     freq.currentTaskDuration = 0.obs;
@@ -116,60 +121,8 @@ class _AddGoalState extends State<AddGoal> {
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
-      /// floating action button
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if ((formKey.currentState!.validate())) {
-            if (goalDuration != 0) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.green.shade300,
-                  duration: const Duration(milliseconds: 500),
-                  content: Row(
-                    children: const [
-                      Icon(Icons.thumb_up_sharp),
-                      SizedBox(width: 20),
-                      Expanded(
-                        child: Text("تمت اضافة الهدف "),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-
-              _Addgoal();
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  duration: const Duration(milliseconds: 500),
-                  backgroundColor: Colors.yellow.shade300,
-                  content: Row(
-                    children: const [
-                      Icon(
-                        Icons.error,
-                        color: Color.fromARGB(255, 0, 0, 0),
-                      ),
-                      SizedBox(width: 20),
-                      Expanded(
-                        child: Text(
-                          " يجب تحديد فترة الهدف",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-          }
-        },
-        backgroundColor: const Color.fromARGB(255, 252, 252, 252),
-        child: const Icon(Icons.add, color: Color(0xFF66BF77)),
-      ),
-
       /// key
       key: _scaffoldkey,
 
@@ -427,6 +380,73 @@ class _AddGoalState extends State<AddGoal> {
                       txt(txt: "إضافة مهام", fontSize: 18),
                     ],
                   ),
+                  //! change the space between the items and the submit button
+                  SizedBox(
+                    height: screenHeight(context) * 0.25,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (isFirstclick) {
+                        isFirstclick = false;
+
+                        if ((formKey.currentState!.validate())) {
+                          if (goalDuration != 0) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.green.shade300,
+                                duration: const Duration(milliseconds: 500),
+                                content: Row(
+                                  children: const [
+                                    Icon(Icons.thumb_up_sharp),
+                                    SizedBox(width: 20),
+                                    Expanded(
+                                      child: Text("تمت اضافة الهدف "),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+
+                            _Addgoal();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                duration: const Duration(milliseconds: 500),
+                                backgroundColor: Colors.yellow.shade300,
+                                content: Row(
+                                  children: const [
+                                    Icon(
+                                      Icons.error,
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                    ),
+                                    SizedBox(width: 20),
+                                    Expanded(
+                                      child: Text(
+                                        " يجب تحديد فترة الهدف",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      }
+                    },
+                    child: Container(
+                      height: screenHeight(context) * 0.05,
+                      width: screenWidth(context) * 0.4,
+                      decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                          child: txt(
+                              txt: 'إضافة هدف',
+                              fontSize: 16,
+                              fontColor: Colors.white)),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -451,65 +471,141 @@ class _AddGoalState extends State<AddGoal> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-              onTap: () async {
-                DateTimeRange? newDate = await showDateRangePicker(
-                  initialDateRange:
-                      selectedDates, // make here the goal selectd in datails '
-                  context: context,
-                  firstDate: DateTime.now().subtract(const Duration(days: 0)),
-                  lastDate: DateTime(2100),
-                  builder: (BuildContext context, Widget? child) {
-                    return Theme(
-                      data: ThemeData.light().copyWith(
-                        colorScheme: const ColorScheme.light(
-                          primary: kPrimaryColor,
-                          onPrimary: Colors.white,
-                          onSurface: kPrimaryColor,
-                        ),
-                      ),
-                      child: child!,
-                    );
-                  },
-                );
+                onTap: () async {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        DateTimeRange newDate;
+                        return Scaffold(
+                          body: Container(
+                              color: Colors.white,
+                              child: SfDateRangePicker(
+                                  headerStyle: const DateRangePickerHeaderStyle(
+                                      backgroundColor: kPrimaryColor),
+                                  //to give restriction
+                                  minDate: DateTime.now(),
+                                  controller: newSelectedDate,
+                                  confirmText: "تأكيد ",
+                                  cancelText: "إلغاء",
+                                  todayHighlightColor: Colors.blue,
+                                  showActionButtons: true,
+                                  onCancel: () {
+                                    newSelectedDate.selectedRange = null;
+                                    Navigator.pop(context);
+                                  },
+                                  onSubmit: (p0) {
+                                    newDate = DateTimeRange(
+                                        start: newSelectedDate
+                                            .selectedRange!.startDate!,
+                                        end: newSelectedDate
+                                            .selectedRange!.endDate!);
+                                    setState(() {
+                                      if (newDate.duration.inDays <
+                                          freq.checkTotalTaskDuration.value) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                duration: const Duration(
+                                                    milliseconds: 1000),
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 243, 9, 9),
+                                                content: Row(
+                                                  children: const [
+                                                    Icon(
+                                                      Icons.error,
+                                                      color: Color.fromARGB(
+                                                          255, 0, 0, 0),
+                                                    ),
+                                                    SizedBox(width: 20),
+                                                    Expanded(
+                                                      child: Text(
+                                                          "فترة الهدف ستصبح أقل من فترة المهام المدخلة",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black)),
+                                                    )
+                                                  ],
+                                                )));
+                                      } else {
+                                        goalDuration = newDate.duration.inDays;
+                                        duration =
+                                            '${goalDuration.toString()} يوما';
+                                        selectedDates = newDate;
+                                        Navigator.pop(context);
+                                      }
+                                    });
+                                  },
+                                  selectionMode:
+                                      DateRangePickerSelectionMode.range,
+                                  initialSelectedRange: selectedDates != null
+                                      ? PickerDateRange(
+                                          selectedDates!.start,
+                                          selectedDates!.end,
+                                        )
+                                      : null)),
+                        );
+                      });
+                },
 
-                setState(() {
-                  if (newDate != null) {
-                    if (newDate.duration.inDays <
-                        freq.totalTasksDuration.value) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          duration: const Duration(milliseconds: 1000),
-                          backgroundColor: const Color.fromARGB(255, 243, 9, 9),
-                          content: Row(
-                            children: const [
-                              Icon(
-                                Icons.error,
-                                color: Color.fromARGB(255, 0, 0, 0),
-                              ),
-                              SizedBox(width: 20),
-                              Expanded(
-                                child: Text(
-                                  "فترة الهدف ستصبح أقل من فترة المهام المدخلة",
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    } else {
-                      goalDuration = newDate.duration.inDays;
-                      duration = '${goalDuration.toString()} يوما';
-                      selectedDates = newDate;
-                    }
-                  }
-                });
-              },
-              child: const Icon(
-                Icons.calendar_month,
-                color: kPrimaryColor,
-              ),
-            ),
+                ////
+                // DateTimeRange? newDate = await showDateRangePicker(
+                //   initialDateRange:
+                //       selectedDates, // make here the goal selectd in datails '
+                //   context: context,
+                //   firstDate: DateTime.now().subtract(const Duration(days: 0)),
+                //   lastDate: DateTime(2100),
+                //   builder: (BuildContext context, Widget? child) {
+                //     return Theme(
+                //       data: ThemeData.light().copyWith(
+                //         colorScheme: const ColorScheme.light(
+                //           primary: kPrimaryColor,
+                //           onPrimary: Colors.white,
+                //           onSurface: kPrimaryColor,
+                //         ),
+                //       ),
+                //       child: child!,
+                //     );
+                //   },
+                // );
+
+                //   setState(() {
+
+                //     if (newDate != null) {
+                //       if (newDate.duration.inDays <
+                //           freq.totalTasksDuration.value) {
+                //         ScaffoldMessenger.of(context).showSnackBar(
+                //           SnackBar(
+                //             duration: const Duration(milliseconds: 1000),
+                //             backgroundColor: const Color.fromARGB(255, 243, 9, 9),
+                //             content: Row(
+                //               children: const [
+                //                 Icon(
+                //                   Icons.error,
+                //                   color: Color.fromARGB(255, 0, 0, 0),
+                //                 ),
+                //                 SizedBox(width: 20),
+                //                 Expanded(
+                //                   child: Text(
+                //                     "فترة الهدف ستصبح أقل من فترة المهام المدخلة",
+                //                     style: TextStyle(color: Colors.black),
+                //                   ),
+                //                 ),
+                //               ],
+                //             ),
+                //           ),
+                //         );
+                //       } else {
+                //         goalDuration = newDate.duration.inDays;
+                //         duration = '${goalDuration.toString()} يوما';
+                //         selectedDates = newDate;
+                //       }
+                //     }
+                //   });
+                // },
+                child: const Icon(
+                  Icons.calendar_month,
+                  color: kPrimaryColor,
+                )),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,

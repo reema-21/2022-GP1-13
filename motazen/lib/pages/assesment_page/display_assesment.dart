@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:motazen/data/data.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:motazen/pages/assesment_page/calculate_assessment.dart';
 import 'package:motazen/theme.dart';
@@ -16,7 +18,7 @@ class _AssessmentPageState extends State<AssessmentPage> {
   int currentStep = 0;
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -106,12 +108,12 @@ class _AssessmentPageState extends State<AssessmentPage> {
                                 });
                               },
                               onChangeEnd: (value) {
-                                setState(() {
-                                  currentStep <
-                                          aspectList.questionData.length - 1
-                                      ? currentStep += 1
-                                      : null;
-                                });
+                                if (currentStep <
+                                    aspectList.questionData.length - 1) {
+                                  currentStep += 1;
+                                }
+                                Timer(const Duration(milliseconds: 400),
+                                    () => setState(() {}));
                               },
                             ),
                           ),

@@ -4,7 +4,7 @@ import 'package:motazen/pages/goals_habits_tab/habit_edit.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/assesment_page/aler2.dart';
 import 'package:provider/provider.dart';
-import '../../../data/data.dart';
+import '../../controllers/aspect_controller.dart';
 import '/entities/habit.dart';
 
 class HabitListScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class HabitListScreen extends StatefulWidget {
 class _HabitListScreenState extends State<HabitListScreen> {
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     return StreamBuilder<List<Habit>>(
       stream: IsarService().getAllHabits(),
       builder: (context, snapshot) {
@@ -56,13 +56,16 @@ class _HabitListScreenState extends State<HabitListScreen> {
                 return Container(
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                  margin: const EdgeInsets.only(bottom: 4),
+                  margin: const EdgeInsets.only(bottom: 4, right: 4, left: 4),
                   child: Card(
                     elevation: 3,
                     // here is the code of each item you have
                     child: ListTile(
                       trailing: TextButton(
-                        child: const Icon(Icons.delete),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.grey[500],
+                        ),
                         onPressed: () async {
                           final action = await AlertDialogs.yesCancelDialog(
                               context,
@@ -70,7 +73,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                               'بالنقر على تأكيد لن تتمكن من استرجاع تلك العادة ');
                           if (action == DialogsAction.yes) {
                             widget.isr.deleteHabit(habit);
-                          } else {}
+                          }
                         },
                       ),
                       tileColor: (index % 2 == 0)

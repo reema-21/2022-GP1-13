@@ -125,6 +125,17 @@ class _AddJournalScreenState extends State<AddJournalScreen> {
                   ),
                 ),
         ],
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                ));
+          },
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

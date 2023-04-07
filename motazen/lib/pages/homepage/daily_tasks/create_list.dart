@@ -1,3 +1,4 @@
+import 'package:cron/cron.dart';
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/isar_service.dart';
@@ -5,14 +6,18 @@ import 'package:motazen/models/todo_model.dart';
 import 'package:motazen/pages/homepage/daily_tasks/ranking_algorithm.dart';
 import 'package:motazen/pages/settings/tasklist_variables.dart';
 
-//set the reset time
-const TimeOfDay resetTime = TimeOfDay(hour: 0, minute: 0);
-//!note: in each set state for the task, both lists are displated multiple times
-//! and when the habit list is check the set state does not occur
+var cron = Cron();
 //*create the todo list
 Todo createTaskTodoList(List<Aspect> aspectList) {
   //initialize
   List<Item> taskItemList = [];
+  cron.schedule(Schedule.parse('0 0 * * *'), () async {
+    //Clear the selected values
+    for (var item in taskItemList) {
+      IsarService().reserCheck(item.id);
+    } //update the list
+    createTaskTodoList(aspectList);
+  });
 
   //step1: add all tasks to a list
   for (var aspect in aspectList) {
@@ -20,10 +25,11 @@ Todo createTaskTodoList(List<Aspect> aspectList) {
     for (var goal in aspect.goals.toList()) {
       //retrive the goal's tasks
       for (var task in goal.task.toList()) {
-        //skip completed tasks
-        if (task.taskCompletionPercentage == 1) {
-          continue;
-        }
+        //! this should be done after the new day reset
+        // //skip completed tasks
+        // if (task.taskCompletionPercentage == 1) {
+        //   continue;
+        // }
         //initialtize the importance to 0
         double importance = 0;
 
@@ -69,12 +75,6 @@ Todo createTaskTodoList(List<Aspect> aspectList) {
   ///------------------------(add call to ranking code here, pass the item list as a parameter)----------------------------------------
   List<Item> rankedList = Rank().calculateRank(taskItemList);
 
-  //reset check value each day
-  //Note:does not work properly
-  if (TimeOfDay.now() == resetTime) {
-    resetCheck(taskItemList);
-  }
-
   ///Step3: visualize the list
   totalTaskNumbers = rankedList.length;
   return Todo(
@@ -89,7 +89,7 @@ Todo createTaskTodoList(List<Aspect> aspectList) {
                   : rankedList.sublist(0, toShowTaskNumber));
 } //end of create task list
 
-Todo createHabitTodoList(List<Aspect> aspectList) {
+Todo? createHabitDailyTodoList(List<Aspect> aspectList) {
   //initialize
   List<Item> habitItemList = [];
 
@@ -98,21 +98,23 @@ Todo createHabitTodoList(List<Aspect> aspectList) {
     //retrieve the aspect's habits
     for (var habit in aspect.habits.toList()) {
       //create habit items
-      habitItemList.add(Item(
-        type: 'Habit',
-        id: habit.id,
-        description: habit.titel,
-        completed: habit.completedForToday,
-        icon: Icon(
-          IconData(aspect.iconCodePoint,
-              fontFamily: aspect.iconFontFamily,
-              fontPackage: aspect.iconFontPackage,
-              matchTextDirection: aspect.iconDirection),
-          color: Color(aspect.color),
-        ),
-        duration: habit.durationIndString,
-        repetition: habit.durationInNumber,
-      ));
+      if (habit.durationIndString == 0) {
+        habitItemList.add(Item(
+          type: 'Habit',
+          id: habit.id,
+          description: habit.titel,
+          completed: habit.completedForToday,
+          icon: Icon(
+            IconData(aspect.iconCodePoint,
+                fontFamily: aspect.iconFontFamily,
+                fontPackage: aspect.iconFontPackage,
+                matchTextDirection: aspect.iconDirection),
+            color: Color(aspect.color),
+          ),
+          duration: habit.durationIndString,
+          repetition: habit.durationInNumber,
+        ));
+      }
     }
   }
 
@@ -120,14 +122,135 @@ Todo createHabitTodoList(List<Aspect> aspectList) {
   ///------------------------(add call to ranking code here, pass the item list as a parameter)----------------------------------------
   List<Item> orderedList = Rank().orderHabits(habitItemList);
 
-  //reset check value each day
-  //Note:does not work properly
-  if (TimeOfDay.now() == resetTime) {
-    resetCheck(habitItemList);
+  ///Step3: visualize the list
+  if (orderedList.isNotEmpty) {
+    return Todo(id: 'todo-tag-1', items: orderedList);
+  } else {
+    return null;
+  }
+} //end of create list
+
+Todo? createHabitWeeklyTodoList(List<Aspect> aspectList) {
+  //initialize
+  List<Item> habitItemList = [];
+
+  //step1: add all habits to a list
+  for (var aspect in aspectList) {
+    //retrieve the aspect's habits
+    for (var habit in aspect.habits.toList()) {
+      //create habit items
+      if (habit.durationIndString == 1) {
+        habitItemList.add(Item(
+          type: 'Habit',
+          id: habit.id,
+          description: habit.titel,
+          completed: habit.completedForToday,
+          icon: Icon(
+            IconData(aspect.iconCodePoint,
+                fontFamily: aspect.iconFontFamily,
+                fontPackage: aspect.iconFontPackage,
+                matchTextDirection: aspect.iconDirection),
+            color: Color(aspect.color),
+          ),
+          duration: habit.durationIndString,
+          repetition: habit.durationInNumber,
+        ));
+      }
+    }
   }
 
+  ///step 2: order habits
+  ///------------------------(add call to ranking code here, pass the item list as a parameter)----------------------------------------
+  List<Item> orderedList = Rank().orderHabits(habitItemList);
+
   ///Step3: visualize the list
-  return Todo(id: 'todo-tag-1', items: orderedList);
+  if (orderedList.isNotEmpty) {
+    return Todo(id: 'todo-tag-1', items: orderedList);
+  } else {
+    return null;
+  }
+} //end of create list
+
+Todo? createHabitMonthlyTodoList(List<Aspect> aspectList) {
+  //initialize
+  List<Item> habitItemList = [];
+
+  //step1: add all habits to a list
+  for (var aspect in aspectList) {
+    //retrieve the aspect's habits
+    for (var habit in aspect.habits.toList()) {
+      //create habit items
+      if (habit.durationIndString == 2) {
+        habitItemList.add(Item(
+          type: 'Habit',
+          id: habit.id,
+          description: habit.titel,
+          completed: habit.completedForToday,
+          icon: Icon(
+            IconData(aspect.iconCodePoint,
+                fontFamily: aspect.iconFontFamily,
+                fontPackage: aspect.iconFontPackage,
+                matchTextDirection: aspect.iconDirection),
+            color: Color(aspect.color),
+          ),
+          duration: habit.durationIndString,
+          repetition: habit.durationInNumber,
+        ));
+      }
+    }
+  }
+
+  ///step 2: order habits
+  ///------------------------(add call to ranking code here, pass the item list as a parameter)----------------------------------------
+  List<Item> orderedList = Rank().orderHabits(habitItemList);
+
+  ///Step3: visualize the list
+  if (orderedList.isNotEmpty) {
+    return Todo(id: 'todo-tag-1', items: orderedList);
+  } else {
+    return null;
+  }
+} //end of create list
+
+Todo? createHabitYearlyTodoList(List<Aspect> aspectList) {
+  //initialize
+  List<Item> habitItemList = [];
+
+  //step1: add all habits to a list
+  for (var aspect in aspectList) {
+    //retrieve the aspect's habits
+    for (var habit in aspect.habits.toList()) {
+      //create habit items
+      if (habit.durationIndString == 3) {
+        habitItemList.add(Item(
+          type: 'Habit',
+          id: habit.id,
+          description: habit.titel,
+          completed: habit.completedForToday,
+          icon: Icon(
+            IconData(aspect.iconCodePoint,
+                fontFamily: aspect.iconFontFamily,
+                fontPackage: aspect.iconFontPackage,
+                matchTextDirection: aspect.iconDirection),
+            color: Color(aspect.color),
+          ),
+          duration: habit.durationIndString,
+          repetition: habit.durationInNumber,
+        ));
+      }
+    }
+  }
+
+  ///step 2: order habits
+  ///------------------------(add call to ranking code here, pass the item list as a parameter)----------------------------------------
+  List<Item> orderedList = Rank().orderHabits(habitItemList);
+
+  ///Step3: visualize the list
+  if (orderedList.isNotEmpty) {
+    return Todo(id: 'todo-tag-1', items: orderedList);
+  } else {
+    return null;
+  }
 } //end of create list
 
 // empty todo

@@ -150,7 +150,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   //==this button a verify otp function
                   if (otpformkey.currentState!.validate()) {
                     verifyEmail();
-                  } else {}
+                  }
                 },
                 child: const PrimaryButton(
                   buttonText: 'تأكيد',

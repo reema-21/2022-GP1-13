@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, non_constant_identifier_names, unused_local_variable
 
 import 'package:flutter/material.dart';
-import 'package:motazen/data/data.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
@@ -40,7 +40,7 @@ class _AspectGoal extends State<AspectGoal> {
       case "مهنتي":
         nameInArabic = "مهنتي";
         break;
-      case "علاقتي":
+      case "علاقاتي":
         nameInArabic = "علاقاتي";
         break;
       case "بيئتي":
@@ -54,7 +54,7 @@ class _AspectGoal extends State<AspectGoal> {
         nameInArabic = "صحتي";
         break;
       case "عائلتي واصدقائي":
-        nameInArabic = "عائلتي وأصدقائي";
+        nameInArabic = "عائلتي واصدقائي";
         break;
     }
     return "أهداف $nameInArabic";
@@ -62,7 +62,7 @@ class _AspectGoal extends State<AspectGoal> {
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -109,7 +109,7 @@ class _AspectGoal extends State<AspectGoal> {
                                   'بالنقر على "تاكيد"لن تتمكن من استرجاع الهدف ا  ');
                               if (action == DialogsAction.yes) {
                                 widget.isr.deleteGoal(goal);
-                              } else {}
+                              }
                             },
                           ),
                           tileColor: Colors.white,

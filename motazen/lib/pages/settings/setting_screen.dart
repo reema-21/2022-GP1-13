@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motazen/pages/communities_page/bages/display_badges.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
 import 'package:motazen/pages/settings/numberof_shown_task.dart';
 import 'package:motazen/pages/settings/profile_edit.dart';
 import '../../Sidebar_and_navigation/navigation-bar.dart';
 
+//REEMAS
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
   @override
@@ -71,18 +71,7 @@ class SettingScreen extends StatelessWidget {
               ),
               BuildAccountOptionRow(
                 title: "خانة احتياط",
-                onClick: () {
-                  //move to the bages page
-                  //! the placement of navigate is placed here temporarly it will be moved later
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return BadgesPage();
-                      },
-                    ),
-                  );
-                },
+                onClick: () {},
               ),
               const SizedBox(height: 40),
               Row(
@@ -144,7 +133,9 @@ class SettingScreen extends StatelessWidget {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          const initializeAspects()));
+                                                          const initializeAspects(
+                                                            isRetake: true,
+                                                          )));
                                             },
                                             height: 45,
                                             minWidth: 70,

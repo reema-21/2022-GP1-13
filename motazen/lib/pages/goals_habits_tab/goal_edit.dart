@@ -1,6 +1,6 @@
 //manar
 import 'package:flutter/material.dart';
-import 'package:motazen/data/data.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/entities/LocalTask.dart';
 import 'package:motazen/pages/goals_habits_tab/goal_details.dart';
 import 'package:motazen/isar_service.dart';
@@ -62,7 +62,7 @@ class _EditGoalState extends State<EditGoal> {
         case "مهنتي":
           goalAspect = "مهنتي";
           break;
-        case "علاقتي":
+        case "علاقاتي":
           goalAspect = "علاقاتي";
           break;
         case "بيئتي":
@@ -76,7 +76,7 @@ class _EditGoalState extends State<EditGoal> {
           goalAspect = "صحتي";
           break;
         case "عائلتي واصدقائي":
-          goalAspect = "عائلتي وأصدقائي";
+          goalAspect = "عائلتي واصدقائي";
           break;
       }
       importance = goal!.importance;
@@ -107,7 +107,7 @@ class _EditGoalState extends State<EditGoal> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
 
     return Stack(
       children: [
@@ -148,6 +148,17 @@ class _EditGoalState extends State<EditGoal> {
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             iconTheme: const IconThemeData(color: kWhiteColor),
+            leading: Builder(
+              builder: (BuildContext context) {
+                return IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back,
+                    ));
+              },
+            ),
           ),
 
           /// floating button

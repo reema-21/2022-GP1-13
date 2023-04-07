@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:motazen/models/community.dart';
-
+//Reemas
 class Userr {
   String? email;
   String? firstName;
@@ -10,6 +10,10 @@ class Userr {
   DateTime? signInDate;
   List<Community>? createdCommunities;
   List<Community>? joinedCommunities;
+  String ? avatarURL ; 
+  bool isinvited = false  ; 
+
+
 
   Userr({
     this.email,
@@ -20,8 +24,9 @@ class Userr {
     this.userName,
     this.createdCommunities,
     this.joinedCommunities,
+    this.avatarURL
   });
-
+//* i added the avatar url
   Map<String, dynamic> toJson() => {
         "email": email,
         "firstName": firstName,
@@ -31,6 +36,7 @@ class Userr {
         "userName": userName,
         "createdCommunities": createdCommunities,
         "joinedCommunities": joinedCommunities,
+        "avatarURL":avatarURL
       };
 
   static Userr fromSnap(DocumentSnapshot snap) {
@@ -44,6 +50,7 @@ class Userr {
       userName: snapshot['userName'],
       createdCommunities: snapshot['createdCommunities'],
       joinedCommunities: snapshot['joinedCommunities'],
+      avatarURL: snapshot["avatarURL"] // this is new 
     );
   }
 }

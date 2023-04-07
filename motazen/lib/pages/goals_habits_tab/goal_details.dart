@@ -2,19 +2,18 @@
 //new
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:motazen/data/data.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/entities/LocalTask.dart';
-import 'package:motazen/pages/goals_habits_tab/taskClass.dart';
+import 'package:motazen/models/taskClass.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/pages/add_goal_page/taskLocal_controller.dart';
+import 'package:motazen/controllers/taskLocal_controller.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
-
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../../Sidebar_and_navigation/navigation-bar.dart';
 import '/entities/goal.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
 import '../../../entities/aspect.dart';
 import 'Edit_task.dart';
 
@@ -62,13 +61,13 @@ class _goalDetailsState extends State<goalDetails> {
   }
 
   final TaskLocalControleer freq = Get.put(TaskLocalControleer());
-
+  DateRangePickerController newSelectedDate = DateRangePickerController();
   final formKey = GlobalKey<FormState>();
   int goalDuration = 0;
   List<LocalTask> goalTasks = [];
   List<LocalTask> oldgoalTasks = [];
   int checkGoalDuration = 0;
-
+  bool isFirstclick = true;
   DateTimeRange? selectedDates;
 
   String duration = "لا يوجد فترة";
@@ -178,32 +177,8 @@ class _goalDetailsState extends State<goalDetails> {
 //do the case when the date was selceted and then deleted //
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.miniStartFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (formKey.currentState!.validate()) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  backgroundColor: Colors.green.shade300,
-                  duration: const Duration(milliseconds: 700),
-                  content: Row(
-                    children: const [
-                      Icon(Icons.thumb_up_sharp),
-                      SizedBox(width: 20),
-                      Expanded(
-                        child: Text("تمت تعديل الهدف "),
-                      )
-                    ],
-                  )));
-
-              Addgoal()();
-            }
-          },
-          backgroundColor: const Color.fromARGB(255, 252, 252, 252),
-          child: const Icon(Icons.save, color: Color(0xFF66BF77)),
-        ),
         key: _scaffoldkey,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -212,72 +187,82 @@ class _goalDetailsState extends State<goalDetails> {
             "تعديل معلومات الهدف",
             style: TextStyle(color: Colors.white, fontSize: 25),
           ),
-          actions: [
-            IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-                onPressed: () async {
-                  final action = await AlertDialogs.yesCancelDialog(
-                      context,
-                      ' هل انت متاكد من الرجوع ',
-                      'بالنقر على "تأكيد"لن يتم حفظ أي تغييرات قمت بها ');
-                  if (action == DialogsAction.yes) {
-                    // here is should make sure to fetch the tasks to take itis depenency before saving it
-                    List<LocalTask> g = [];
-                    Goal? goal = Goal(userID: IsarService.getUserID);
-                    goal = await widget.isr.getSepecificGoall(widget.id);
-                    g = goal!.task.toList();
-                    for (int i = 0; i < g.length; i++) {
-                      widget.isr.deleteTask(g[i].id);
-                    }
-                    for (int i = 0; i < oldgoalTasks.length; i++) {
-                      //this for canceling
-                      //here i will add new code for the dependncy
-                      List<String> Taskss =
-                          freq.OrginalTasks.value[i].TaskDependency;
-                      await Future.forEach(Taskss, (item) async {
-                        LocalTask? y = LocalTask(userID: IsarService.getUserID);
-                        String name = item;
-
-                        y = await widget.isr.findSepecificTask(name);
-                        oldgoalTasks[i]
-                            .TaskDependency
-                            .add(y!); // to link task and it depends tasks ;
-                      });
-
-                      widget.isr.saveTask(oldgoalTasks[i]);
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                  onPressed: () async {
+                    final action = await AlertDialogs.yesCancelDialog(
+                        context,
+                        ' هل انت متاكد من الرجوع ',
+                        'بالنقر على "تأكيد"لن يتم حفظ أي تغييرات قمت بها ');
+                    if (action == DialogsAction.yes) {
+                      // here is should make sure to fetch the tasks to take itis depenency before saving it
+                      List<LocalTask> g = [];
                       Goal? goal = Goal(userID: IsarService.getUserID);
                       goal = await widget.isr.getSepecificGoall(widget.id);
-                      goal!.task.add(oldgoalTasks[i]);
+                      g = goal!.task.toList();
+                      for (int i = 0; i < g.length; i++) {
+                        widget.isr.deleteTask(g[i].id);
+                      }
+                      for (int i = 0; i < oldgoalTasks.length; i++) {
+                        //this for canceling
+                        //here i will add new code for the dependncy
+                        List<String> Taskss =
+                            freq.OrginalTasks.value[i].TaskDependency;
+                        await Future.forEach(Taskss, (item) async {
+                          LocalTask? y =
+                              LocalTask(userID: IsarService.getUserID);
+                          String name = item;
 
-                      widget.isr.createGoal(goal);
-                      oldgoalTasks[i].goal.value = goal;
-                      widget.isr.saveTask(oldgoalTasks[i]);
+                          y = await widget.isr.findSepecificTask(name);
+                          oldgoalTasks[i]
+                              .TaskDependency
+                              .add(y!); // to link task and it depends tasks ;
+                        });
+
+                        widget.isr.saveTask(oldgoalTasks[i]);
+                        Goal? goal = Goal(userID: IsarService.getUserID);
+                        goal = await widget.isr.getSepecificGoall(widget.id);
+                        goal!.task.add(oldgoalTasks[i]);
+
+                        widget.isr.createGoal(goal);
+                        oldgoalTasks[i].goal.value = goal;
+                        widget.isr.saveTask(oldgoalTasks[i]);
+                      }
+
+                      freq.TaskDuration = 0.obs;
+                      freq.currentTaskDuration = 0.obs;
+                      freq.totalTasksDuration = 0.obs;
+                      freq.iscool = false.obs;
+                      freq.tem = 0.obs;
+                      freq.isSelected = "أيام".obs;
+                      freq.goalTask = Rx<List<LocalTask>>([]);
+                      freq.allTaskForDepency = Rx<List<TaskData>>([]);
+
+                      freq.newTasksAddedInEditing = Rx<List<LocalTask>>([]);
+
+                      freq.TasksMenue.value.clear();
+                      freq.selectedTasks.value.clear();
+                      freq.OrginalTasks.value.clear();
+
+                      freq.itemCount = 0.obs;
+                      freq.itemCountAdd = 0.obs;
+
+                      if (mounted) {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const navBar(selectedIndex: 1)));
+                      }
                     }
-
-                    freq.TaskDuration = 0.obs;
-                    freq.currentTaskDuration = 0.obs;
-                    freq.totalTasksDuration = 0.obs;
-                    freq.iscool = false.obs;
-                    freq.tem = 0.obs;
-                    freq.isSelected = "أيام".obs;
-                    freq.goalTask = Rx<List<LocalTask>>([]);
-                    freq.allTaskForDepency = Rx<List<TaskData>>([]);
-
-                    freq.newTasksAddedInEditing = Rx<List<LocalTask>>([]);
-
-                    freq.TasksMenue.value.clear();
-                    freq.selectedTasks.value.clear();
-                    freq.OrginalTasks.value.clear();
-
-                    freq.itemCount = 0.obs;
-                    freq.itemCountAdd = 0.obs;
-
-                    Get.to(() => const navBar(
-                          selectedIndex: 1,
-                        ));
-                  } else {}
-                }),
-          ],
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ));
+            },
+          ),
         ),
         body: Stack(
           children: [
@@ -469,8 +454,42 @@ class _goalDetailsState extends State<goalDetails> {
                           txt(txt: "إضافة مهام", fontSize: 18),
                         ],
                       ),
+                      SizedBox(
+                        height: screenHeight(context) * 0.25,
+                      ),
 
-                      //--------------------
+                      InkWell(
+                        onTap: () {
+                          if (formKey.currentState!.validate()) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                backgroundColor: Colors.green.shade300,
+                                duration: const Duration(milliseconds: 700),
+                                content: Row(
+                                  children: const [
+                                    Icon(Icons.thumb_up_sharp),
+                                    SizedBox(width: 20),
+                                    Expanded(
+                                      child: Text("تمت تعديل الهدف "),
+                                    )
+                                  ],
+                                )));
+
+                            Addgoal()();
+                          }
+                        },
+                        child: Container(
+                          height: screenHeight(context) * 0.05,
+                          width: screenWidth(context) * 0.4,
+                          decoration: BoxDecoration(
+                              color: kPrimaryColor,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Center(
+                              child: txt(
+                                  txt: 'تعديل الهدف',
+                                  fontSize: 16,
+                                  fontColor: Colors.white)),
+                        ),
+                      )
                     ])))
 
             //here the tasks .
@@ -494,59 +513,102 @@ class _goalDetailsState extends State<goalDetails> {
             children: [
               InkWell(
                   onTap: () async {
-                    DateTimeRange? newDate = await showDateRangePicker(
-                      initialDateRange: selectedDates ??
-                          DateTimeRange(
-                              start: widget.startDate, end: widget.endDate),
-// make here the goal selectd in datails '
-                      context: context,
-                      firstDate:
-                          DateTime.now().subtract(const Duration(days: 0)),
-                      lastDate: DateTime(2100),
-                      builder: (BuildContext context, Widget? child) {
-                        return Theme(
-                          data: ThemeData.light().copyWith(
-                            colorScheme: const ColorScheme.light(
-                              primary: kPrimaryColor,
-                              onPrimary: Colors.white,
-                              onSurface: kPrimaryColor,
-                            ),
-                          ),
-                          child: child!,
-                        );
-                      },
-                    );
-
-                    setState(() {
-                      if (newDate != null) {
-                        if (newDate.duration.inDays <
-                            freq.checkTotalTaskDuration.value) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              duration: const Duration(milliseconds: 1000),
-                              backgroundColor:
-                                  const Color.fromARGB(255, 243, 9, 9),
-                              content: Row(
-                                children: const [
-                                  Icon(
-                                    Icons.error,
-                                    color: Color.fromARGB(255, 0, 0, 0),
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          DateTimeRange newDate;
+                          return Scaffold(
+                            body: Container(
+                                color: Colors.white,
+                                child: SfDateRangePicker(
+                                  headerStyle: const DateRangePickerHeaderStyle(
+                                      backgroundColor: kPrimaryColor),
+                                  //to give restriction
+                                  minDate: widget.startDate,
+                                  controller: newSelectedDate,
+                                  confirmText: "تأكيد ",
+                                  cancelText: "إلغاء",
+                                  todayHighlightColor: Colors.blue,
+                                  showActionButtons: true,
+                                  onCancel: () {
+                                    newSelectedDate.selectedRange = null;
+                                    Navigator.pop(context);
+                                  },
+                                  onSubmit: (p0) {
+                                    newDate = DateTimeRange(
+                                        start: newSelectedDate
+                                            .selectedRange!.startDate!,
+                                        end: newSelectedDate
+                                            .selectedRange!.endDate!);
+                                    setState(() {
+                                      if (newDate.duration.inDays <
+                                          freq.checkTotalTaskDuration.value) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                duration: const Duration(
+                                                    milliseconds: 1000),
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 243, 9, 9),
+                                                content: Row(
+                                                  children: const [
+                                                    Icon(
+                                                      Icons.error,
+                                                      color: Color.fromARGB(
+                                                          255, 0, 0, 0),
+                                                    ),
+                                                    SizedBox(width: 20),
+                                                    Expanded(
+                                                      child: Text(
+                                                          "فترة الهدف ستصبح أقل من فترة المهام المدخلة",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black)),
+                                                    )
+                                                  ],
+                                                )));
+                                      } else {
+                                        goalDuration = newDate.duration.inDays;
+                                        duration =
+                                            '${goalDuration.toString()} يوما';
+                                        selectedDates = newDate;
+                                        Navigator.pop(context);
+                                      }
+                                    });
+                                  },
+                                  selectionMode:
+                                      DateRangePickerSelectionMode.range,
+                                  initialSelectedRange: PickerDateRange(
+                                    widget.startDate,
+                                    widget.endDate,
                                   ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Text(
-                                        "فترة الهدف ستصبح أقل من فترة المهام المدخلة",
-                                        style: TextStyle(color: Colors.black)),
-                                  )
-                                ],
-                              )));
-                        } else {
-                          goalDuration = newDate.duration.inDays;
-                          duration = '${goalDuration.toString()} يوما';
-                          selectedDates = newDate;
-                        }
-                      }
-                    });
+                                )),
+                          );
+                        });
                   },
+//                     DateTimeRange? newDate = await showDateRangePicker(
+//                       initialDateRange: selectedDates ??
+//                           DateTimeRange(
+//                               start: widget.startDate, end: widget.endDate),
+// // make here the goal selectd in datails '
+//                       context: context,
+//                       firstDate:
+//                           DateTime.now().subtract(const Duration(days: 0)),
+//                       lastDate: DateTime(2100),
+//                       builder: (BuildContext context, Widget? child) {
+//                         return Theme(
+//                           data: ThemeData.light().copyWith(
+//                             colorScheme: const ColorScheme.light(
+//                               primary: kPrimaryColor,
+//                               onPrimary: Colors.white,
+//                               onSurface: kPrimaryColor,
+//                             ),
+//                           ),
+//                           child: child!,
+//                         );
+//                       },
+//                     );
+
                   child: const Icon(
                     Icons.calendar_month,
                     color: kPrimaryColor,

@@ -5,7 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-import '../../../data/data.dart';
+import '../../controllers/aspect_controller.dart';
 import '/entities/habit.dart';
 import 'habit_datials.dart';
 
@@ -72,7 +72,7 @@ class _EditGoalState extends State<EditHbit> {
           habitAspect = "صحتي";
           break;
         case "عائلتي واصدقائي":
-          habitAspect = "عائلتي وأصدقائي";
+          habitAspect = "عائلتي واصدقائي";
           break;
       }
     });
@@ -82,7 +82,7 @@ class _EditGoalState extends State<EditHbit> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
 
     return Stack(
       children: [
@@ -120,9 +120,19 @@ class _EditGoalState extends State<EditHbit> {
               "معلومات العادة",
               style: TextStyle(color: Colors.white),
             ),
-            //backgroundColor: kWhiteColor,
             backgroundColor: Colors.transparent,
             iconTheme: const IconThemeData(color: kWhiteColor),
+            leading: Builder(
+              builder: (BuildContext context) {
+                return IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back,
+                    ));
+              },
+            ),
           ),
 
           /// floating button

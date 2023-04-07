@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:motazen/data/data.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/entities/imporvment.dart';
 import 'package:motazen/isar_service.dart';
@@ -58,7 +58,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     List<AspectImporvment> chartData = [];
 
     List<Imporvment> tempList = [];
@@ -114,19 +114,28 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, color: kPrimaryColor),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
+          aspectList.getSelectedIcon(widget.aspect.name),
+          const SizedBox(
+            width: 10,
+          ),
         ],
-
-        leading: aspectList.getSelectedIcon(widget.aspect.name),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.green,
+                ));
+          },
+        ),
         title: Text(
           widget.aspect.name,
           style: titleText2,
         ),
-        automaticallyImplyLeading: true, // need color
+        centerTitle: true,
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(

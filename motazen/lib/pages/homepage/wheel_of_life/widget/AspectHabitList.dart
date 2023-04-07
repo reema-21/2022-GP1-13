@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, non_constant_identifier_names, unused_local_variable
 //man
 import 'package:flutter/material.dart';
-import 'package:motazen/data/data.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/entities/habit.dart';
 import 'package:motazen/isar_service.dart';
@@ -30,7 +30,7 @@ class _AspectGoal extends State<AspectHabit> {
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -72,7 +72,7 @@ class _AspectGoal extends State<AspectHabit> {
                             'بالنقر على تأكيد لن تتمكن من استرجاع تلك العادة ');
                         if (action == DialogsAction.yes) {
                           widget.isr.deleteHabit(habit);
-                        } else {}
+                        }
                       },
                     ),
                     tileColor: (index % 2 != 0)

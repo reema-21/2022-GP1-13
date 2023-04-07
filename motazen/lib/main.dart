@@ -9,7 +9,7 @@ import 'package:motazen/pages/login/login.dart';
 import 'package:motazen/pages/onboarding_page.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-import '/data/data.dart';
+import 'controllers/aspect_controller.dart';
 import 'firebase_options.dart';
 
 Future main() async {
@@ -25,8 +25,8 @@ Future main() async {
   bool ifr = await IsFirstRun.isFirstRun();
   iser = IsarService();
   runApp(
-    ChangeNotifierProvider<WheelData>(
-      create: (_) => WheelData(),
+    ChangeNotifierProvider<AspectController>(
+      create: (_) => AspectController(),
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

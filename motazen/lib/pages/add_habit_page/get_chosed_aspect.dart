@@ -43,7 +43,7 @@ class _showsState extends State<getChosenAspectH> {
                   case "مهنتي":
                     nameInArabic = "مهنتي";
                     break;
-                  case "علاقتي":
+                  case "علاقاتي":
                     nameInArabic = "علاقاتي";
                     break;
                   case "بيئتي":
@@ -57,7 +57,7 @@ class _showsState extends State<getChosenAspectH> {
                     nameInArabic = "صحتي";
                     break;
                   case "عائلتي واصدقائي":
-                    nameInArabic = "عائلتي وأصدقائي";
+                    nameInArabic = "عائلتي واصدقائي";
                     break;
                 }
 

@@ -105,35 +105,15 @@ class Rank {
         [SortedComparable<Item, double>((task) => task.rank!, invert: true)]);
   }
 
-/////////////////////ordering habits by frequency//////////////
+//------------------------ordering habits by frequency------------------------//
   List<Item> orderHabits(List<Item> habits) {
-    double duration = 0;
-
     for (var habit in habits) {
-      switch (habit.duration) {
-        case 0:
-          //repeated during a day
-          duration = 365;
-          break;
-        case 1:
-          //repeated during a week
-          duration = 54; //!approxiamet value, revise later
-          break;
-        case 2:
-          //repeated during a month
-          duration = 12;
-          break;
-        case 3:
-          //repeated during a year
-          duration = 1;
-          break;
-      }
       //check items should be displayed at the bottom of the list
       if (habit.completed) {
         habit.rank = 0;
       } else {
         //find the total repution
-        habit.rank = (habit.repetition! * duration);
+        habit.rank = habit.repetition!.toDouble();
       }
     }
 

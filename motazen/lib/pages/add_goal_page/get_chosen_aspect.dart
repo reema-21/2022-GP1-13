@@ -4,7 +4,7 @@ import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../../isar_service.dart';
-import '../../data/data.dart';
+import '../../controllers/aspect_controller.dart';
 
 class getChosenAspect extends StatefulWidget {
   final String? origin;
@@ -20,7 +20,7 @@ class getChosenAspect extends StatefulWidget {
 class _showsState extends State<getChosenAspect> {
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
       body: Center(
         child: FutureBuilder(

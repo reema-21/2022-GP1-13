@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+//Reemas
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -32,6 +32,27 @@ class AuthController extends GetxController {
     super.onReady();
   }
 
+//*this method to get the user avatarurl from firebase
+
+  getUserAvatar() async {
+    await firestore
+        .collection("user")
+        .doc(firebaseAuth.currentUser!.uid)
+        .get()
+        .then((value) {
+      var currentUserDoc = value.data();
+      currentUser.value.avatarURL = currentUserDoc!["avatarURL"];
+    });
+  }
+
+  //*this method to set the user avatar
+  setUserAvatar(String userAvatarUrl) async {
+    await firestore
+        .collection("user")
+        .doc(firebaseAuth.currentUser!.uid)
+        .update({"avatarURL": userAvatarUrl});
+  }
+
   getUsersList() async {
     usersList.clear();
     try {
@@ -43,45 +64,42 @@ class AuthController extends GetxController {
           try {
             createdCommunitiess = user['createdCommunities'];
           } catch (e) {
-            log('error: $e');
+            log('error in created: $e');
           }
 
           List joinedCommunitiess = [];
           try {
             joinedCommunitiess = user['joinedCommunities'];
           } catch (e) {
-            log('error: $e');
+            log('error in joined: $e');
           }
-          String userNamee = user['userName'];
-          String emaill = user['email'];
-          Timestamp signInDatee = user['signInDate'];
-          String pass = user['password'];
-          String userIDD = user['userID'];
-          String firstNamee = user['firstName'];
-          for (var community in createdCommunitiess) {
-            try {} catch (e) {
-              log('error: $e');
-            }
+          String userNamee = user.data()['userName'];
+          String emaill = user.data()['email'];
+          Timestamp signInDatee = user.data()['signInDate'];
+          String pass = user.data()['password'];
+          String userIDD = user.data()['userID'];
+          String firstNamee = user.data()['firstName'];
+          String? avatarURL = user.data()["avatarURL"];
 
+          for (var community in createdCommunitiess) {
             try {
               createdCommnitiesOfUser.add(Community(
-                  progressList: community['progress_list'],
+                  progressList: community[
+                      'progress_list'], //this list isn't being saved in db
                   aspect: community['aspect'],
                   founderUsername: community['founderUsername'],
                   communityName: community['communityName'],
                   creationDate: community['creationDate'].toDate(),
                   goalName: community['goalName'],
                   isPrivate: community['isPrivate'],
+                  isDeleted: community['isDeleted'],
                   id: community['_id']));
             } catch (e) {
-              log('error: $e');
+              log('error in add created to list: $e');
             }
           }
 
           for (var community in joinedCommunitiess) {
-            try {} catch (e) {
-              log('error: $e');
-            }
             try {
               joinedCommnitiesOfUser.add(Community(
                   progressList: community['progress_list'],
@@ -91,27 +109,29 @@ class AuthController extends GetxController {
                   creationDate: community['creationDate'].toDate(),
                   goalName: community['goalName'],
                   isPrivate: community['isPrivate'],
+                  isDeleted: community['isDeleted'],
                   id: community['_id']));
             } catch (e) {
-              log('error: $e');
+              log('error in add joined to list: $e');
             }
           }
 
-          usersList.add(
-            Userr(
-                userName: userNamee,
-                createdCommunities: createdCommnitiesOfUser,
-                email: emaill,
-                firstName: firstNamee,
-                joinedCommunities: joinedCommnitiesOfUser,
-                password: pass,
-                signInDate: signInDatee.toDate(),
-                userID: userIDD),
-          );
+          usersList.add(Userr(
+              userName: userNamee,
+              createdCommunities: createdCommnitiesOfUser,
+              email: emaill,
+              firstName: firstNamee,
+              joinedCommunities: joinedCommnitiesOfUser,
+              password: pass,
+              signInDate: signInDatee.toDate(),
+              userID: userIDD,
+              avatarURL: avatarURL));
+          // avatarURL: avatarURL
+          ////! you need to fix this comment above
         }
       });
     } catch (e) {
-      log('error: $e');
+      log('error(auth controller): $e');
     }
     update();
   }

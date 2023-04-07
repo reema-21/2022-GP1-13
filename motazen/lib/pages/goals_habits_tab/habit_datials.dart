@@ -7,7 +7,7 @@ import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 import '../../../Sidebar_and_navigation/navigation-bar.dart';
-import '../../../data/data.dart';
+import '../../controllers/aspect_controller.dart';
 import '/entities/habit.dart';
 
 import 'package:get/get.dart';
@@ -46,14 +46,13 @@ class _AddHabitState extends State<HabitDetails> {
   late int durationInInt;
   final _goalNmaeController = TextEditingController();
   final _goalaspectController = TextEditingController(); // for fixed habits
-
+  bool isFirstclick = true;
   final EditMyControleer freq = Get.put(EditMyControleer());
   final List<String> durations = ['اليوم', 'الأسبوع', 'الشهر', 'السنة'];
   String? isDuration;
-
   String duratioSelected = "";
-
   String? isSelected;
+
   @override
   void initState() {
     super.initState();
@@ -120,33 +119,9 @@ class _AddHabitState extends State<HabitDetails> {
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
 
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (formKey2.currentState!.validate()) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Row(
-              children: const [
-                Icon(
-                  Icons.thumb_up_sharp,
-                  color: kWhiteColor,
-                ),
-                SizedBox(width: 20),
-                Expanded(
-                  child: Text("تم حفظ التغييرات بنجاح "),
-                )
-              ],
-            )));
-
-            _AddHabit();
-          }
-        },
-        backgroundColor: const Color.fromARGB(255, 252, 252, 252),
-        child: const Icon(Icons.save, color: Color(0xFF66BF77)),
-      ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF66BF77),
@@ -154,23 +129,30 @@ class _AddHabitState extends State<HabitDetails> {
           "تعديل معلومات العادة",
           style: TextStyle(color: Colors.white, fontSize: 25),
         ),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-              onPressed: () async {
-                final action = await AlertDialogs.yesCancelDialog(
-                    context,
-                    ' هل انت متاكد من الرجوع ',
-                    'بالنقر على "تاكيد"لن يتم حفظ التغييرات التي قمت بها');
-                if (action == DialogsAction.yes) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const navBar(
-                      selectedIndex: 1,
-                    );
-                  }));
-                } else {}
-              }),
-        ],
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+                onPressed: () async {
+                  final action = await AlertDialogs.yesCancelDialog(
+                      context,
+                      ' هل انت متاكد من الرجوع ',
+                      'بالنقر على "تاكيد"لن يتم حفظ التغييرات التي قمت بها');
+                  if (action == DialogsAction.yes) {
+                    //! it should return to the habits tab
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const navBar(
+                        selectedIndex: 1,
+                      );
+                    }));
+                  }
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ));
+          },
+        ),
       ),
       body: Stack(children: [
         Container(
@@ -342,7 +324,47 @@ class _AddHabitState extends State<HabitDetails> {
                 ),
               ),
 
-              //frequency.
+              SizedBox(
+                height: screenHeight(context) * 0.25,
+              ),
+
+              InkWell(
+                onTap: () {
+                  if (isFirstclick) {
+                    isFirstclick = false;
+
+                    if (formKey2.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Row(
+                        children: const [
+                          Icon(
+                            Icons.thumb_up_sharp,
+                            color: kWhiteColor,
+                          ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: Text("تم حفظ التغييرات بنجاح "),
+                          )
+                        ],
+                      )));
+
+                      _AddHabit();
+                    }
+                  }
+                },
+                child: Container(
+                  height: screenHeight(context) * 0.05,
+                  width: screenWidth(context) * 0.4,
+                  decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Center(
+                      child: txt(
+                          txt: 'تعديل العادة',
+                          fontSize: 16,
+                          fontColor: Colors.white)),
+                ),
+              )
             ]),
           ),
         ),

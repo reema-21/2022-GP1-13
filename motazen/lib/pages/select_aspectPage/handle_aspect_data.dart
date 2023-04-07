@@ -5,16 +5,16 @@ import 'package:motazen/entities/goal.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:provider/provider.dart';
-import '../../data/data.dart';
+import '../../controllers/aspect_controller.dart';
 import '/entities/aspect.dart';
-import '../../data/models.dart';
+import '../../models/aspect_model.dart';
 import 'select_aspect.dart';
 
 class handle_aspect {
   final IsarService isar = IsarService();
 
 //initialize all aspects in local storage
-  Future<List<Aspect>> initializeAspects(List<Data> list) async {
+  Future<List<Aspect>> initializeAspects(List<AspectModel> list) async {
     await isar.cleanAspects();
     for (var i = 0; i < list.length; i++) {
       var newAspect = Aspect(userID: IsarService.getUserID);
@@ -94,8 +94,10 @@ class handle_aspect {
 ////////////////////////////initialize for the first time/////////////////////
 
 class initializeAspects extends StatefulWidget {
+  final bool? isRetake;
   const initializeAspects({
     super.key,
+    this.isRetake,
   });
 
   @override
@@ -106,7 +108,7 @@ class _initializeAspectsState extends State<initializeAspects> {
   final IsarService isar = IsarService();
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
       body: Center(
         child: FutureBuilder<List<Aspect>>(
@@ -115,7 +117,7 @@ class _initializeAspectsState extends State<initializeAspects> {
               if (snapshot.hasData) {
                 aspectList.allAspects = snapshot.data!;
                 return AspectSelection(
-                  isr: isar,
+                  isRetake: widget.isRetake,
                 );
               } else {
                 return const CircularProgressIndicator();
@@ -137,7 +139,7 @@ class getAllAspects extends StatefulWidget {
 class _getAllAspectsState extends State<getAllAspects> {
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
       body: Center(
         child: FutureBuilder(

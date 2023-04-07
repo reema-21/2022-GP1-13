@@ -1,55 +1,103 @@
+import 'dart:developer';
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:motazen/pages/reset/reset_password.dart';
 import 'package:motazen/pages/settings/setting_screen.dart';
 import 'package:motazen/primary_button.dart';
+import 'package:motazen/theme.dart';
 
+import '../../controllers/auth_controller.dart';
 import '../../dialogue_boxes.dart';
 import '../select_aspectPage/handle_aspect_data.dart';
 
 final ButtonStyle style =
     ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
-class SettingsUI extends StatelessWidget {
-  const SettingsUI({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      //Note: why use the material app widget again (a new tree is created)
-      debugShowCheckedModeBanner: false,
-      title: "Setting UI",
-      home: EditProfilePage(),
-    );
-  }
-}
-
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  bool showPassword = true;
-  bool showConfirmPassword = true;
+  bool showOldPassword = true;
+  bool showNewPassword = true;
+  bool showConfirmNewPassword = true;
   final emailController = TextEditingController();
-  final usernameController = TextEditingController();
   final firstnameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final _userNameKey = GlobalKey<FormState>();
+  final usernameController = TextEditingController();
+  final oldPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmNewPasswordController = TextEditingController();
   final _firstNameKey = GlobalKey<FormState>();
+  final _userNameKey = GlobalKey<FormState>();
   final _emailKey = GlobalKey<FormState>();
-  final _passKey = GlobalKey<FormState>();
-  final _confirmPassKey = GlobalKey<FormState>();
+  final _OldPassKey = GlobalKey<FormState>();
+  final _newPassKey = GlobalKey<FormState>();
+  final _confirmNewPassKey = GlobalKey<FormState>();
+  String oldFirstName = "";
+  String oldUsername = "";
+  String oldEmail = "";
 
   CollectionReference ref = FirebaseFirestore.instance.collection('user');
   final userID = FirebaseAuth.instance.currentUser;
+  AuthController authController = Get.find(); // for the avatar url
+  final ImagePicker _picker = ImagePicker();
+  String cuurentProfile = "";
+  Future<void> getImage() async {
+    XFile? profileImage = await _picker.pickImage(source: ImageSource.gallery);
+    File file = File(profileImage!.path);
+
+    final user = FirebaseAuth.instance.currentUser;
+    final storageRef =
+        FirebaseStorage.instance.ref().child("user/profile/${user!.uid}.jpg");
+    var uploadTask = await storageRef.putFile(file);
+    String profileImageUrl = await uploadTask.ref.getDownloadURL();
+    setState(() {
+      //get the llink and save to firebase and the current.avtarURL value
+      authController.setUserAvatar(profileImageUrl);
+      authController.currentUser.value.avatarURL = profileImageUrl;
+    });
+  }
+
+  @override
+  void initState() {
+    if (authController.currentUser.value.avatarURL != null) {
+      cuurentProfile = authController.currentUser.value.avatarURL!;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    oldEmail = '${FirebaseAuth.instance.currentUser!.email}';
+    if (emailController.text.isEmpty) {
+      emailController.text = oldEmail;
+    }
+    oldUsername = '${FirebaseAuth.instance.currentUser!.displayName}';
+    if (firstnameController.text.isEmpty) {
+      firstnameController.text = oldUsername;
+    }
+    final docRef =
+        firestore.collection('user').doc(firebaseAuth.currentUser!.uid);
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        oldFirstName = data['userName'] ?? "";
+        if (usernameController.text.isEmpty) {
+          usernameController.text = oldFirstName;
+        }
+      },
+      onError: (e) => log("Error getting document: $e"),
+    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -63,12 +111,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
             color: Colors.green,
           ),
           onPressed: () {
-            if (!(firstnameController.text.isNotEmpty ||
-                usernameController.text.isNotEmpty ||
-                emailController.text.isNotEmpty ||
-                passwordController.text.isNotEmpty)) {
+            if (!(usernameController.text != oldFirstName ||
+                firstnameController.text != oldUsername ||
+                emailController.text != oldEmail ||
+                oldPasswordController.text.isNotEmpty ||
+                cuurentProfile != authController.currentUser.value.avatarURL))
               Navigator.pop(context);
-            } else {
+            else {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -91,6 +140,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                             TextButton(
                               onPressed: () async {
+                                setState(() {
+                                  if (cuurentProfile == "") {
+                                    authController.setUserAvatar("");
+                                    authController.currentUser.value.avatarURL =
+                                        "";
+                                  } else {
+                                    authController
+                                        .setUserAvatar(cuurentProfile);
+                                    authController.currentUser.value.avatarURL =
+                                        cuurentProfile;
+                                  }
+                                  //get the llink and save to firebase and the current.avtarURL value
+                                });
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },
@@ -131,10 +193,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
               Center(
                 child: Stack(
                   children: [
-                    Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
+                    Obx(
+                      () => Container(
+                        width: 130,
+                        height: 130,
+                        decoration: BoxDecoration(
                           border: Border.all(
                               width: 4,
                               color: Theme.of(context).scaffoldBackgroundColor),
@@ -146,63 +209,63 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 offset: const Offset(0, 10))
                           ],
                           shape: BoxShape.circle,
-                          image: const DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                "",
-                              ))),
+                        ),
+                        child: CircleAvatar(
+                            backgroundImage: authController
+                                            .currentUser.value.avatarURL ==
+                                        null ||
+                                    authController
+                                            .currentUser.value.avatarURL ==
+                                        ""
+                                ? null
+                                : CachedNetworkImageProvider(
+                                    authController.currentUser.value.avatarURL!,
+                                    errorListener: () {}),
+                            radius: 32,
+                            backgroundColor: kWhiteColor,
+                            child: authController.currentUser.value.avatarURL ==
+                                    null
+                                ? const Icon(
+                                    Icons
+                                        .account_circle_sharp, //? is better to have the same icon as the one in the side bar
+                                    color: Color.fromARGB(31, 97, 96, 96),
+                                    size: 120,
+                                  )
+                                : null),
+                      ),
                     ),
                     Positioned(
                         bottom: 0,
                         right: 0,
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            color: Colors.green,
-                          ),
-                          child: const Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
-                        )),
+                        child: GestureDetector(
+                            onTap: () async {
+                              // open the gallery
+                              getImage();
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  width: 4,
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                ),
+                                color: Colors.green,
+                              ),
+                              child: const Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ),
+                            ))),
                   ],
                 ),
               ),
               const SizedBox(
                 height: 35,
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 35.0),
-                child: Form(
-                  key: _firstNameKey,
-                  child: TextFormField(
-                    controller: firstnameController,
-                    decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.only(bottom: 3),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        hintText: "تعديل الاسم الأول",
-                        hintStyle: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        )),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return null;
-                      }
-                      if (!RegExp(r"^[\u0600-\u06FF ]+").hasMatch(value)) {
-                        return "ادخلك اسمك باللغة العربية"; //
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ),
+
               Padding(
                 padding: const EdgeInsets.only(bottom: 35.0),
                 child: Form(
@@ -210,13 +273,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: TextFormField(
                       controller: usernameController,
                       decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.only(bottom: 3),
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          hintText: "تعديل اسم المستخدم",
-                          hintStyle: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          )),
+                        contentPadding: EdgeInsets.only(bottom: 3),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        labelText: "تعديل اسم المستخدم",
+                        labelStyle: TextStyle(
+                          color: kTextFieldColor,
+                        ),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return null;
@@ -240,14 +303,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           }
                         }
                         if (nums > 7) {
-                          return "اسم المستخدم لا يمكن أن يحتوي على أكثر من 7 أرقام";
+                          return "لا يمكن أن يحتوي على أكثر من 7 أرقام";
                         }
                         if (!RegExp(r"^[A-Za-z0-9]*$").hasMatch(value)) {
-                          return "اسم المستخدم يقبل الحروف والأعداد الإنجليزية دون الرموز.";
+                          return "يقبل الحروف والأعداد الإنجليزية دون الرموز.";
                         }
 
                         return null;
                       }),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 35.0),
+                child: Form(
+                  key: _firstNameKey,
+                  child: TextFormField(
+                    controller: firstnameController,
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.only(bottom: 3),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      labelText: "تعديل الاسم الأول",
+                      labelStyle: TextStyle(
+                        color: kTextFieldColor,
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return null;
+                      }
+                      if (!RegExp(r"^[\u0600-\u06FF ]+").hasMatch(value)) {
+                        return "اسمك الأول باللغة العربية"; //
+                      }
+                      return null;
+                    },
+                  ),
                 ),
               ),
               Padding(
@@ -270,115 +359,212 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     decoration: const InputDecoration(
                         contentPadding: EdgeInsets.only(bottom: 3),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
-                        hintText: "تعديل البريد الإلكتروني",
-                        hintStyle: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
+                        labelText: "تعديل البريد الإلكتروني",
+                        labelStyle: TextStyle(
+                          color: kTextFieldColor,
                         )),
                   ),
                 ),
               ),
+              ////////////////////////////////////////////////////////
               Padding(
                   padding: const EdgeInsets.only(bottom: 35.0),
                   child: Form(
-                    key: _passKey,
+                    key: _OldPassKey,
                     child: TextFormField(
-                      obscureText: showPassword,
-                      controller: passwordController,
+                      obscureText: showOldPassword,
+                      controller: oldPasswordController,
+                      validator: (value) {
+                        return "كلمة السر لا تتطابق";
+                      },
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              showOldPassword = !showOldPassword;
+                            });
+                          },
+                          icon: showOldPassword
+                              ? const Icon(
+                                  Icons.visibility_off,
+                                  color: kTextFieldColor,
+                                )
+                              : const Icon(
+                                  Icons.visibility,
+                                  color: kPrimaryColor,
+                                ),
+                        ),
+                        contentPadding: const EdgeInsets.only(bottom: 3),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        labelText: "كلمة السر الحالية",
+                        labelStyle: const TextStyle(
+                          color: kTextFieldColor,
+                        ),
+                      ),
+                    ),
+                  )),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ResetPasswordScreen(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'نسيت كلمة السر الحالية؟',
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 17,
+                    decoration: TextDecoration.underline,
+                    decorationThickness: 1,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              ////////////////////////////////////
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 35.0),
+                  child: Form(
+                    key: _newPassKey,
+                    child: TextFormField(
+                      obscureText: showNewPassword,
+                      controller: newPasswordController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return null;
                         }
                         if (value.length < 6) {
-                          return 'كلمة السر يجب أن تكون 6 خانات فأكثر مثل:IH2D45f';
+                          return 'كلمة السر يجب أن تكون 6 خانات فأكثر ';
                         }
                         return null;
                       },
                       decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                showPassword = !showPassword;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.remove_red_eye,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          contentPadding: const EdgeInsets.only(bottom: 3),
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          hintText: "تعديل كلمة السر",
-                          hintStyle: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          )),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              showNewPassword = !showNewPassword;
+                            });
+                          },
+                          icon: showNewPassword
+                              ? const Icon(
+                                  Icons.visibility_off,
+                                  color: kTextFieldColor,
+                                )
+                              : const Icon(
+                                  Icons.visibility,
+                                  color: kPrimaryColor,
+                                ),
+                        ),
+                        contentPadding: const EdgeInsets.only(bottom: 3),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        labelText: "تعديل كلمة السر",
+                        labelStyle: const TextStyle(
+                          color: kTextFieldColor,
+                        ),
+                      ),
                     ),
                   )),
+
               Padding(
                 padding: const EdgeInsets.only(bottom: 35.0),
                 child: Form(
-                  key: _confirmPassKey,
+                  key: _confirmNewPassKey,
                   child: TextFormField(
-                    controller: confirmPasswordController,
-                    obscureText: showConfirmPassword,
+                    controller: confirmNewPasswordController,
+                    obscureText: showConfirmNewPassword,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        if (passwordController.text ==
-                            confirmPasswordController.text) return null;
+                        if (newPasswordController.text ==
+                            confirmNewPasswordController.text) return null;
                         return 'فضلًا ادخل كلمة السر';
                       }
-                      if (passwordController.text !=
-                          confirmPasswordController.text) {
+                      if (newPasswordController.text !=
+                          confirmNewPasswordController.text) {
                         return "الكلمة لا تتطابق";
                       }
 
                       if (value.length < 6) {
-                        return 'كلمة السر يجب أن تكون 6 خانات فأكثر مثل:IH2D45f';
+                        return 'كلمة السر يجب أن تكون 6 خانات فأكثر ';
                       }
                       return null;
                     },
                     decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              showConfirmPassword = !showConfirmPassword;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.remove_red_eye,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.only(bottom: 3),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        hintText: "تأكيد كلمة السر الجديدة",
-                        hintStyle: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                        )),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            showConfirmNewPassword = !showConfirmNewPassword;
+                          });
+                        },
+                        icon: showConfirmNewPassword
+                            ? const Icon(
+                                Icons.visibility_off,
+                                color: kTextFieldColor,
+                              )
+                            : const Icon(
+                                Icons.visibility,
+                                color: kPrimaryColor,
+                              ),
+                      ),
+                      contentPadding: const EdgeInsets.only(bottom: 3),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      labelText: "تأكيد كلمة السر الجديدة",
+                      labelStyle: const TextStyle(
+                        color: kTextFieldColor,
+                      ),
+                    ),
                   ),
                 ),
               ),
               InkWell(
                 onTap: () async {
-                  if (!(firstnameController.text.isNotEmpty ||
-                      usernameController.text.isNotEmpty ||
+                  bool formIsOkay = true;
+                  if (!(usernameController.text.isNotEmpty ||
+                      firstnameController.text.isNotEmpty ||
                       emailController.text.isNotEmpty ||
-                      passwordController.text.isNotEmpty)) {
+                      newPasswordController.text.isNotEmpty)) {
                     Fluttertoast.showToast(msg: "الرجاء ادخل بياناتك لتغييرها");
                   }
-                  //firstName
+                  if (usernameController.text.isNotEmpty &&
+                      usernameController.text != oldFirstName) {
+                    if (!_userNameKey.currentState!.validate()) {
+                      setState(() {
+                        formIsOkay = false;
+                      });
+                    }
+                  }
                   if (firstnameController.text.isNotEmpty &&
-                      _firstNameKey.currentState!.validate()) {
-                    userID!
-                        .updateDisplayName(firstnameController.text.toString())
-                        .then((value) {});
+                      firstnameController.text != oldUsername) {
+                    if (!_firstNameKey.currentState!.validate()) {
+                      setState(() {
+                        formIsOkay = false;
+                      });
+                      final validUserName = await usernameCheck(
+                          firstnameController.text.toLowerCase());
+                      if (!validUserName) {
+                        setState(() {
+                          formIsOkay = false;
+                        });
+                        AllDialogues.showErrorDialog(
+                            title: "!هذا المستخدم مسجل سابقًا",
+                            discription:
+                                " مسجل سابقًا، سجّل باسم مستخدم جديد ${firstnameController.text} ");
+                      }
+                    }
+                  }
+                  //firstName
+                  if (formIsOkay &&
+                      usernameController.text.isNotEmpty &&
+                      usernameController.text != oldFirstName &&
+                      _userNameKey.currentState!.validate()) {
                     ref.doc(userID!.uid.toString()).update({
-                      'firstName': firstnameController.text.toString(),
+                      'userName': usernameController.text.toString(),
                     }).then((value) {
                       Fluttertoast.showToast(msg: "تم بنجاح");
-                      firstnameController.text = '';
+                      usernameController.text = '';
 
                       setState(() {});
                       Navigator.pushReplacement(
@@ -391,22 +577,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     }).onError((error, stackTrace) {});
                   }
                   // username
-                  if (usernameController.text.isNotEmpty &&
-                      _userNameKey.currentState!.validate()) {
+                  if (formIsOkay &&
+                      firstnameController.text.isNotEmpty &&
+                      firstnameController.text != oldUsername &&
+                      _firstNameKey.currentState!.validate()) {
                     final validUserName = await usernameCheck(
-                        usernameController.text.toLowerCase());
+                        firstnameController.text.toLowerCase());
                     if (!validUserName) {
                       AllDialogues.showErrorDialog(
                           title: "!هذا المستخدم مسجل سابقًا",
                           discription:
-                              " مسجل سابقًا، سجّل باسم مستخدم جديد ${usernameController.text} ");
+                              " مسجل سابقًا، سجّل باسم مستخدم جديد ${firstnameController.text} ");
                     } else {
+                      userID!
+                          .updateDisplayName(
+                              firstnameController.text.toString())
+                          .then((value) {});
                       ref.doc(userID!.uid.toString()).update({
-                        'userName':
-                            usernameController.text.toString().toLowerCase(),
+                        'firstName':
+                            firstnameController.text.toString().toLowerCase(),
                       }).then((value) {
                         Fluttertoast.showToast(msg: "تم بنجاح");
-                        usernameController.text = '';
+                        firstnameController.text = '';
                         setState(() {});
                         Navigator.pushReplacement(
                             context,
@@ -420,25 +612,72 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   }
 
                   //email
-                  if (emailController.text.isNotEmpty &&
+                  if (formIsOkay &&
+                      emailController.text.isNotEmpty &&
+                      emailController.text != oldEmail &&
                       _emailKey.currentState!.validate()) {
-                    final validEmail =
-                        await emailIdCheck(emailController.text.toLowerCase());
-                    AllDialogues.hideloading();
-                    if (!validEmail) {
-                      AllDialogues.showErrorDialog(
-                          title: "!البريد الإلكتروني موجود مُسبقًا",
-                          discription:
-                              " مسجل مسبقًا, الرجاء التسجيل ببريد آخر ${emailController.text} البريد الإلكتروني  ");
+                    if (oldPasswordController.text.isNotEmpty) {
+                      final cred = EmailAuthProvider.credential(
+                          email: oldEmail,
+                          password: oldPasswordController.text);
+                      firebaseAuth.currentUser!
+                          .reauthenticateWithCredential(cred)
+                          .then((value) async {
+                        final validEmail = await emailIdCheck(
+                            emailController.text.toLowerCase());
+                        AllDialogues.hideloading();
+                        if (!validEmail) {
+                          AllDialogues.showErrorDialog(
+                              title: "!البريد الإلكتروني موجود مُسبقًا",
+                              discription:
+                                  " مسجل مسبقًا, الرجاء التسجيل ببريد آخر ${emailController.text} البريد الإلكتروني  ");
+                        } else {
+                          userID!
+                              .updateEmail(emailController.text.toString())
+                              .then((value) {
+                            ref.doc(userID!.uid.toString()).update({
+                              'email': emailController.text.toString(),
+                            }).then((value) {
+                              Fluttertoast.showToast(msg: "تم بنجاح");
+                              emailController.text = '';
+                              setState(() {});
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const getAllAspects(
+                                            page: 'Home',
+                                          )));
+                            }).onError((error, stackTrace) {});
+                          });
+                        }
+                      }).onError((error, stackTrace) {
+                        _OldPassKey.currentState!.validate();
+                      });
                     } else {
-                      userID!
-                          .updateEmail(emailController.text.toString())
-                          .then((value) {
-                        ref.doc(userID!.uid.toString()).update({
-                          'email': emailController.text.toString(),
-                        }).then((value) {
+                      Fluttertoast.showToast(
+                          msg: "لتغيير البريد الإلكتروني، ادخل كلمة المرور");
+                    }
+                  }
+                  // password
+                  if (formIsOkay &&
+                      newPasswordController.text.isNotEmpty &&
+                      _newPassKey.currentState!.validate() &&
+                      _confirmNewPassKey.currentState!.validate()) {
+                    /////////////////////////////
+                    if (oldPasswordController.text.isNotEmpty) {
+                      final cred = EmailAuthProvider.credential(
+                          email: oldEmail,
+                          password: oldPasswordController.text);
+                      firebaseAuth.currentUser!
+                          .reauthenticateWithCredential(cred)
+                          .then((value) async {
+                        userID!
+                            .updatePassword(newPasswordController.text)
+                            .then((value) {
                           Fluttertoast.showToast(msg: "تم بنجاح");
-                          emailController.text = '';
+                          newPasswordController.text = '';
+                          confirmNewPasswordController.text = '';
                           setState(() {});
                           Navigator.pushReplacement(
                               context,
@@ -448,28 +687,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                         page: 'Home',
                                       )));
                         }).onError((error, stackTrace) {});
+                      }).onError((error, stackTrace) {
+                        _OldPassKey.currentState!.validate();
                       });
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: "لتغيير كلمة السر ادخل كلمة السر الحالية");
                     }
-                  }
-                  // password
-                  if (passwordController.text.isNotEmpty &&
-                      _passKey.currentState!.validate() &&
-                      _confirmPassKey.currentState!.validate()) {
-                    userID!
-                        .updatePassword(passwordController.text)
-                        .then((value) {
-                      Fluttertoast.showToast(msg: "تم بنجاح");
-                      passwordController.text = '';
-                      confirmPasswordController.text = '';
-                      setState(() {});
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const getAllAspects(
-                                    page: 'Home',
-                                  )));
-                    }).onError((error, stackTrace) {});
+                    ////////
                   }
                 },
                 child: const PrimaryButton(buttonText: 'أحفظ التغييرات'),

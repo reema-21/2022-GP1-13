@@ -58,6 +58,9 @@ dependencies:
   flutter_native_splash: ^2.2.17
   async: ^2.10.0
   sprung: ^3.0.1
+  syncfusion_flutter_datepicker: ^20.4.54
+  shimmer: ^2.0.0
+  cron: ^0.5.1
 
 dev_dependencies:
   flutter_test:
@@ -78,7 +81,7 @@ flutter:
   generate: true
   uses-material-design: true
   assets:
-    - assets/images/
+    - assets/
   fonts:
     - family: Poppins
       fonts:

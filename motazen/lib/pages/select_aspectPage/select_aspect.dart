@@ -4,15 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:provider/provider.dart';
-
 import '../assesment_page/show.dart';
 import 'handle_aspect_data.dart';
-import '../../data/data.dart';
+import '../../controllers/aspect_controller.dart';
 import '../../theme.dart';
 
 class AspectSelection extends StatefulWidget {
-  final IsarService isr;
-  const AspectSelection({super.key, required this.isr});
+  final bool? isRetake;
+  const AspectSelection({super.key, this.isRetake});
 
   @override
   State<AspectSelection> createState() => _selectAspectState();
@@ -31,7 +30,7 @@ class _selectAspectState extends State<AspectSelection> {
     selectedAspects.clear();
     unselectedAspects.clear();
     //list of all aspects
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     for (var i = 0; i < aspectList.allAspects.length; i++) {
       __isSelected.add(aspectList.allAspects[i].isSelected);
       if (aspectList.allAspects[i].isSelected == true) {
@@ -67,7 +66,6 @@ class _selectAspectState extends State<AspectSelection> {
             ? () {
 //call a method that add the index to the local and go to assignment page .
                 Get.to(() => AssessmentQuestionsList(
-                      iser: widget.isr,
                       unselected: unselectedAspects,
                     ));
               }
@@ -81,6 +79,19 @@ class _selectAspectState extends State<AspectSelection> {
     return Scaffold(
       backgroundColor: kWhiteColor,
       appBar: AppBar(
+        leading: widget.isRetake == true
+            ? Builder(
+                builder: (BuildContext context) {
+                  return IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(
+                        Icons.arrow_back,
+                      ));
+                },
+              )
+            : null,
         title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -115,15 +126,16 @@ class _selectAspectState extends State<AspectSelection> {
                         children: [
                           SingleChildScrollView(
                             child: Wrap(
-                              spacing: 40,
-                              runSpacing: 55,
+                              spacing: 45,
+                              runSpacing: 65,
                               children: List<Widget>.generate(
                                   8,
                                   (int i) => TextButton(
                                       style: ButtonStyle(
                                           splashFactory: NoSplash.splashFactory,
                                           fixedSize: MaterialStateProperty.all(
-                                              const Size(150, 90)),
+                                              Size((size.width * 0.4),
+                                                  (size.height * 0.1))),
                                           backgroundColor:
                                               MaterialStateProperty.all(
                                                   aspectList.allAspects[i]
@@ -197,7 +209,7 @@ class _selectAspectState extends State<AspectSelection> {
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
               child: Align(
                 alignment: Alignment.bottomRight,
-                child: doneButton(widget.isr),
+                child: doneButton(IsarService()),
               ),
             )
           ],

@@ -51,6 +51,16 @@ class IsarService {
     });
   }
 
+  Future<void> addAspectHabitLink(Habit habit, Aspect aspect) async {
+    //create the link
+    aspect.habits.add(habit);
+    final isar = await db;
+    //save the link
+    isar.writeTxnSync(() {
+      aspect.habits.saveSync();
+    });
+  }
+
   Future<LocalTask?> getSepecificTask(int id) async {
     final isar = await db;
     return await isar.localTasks
@@ -111,10 +121,23 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.communityIDs.putSync(newCommunity));
   }
 
-  Future<void> createAspect(Aspect newAspect) async {
-    //Add aspect
+  Future<bool> createAspect(Aspect newAspect) async {
     final isar = await db;
-    isar.writeTxnSync<int>(() => isar.aspects.putSync(newAspect));
+    //Step1: check if the aspect exists for the user (avoid duplication)
+    Aspect? aspect = await isar.aspects
+        .filter()
+        .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
+        .nameEqualTo(newAspect.name)
+        .findFirst();
+
+    if (aspect == null) {
+      //Step2: if there is no duplication save the aspect
+      isar.writeTxnSync<int>(() => isar.aspects.putSync(newAspect));
+      return true;
+    } else {
+      //Alt Step2: if there is duplication, do not save and return false
+      return false;
+    }
   }
 
   /// ******************** */
@@ -278,6 +301,16 @@ class IsarService {
   Future<void> saveTask(LocalTask task) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.localTasks.putSync(task));
+  }
+
+  Future<void> addAspectGoalLink(Goal goal, Aspect aspect) async {
+    //create the link
+    aspect.goals.add(goal);
+    final isar = await db;
+    //save the link
+    isar.writeTxnSync(() {
+      aspect.goals.saveSync();
+    });
   }
 
   Future<void> updateTask(LocalTask task) async {

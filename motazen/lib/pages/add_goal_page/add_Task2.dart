@@ -2,9 +2,9 @@
 //new
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/LocalTask.dart';
-import 'package:motazen/pages/goals_habits_tab/taskClass.dart';
+import 'package:motazen/models/taskClass.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/pages/add_goal_page/taskLocal_controller.dart';
+import 'package:motazen/controllers/taskLocal_controller.dart';
 import '../assesment_page/alert_dialog.dart';
 import 'package:get/get.dart';
 import 'package:multiselect/multiselect.dart';

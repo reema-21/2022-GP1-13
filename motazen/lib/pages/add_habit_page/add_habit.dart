@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:motazen/data/data.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
@@ -29,7 +29,7 @@ class _AddHabitState extends State<AddHabit> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   final _goalNmaeController = TextEditingController();
   final List<String> durations = ['اليوم', 'الأسبوع', 'الشهر', 'السنة'];
-
+  bool isFirstclick = true;
   String? isSelected;
   String? isDuration;
   String duratioSelected = "";
@@ -55,15 +55,15 @@ class _AddHabitState extends State<AddHabit> {
     newhabit.frequency = duratioSelected;
     Aspect? selected = await widget.isr.findSepecificAspect(isSelected!);
     newhabit.aspect.value = selected;
-
     widget.isr.createHabit(newhabit);
-    selected!.habits.add(newhabit);
-    widget.isr.createAspect(selected);
+    // selected!.habits.add(newhabit);
+    // widget.isr.createAspect(selected);
+    widget.isr.addAspectHabitLink(newhabit, selected!);
 
     freq.frequency = 1.obs;
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return const navBar(
-        //Note: can you make it go to the habits tap ??
+        //Note: can you make it go to the habits tap ?? I'll try :)
         selectedIndex: 1,
       );
     }));
@@ -71,35 +71,9 @@ class _AddHabitState extends State<AddHabit> {
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          if (formKey411.currentState!.validate()) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: const [
-                    Icon(
-                      Icons.thumb_up_sharp,
-                      color: kWhiteColor,
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: Text("تمت اضافة العادة "),
-                    ),
-                  ],
-                ),
-              ),
-            );
-
-            _AddHabit();
-          }
-        },
-      ),
       key: _scaffoldkey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -108,31 +82,36 @@ class _AddHabitState extends State<AddHabit> {
           "إضافة عادة جديدة",
           style: TextStyle(color: Colors.white),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-            onPressed: () async {
-              final action = await AlertDialogs.yesCancelDialog(
-                  context,
-                  ' هل انت متاكد من الرجوع ',
-                  'بالنقر على "تاكيد"لن يتم حفظ معلومات العادة  ');
-              if (action == DialogsAction.yes) {
-                freq.frequency = 1.obs;
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+                onPressed: () async {
+                  final action = await AlertDialogs.yesCancelDialog(
+                      context,
+                      ' هل انت متاكد من الرجوع ',
+                      'بالنقر على "تاكيد"لن يتم حفظ معلومات العادة  ');
+                  if (action == DialogsAction.yes) {
+                    freq.frequency = 1.obs;
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const navBar(
-                        selectedIndex: 1,
-                      );
-                    },
-                  ),
-                );
-              } else {}
-            },
-          ),
-        ],
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const navBar(
+                            selectedIndex: 1,
+                            //! should move to the habits tab
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ));
+          },
+        ),
       ),
       body: Stack(
         children: [
@@ -308,8 +287,49 @@ class _AddHabitState extends State<AddHabit> {
                       border: UnderlineInputBorder(),
                     ),
                   ),
+                  SizedBox(
+                    height: screenHeight(context) * 0.25,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (isFirstclick) {
+                        isFirstclick = false;
 
-                  // end of pluse mins
+                        if (formKey411.currentState!.validate()) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.thumb_up_sharp,
+                                    color: kWhiteColor,
+                                  ),
+                                  SizedBox(width: 20),
+                                  Expanded(
+                                    child: Text("تمت اضافة العادة "),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+
+                          _AddHabit();
+                        }
+                      }
+                    },
+                    child: Container(
+                      height: screenHeight(context) * 0.05,
+                      width: screenWidth(context) * 0.4,
+                      decoration: BoxDecoration(
+                          color: kPrimaryColor,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                          child: txt(
+                              txt: 'إضافة العادة',
+                              fontSize: 16,
+                              fontColor: Colors.white)),
+                    ),
+                  )
                 ],
               ),
             ),

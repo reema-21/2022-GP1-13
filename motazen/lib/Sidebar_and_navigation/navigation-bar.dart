@@ -6,19 +6,19 @@ import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/notifications_screen.dart/notifications_screen.dart';
+import 'package:motazen/pages/notifications_screen.dart/notifications_screen.dart';
 import 'package:motazen/pages/add_goal_page/add_goal_screen.dart';
-import 'package:motazen/pages/communities_page/create_community.dart';
+import 'package:motazen/pages/communities_page/list%20of%20communities/create_community.dart';
 import 'package:motazen/pages/goals_habits_tab/goal_habits_pages.dart';
 import 'package:motazen/pages/homepage/homepage.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/community_controller.dart';
-import '../data/data.dart';
-import '../pages/add_goal_page/task_controller.dart';
+import '../controllers/aspect_controller.dart';
+import '../controllers/task_controller.dart';
 import '../pages/add_habit_page/add_habit.dart';
-import '../pages/communities_page/communities.dart';
+import '../pages/communities_page/list of communities/communities.dart';
 import '../pages/journal_page/journal_screen.dart';
 import 'sidebar.dart';
 
@@ -49,11 +49,12 @@ class _MynavBar extends State<navBar> {
     super.initState();
     selectedIndex = widget.selectedIndex;
     authController.getUsersList();
+    authController.getUserAvatar();
   }
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<WheelData>(context);
+    var aspectList = Provider.of<AspectController>(context);
     navigate(int index) {
       setState(() {
         selectedIndex = index;
@@ -65,6 +66,67 @@ class _MynavBar extends State<navBar> {
       length: selectedIndex == 1 ? 2 : 1,
       child: Scaffold(
         backgroundColor: kWhiteColor,
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniStartFloat,
+        floatingActionButton: selectedIndex == 1 || selectedIndex == 2
+            ? FloatingActionButton(
+                onPressed: () {
+                  if (selectedIndex == 1) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                              title: Text(
+                                "أود إضافة ",
+                                textAlign: TextAlign.center,
+                                style: subTitle,
+                              ),
+                              content: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      child: Text(
+                                        "هدف",
+                                        style: alertText,
+                                      ),
+                                      onPressed: () {
+                                        Get.to(() => AddGoal(
+                                              isr: IsarService(),
+                                              goalsTasks: const [],
+                                            ));
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    TextButton(
+                                      child: Text(
+                                        "عادة",
+                                        style: alertText,
+                                      ),
+                                      onPressed: () {
+                                        Get.to(() => AddHabit(
+                                              isr: IsarService(),
+                                            ));
+                                      },
+                                    ),
+                                  ]));
+                        });
+                  }
+                  if (selectedIndex == 2) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const CreateCommunity();
+                    }));
+                  }
+                },
+                backgroundColor: kPrimaryColor,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+              )
+            : null,
 
         /// appbar
         appBar: AppBar(
@@ -73,7 +135,7 @@ class _MynavBar extends State<navBar> {
             actions: <Widget>[
               InkWell(
                 onTap: (() {
-                  Get.to(const NotificationsScreen());
+                  Get.to(() => const NotificationsScreen());
                 }),
                 child: SizedBox(
                   width: 72,
@@ -97,8 +159,10 @@ class _MynavBar extends State<navBar> {
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            communityController.getNotifications(
-                                aspectList.selected, snapshot.data);
+                            communityController.notificationQuerySnapshot =
+                                snapshot.data;
+                            communityController
+                                .getNotifications(aspectList.selected);
                           }
                           return snapshot.hasData &&
                                   snapshot.data!.docs.isNotEmpty
@@ -133,69 +197,6 @@ class _MynavBar extends State<navBar> {
                   ),
                 ),
               ),
-              selectedIndex == 1
-                  ? IconButton(
-                      icon: const Icon(Icons.add, color: kBlackColor),
-                      iconSize: 30,
-                      onPressed: () async {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                  title: Text(
-                                    "أود إضافة ",
-                                    textAlign: TextAlign.center,
-                                    style: subTitle,
-                                  ),
-                                  content: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        TextButton(
-                                          child: Text(
-                                            "هدف",
-                                            style: alertText,
-                                          ),
-                                          onPressed: () {
-                                            Get.to(() => AddGoal(
-                                                  isr: IsarService(),
-                                                  goalsTasks: const [],
-                                                ));
-                                          },
-                                        ),
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-                                        TextButton(
-                                          child: Text(
-                                            "عادة",
-                                            style: alertText,
-                                          ),
-                                          onPressed: () {
-                                            Get.to(() => AddHabit(
-                                                  isr: IsarService(),
-                                                ));
-                                          },
-                                        ),
-                                      ]));
-                            });
-                      },
-                    )
-                  : selectedIndex == 2
-                      ? IconButton(
-                          icon: const Icon(Icons.add, color: kBlackColor),
-                          iconSize: 30,
-                          onPressed: () async {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return const CreateCommunity();
-                            }));
-                          },
-                        )
-                      : const SizedBox(
-                          height: 0,
-                          width: 0,
-                        ),
             ],
             bottom: selectedIndex == 1
                 ? const TabBar(
