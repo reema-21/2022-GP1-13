@@ -1,10 +1,9 @@
-// ignore_for_file: file_names, camel_case_types
-
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:motazen/Sidebar_and_navigation/expandable_fab.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/notifications_screen.dart/notifications_screen.dart';
 import 'package:motazen/pages/add_goal_page/add_goal_screen.dart';
@@ -18,29 +17,28 @@ import '../controllers/community_controller.dart';
 import '../controllers/aspect_controller.dart';
 import '../controllers/task_controller.dart';
 import '../pages/add_habit_page/add_habit.dart';
-import '../pages/communities_page/list of communities/communities.dart';
+import '../pages/communities_page/list of Communities/Communities.dart';
 import '../pages/journal_page/journal_screen.dart';
 import 'sidebar.dart';
 
 //ours
 
-class navBar extends StatefulWidget {
+class NavBar extends StatefulWidget {
   final int selectedIndex;
-  const navBar({super.key, required this.selectedIndex});
+  const NavBar({super.key, required this.selectedIndex});
 
   @override
-  State<navBar> createState() => _MynavBar();
+  State<NavBar> createState() => _MynavBar();
 }
 
-class _MynavBar extends State<navBar> {
+class _MynavBar extends State<NavBar> {
   late int selectedIndex;
   AuthController authController = Get.put(AuthController());
   CommunityController communityController = Get.put(CommunityController());
   TaskControleer taskControleer = Get.put(TaskControleer());
-
   final List<Widget> _widgetOptions = [
     const Homepage(),
-    Goals_habit(iser: IsarService()),
+    GoalsHabit(iser: IsarService()),
     const Communities(),
     Journal(),
   ];
@@ -50,6 +48,7 @@ class _MynavBar extends State<navBar> {
     selectedIndex = widget.selectedIndex;
     authController.getUsersList();
     authController.getUserAvatar();
+    communityController.getUserData();
   }
 
   @override
@@ -69,66 +68,41 @@ class _MynavBar extends State<navBar> {
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniStartFloat,
         floatingActionButton: selectedIndex == 1 || selectedIndex == 2
-            ? FloatingActionButton(
-                onPressed: () {
-                  if (selectedIndex == 1) {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                              title: Text(
-                                "أود إضافة ",
-                                textAlign: TextAlign.center,
-                                style: subTitle,
-                              ),
-                              content: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    TextButton(
-                                      child: Text(
-                                        "هدف",
-                                        style: alertText,
-                                      ),
-                                      onPressed: () {
-                                        Get.to(() => AddGoal(
-                                              isr: IsarService(),
-                                              goalsTasks: const [],
-                                            ));
-                                      },
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    TextButton(
-                                      child: Text(
-                                        "عادة",
-                                        style: alertText,
-                                      ),
-                                      onPressed: () {
-                                        Get.to(() => AddHabit(
-                                              isr: IsarService(),
-                                            ));
-                                      },
-                                    ),
-                                  ]));
-                        });
-                  }
-                  if (selectedIndex == 2) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const CreateCommunity();
-                    }));
-                  }
-                },
-                backgroundColor: kPrimaryColor,
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              )
+            ? selectedIndex == 1
+                ? ExpandableFab(
+                    distance: 75.0,
+                    children: [
+                      ActionButton(
+                        onPressed: () => Get.to(() =>
+                            AddGoal(isr: IsarService(), goalsTasks: const [])),
+                        icon: const Icon(Icons.sports_score),
+                      ),
+                      ActionButton(
+                        onPressed: () => Get.to(() => AddHabit(
+                              isr: IsarService(),
+                            )),
+                        icon: const Icon(Icons.event_repeat),
+                      ),
+                    ],
+                  )
+                : SizedBox(
+                    child: FloatingActionButton(
+                      mini: true,
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const CreateCommunity();
+                        }));
+                      },
+                      backgroundColor: kPrimaryColor,
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
             : null,
 
-        /// appbar
         appBar: AppBar(
             // notifications button
             elevation: 0.0,

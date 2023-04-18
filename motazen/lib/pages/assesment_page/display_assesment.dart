@@ -1,14 +1,17 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
+import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:motazen/pages/assesment_page/calculate_assessment.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 
 class AssessmentPage extends StatefulWidget {
-  const AssessmentPage({super.key});
+  final List<String> unselected;
+  final List<String> selected;
+  const AssessmentPage(
+      {super.key, required this.unselected, required this.selected});
 
   @override
   State<AssessmentPage> createState() => _AssessmentPageState();
@@ -30,9 +33,15 @@ class _AssessmentPageState extends State<AssessmentPage> {
                 'تقييم جوانب الحياة',
                 style: titleText,
               ),
-              Text('ادخل اجابتك بإستخدام المؤشر', style: subTitle),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('ادخل اجابتك بإستخدام المؤشر', style: subTitle),
+                  Text('١ تعني لا أوافق ١٠ تعني أوافق', style: subTitle),
+                ],
+              ),
             ]),
-        toolbarHeight: 120,
+        toolbarHeight: 125,
       ),
       backgroundColor: Colors.white,
       body: Stepper(
@@ -136,38 +145,52 @@ class _AssessmentPageState extends State<AssessmentPage> {
         onStepTapped: (step) => setState(() {
           currentStep = step;
         }),
-        onStepContinue: () {
+        onStepContinue: () async {
           final isLastStep = currentStep == aspectList.questionData.length - 1;
           bool allQuestionsAnswered = true;
-          setState(() {
-            if (isLastStep) {
-              //check if any question was left unanswered
-              for (var element in aspectList.questionData) {
-                if (element['points'] == 0) {
-                  allQuestionsAnswered = false;
-                }
+          if (isLastStep) {
+            //check if any question was left unanswered
+            for (var element in aspectList.questionData) {
+              if (element['points'] == 0) {
+                allQuestionsAnswered = false;
+              }
+            }
+
+            if (allQuestionsAnswered) {
+              //delete the data of unselected aspects
+              for (var aspect in widget.unselected) {
+                IsarService().deleteAllAspectsData(aspect);
+                await IsarService().deselectAspect(aspect);
+                await IsarService().removeAspectImprovement(aspect);
               }
 
-              if (allQuestionsAnswered) {
-                //calculate the points and save result
-                CalculateAspectPoints()
-                    .calculateAllpoints(aspectList.questionData);
-                //get to the new page
+              for (var aspect in widget.selected) {
+                await IsarService().selectAspect(aspect);
+                await IsarService().removeAspectImprovement(aspect);
+                await IsarService().addImprovement(0.0, aspectName: aspect);
+              }
+
+              //calculate the points and save result
+              CalculateAspectPoints()
+                  .calculateAllpoints(aspectList.questionData);
+              //get to the new page
+              if (mounted) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return const getChosenAspect();
+                      return const GetChosenAspect();
                     },
                   ),
                 );
-              } else {
-                //TODO: add an alert to notify the user
               }
             } else {
-              currentStep += 1;
+              //TODO: add an alert to notify the user
             }
-          });
+          } else {
+            currentStep += 1;
+            setState(() {});
+          }
         },
         onStepCancel: currentStep == 0
             ? null

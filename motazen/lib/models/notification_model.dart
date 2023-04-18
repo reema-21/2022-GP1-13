@@ -1,13 +1,11 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
-//reemas
 class NotificationModel {
-  final senderAvtar;
-  final senderID;
-  final comm;
-  final post;
-  final userName;
-  final reply;
-  final notificationOfTheCommunity;
+  final String senderAvtar;
+  final String senderID;
+  final dynamic comm;
+  final dynamic post;
+  final String userName;
+  final dynamic reply;
+  final dynamic notificationOfTheCommunity;
   DateTime creationDate;
   String? notificationType;
   NotificationModel(
@@ -19,19 +17,17 @@ class NotificationModel {
       required this.creationDate,
       required this.notificationOfTheCommunity,
       required this.senderAvtar,
-      required this.senderID 
-      
-      });
+      required this.senderID});
 
   Map<String, dynamic> toJson() => {
         'community': comm,
         'post': post,
-        'user_name': userName,
+        'userName': userName,
         'reply': reply,
         'type': notificationType,
         'creation_date': creationDate,
         'community_link': notificationOfTheCommunity,
-        'sender_avatar':senderAvtar,
-        'sender_id':senderID
+        'sender_avatar': senderAvtar,
+        'sender_id': senderID
       };
 }

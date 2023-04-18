@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:motazen/theme.dart';
 
@@ -7,7 +5,7 @@ class LogInForm extends StatefulWidget {
   const LogInForm({super.key});
 
   @override
-  _LogInFormState createState() => _LogInFormState();
+  State<LogInForm> createState() => _LogInFormState();
 }
 
 class _LogInFormState extends State<LogInForm> {

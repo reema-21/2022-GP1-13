@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'LocalTask.dart';
+part of 'local_task.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
 extension GetLocalTaskCollection on Isar {
   IsarCollection<LocalTask> get localTasks => this.collection();
@@ -42,13 +42,18 @@ const LocalTaskSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'taskCompletionPercentage': PropertySchema(
+    r'rank': PropertySchema(
       id: 5,
+      name: r'rank',
+      type: IsarType.double,
+    ),
+    r'taskCompletionPercentage': PropertySchema(
+      id: 6,
       name: r'taskCompletionPercentage',
       type: IsarType.double,
     ),
     r'userID': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'userID',
       type: IsarType.string,
     )
@@ -60,9 +65,9 @@ const LocalTaskSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'TaskDependency': LinkSchema(
-      id: -96631418246996705,
-      name: r'TaskDependency',
+    r'taskDependency': LinkSchema(
+      id: -645007614003360191,
+      name: r'taskDependency',
       target: r'LocalTask',
       single: false,
     ),
@@ -77,7 +82,7 @@ const LocalTaskSchema = CollectionSchema(
   getId: _localTaskGetId,
   getLinks: _localTaskGetLinks,
   attach: _localTaskAttach,
-  version: '3.0.5',
+  version: '3.1.0',
 );
 
 int _localTaskEstimateSize(
@@ -103,8 +108,9 @@ void _localTaskSerialize(
   writer.writeLong(offsets[2], object.duration);
   writer.writeString(offsets[3], object.durationDescribtion);
   writer.writeString(offsets[4], object.name);
-  writer.writeDouble(offsets[5], object.taskCompletionPercentage);
-  writer.writeString(offsets[6], object.userID);
+  writer.writeDouble(offsets[5], object.rank);
+  writer.writeDouble(offsets[6], object.taskCompletionPercentage);
+  writer.writeString(offsets[7], object.userID);
 }
 
 LocalTask _localTaskDeserialize(
@@ -114,7 +120,7 @@ LocalTask _localTaskDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = LocalTask(
-    userID: reader.readString(offsets[6]),
+    userID: reader.readString(offsets[7]),
   );
   object.amountCompleted = reader.readLong(offsets[0]);
   object.completedForToday = reader.readBool(offsets[1]);
@@ -122,7 +128,8 @@ LocalTask _localTaskDeserialize(
   object.durationDescribtion = reader.readString(offsets[3]);
   object.id = id;
   object.name = reader.readString(offsets[4]);
-  object.taskCompletionPercentage = reader.readDouble(offsets[5]);
+  object.rank = reader.readDouble(offsets[5]);
+  object.taskCompletionPercentage = reader.readDouble(offsets[6]);
   return object;
 }
 
@@ -146,6 +153,8 @@ P _localTaskDeserializeProp<P>(
     case 5:
       return (reader.readDouble(offset)) as P;
     case 6:
+      return (reader.readDouble(offset)) as P;
+    case 7:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -157,13 +166,13 @@ Id _localTaskGetId(LocalTask object) {
 }
 
 List<IsarLinkBase<dynamic>> _localTaskGetLinks(LocalTask object) {
-  return [object.TaskDependency, object.goal];
+  return [object.taskDependency, object.goal];
 }
 
 void _localTaskAttach(IsarCollection<dynamic> col, Id id, LocalTask object) {
   object.id = id;
-  object.TaskDependency.attach(
-      col, col.isar.collection<LocalTask>(), r'TaskDependency', id);
+  object.taskDependency
+      .attach(col, col.isar.collection<LocalTask>(), r'taskDependency', id);
   object.goal.attach(col, col.isar.collection<Goal>(), r'goal', id);
 }
 
@@ -684,6 +693,68 @@ extension LocalTaskQueryFilter
     });
   }
 
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> rankEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'rank',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> rankGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'rank',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> rankLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'rank',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> rankBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'rank',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
       taskCompletionPercentageEqualTo(
     double value, {
@@ -889,28 +960,28 @@ extension LocalTaskQueryLinks
   QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition> taskDependency(
       FilterQuery<LocalTask> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'TaskDependency');
+      return query.link(q, r'taskDependency');
     });
   }
 
   QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
       taskDependencyLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'TaskDependency', length, true, length, true);
+      return query.linkLength(r'taskDependency', length, true, length, true);
     });
   }
 
   QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
       taskDependencyIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'TaskDependency', 0, true, 0, true);
+      return query.linkLength(r'taskDependency', 0, true, 0, true);
     });
   }
 
   QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
       taskDependencyIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'TaskDependency', 0, false, 999999, true);
+      return query.linkLength(r'taskDependency', 0, false, 999999, true);
     });
   }
 
@@ -920,7 +991,7 @@ extension LocalTaskQueryLinks
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'TaskDependency', 0, true, length, include);
+      return query.linkLength(r'taskDependency', 0, true, length, include);
     });
   }
 
@@ -930,7 +1001,7 @@ extension LocalTaskQueryLinks
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'TaskDependency', length, include, 999999, true);
+      return query.linkLength(r'taskDependency', length, include, 999999, true);
     });
   }
 
@@ -943,7 +1014,7 @@ extension LocalTaskQueryLinks
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'TaskDependency', lower, includeLower, upper, includeUpper);
+          r'taskDependency', lower, includeLower, upper, includeUpper);
     });
   }
 
@@ -1021,6 +1092,18 @@ extension LocalTaskQuerySortBy on QueryBuilder<LocalTask, LocalTask, QSortBy> {
   QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByRank() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'rank', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByRankDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'rank', Sort.desc);
     });
   }
 
@@ -1127,6 +1210,18 @@ extension LocalTaskQuerySortThenBy
     });
   }
 
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByRank() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'rank', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByRankDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'rank', Sort.desc);
+    });
+  }
+
   QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
       thenByTaskCompletionPercentage() {
     return QueryBuilder.apply(this, (query) {
@@ -1189,6 +1284,12 @@ extension LocalTaskQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LocalTask, LocalTask, QDistinct> distinctByRank() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'rank');
+    });
+  }
+
   QueryBuilder<LocalTask, LocalTask, QDistinct>
       distinctByTaskCompletionPercentage() {
     return QueryBuilder.apply(this, (query) {
@@ -1240,6 +1341,12 @@ extension LocalTaskQueryProperty
   QueryBuilder<LocalTask, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<LocalTask, double, QQueryOperations> rankProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'rank');
     });
   }
 

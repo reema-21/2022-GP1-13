@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:motazen/models/post_model.dart';
@@ -8,12 +6,12 @@ import 'package:motazen/pages/communities_page/community/posts/own_messages_desi
 import 'package:motazen/theme.dart';
 
 class PostDesign extends StatefulWidget {
-  final communityId;
+  final String communityId;
   final PostModel post;
-  final dbpathToPostChnl;
-  final commentCallback;
-  final likeCallback;
-  final repliedPostScrollCallback;
+  final String dbpathToPostChnl;
+  final dynamic commentCallback;
+  final dynamic likeCallback;
+  final dynamic repliedPostScrollCallback;
   const PostDesign(
       {Key? key,
       required this.communityId,
@@ -110,34 +108,31 @@ class _PostDesignState extends State<PostDesign> {
                   progressValue: authProgress);
             }
           } else {
-            return Container();
+            final authid = widget.post.authorId;
+            final cuser = FirebaseAuth.instance.currentUser!.uid;
+            if (authid == cuser) {
+              return OwnMessageDesign(
+                pst: widget.post,
+                postLink: widget.dbpathToPostChnl,
+                commentCallback: widget.commentCallback,
+                likeCallback: widget.likeCallback,
+                authID: cuser,
+                repliedPostScrollCallback: widget.repliedPostScrollCallback,
+                progressList: 0,
+              );
+            } else {
+              return OtherMessageDesign(
+                avatar: avatar,
+                pst: widget.post,
+                postLink: widget.dbpathToPostChnl,
+                commentCallback: widget.commentCallback,
+                likeCallback: widget.likeCallback,
+                authID: cuser,
+                repliedPostScrollCallback: widget.repliedPostScrollCallback,
+                progressValue: 0.0,
+              );
+            }
           }
-          // } else {
-          //   final authid = widget.post.authorId;
-          //   final cuser = FirebaseAuth.instance.currentUser!.uid;
-          //   if (authid == cuser) {
-          //     return OwnMessageDesign(
-          //       pst: widget.post,
-          //       postLink: widget.dbpathToPostChnl,
-          //       commentCallback: widget.commentCallback,
-          //       likeCallback: widget.likeCallback,
-          //       authID: cuser,
-          //       repliedPostScrollCallback: widget.repliedPostScrollCallback,
-          //       progressList: 0,
-          //     );
-          //   } else {
-          //     return OtherMessageDesign(
-          //       avatar: avatar,
-          //       pst: widget.post,
-          //       postLink: widget.dbpathToPostChnl,
-          //       commentCallback: widget.commentCallback,
-          //       likeCallback: widget.likeCallback,
-          //       authID: cuser,
-          //       repliedPostScrollCallback: widget.repliedPostScrollCallback,
-          //       progressValue: 0.0,
-          //     );
-          //   }
-          // }
         });
   }
 }

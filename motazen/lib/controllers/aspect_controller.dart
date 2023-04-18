@@ -1,5 +1,3 @@
-// ignore_for_file: await_only_futures, camel_case_types
-//reemas
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
 import '/entities/aspect.dart';
@@ -16,7 +14,7 @@ class AspectController with ChangeNotifier {
     AspectModel(name: 'ذاتي', color: 4281130443, icon: Icons.psychology),
     //add بيئتي aspect
     AspectModel(name: 'بيئتي', color: 4288551408, icon: Icons.home),
-    //add علاقتي aspect
+    //add علاقاتي aspect
     AspectModel(name: 'علاقاتي', color: 4294920521, icon: Icons.favorite),
     //add مهنتي aspect
     AspectModel(name: 'مهنتي', color: 4278216099, icon: Icons.work),
@@ -49,6 +47,18 @@ class AspectController with ChangeNotifier {
     return false;
   }
 
+  //update selected
+  void updateSelectedList(List<Aspect> newSelected) {
+    selected.clear();
+    selected.addAll(newSelected);
+  }
+
+  //clear question answers
+  void clearQuestiondData() {
+    questionData.clear();
+    notifyListeners();
+  }
+
   //return the names of the aspects
   List<String> getSelectedNames() {
     List<String> names = [];
@@ -58,14 +68,12 @@ class AspectController with ChangeNotifier {
     return names;
   }
 
-  Icon getSelectedIcon(String name,
-      {double? size, List<Aspect>? tempSelected}) {
+  Icon getSelectedIcon(String name, {double? size}) {
     Icon icon = Icon(
       Icons.place,
       size: size ?? 24.0,
     );
-    List<Aspect> temp = tempSelected ?? selected;
-    for (var aspect in temp) {
+    for (var aspect in allAspects) {
       if (name == aspect.name) {
         icon = Icon(
           IconData(aspect.iconCodePoint,

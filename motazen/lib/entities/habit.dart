@@ -1,5 +1,4 @@
 import '/entities/aspect.dart';
-
 import 'package:isar/isar.dart';
 part 'habit.g.dart';
 

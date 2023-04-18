@@ -1,7 +1,5 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, library_private_types_in_public_api, non_constant_identifier_names, no_leading_underscores_for_local_identifiers
-//new
+import 'dart:developer';
 import 'dart:io';
-//REEMAS
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,20 +12,24 @@ import 'package:motazen/models/post_model.dart';
 import 'package:motazen/pages/communities_page/community/posts/community_post_design.dart';
 import 'package:motazen/theme.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-
-import '../../../Sidebar_and_navigation/navigation-bar.dart';
+import '../../../Sidebar_and_navigation/navigation_bar.dart';
 import '../../../controllers/auth_controller.dart';
 import 'community_info.dart';
 
+//DONE
 class CommunityHomePage extends StatefulWidget {
   const CommunityHomePage(
-      {Key? key, required this.comm, this.cameFromNotification})
+      {Key? key,
+      required this.comm,
+      this.cameFromNotification,
+      required this.fromInvite})
       : super(key: key);
-  final comm;
-  final cameFromNotification;
+  final dynamic comm;
+  final dynamic cameFromNotification;
+  final dynamic fromInvite;
 
   @override
-  _CommunityHomePageState createState() => _CommunityHomePageState();
+  State<CommunityHomePage> createState() => _CommunityHomePageState();
 }
 
 class _CommunityHomePageState extends State<CommunityHomePage> {
@@ -95,7 +97,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                 replyingPost: null,
                 imageURL: null)
             .toJson(),
-        'user_name': user.displayName,
+        'userName': user.displayName,
       });
     }
     setState(() {
@@ -123,7 +125,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
         'community_link': widget.comm.id,
         'type': 'like',
         'post': pst.toJson(),
-        'user_name': user.displayName,
+        'userName': user.displayName,
       });
     }
   }
@@ -139,7 +141,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
         .doc(pst.authorId)
         .collection('notifications')
         .where('type', isEqualTo: 'like')
-        .where('user_name', isEqualTo: user.displayName)
+        .where('userName', isEqualTo: user.displayName)
         .where('post', isEqualTo: pst.toJson())
         .get()
         .then((snapshot) {
@@ -149,12 +151,12 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
     });
   }
 
-  File? ImageFile;
+  File? imageFile;
   Future getImage() async {
-    ImagePicker _picker = ImagePicker();
-    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    ImagePicker picker = ImagePicker();
+    XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      ImageFile = File(image.path);
+      imageFile = File(image.path);
       setState(() {
         isSendingImage = true;
       });
@@ -164,11 +166,11 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
   Future uploadImage() async {
     final user = FirebaseAuth.instance.currentUser;
     final time = DateTime.now().toUtc().millisecondsSinceEpoch;
-    final _ref = FirebaseStorage.instance
+    final ref = FirebaseStorage.instance
         .ref()
         .child('images')
         .child('${user!.uid}_$time.jpg');
-    var putFile = await _ref.putFile(ImageFile!);
+    var putFile = await ref.putFile(imageFile!);
     String imageURL = await putFile.ref.getDownloadURL();
 
     _dbRef
@@ -212,13 +214,13 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                 replyingPost: null,
                 imageURL: null)
             .toJson(),
-        'user_name': user.displayName,
+        'userName': user.displayName,
       });
     }
     setState(() {
       _post = '';
       replyingPost = null;
-      ImageFile = null;
+      imageFile = null;
     });
   }
 
@@ -235,7 +237,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              const navBar(selectedIndex: 2)));
+                              const NavBar(selectedIndex: 2)));
                 },
                 icon: const Icon(
                   Icons.arrow_back,
@@ -247,7 +249,8 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
         backgroundColor: Colors.white,
         title: GestureDetector(
           onTap: () {
-            Get.to(CommunityInfo(comm: widget.comm));
+            Get.to(() => CommunityInfo(
+                comm: widget.comm, fromInvite: widget.fromInvite));
           },
           child: Text(
             '${widget.comm.communityName}',
@@ -324,7 +327,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                                 final currentUserId =
                                     FirebaseAuth.instance.currentUser!.uid;
                                 if (currentUserId == pst.authorId) {
-                                  print('cant like your own message');
+                                  log('cant like your own message');
                                   return;
                                 }
                                 if (pst.likes.contains(currentUserId)) {
@@ -405,27 +408,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                     child: CircularProgressIndicator(),
                   ),
                 ),
-              // if (!isActiveCommunity && loadfinished)
-              //   Container(
-              //     height: 70,
-              //     width: MediaQuery.of(context).size.width,
-              //     decoration: BoxDecoration(
-              //       color: Colors.redAccent,
-              //       borderRadius: const BorderRadius.all(Radius.circular(8)),
-              //       boxShadow: [
-              //         BoxShadow(
-              //           color: Colors.grey.withOpacity(0.5),
-              //           spreadRadius: 5,
-              //           blurRadius: 7,
-              //           offset:
-              //               const Offset(0, 3), // changes position of shadow
-              //         ),
-              //       ],
-              //     ),
-              //     child: const Center(
-              //       child: Text('The Community is deleted'),
-              //     ),
-              //   ),
               if (isActiveCommunity && loadfinished && !widget.comm.isDeleted)
                 Padding(
                   padding:
@@ -581,7 +563,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                                             MediaQuery.of(context).size.width /
                                                 1.75,
                                       ),
-                                      child: Image.file(ImageFile!)),
+                                      child: Image.file(imageFile!)),
                                 ),
                                 const SizedBox(
                                   width: 10,
@@ -590,7 +572,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                                     onPressed: () {
                                       setState(() {
                                         isSendingImage = false;
-                                        ImageFile = null;
+                                        imageFile = null;
                                       });
                                     },
                                     icon: const Icon(
@@ -646,9 +628,9 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                               ),
                             ),
                             IconButton(
-                                onPressed: _post == '' && ImageFile == null
+                                onPressed: _post == '' && imageFile == null
                                     ? null
-                                    : ImageFile == null
+                                    : imageFile == null
                                         ? () {
                                             setState(() {
                                               isReplying = false;
@@ -667,7 +649,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                                 icon: Icon(
                                   Icons.send,
                                   color: _postController.text == '' &&
-                                          ImageFile == null
+                                          imageFile == null
                                       ? Colors.grey
                                       : Colors.green,
                                   size: 30,

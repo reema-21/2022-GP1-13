@@ -216,7 +216,7 @@ class OwnMessageDesign extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              viewPhoto(imgURL: pst.imageURL)));
+                                              ViewPhoto(imgURL: pst.imageURL)));
                                 },
                                 child: Container(
                                     constraints: BoxConstraints(
@@ -263,13 +263,13 @@ class OwnMessageDesign extends StatelessWidget {
                           const SizedBox(
                             width: 6,
                           ),
-                          //? how should we display the number of likes when the button is disabled for the used
                           InkWell(
                             onTap: () {
                               likeCallback(pst,
                                   '$postLink/${pst.time.toString()}${pst.authorId}/');
                             },
                             child: Icon(
+                              //! the icon should not be displayed when the user is the author of the post
                               size: 20,
                               pst.likes.contains(authID)
                                   ? Icons.thumb_up_off_alt_sharp

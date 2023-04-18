@@ -1,10 +1,10 @@
-// ignore_for_file: file_names, must_be_immutable, non_constant_identifier_names, unused_element, use_build_context_synchronously, unused_local_variable, unrelated_type_equality_checks
-//new
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
-import 'package:motazen/entities/LocalTask.dart';
-import 'package:motazen/models/taskClass.dart';
+import 'package:motazen/entities/local_task.dart';
+import 'package:motazen/models/task_model.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/controllers/taskLocal_controller.dart';
+import 'package:motazen/controllers/localtask_controller.dart';
 import '../assesment_page/alert_dialog.dart';
 import 'package:get/get.dart';
 import 'package:multiselect/multiselect.dart';
@@ -30,23 +30,23 @@ class _AddTaskState extends State<AddTask> {
   //counter //is this code needed
   List<String> durationName = ['أيام', 'أسابيع', 'أشهر', 'سنوات'];
   bool x = false;
-  List<String> TasksNamedropmenue = [];
+  List<String> tasksNamedropmenue = [];
   List<String> selected = [];
   String? isSelected = "";
-  late String TaskName;
+  late String taskName;
   @override
   void initState() {
     super.initState();
   }
 
-  AddTheEnterdTask(LocalTask newTask, List<String> tasks) async {
-    List<String> Taskss = tasks;
-    await Future.forEach(Taskss, (item) async {
+  addTheEnterdTask(LocalTask newTask, List<String> enteredTasks) async {
+    List<String> tasks = enteredTasks;
+    await Future.forEach(tasks, (item) async {
       LocalTask? y = LocalTask(userID: IsarService.getUserID);
       String name = item;
 
       y = await widget.isr.findSepecificTask(name);
-      newTask.TaskDependency.add(y!); // to link task and it depends tasks ;
+      newTask.taskDependency.add(y!); // to link task and it depends tasks ;
     });
 
     widget.isr.saveTask(newTask);
@@ -85,7 +85,7 @@ class _AddTaskState extends State<AddTask> {
                       final impo = freq.goalTask.value[index].duration;
                       final durationDescription =
                           freq.goalTask.value[index].durationDescribtion;
-                      TasksNamedropmenue.add(name); //this might not been used
+                      tasksNamedropmenue.add(name); //this might not been used
                       String diplayedduration = "";
                       switch (durationDescription) {
                         case "أيام":
@@ -141,7 +141,8 @@ class _AddTaskState extends State<AddTask> {
                           // here is the code of each item you have
                           child: ListTile(
                             trailing: TextButton(
-                              child: const Icon(Icons.delete),
+                              child:
+                                  Icon(Icons.delete, color: Colors.grey[500]),
                               onPressed: () async {
                                 final action = await AlertDialogs.yesCancelDialog(
                                     context,
@@ -158,7 +159,7 @@ class _AddTaskState extends State<AddTask> {
 
                                     for (int j = 0; j < x.length; j++) {
                                       List<String> dependencies =
-                                          x[i].TaskDependency;
+                                          x[i].taskDependency;
                                       for (int k = 0;
                                           k < dependencies.length;
                                           k++) {
@@ -171,41 +172,43 @@ class _AddTaskState extends State<AddTask> {
                                     }
                                   }
                                   if (isDependent) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            duration:
-                                                const Duration(seconds: 1),
-                                            backgroundColor:
-                                                const Color.fromARGB(
-                                                    255, 196, 48, 37),
-                                            content: Row(
-                                              children: const [
-                                                Icon(
-                                                  Icons.error,
-                                                  color: Colors.white,
-                                                ),
-                                                SizedBox(width: 20),
-                                                Expanded(
-                                                  child: Text(
-                                                      "لا يمكن حذف هذه المهمة  "),
-                                                )
-                                              ],
-                                            )));
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              duration:
+                                                  const Duration(seconds: 1),
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 196, 48, 37),
+                                              content: Row(
+                                                children: const [
+                                                  Icon(
+                                                    Icons.error,
+                                                    color: Colors.white,
+                                                  ),
+                                                  SizedBox(width: 20),
+                                                  Expanded(
+                                                    child: Text(
+                                                        "لا يمكن حذف هذه المهمة  "),
+                                                  )
+                                                ],
+                                              )));
+                                    }
                                   } else {
                                     int x = freq.goalTask.value[index].duration;
                                     freq.dcrementTaskDuration(x);
                                     for (int i = 0;
-                                        i < freq.TasksMenue.value.length;
+                                        i < freq.tasksMenue.value.length;
                                         i++) {
                                       // delete the deleted task from the menue
-                                      if (freq.TasksMenue.value[i] ==
+                                      if (freq.tasksMenue.value[i] ==
                                           freq.goalTask.value[index].name) {
-                                        freq.TasksMenue.value.removeAt(i);
+                                        freq.tasksMenue.value.removeAt(i);
                                         break;
                                       }
                                     }
-                                    widget.isr.deleteTask3(
-                                        freq.goalTask.value[index]);
+                                    widget.isr
+                                        .deleteTask(freq.goalTask.value[index]);
 
                                     setState(() {
                                       freq.removeTask(index);
@@ -230,10 +233,9 @@ class _AddTaskState extends State<AddTask> {
           backgroundColor: const Color.fromARGB(255, 252, 252, 252),
           child: const Icon(Icons.add, color: Color(0xFF66BF77)),
           onPressed: () {
-            for (var i in freq.allTaskForDepency.value) {}
             freq.selectedTasks.value.clear();
             freq.inputTaskName.text = "";
-            freq.TaskDuration.value = 0;
+            freq.taskDuration.value = 0;
             freq.isSelected.value = "أيام";
             freq.currentTaskDuration.value = 0;
 
@@ -252,17 +254,17 @@ class _AddTaskState extends State<AddTask> {
                             child: Column(children: [
                           TextFormField(
                             validator: (value) {
-                              bool Repeated = false;
+                              bool repeated = false;
                               for (var i in freq.goalTask.value) {
                                 if (i.name == value) {
                                   setState(() {
-                                    Repeated = true;
+                                    repeated = true;
                                   });
                                 }
                               }
                               if (value == null || value.isEmpty) {
                                 return "من فضلك ادخل اسم المهمة";
-                              } else if (Repeated) {
+                              } else if (repeated) {
                                 return "يوجد مهمة بنفس الاسم";
                               } else {
                                 return null;
@@ -303,7 +305,7 @@ class _AddTaskState extends State<AddTask> {
                                     ),
                                     onPressed: () {
                                       freq.increment(widget.goalDurtion);
-                                      if (freq.TaskDuration != 0) {
+                                      if (freq.taskDuration.toInt() != 0) {
                                         freq.storeStatusOpen(true);
                                       }
                                     },
@@ -314,7 +316,7 @@ class _AddTaskState extends State<AddTask> {
                                 width: 10,
                               ),
                               Obx((() => Text(
-                                    freq.TaskDuration.toString(),
+                                    freq.taskDuration.toString(),
                                     style: const TextStyle(fontSize: 20),
                                   ))),
                               const SizedBox(width: 10),
@@ -332,7 +334,7 @@ class _AddTaskState extends State<AddTask> {
                                     freq.dcrement();
                                     freq.storeStatusOpen(true);
 
-                                    if (freq.TaskDuration == 0) {
+                                    if (freq.taskDuration.toInt() == 0) {
                                       freq.storeStatusOpen(false);
                                     }
                                   },
@@ -407,7 +409,7 @@ class _AddTaskState extends State<AddTask> {
                             height: 20,
                           ),
                           DropDownMultiSelect(
-                            options: freq.TasksMenue.value,
+                            options: freq.tasksMenue.value,
                             //need to be righted
                             decoration: const InputDecoration(
                               labelText: "تعتمد على المهام :",
@@ -430,7 +432,7 @@ class _AddTaskState extends State<AddTask> {
                                     ? () {
                                         if (formKey.currentState!.validate()) {
                                           setState(() {
-                                            // TasksNamedropmenue.add(inputTaskName.text);
+                                            // tasksNamedropmenue.add(inputTaskName.text);
 
                                             LocalTask newTak = LocalTask(
                                                 userID: IsarService.getUserID);
@@ -440,14 +442,14 @@ class _AddTaskState extends State<AddTask> {
                                             switch (freq.isSelected.value) {
                                               case "أيام":
                                                 newTak.duration =
-                                                    freq.TaskDuration.value;
+                                                    freq.taskDuration.value;
                                                 durationDescribtion = "أيام";
                                                 newTak.durationDescribtion =
                                                     durationDescribtion;
                                                 break;
                                               case "أسابيع":
                                                 newTak.duration =
-                                                    (freq.TaskDuration.value *
+                                                    (freq.taskDuration.value *
                                                         7);
                                                 durationDescribtion = "أسابيع";
                                                 newTak.durationDescribtion =
@@ -456,7 +458,7 @@ class _AddTaskState extends State<AddTask> {
                                                 break;
                                               case "أشهر":
                                                 newTak.duration =
-                                                    (freq.TaskDuration.value *
+                                                    (freq.taskDuration.value *
                                                         30);
                                                 durationDescribtion = "أشهر";
                                                 newTak.durationDescribtion =
@@ -465,7 +467,7 @@ class _AddTaskState extends State<AddTask> {
                                                 break;
                                               case "سنوات":
                                                 newTak.duration =
-                                                    (freq.TaskDuration.value *
+                                                    (freq.taskDuration.value *
                                                         360);
                                                 durationDescribtion = "سنوات ";
                                                 newTak.durationDescribtion =
@@ -474,18 +476,18 @@ class _AddTaskState extends State<AddTask> {
                                                 break;
                                             }
 
-                                            AddTheEnterdTask(newTak,
+                                            addTheEnterdTask(newTak,
                                                 freq.selectedTasks.value);
-                                            freq.TasksMenue.value.add(
+                                            freq.tasksMenue.value.add(
                                                 freq.inputTaskName.value.text);
                                             setState(() {
                                               x = freq.addTask(
                                                   freq.inputTaskName.value.text,
                                                   freq.isSelected.value,
-                                                  freq.TaskDuration.value);
+                                                  freq.taskDuration.value);
                                             }); //ad the enterd to the tasks to the dependncy tasks .
 
-                                            freq.TaskDuration.value = 0;
+                                            freq.taskDuration.value = 0;
 
                                             freq.storeStatusOpen(false);
                                             freq.incrementTaskDuration();

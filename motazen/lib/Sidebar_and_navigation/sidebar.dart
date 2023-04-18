@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:motazen/controllers/auth_controller.dart';
+import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/pages/login/login.dart';
 import 'package:motazen/pages/settings/profile_edit.dart';
 import 'package:motazen/pages/settings/setting_screen.dart';
@@ -42,9 +43,9 @@ class _SideBarState extends State<SideBar> {
     //* uplaod the image to the firebase storage
     //! this should be moved to a method
     final user = FirebaseAuth.instance.currentUser;
-    final _StorageRef =
+    final storageRef =
         FirebaseStorage.instance.ref().child("user/profile/${user!.uid}.jpg");
-    var uploadTask = await _StorageRef.putFile(file!);
+    var uploadTask = await storageRef.putFile(file!);
     String profileImageUrl = await uploadTask.ref.getDownloadURL();
 
 // here lets set the value of user avatar
@@ -367,6 +368,7 @@ class _SideBarState extends State<SideBar> {
                   'بالنقر على "تأكيد" سيتم تسجيل خروجك من تطبيق متزن  ');
               if (action == DialogsAction.yes) {
                 await FirebaseAuth.instance.signOut();
+                ItemList().clearList();
                 Get.to(() => const LogInScreen());
               }
             },

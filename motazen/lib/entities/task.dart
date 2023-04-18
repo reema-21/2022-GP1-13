@@ -1,8 +1,6 @@
-// ignore_for_file: non_constant_identifier_names
-
 class Task {
   //I am making it without id
-  late List<String> TaskDependency;
+  late List<String> taskDependency;
   late String name;
   // List <Goal> goal = [];
   int amountCompleted = 0;
@@ -10,7 +8,7 @@ class Task {
   late int duration;
   late String durationDescribtion;
   Task({
-    required this.TaskDependency,
+    required this.taskDependency,
     required this.amountCompleted,
     required this.duration,
     required this.durationDescribtion,
@@ -26,7 +24,7 @@ class Task {
         "taskCompletionPercentage": taskCompletionPercentage,
         "duration": duration,
         "durationDescribtion": durationDescribtion,
-        "TaskDependency": TaskDependency,
+        "taskDependency": taskDependency,
         // "id": id,
       };
 }

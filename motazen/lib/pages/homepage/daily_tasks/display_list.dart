@@ -1,34 +1,41 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/models/todo_model.dart';
+import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/pages/homepage/daily_tasks/custom_rect_tween.dart';
 import 'package:motazen/pages/homepage/daily_tasks/hero_dialog_route.dart';
+import 'package:motazen/pages/homepage/daily_tasks/list_popups.dart';
+import 'package:motazen/pages/settings/tasklist_variables.dart';
 import 'package:motazen/theme.dart';
 import '../../goals_habits_tab/calculate_progress.dart';
 
 ///----------------------------------------Task Card----------------------------------------
-/// {@template todo_card}
-/// Card that display a [Todo]'s content.
-///
-/// On tap it opens a [HeroDialogRoute] with [_TodoPopupCard] as the content.
-/// {@endtemplate}
-class TaskTodoCard extends StatelessWidget {
-  /// {@macro todo_card}
+class TaskTodoCard extends StatefulWidget {
   const TaskTodoCard({
     Key? key,
-    required this.todo,
+    required this.aspectList,
   }) : super(key: key);
+  final List<Aspect> aspectList;
+  @override
+  State<TaskTodoCard> createState() => _TaskTodoCardState();
+}
 
-  final Todo todo;
-
+class _TaskTodoCardState extends State<TaskTodoCard> {
   @override
   Widget build(BuildContext context) {
+    if (ItemList.itemList.isEmpty ||
+        ItemList.itemList.length < toShowTaskNumber) {
+      ItemList().createTaskTodoList(widget.aspectList);
+    }
+
+    final scrollController = ScrollController();
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           HeroDialogRoute(
-            builder: (context) => Center(
-              child: _TaskTodoPopupCard(todo: todo),
-            ),
+            builder: (context) => const Center(child: _TaskTodoPopupCard()),
           ),
         );
       },
@@ -36,7 +43,7 @@ class TaskTodoCard extends StatelessWidget {
         createRectTween: (begin, end) {
           return CustomRectTween(begin: begin!, end: end!);
         },
-        tag: todo.id,
+        tag: 'todo-tag-1',
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
           child: Padding(
@@ -45,16 +52,97 @@ class TaskTodoCard extends StatelessWidget {
               color: Colors.white,
               elevation: 5.0,
               borderRadius: BorderRadius.circular(12),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      _TodoItemsBox(items: todo.items),
-                    ],
-                  ),
-                ),
-              ),
+              child: ItemList.itemList.isEmpty
+                  ? const Center(
+                      child: Text('لا يوجد مهام مسجلة'),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(8.0),
+                      controller: scrollController,
+                      shrinkWrap: true,
+                      itemCount: (ItemList.itemList.length),
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          trailing: Checkbox(
+                            onChanged: (bool? val) async {
+                              if (ItemList.itemList[index].completed) {
+                                //completed = true, then we need to decrement
+                                ItemList.itemList[index].completed = false;
+                                if (ItemList
+                                        .itemList[index].daysCompletedTask !=
+                                    null) {
+                                  ItemList.itemList[index].daysCompletedTask =
+                                      ItemList.itemList[index]
+                                              .daysCompletedTask! -
+                                          1;
+                                }
+                                await CalculateProgress().updateAmountCompleted(
+                                    ItemList.itemList[index].id,
+                                    ItemList.itemList[index].itemGoal,
+                                    'Decrement',
+                                    ItemList.itemList[index].type);
+                                await ItemList().updateList();
+                              } else {
+                                //completed = false, then we need to increment
+                                ItemList.itemList[index].completed = true;
+                                if (ItemList
+                                        .itemList[index].daysCompletedTask !=
+                                    null) {
+                                  ItemList.itemList[index].daysCompletedTask =
+                                      ItemList.itemList[index]
+                                              .daysCompletedTask! +
+                                          1;
+                                }
+                                await CalculateProgress().updateAmountCompleted(
+                                    ItemList.itemList[index].id,
+                                    ItemList.itemList[index].itemGoal,
+                                    'Increment',
+                                    ItemList.itemList[index].type);
+                                await ItemList().updateList();
+                                bool isTaskCompleted =
+                                    (ItemList.itemList[index].duration -
+                                            ItemList.itemList[index]
+                                                .daysCompletedTask) ==
+                                        0;
+                                if (mounted && isTaskCompleted) {
+                                  //a user has finished a task
+                                  showCupertinoDialog(
+                                      barrierDismissible: true,
+                                      context: context,
+                                      builder: (context) {
+                                        return const ListDialog(
+                                          title: 'اكتملت المهمة!',
+                                          description: 'كلام عن اكتمال المهمة',
+                                        );
+                                      });
+                                }
+                              }
+                              setState(() {});
+                            },
+                            value: ItemList.itemList[index].completed,
+                            activeColor: kPrimaryColor,
+                            checkColor: kWhiteColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          title: Text(
+                            ItemList.itemList[index].description,
+                            style: TextStyle(
+                                color:
+                                    ItemList.itemList[index].type == 'Task' &&
+                                            ItemList.itemList[index].dueDate!
+                                                .isBefore(DateTime.now())
+                                        ? Colors.red
+                                        : Colors.black,
+                                decoration: ItemList.itemList[index].completed
+                                    ? TextDecoration.lineThrough
+                                    : null),
+                          ),
+                          leading: ItemList.itemList[index].icon,
+                        );
+                      },
+                    ),
             ),
           ),
         ),
@@ -63,19 +151,20 @@ class TaskTodoCard extends StatelessWidget {
   }
 }
 
-/// {@template todo_popup_card}
-/// Popup card to expand the content of a [Todo] card.
-///
-/// Activated from [TodoCard].
-/// {@endtemplate}
-class _TaskTodoPopupCard extends StatelessWidget {
-  const _TaskTodoPopupCard({Key? key, required this.todo}) : super(key: key);
-  final Todo todo;
+class _TaskTodoPopupCard extends StatefulWidget {
+  const _TaskTodoPopupCard();
 
   @override
+  State<_TaskTodoPopupCard> createState() => __TaskTodoPopupCardState();
+}
+
+class __TaskTodoPopupCardState extends State<_TaskTodoPopupCard> {
+  @override
   Widget build(BuildContext context) {
+    final scrollController = ScrollController();
+
     return Hero(
-      tag: todo.id,
+      tag: 'todo-tag-1',
       createRectTween: (begin, end) {
         return CustomRectTween(begin: begin!, end: end!);
       },
@@ -85,17 +174,95 @@ class _TaskTodoPopupCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           color: Colors.white,
           child: SizedBox(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _TodoItemsBox(items: todo.items),
-                  ],
-                ),
-              ),
-            ),
+            child: ItemList.itemList.isEmpty
+                ? const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text('لا يوجد مهام مسجلة'),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    itemCount: (ItemList.itemList.length),
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        trailing: Checkbox(
+                          onChanged: (bool? val) async {
+                            if (ItemList.itemList[index].completed) {
+                              //completed = true, then we need to decrement
+                              ItemList.itemList[index].completed = false;
+                              if (ItemList.itemList[index].daysCompletedTask !=
+                                  null) {
+                                ItemList.itemList[index].daysCompletedTask =
+                                    ItemList.itemList[index]
+                                            .daysCompletedTask! -
+                                        1;
+                              }
+                              await CalculateProgress().updateAmountCompleted(
+                                  ItemList.itemList[index].id,
+                                  ItemList.itemList[index].itemGoal,
+                                  'Decrement',
+                                  ItemList.itemList[index].type);
+                              await ItemList().updateList();
+                            } else {
+                              //completed = false, then we need to increment
+                              ItemList.itemList[index].completed = true;
+                              if (ItemList.itemList[index].daysCompletedTask !=
+                                  null) {
+                                ItemList.itemList[index].daysCompletedTask =
+                                    ItemList.itemList[index]
+                                            .daysCompletedTask! +
+                                        1;
+                              }
+                              await CalculateProgress().updateAmountCompleted(
+                                  ItemList.itemList[index].id,
+                                  ItemList.itemList[index].itemGoal,
+                                  'Increment',
+                                  ItemList.itemList[index].type);
+                              await ItemList().updateList();
+                              bool isTaskCompleted =
+                                  (ItemList.itemList[index].duration -
+                                          ItemList.itemList[index]
+                                              .daysCompletedTask) ==
+                                      0;
+                              if (mounted && isTaskCompleted) {
+                                //a user has finished a task
+                                showCupertinoDialog(
+                                    barrierDismissible: true,
+                                    context: context,
+                                    builder: (context) {
+                                      return const ListDialog(
+                                        title: 'اكتملت المهمة!',
+                                        description: 'كلام عن اكتمال المهمة',
+                                      );
+                                    });
+                              }
+                            }
+                            setState(() {});
+                          },
+                          value: ItemList.itemList[index].completed,
+                          activeColor: kPrimaryColor,
+                          checkColor: kWhiteColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        title: Text(
+                          ItemList.itemList[index].description,
+                          style: TextStyle(
+                              color: ItemList.itemList[index].type == 'Task' &&
+                                      ItemList.itemList[index].dueDate!
+                                          .isBefore(DateTime.now())
+                                  ? Colors.red
+                                  : Colors.black,
+                              decoration: ItemList.itemList[index].completed
+                                  ? TextDecoration.lineThrough
+                                  : null),
+                        ),
+                        leading: ItemList.itemList[index].icon,
+                      );
+                    },
+                  ),
           ),
         ),
       ),
@@ -103,49 +270,30 @@ class _TaskTodoPopupCard extends StatelessWidget {
   }
 }
 
-///------------------------------------------------Habit Card---------------------------
-///----------------------------------------Task Card----------------------------------------
-/// {@template todo_card}
-/// Card that display a [Todo]'s content.
-///
-/// On tap it opens a [HeroDialogRoute] with [_TodoPopupCard] as the content.
-/// {@endtemplate}
-class HabitTodoCard extends StatelessWidget {
-  /// {@macro todo_card}
-  const HabitTodoCard({
-    Key? key,
-    required this.daysTodo,
-    required this.weeksTodo,
-    required this.monthsTodo,
-    required this.yearsTodo,
-  }) : super(key: key);
+class HabitTodoCard extends StatefulWidget {
+  const HabitTodoCard({super.key, required this.aspectList});
+  final List<Aspect> aspectList;
+  @override
+  State<HabitTodoCard> createState() => _HabitTodoCardState();
+}
 
-  final Todo? daysTodo;
-  final Todo? weeksTodo;
-  final Todo? monthsTodo;
-  final Todo? yearsTodo;
-
+class _HabitTodoCardState extends State<HabitTodoCard> {
   @override
   Widget build(BuildContext context) {
     bool noHabits = true;
-    if (daysTodo != null ||
-        weeksTodo != null ||
-        monthsTodo != null ||
-        yearsTodo != null) {
+    ItemList().createHabitList(widget.aspectList);
+    if (ItemList.dailyHabits.isNotEmpty ||
+        ItemList.weeklyHabits.isNotEmpty ||
+        ItemList.monthlyHabits.isNotEmpty ||
+        ItemList.yearlyHabits.isNotEmpty) {
       noHabits = false;
     }
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           HeroDialogRoute(
-            builder: (context) => Center(
-              child: _HabitTodoPopupCard(
-                daysTodo: daysTodo,
-                monthsTodo: monthsTodo,
-                weeksTodo: weeksTodo,
-                yearsTodo: yearsTodo,
-                noHabits: noHabits,
-              ),
+            builder: (context) => const Center(
+              child: _HabitTodoPopupCard(),
             ),
           ),
         );
@@ -165,28 +313,38 @@ class HabitTodoCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      if (daysTodo != null) const Text('عاداتي اليومية'),
-                      if (daysTodo != null)
-                        _TodoItemsBox(items: daysTodo!.items),
-                      if (daysTodo != null) const Divider(),
-                      if (weeksTodo != null) const Text('عاداتي الأسبوعية'),
-                      if (weeksTodo != null)
-                        _TodoItemsBox(items: weeksTodo!.items),
-                      if (weeksTodo != null) const Divider(),
-                      if (monthsTodo != null) const Text('عاداتي الشهرية'),
-                      if (monthsTodo != null)
-                        _TodoItemsBox(items: monthsTodo!.items),
-                      if (monthsTodo != null) const Divider(),
-                      if (yearsTodo != null) const Text('عاداتي السنوية'),
-                      if (yearsTodo != null)
-                        _TodoItemsBox(items: yearsTodo!.items),
-                      if (noHabits) const Text('لا يوجد عادات مسجلة'),
-                    ],
-                  ),
-                ),
+                child: noHabits
+                    ? const Center(
+                        child: Text('لا يوجد عادات مسجلة'),
+                      )
+                    : SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            if (ItemList.dailyHabits.isNotEmpty)
+                              const Text('عاداتي اليومية'),
+                            if (ItemList.dailyHabits.isNotEmpty)
+                              _TodoItemsBox(items: ItemList.dailyHabits),
+                            if (ItemList.dailyHabits.isNotEmpty)
+                              const Divider(),
+                            if (ItemList.weeklyHabits.isNotEmpty)
+                              const Text('عاداتي الأسبوعية'),
+                            if (ItemList.weeklyHabits.isNotEmpty)
+                              _TodoItemsBox(items: ItemList.weeklyHabits),
+                            if (ItemList.weeklyHabits.isNotEmpty)
+                              const Divider(),
+                            if (ItemList.monthlyHabits.isNotEmpty)
+                              const Text('عاداتي الشهرية'),
+                            if (ItemList.monthlyHabits.isNotEmpty)
+                              _TodoItemsBox(items: ItemList.monthlyHabits),
+                            if (ItemList.monthlyHabits.isNotEmpty)
+                              const Divider(),
+                            if (ItemList.yearlyHabits.isNotEmpty)
+                              const Text('عاداتي السنوية'),
+                            if (ItemList.yearlyHabits.isNotEmpty)
+                              _TodoItemsBox(items: ItemList.yearlyHabits),
+                          ],
+                        ),
+                      ),
               ),
             ),
           ),
@@ -196,28 +354,23 @@ class HabitTodoCard extends StatelessWidget {
   }
 }
 
-/// {@template todo_popup_card}
-/// Popup card to expand the content of a [Todo] card.
-///
-/// Activated from [TodoCard].
-/// {@endtemplate}
-class _HabitTodoPopupCard extends StatelessWidget {
-  const _HabitTodoPopupCard(
-      {Key? key,
-      this.daysTodo,
-      this.weeksTodo,
-      this.monthsTodo,
-      this.yearsTodo,
-      required this.noHabits})
-      : super(key: key);
-  final Todo? daysTodo;
-  final Todo? weeksTodo;
-  final Todo? monthsTodo;
-  final Todo? yearsTodo;
-  final bool noHabits;
+class _HabitTodoPopupCard extends StatefulWidget {
+  const _HabitTodoPopupCard();
 
   @override
+  State<_HabitTodoPopupCard> createState() => __HabitTodoPopupCardState();
+}
+
+class __HabitTodoPopupCardState extends State<_HabitTodoPopupCard> {
+  @override
   Widget build(BuildContext context) {
+    bool noHabits = true;
+    if (ItemList.dailyHabits.isNotEmpty ||
+        ItemList.weeklyHabits.isNotEmpty ||
+        ItemList.monthlyHabits.isNotEmpty ||
+        ItemList.yearlyHabits.isNotEmpty) {
+      noHabits = false;
+    }
     return Hero(
       tag: 2,
       createRectTween: (begin, end) {
@@ -231,28 +384,35 @@ class _HabitTodoPopupCard extends StatelessWidget {
           child: SizedBox(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (daysTodo != null) const Text('عاداتي اليومية'),
-                    if (daysTodo != null) _TodoItemsBox(items: daysTodo!.items),
-                    if (daysTodo != null) const Divider(),
-                    if (weeksTodo != null) const Text('عاداتي الأسبوعية'),
-                    if (weeksTodo != null)
-                      _TodoItemsBox(items: weeksTodo!.items),
-                    if (weeksTodo != null) const Divider(),
-                    if (monthsTodo != null) const Text('عاداتي الشهرية'),
-                    if (monthsTodo != null)
-                      _TodoItemsBox(items: monthsTodo!.items),
-                    if (monthsTodo != null) const Divider(),
-                    if (yearsTodo != null) const Text('عاداتي السنوية'),
-                    if (yearsTodo != null)
-                      _TodoItemsBox(items: yearsTodo!.items),
-                    if (noHabits) const Text('لا يوجد عادات مسجلة'),
-                  ],
-                ),
-              ),
+              child: noHabits
+                  ? const Text('لا يوجد عادات مسجلة')
+                  : SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (ItemList.dailyHabits.isNotEmpty)
+                            const Text('عاداتي اليومية'),
+                          if (ItemList.dailyHabits.isNotEmpty)
+                            _TodoItemsBox(items: ItemList.dailyHabits),
+                          if (ItemList.dailyHabits.isNotEmpty) const Divider(),
+                          if (ItemList.weeklyHabits.isNotEmpty)
+                            const Text('عاداتي الأسبوعية'),
+                          if (ItemList.weeklyHabits.isNotEmpty)
+                            _TodoItemsBox(items: ItemList.weeklyHabits),
+                          if (ItemList.weeklyHabits.isNotEmpty) const Divider(),
+                          if (ItemList.monthlyHabits.isNotEmpty)
+                            const Text('عاداتي الشهرية'),
+                          if (ItemList.monthlyHabits.isNotEmpty)
+                            _TodoItemsBox(items: ItemList.monthlyHabits),
+                          if (ItemList.monthlyHabits.isNotEmpty)
+                            const Divider(),
+                          if (ItemList.yearlyHabits.isNotEmpty)
+                            const Text('عاداتي السنوية'),
+                          if (ItemList.yearlyHabits.isNotEmpty)
+                            _TodoItemsBox(items: ItemList.yearlyHabits),
+                        ],
+                      ),
+                    ),
             ),
           ),
         ),

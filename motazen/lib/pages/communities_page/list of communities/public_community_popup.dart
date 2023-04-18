@@ -1,10 +1,8 @@
-// ignore_for_file: non_constant_identifier_names, no_leading_underscores_for_local_identifiers
-//new
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/community_controller.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
-import 'package:motazen/entities/CommunityID.dart';
+import 'package:motazen/entities/community_id.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:motazen/isar_service.dart';
@@ -76,10 +74,9 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                 Navigator.pop(
                                     context); // so that the join window goes
 
-                                final _goalaspectController =
+                                final goalaspectController =
                                     TextEditingController();
-                                _goalaspectController.text =
-                                    community.goalName!;
+                                goalaspectController.text = community.goalName!;
 
                                 final formKey = GlobalKey<FormState>();
                                 Goal isSelected =
@@ -207,16 +204,22 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                             .validate() &&
                                                         goalsName.isNotEmpty) {
                                                       //-----------------------------------
+                                                      //here
                                                       CommunityID newCom =
                                                           CommunityID(
                                                               userID: IsarService
                                                                   .getUserID);
-                                                      newCom.CommunityId =
+                                                      newCom.communityId =
                                                           community.id;
-                                                      isSelected.Communities
+                                                      newCom.goal.value =
+                                                          isSelected;
+
+                                                      isSelected.communities
                                                           .add(newCom);
                                                       IsarService iser =
                                                           IsarService();
+                                                      iser.saveCom(newCom);
+
                                                       iser.createGoal(
                                                           isSelected);
                                                       bool isJoined = false;
@@ -356,10 +359,13 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                       communityController
                                                           .update();
                                                       Get.to(CommunityHomePage(
+                                                          fromInvite: false,
                                                           comm: communityController
                                                               .listOfJoinedCommunities
                                                               .last));
                                                     } else {
+                                                      isFirstClick = true;
+
                                                       Navigator.pop(context);
                                                     }
                                                   }

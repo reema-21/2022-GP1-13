@@ -284,7 +284,7 @@ class OtherMessageDesign extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              viewPhoto(imgURL: pst.imageURL)));
+                                              ViewPhoto(imgURL: pst.imageURL)));
                                 },
                                 child: Container(
                                     constraints: BoxConstraints(

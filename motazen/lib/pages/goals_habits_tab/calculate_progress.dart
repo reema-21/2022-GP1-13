@@ -1,4 +1,5 @@
-import 'package:motazen/entities/LocalTask.dart';
+import 'package:motazen/entities/local_task.dart';
+
 import 'package:motazen/entities/goal.dart';
 import '../../entities/aspect.dart';
 import '../../isar_service.dart';
@@ -29,13 +30,14 @@ class CalculateProgress {
   }
 
   Future<void> calculateTaskPercentage(int taskId, int goalId) async {
-    LocalTask? completedTask = await IsarService().getSepecificTask(taskId);
+    LocalTask? completedTask =
+        await IsarService().findSepecificTaskByID(taskId);
     Goal? goal = await IsarService().getSepecificGoall(goalId);
     double completionPercentage =
         completedTask!.amountCompleted / completedTask.duration;
     //check if the value is within range
     if (completionPercentage < 1 || completionPercentage == 1) {
-      IsarService().updateTaskPercentage(taskId, completionPercentage);
+      await IsarService().updateTaskPercentage(taskId, completionPercentage);
       calculateGoalPercentage(goal, goal!.goalProgressPercentage);
     }
   }
@@ -56,9 +58,9 @@ class CalculateProgress {
 
     //check if the progress is within range
     if (totalGoalProgress < 1 || totalGoalProgress == 1) {
-      IsarService().updateGoalPercentage(goal.id, totalGoalProgress);
+      await IsarService().updateGoalPercentage(goal.id, totalGoalProgress);
       Aspect? aspect = await IsarService().getAspectByGoal(goal.id);
-      handle_aspect()
+      HandleAspect()
           .updateAspects(aspect!, goal, previousProgress, totalGoalProgress);
     }
   }

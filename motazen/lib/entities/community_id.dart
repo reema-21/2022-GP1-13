@@ -1,13 +1,13 @@
-// ignore_for_file: file_names, non_constant_identifier_names
-
+import 'goal.dart';
 import 'package:isar/isar.dart';
-part 'CommunityID.g.dart';
+part 'community_id.g.dart';
 
 @collection
 class CommunityID {
   Id id = Isar.autoIncrement;
-  late String CommunityId;
-
+  late String communityId;
+  final goal = IsarLink<Goal>();
   String userID;
+
   CommunityID({required this.userID});
 }

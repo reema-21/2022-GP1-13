@@ -1,19 +1,15 @@
-// ignore_for_file: invalid_use_of_protected_member, non_constant_identifier_names
-//new
-//REEMAS
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/community_controller.dart';
 import 'package:motazen/pages/communities_page/community/community_home.dart';
 import 'package:motazen/pages/communities_page/list%20of%20communities/public_community_popup.dart';
 import 'package:motazen/theme.dart';
-
 import 'package:provider/provider.dart';
 import '../../../controllers/aspect_controller.dart';
 import '../../../entities/aspect.dart';
 import '../../../models/community.dart';
 
+//DONENOW
 //ours
 class Communities extends StatefulWidget {
   const Communities({super.key});
@@ -26,6 +22,7 @@ class _CommunitiesState extends State<Communities> {
   bool isSearchCommunitySelected = false;
   bool isMyCommunitySelected = true;
   bool isFilterClicked = false;
+  List<Community> userCommunities = [];
   List<bool> whichFilter = [
     false,
     false,
@@ -42,12 +39,14 @@ class _CommunitiesState extends State<Communities> {
 
   @override
   void initState() {
-    super.initState();
     userDataUpdate();
+    super.initState();
   }
 
-  userDataUpdate() async {
+  Future<void> userDataUpdate() async {
     await communityController.getUserData();
+    userCommunities = communityController.listOfCreatedCommunities +
+        communityController.listOfJoinedCommunities;
     setState(() {});
   }
 
@@ -133,10 +132,7 @@ class _CommunitiesState extends State<Communities> {
             SizedBox(
               height: screenHeight(context) * 0.01,
             ),
-            CommunityTile(
-                communityController.listOfCreatedCommunities.value +
-                    communityController.listOfJoinedCommunities.value,
-                firebaseAuth.currentUser!.displayName)
+            communityTile(userCommunities, firebaseAuth.currentUser!.uid)
           ],
         );
       }),
@@ -175,7 +171,7 @@ class _CommunitiesState extends State<Communities> {
                 shrinkWrap: true,
                 itemCount: aspectList.selected.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
+                    crossAxisCount: 3,
                     crossAxisSpacing: 3.0,
                     mainAxisSpacing: 3.0,
                     mainAxisExtent: 40),
@@ -196,13 +192,14 @@ class _CommunitiesState extends State<Communities> {
                                 .withOpacity(0.8)
                             : Colors.white,
                       ),
-                      height: 5,
                       child: Center(
                           child: Text(
                         aspectList.selected[index].name,
                         style: TextStyle(
                             color:
-                                whichFilter[index] ? kWhiteColor : kBlackColor),
+                                whichFilter[index] ? kWhiteColor : kBlackColor,
+                            fontSize: 16),
+                        overflow: TextOverflow.visible,
                       )),
                     ),
                   );
@@ -214,7 +211,6 @@ class _CommunitiesState extends State<Communities> {
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
                   final publicCommunitiesDoc = snapshot.data!.docs;
-                  // log(" Length: ${publicCommunitiesDoc.map((e) => e.data())}");
                   List<Community> publicCommunities = [];
                   for (var community in publicCommunitiesDoc) {
                     if (!(communityController.listOfJoinedCommunities
@@ -260,11 +256,11 @@ class _CommunitiesState extends State<Communities> {
                   sortedAspects.sort(
                     (a, b) => b.percentagePoints.compareTo(a.percentagePoints),
                   );
-                  List<Community> TempList = [];
+                  List<Community> tempList = [];
                   for (Aspect aspect in sortedAspects) {
                     for (int i = publicCommunities.length - 1; i >= 0; i--) {
                       if (publicCommunities[i].aspect == aspect.name) {
-                        TempList.add(publicCommunities[i]);
+                        tempList.add(publicCommunities[i]);
                       }
                     }
                   }
@@ -280,14 +276,14 @@ class _CommunitiesState extends State<Communities> {
                           itemBuilder: (context, index) {
                             String goalname =
                                 publicCommunities[index].goalName!;
-                            String CommunityAspect =
+                            String communityAspect =
                                 publicCommunities[index].aspect!;
                             var aspectList =
                                 Provider.of<AspectController>(context);
                             List<Aspect> listOfaspect = aspectList.selected;
                             int selsectAspectIndex = 0;
                             for (int i = 0; i < listOfaspect.length; i++) {
-                              if (listOfaspect[i].name == CommunityAspect) {
+                              if (listOfaspect[i].name == communityAspect) {
                                 selsectAspectIndex = i;
                               }
                             }
@@ -308,6 +304,8 @@ class _CommunitiesState extends State<Communities> {
                             );
                             Color aspectColor = Color(
                                 aspectList.selected[selsectAspectIndex].color);
+                            publicCommunities[index].founderUsername ==
+                                firebaseAuth.currentUser!.displayName;
                             return GestureDetector(
                               onTap: () {
                                 publicCommunityDetailsPopup(context,
@@ -373,7 +371,10 @@ class _CommunitiesState extends State<Communities> {
                         );
                 } else {
                   return const Center(
-                    child: Text("لا يوجد مجتمعات"),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 100),
+                      child: Text("لا يوجد مجتمعات"),
+                    ),
                   );
                 }
               })),
@@ -402,18 +403,18 @@ class _CommunitiesState extends State<Communities> {
   }
 }
 
-Widget CommunityTile(final community, final currentUserFounderName) {
+Widget communityTile(final community, final currentUserFounderName) {
   return Expanded(
     child: ListView.builder(
         itemCount: community.length,
         itemBuilder: (context, index) {
           String goalname = community[index].goalName;
-          String CommunityAspect = community[index].aspect;
+          String communityAspect = community[index].aspect;
           var aspectList = Provider.of<AspectController>(context);
           List<Aspect> listOfaspect = aspectList.selected;
           int selsectAspectIndex = 0;
           for (int i = 0; i < listOfaspect.length; i++) {
-            if (listOfaspect[i].name == CommunityAspect) {
+            if (listOfaspect[i].name == communityAspect) {
               selsectAspectIndex = i;
             }
           }
@@ -441,6 +442,7 @@ Widget CommunityTile(final community, final currentUserFounderName) {
                   context,
                   MaterialPageRoute(
                       builder: (context) => CommunityHomePage(
+                            fromInvite: false,
                             comm: community[index],
                           )));
             }),

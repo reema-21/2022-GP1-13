@@ -1,21 +1,22 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, must_be_immutable, unused_local_variable
-//manar
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
-import 'package:motazen/entities/LocalTask.dart';
+import 'package:motazen/entities/local_task.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:motazen/models/taskClass.dart';
+import 'package:motazen/models/task_model.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/controllers/taskLocal_controller.dart';
+import 'package:motazen/controllers/localtask_controller.dart';
+import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import '../../Sidebar_and_navigation/navigation-bar.dart';
+import '../../Sidebar_and_navigation/navigation_bar.dart';
 import '../../entities/aspect.dart';
 import '../../theme.dart';
 import '../assesment_page/alert_dialog.dart';
-import 'add_Task2.dart';
+import 'add_task.dart';
 
 class AddGoal extends StatefulWidget {
   List<LocalTask> goalsTasks = [];
@@ -59,14 +60,14 @@ class _AddGoalState extends State<AddGoal> {
 
   Goal newgoal = Goal(userID: IsarService.getUserID);
 
-  _Addgoal() async {
+  Future<void> _addgoal() async {
     newgoal.titel = _goalName;
     newgoal.importance = importance;
     Aspect? selected = await widget.isr.findSepecificAspect(isSelected!);
     newgoal.aspect.value = selected; // link aspect to the goal
     selected!.goals.add(newgoal);
     // widget.isr.createAspect(selected); //Note: what is it used for
-    newgoal.DescriptiveGoalDuration = duration;
+    newgoal.descriptiveGoalDuration = duration;
     newgoal.goalDuration = goalDuration;
     newgoal.startData = selectedDates!.start;
     newgoal.endDate = selectedDates!.end;
@@ -85,9 +86,9 @@ class _AddGoalState extends State<AddGoal> {
       newgoal.task.add(y); // to link the task to the goal
       widget.isr.saveTask(y);
     }
+    await widget.isr.createGoal(newgoal);
     await widget.isr.addAspectGoalLink(newgoal, selected);
-    widget.isr.createGoal(newgoal);
-    freq.TaskDuration = 0.obs;
+    freq.taskDuration = 0.obs;
     freq.currentTaskDuration = 0.obs;
     freq.totalTasksDuration = 0.obs;
     freq.checkTotalTaskDuration = 0.obs;
@@ -96,10 +97,10 @@ class _AddGoalState extends State<AddGoal> {
     freq.tem = 0.obs;
     freq.isSelected = "أيام".obs;
     freq.goalTask = Rx<List<LocalTask>>([]);
-    freq.TasksMenue = Rx<List<String>>([]);
+    freq.tasksMenue = Rx<List<String>>([]);
     freq.selectedTasks = Rx<List<String>>([]);
     freq.newTasksAddedInEditing = Rx<List<LocalTask>>([]);
-    freq.TasksMenue.value.clear();
+    freq.tasksMenue.value.clear();
     freq.selectedTasks.value.clear();
     freq.allTaskForDepency = Rx<List<TaskData>>([]);
     freq.tryTask = Rx<TaskData>(TaskData());
@@ -107,21 +108,23 @@ class _AddGoalState extends State<AddGoal> {
     freq.allTaskForDepency.value.clear();
     freq.itemCountAdd = 0.obs;
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          return const navBar(
-            selectedIndex: 1,
-          );
-        },
-      ),
-    );
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return const NavBar(
+              selectedIndex: 1,
+            );
+          },
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<AspectController>(context);
+    var aspectList = Provider.of<AspectController>(context, listen: false);
     return Scaffold(
       /// key
       key: _scaffoldkey,
@@ -146,11 +149,11 @@ class _AddGoalState extends State<AddGoal> {
                 //to have intionals values all thetime
                 // delete the added tasks .
                 for (int i = 0; i < freq.goalTask.value.length; i++) {
-                  widget.isr.deleteTask3(freq.goalTask.value[i]);
+                  widget.isr.deleteTask(freq.goalTask.value[i]);
                 }
 
                 //...............................
-                freq.TaskDuration = 0.obs;
+                freq.taskDuration = 0.obs;
                 freq.currentTaskDuration = 0.obs;
                 freq.checkTotalTaskDuration = 0.obs;
                 freq.totalTasksDuration = 0.obs;
@@ -159,26 +162,24 @@ class _AddGoalState extends State<AddGoal> {
                 freq.isSelected = "أيام".obs;
                 freq.goalTask = Rx<List<LocalTask>>([]);
                 freq.newTasksAddedInEditing = Rx<List<LocalTask>>([]);
-                freq.TasksMenue.value.clear();
+                freq.tasksMenue.value.clear();
                 freq.selectedTasks.value.clear();
                 freq.allTaskForDepency.value.clear();
                 freq.itemCount = 0.obs;
                 freq.itemCountAdd = 0.obs;
-                Rx<List<String>> TasksMenue = Rx<List<String>>([]);
-                Rx<List<String>> selectedTasks = Rx<List<String>>([]);
-                Rx<List<TaskData>> allTaskForDepency = Rx<List<TaskData>>([]);
-                Rx<TaskData> tryTask = Rx<TaskData>(TaskData());
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const navBar(
-                        selectedIndex: 1,
-                      );
-                    },
-                  ),
-                );
+                if (mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const NavBar(
+                          selectedIndex: 1,
+                        );
+                      },
+                    ),
+                  );
+                }
               }
             },
           ),
@@ -385,54 +386,57 @@ class _AddGoalState extends State<AddGoal> {
                     height: screenHeight(context) * 0.25,
                   ),
                   InkWell(
-                    onTap: () {
-                      if (isFirstclick) {
-                        isFirstclick = false;
+                    onTap: () async {
+                      // if (isFirstclick) {
+                      //   isFirstclick = false;
 
-                        if ((formKey.currentState!.validate())) {
-                          if (goalDuration != 0) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.green.shade300,
-                                duration: const Duration(milliseconds: 500),
-                                content: Row(
-                                  children: const [
-                                    Icon(Icons.thumb_up_sharp),
-                                    SizedBox(width: 20),
-                                    Expanded(
-                                      child: Text("تمت اضافة الهدف "),
-                                    ),
-                                  ],
-                                ),
+                      if (formKey.currentState!.validate()) {
+                        if (goalDuration != 0) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.green.shade300,
+                              duration: const Duration(milliseconds: 500),
+                              content: Row(
+                                children: const [
+                                  Icon(Icons.thumb_up_sharp),
+                                  SizedBox(width: 20),
+                                  Expanded(
+                                    child: Text("تمت اضافة الهدف "),
+                                  ),
+                                ],
                               ),
-                            );
-
-                            _Addgoal();
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                duration: const Duration(milliseconds: 500),
-                                backgroundColor: Colors.yellow.shade300,
-                                content: Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.error,
-                                      color: Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          );
+                          await _addgoal();
+                          ItemList().createTaskTodoList(aspectList.selected);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              duration: const Duration(milliseconds: 500),
+                              backgroundColor: Colors.yellow.shade300,
+                              content: Row(
+                                children: const [
+                                  Icon(
+                                    Icons.error,
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                  SizedBox(width: 20),
+                                  Expanded(
+                                    child: Text(
+                                      " يجب تحديد فترة الهدف",
+                                      style: TextStyle(color: Colors.black),
                                     ),
-                                    SizedBox(width: 20),
-                                    Expanded(
-                                      child: Text(
-                                        " يجب تحديد فترة الهدف",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            );
-                          }
+                            ),
+                          );
                         }
                       }
+                      // else {
+                      //   isFirstclick = true;
+                      // }
+                      // }
                     },
                     child: Container(
                       height: screenHeight(context) * 0.05,

@@ -195,7 +195,7 @@ signIn(email, pass) async {
         .signInWithEmailAndPassword(email: email, password: pass);
 
     Fluttertoast.showToast(msg: "تم تسجيل الدخول بنجاح");
-    Get.to(() => const getAllAspects(
+    Get.to(() => const GetAllAspects(
           page: 'Home',
         ));
   } on FirebaseAuthException catch (e) {

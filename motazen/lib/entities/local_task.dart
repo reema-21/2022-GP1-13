@@ -1,13 +1,11 @@
-// ignore_for_file: non_constant_identifier_names, file_names
-
 import 'package:isar/isar.dart';
 import 'package:motazen/entities/goal.dart';
-part 'LocalTask.g.dart';
+part 'local_task.g.dart';
 
 @collection
 class LocalTask {
   Id id = Isar.autoIncrement; // you can also use id = null to auto increment
-  final TaskDependency = IsarLinks<LocalTask>();
+  final taskDependency = IsarLinks<LocalTask>();
   late String name;
   final goal = IsarLink<Goal>();
   int amountCompleted = 0;
@@ -15,6 +13,7 @@ class LocalTask {
   late int duration;
   late String durationDescribtion;
   bool completedForToday = false;
+  double rank = 0;
   String userID;
   LocalTask({required this.userID});
 }

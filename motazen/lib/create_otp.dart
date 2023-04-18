@@ -1,11 +1,9 @@
-// ignore_for_file: deprecated_member_use, unused_local_variable, unused_catch_clause
-
+// ignore_for_file: deprecated_member_use
+import 'dart:developer' as dev;
 import 'dart:math';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
-
 import 'dialogue_boxes.dart';
 import 'models/community.dart';
 
@@ -32,11 +30,12 @@ sendInvitation(String receiverEmail, Community comm, String inviter) async {
         'Dear $receiverEmail,\n$inviter has invited you in the community ${comm.communityName}. Please check the app notification to accept or reject the invitation\n\nRegards,\nTeam Motazen';
 
   try {
-    final sendReport = await send(message, smtpServer);
+    await send(message, smtpServer);
     AllDialogues.hideloading();
     Fluttertoast.showToast(msg: "Invite sent", toastLength: Toast.LENGTH_LONG);
   } on MailerException catch (e) {
     AllDialogues.hideloading();
     Fluttertoast.showToast(msg: "Failed sending invite mail");
+    dev.log('error in create_OTP : $e');
   }
 }

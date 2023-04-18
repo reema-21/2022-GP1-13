@@ -1,10 +1,8 @@
-//ignore_for_file: non_constant_identifier_names, file_names, unused_local_variable
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:motazen/entities/LocalTask.dart';
+import 'package:motazen/entities/local_task.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/models/taskClass.dart';
+import 'package:motazen/models/task_model.dart';
 
 // create  a class called task
 //the class have the same name property except having a list that
@@ -13,7 +11,7 @@ import 'package:motazen/models/taskClass.dart';
 class TaskLocalControleer extends GetxController {
   var checkTotalTaskDuration =
       0.obs; // to check whether the user Enterd a valid goal duration or not
-  var TaskDuration = 0.obs;
+  var taskDuration = 0.obs;
   var currentTaskDuration = 0.obs;
   var totalTasksDuration = 0.obs;
   var iscool = false.obs;
@@ -23,9 +21,9 @@ class TaskLocalControleer extends GetxController {
   Rx<List<LocalTask>> goalTask =
       Rx<List<LocalTask>>([]); // for saving the task depenecy  .
   Rx<List<LocalTask>> newTasksAddedInEditing = Rx<List<LocalTask>>([]);
-  Rx<List<LocalTask>> DeletedTasks = Rx<List<LocalTask>>([]);
-  Rx<List<LocalTask>> EditedTasksInEditing = Rx<List<LocalTask>>([]);
-  Rx<List<String>> TasksMenue = Rx<List<String>>([]);
+  Rx<List<LocalTask>> deletedTasks = Rx<List<LocalTask>>([]);
+  Rx<List<LocalTask>> editedTasksInEditing = Rx<List<LocalTask>>([]);
+  Rx<List<String>> tasksMenue = Rx<List<String>>([]);
   Rx<List<String>> selectedTasks = Rx<List<String>>([]);
   var selectedOption = "".obs;
 
@@ -37,7 +35,7 @@ class TaskLocalControleer extends GetxController {
   var itemCountAdd = 0.obs;
   var itemCountDelete = 0.obs;
   var itemCountEdit = 0.obs;
-  Rx<List<TaskData>> OrginalTasks = Rx<List<TaskData>>([]);
+  Rx<List<TaskData>> orginalTasks = Rx<List<TaskData>>([]);
 
   Rx<List<TaskData>> allTaskForDepency = Rx<List<TaskData>>([]);
   Rx<TaskData> tryTask = Rx<TaskData>(TaskData());
@@ -79,14 +77,14 @@ class TaskLocalControleer extends GetxController {
   }
 
   bool addTask(String name, String duName, int val) {
-    TaskData TaskForDependency = TaskData();
-    TaskForDependency.name = name;
+    TaskData taskForDependency = TaskData();
+    taskForDependency.name = name;
     //this is just to create the list to check for andy dependen to not delete .
     for (int i = 0; i < selectedTasks.value.length; i++) {
-      TaskForDependency.TaskDependency.add(selectedTasks.value[i]);
+      taskForDependency.taskDependency.add(selectedTasks.value[i]);
     }
 
-    allTaskForDepency.value.add(TaskForDependency);
+    allTaskForDepency.value.add(taskForDependency);
 
     LocalTask newTak = LocalTask(userID: IsarService.getUserID);
     newTak.name = name;
@@ -129,13 +127,11 @@ class TaskLocalControleer extends GetxController {
     // i am suppose that they will have the same index
     allTaskForDepency.value.removeAt(index);
 
-    for (var i in allTaskForDepency.value) {}
-
     goalTask.value.removeAt(index);
     itemCount.value = goalTask.value.length;
   }
 
-  AssignTaks(List<LocalTask> currentGoalTask) {
+  assignTasks(List<LocalTask> currentGoalTask) {
     goalTask.value.clear();
     goalTask.value.addAll(currentGoalTask);
 
@@ -150,7 +146,7 @@ class TaskLocalControleer extends GetxController {
       totalSummation = totalSummation + goalTask.value[i].duration;
     }
 
-    TaskDuration.value = taskduration;
+    taskDuration.value = taskduration;
     currentTaskDuration.value = currentTaskduraions;
     tem.value = totalDurtion;
     totalTasksDuration.value = totalDurtion;
@@ -259,18 +255,18 @@ class TaskLocalControleer extends GetxController {
           duration: const Duration(milliseconds: 1200),
           snackPosition: SnackPosition.BOTTOM);
     } else {
-      TaskDuration.value++;
+      taskDuration.value++;
     }
   }
 
   setdefult() {
-    TaskDuration.value = 0;
+    taskDuration.value = 0;
     tem.value = tem.value - currentTaskDuration.value;
     currentTaskDuration.value = 0;
   }
 
   dcrement() {
-    if (TaskDuration.value <= 0) {
+    if (taskDuration.value <= 0) {
       Get.snackbar("", "قيمة الفترة لا يمكن أن يكون أقل من واحد ",
           icon: const Icon(Icons.error),
           backgroundColor: const Color.fromARGB(255, 138, 36, 36),
@@ -279,12 +275,12 @@ class TaskLocalControleer extends GetxController {
           duration: const Duration(milliseconds: 1200),
           snackPosition: SnackPosition.BOTTOM);
     } else {
-      TaskDuration.value--;
+      taskDuration.value--;
 
       switch (isSelected.value) {
         case "أيام":
-          tem.value = tem.value - TaskDuration.value;
-          currentTaskDuration.value = TaskDuration.value;
+          tem.value = tem.value - taskDuration.value;
+          currentTaskDuration.value = taskDuration.value;
 
           break;
         case "أسابيع":
@@ -361,6 +357,6 @@ class TaskLocalControleer extends GetxController {
 
         break;
     }
-    TaskDuration.value++;
+    taskDuration.value++;
   }
 }

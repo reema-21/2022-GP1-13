@@ -1,10 +1,10 @@
 import 'package:directed_graph/directed_graph.dart';
-import 'package:motazen/entities/LocalTask.dart';
+import 'package:motazen/entities/local_task.dart';
 import 'package:motazen/models/todo_model.dart';
 import 'package:sorted/sorted.dart';
 
 class Rank {
-  ////////////////////Ranking tasks/////////////
+  //------------------------Ranking tasks------------------------//
   static DirectedGraph<String> graph = DirectedGraph({});
   void createDepGraph(LocalTask task) {
     ///check if the graph contains the task, if not
@@ -18,7 +18,7 @@ class Rank {
     ///this is the optimal way
 
     //add the dependencies of the task
-    for (var element in task.TaskDependency.toList()) {
+    for (var element in task.taskDependency.toList()) {
       if (!graph.edgeExists('${task.id}', '${element.id}')) {
         graph.addEdges('${task.id}', {'${element.id}'});
       }
@@ -48,7 +48,7 @@ class Rank {
 
       //Calculate the time left for each task
       timeLeft = (task.duration! - task.daysCompletedTask!) / diff;
-      //save the time left (in the actual code we probably need to save thid data in isar
+      //save the time left
       task.timeLeft = timeLeft;
     }
 

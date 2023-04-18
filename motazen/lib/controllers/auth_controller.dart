@@ -1,7 +1,5 @@
 import 'dart:developer';
-//Reemas
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:motazen/models/community.dart';
 import 'package:motazen/theme.dart';
@@ -13,19 +11,11 @@ class AuthController extends GetxController {
   late Rx<Userr> currentUser = Userr().obs;
   Rx<int> loginAttempts = 0.obs;
   Rx<int> endTime = 0.obs;
-  late Rx<User?> _user;
+  // late Rx<User?> _user;
   bool isLoging = false;
-  User? get user => _user.value;
-  final _auth = FirebaseAuth.instance;
+  // User? get user => _user.value;
 
   Rx<int> isObscure = 1.obs;
-
-  @override
-  void onReady() {
-    super.onReady();
-    _user = Rx<User?>(_auth.currentUser);
-    _user.bindStream(_auth.authStateChanges());
-  }
 
   @override
   void onClose() {

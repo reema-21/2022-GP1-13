@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
+import 'package:motazen/Sidebar_and_navigation/navigation_bar.dart';
 import 'package:motazen/pages/settings/tasklist_variables.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
@@ -109,7 +109,7 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
                                     setState(() {
                                       //? is this condition really nessacerry? what if
                                       //? I want to increase the number of displayed items before adding new items
-                                      if (taskToShow < totalTaskNumbers) {
+                                      if (taskToShow <= totalTaskNumbers) {
                                         taskToShow++;
                                       } else if (totalTaskNumbers == 0) {
                                         Fluttertoast.showToast(
@@ -192,7 +192,7 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const navBar(selectedIndex: 0)));
+                                              const NavBar(selectedIndex: 0)));
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "للتغيير عليك بإدخال قيمة",

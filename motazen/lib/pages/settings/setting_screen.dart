@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
 import 'package:motazen/pages/settings/numberof_shown_task.dart';
 import 'package:motazen/pages/settings/profile_edit.dart';
-import '../../Sidebar_and_navigation/navigation-bar.dart';
+import '../../Sidebar_and_navigation/navigation_bar.dart';
 
 //REEMAS
 class SettingScreen extends StatelessWidget {
@@ -15,7 +15,7 @@ class SettingScreen extends StatelessWidget {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => const navBar(selectedIndex: 0)));
+                builder: (context) => const NavBar(selectedIndex: 0)));
         return false;
       },
       child: Scaffold(
@@ -28,7 +28,7 @@ class SettingScreen extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const navBar(selectedIndex: 0)));
+                      builder: (context) => const NavBar(selectedIndex: 0)));
             },
             icon: const Icon(
               Icons.arrow_back,
@@ -133,7 +133,7 @@ class SettingScreen extends StatelessWidget {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          const initializeAspects(
+                                                          const InitializeAspects(
                                                             isRetake: true,
                                                           )));
                                             },

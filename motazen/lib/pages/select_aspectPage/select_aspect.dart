@@ -1,42 +1,52 @@
-// ignore_for_file: camel_case_types, iterable_contains_unrelated_type, list_remove_unrelated_type
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:provider/provider.dart';
 import '../assesment_page/show.dart';
-import 'handle_aspect_data.dart';
 import '../../controllers/aspect_controller.dart';
 import '../../theme.dart';
 
 class AspectSelection extends StatefulWidget {
+  final List<Aspect>? previousAspects;
   final bool? isRetake;
-  const AspectSelection({super.key, this.isRetake});
+  const AspectSelection({super.key, this.previousAspects, this.isRetake});
 
   @override
-  State<AspectSelection> createState() => _selectAspectState();
+  State<AspectSelection> createState() => _SelectAspectState();
 }
 
-class _selectAspectState extends State<AspectSelection> {
-  //use the local storge att instead
-  final List<bool> __isSelected = [];
+class _SelectAspectState extends State<AspectSelection> {
   List<String> selectedAspects = [];
   List<String> unselectedAspects = [];
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     //clean lists
-    __isSelected.clear();
     selectedAspects.clear();
     unselectedAspects.clear();
     //list of all aspects
-    var aspectList = Provider.of<AspectController>(context);
-    for (var i = 0; i < aspectList.allAspects.length; i++) {
-      __isSelected.add(aspectList.allAspects[i].isSelected);
-      if (aspectList.allAspects[i].isSelected == true) {
-        selectedAspects.add(aspectList.allAspects[i].name);
+    for (var i = 0; i < widget.previousAspects!.length; i++) {
+      if (widget.previousAspects![i].isSelected == true) {
+        selectedAspects.add(widget.previousAspects![i].name);
       } else {
-        unselectedAspects.add(aspectList.allAspects[i].name);
+        unselectedAspects.add(widget.previousAspects![i].name);
+      }
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var aspectList = Provider.of<AspectController>(context);
+
+    if (selectedAspects.isEmpty) {
+      for (var i = 0; i < aspectList.allAspects.length; i++) {
+        if (aspectList.allAspects[i].isSelected == true) {
+          selectedAspects.add(aspectList.allAspects[i].name);
+        } else {
+          unselectedAspects.add(aspectList.allAspects[i].name);
+        }
       }
     }
 
@@ -62,11 +72,12 @@ class _selectAspectState extends State<AspectSelection> {
             fontFamily: 'Frutiger',
           )),
         ),
-        onPressed: __isSelected.contains(true)
+        onPressed: selectedAspects.isNotEmpty
             ? () {
 //call a method that add the index to the local and go to assignment page .
                 Get.to(() => AssessmentQuestionsList(
                       unselected: unselectedAspects,
+                      selected: selectedAspects,
                     ));
               }
             : null,
@@ -138,8 +149,10 @@ class _selectAspectState extends State<AspectSelection> {
                                                   (size.height * 0.1))),
                                           backgroundColor:
                                               MaterialStateProperty.all(
-                                                  aspectList.allAspects[i]
-                                                          .isSelected
+                                                  selectedAspects.contains(
+                                                          aspectList
+                                                              .allAspects[i]
+                                                              .name)
                                                       ? Color(aspectList
                                                               .allAspects[i]
                                                               .color)
@@ -148,38 +161,36 @@ class _selectAspectState extends State<AspectSelection> {
                                           elevation:
                                               MaterialStateProperty.all(10)),
                                       onPressed: () {
-                                        setState(() {
-                                          //update status in local storage
-                                          handle_aspect().updateStatus(
+                                        //! remove this section if the code doesn't work
+                                        //save unselected aspect name
+                                        if (selectedAspects.contains(
+                                            aspectList.allAspects[i].name)) {
+                                          selectedAspects.remove(
                                               aspectList.allAspects[i].name);
-                                          //change selected value
-                                          aspectList.allAspects[i].isSelected
-                                              ? aspectList.allAspects[i]
-                                                  .isSelected = false
-                                              : aspectList.allAspects[i]
-                                                  .isSelected = true;
-                                          //save selected aspect name
-                                          aspectList.allAspects[i].isSelected
-                                              ? selectedAspects.add(
-                                                  aspectList.allAspects[i].name)
-                                              : selectedAspects.remove(
-                                                  aspectList
-                                                      .allAspects[i].name);
-                                          //save unselected aspect name
-                                          aspectList.allAspects[i].isSelected
-                                              ? unselectedAspects.remove(
-                                                  aspectList.allAspects[i].name)
-                                              : unselectedAspects.add(aspectList
-                                                  .allAspects[i].name);
-                                        });
+                                        } else {
+                                          selectedAspects.add(
+                                              aspectList.allAspects[i].name);
+                                        }
+
+                                        //save unselected aspect name
+                                        if (unselectedAspects.contains(
+                                            aspectList.allAspects[i].name)) {
+                                          unselectedAspects.remove(
+                                              aspectList.allAspects[i].name);
+                                        } else {
+                                          unselectedAspects.add(
+                                              aspectList.allAspects[i].name);
+                                        }
+                                        setState(() {});
                                       },
                                       child: ListTile(
                                         title: Text(
                                           aspectList.allAspects[i].name,
                                           style: TextStyle(
                                               fontSize: 18,
-                                              color: aspectList
-                                                      .allAspects[i].isSelected
+                                              color: selectedAspects.contains(
+                                                      aspectList
+                                                          .allAspects[i].name)
                                                   ? kWhiteColor
                                                   : kBlackColor),
                                         ),
@@ -194,8 +205,8 @@ class _selectAspectState extends State<AspectSelection> {
                                             matchTextDirection: aspectList
                                                 .allAspects[i].iconDirection,
                                           ),
-                                          color: aspectList
-                                                  .allAspects[i].isSelected
+                                          color: selectedAspects.contains(
+                                                  aspectList.allAspects[i].name)
                                               ? kWhiteColor
                                               : kDarkGreyColor,
                                           size: 27,

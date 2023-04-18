@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, depend_on_referenced_packages, empty_catches
-//new
+import 'dart:developer';
+
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
+import 'package:motazen/Sidebar_and_navigation/navigation_bar.dart';
 import 'package:motazen/controllers/auth_controller.dart';
+import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/models/community.dart';
 import 'package:motazen/models/user.dart';
 
@@ -38,8 +39,7 @@ class CommunityController extends GetxController {
   Rx<String> goalWeight = ''.obs;
   Rx<String> goal = ''.obs;
   Rx<String> activityLevel = ''.obs;
-  var notificationQuerySnapshot;
-
+  dynamic notificationQuerySnapshot;
   final Rx<String> _uid = "".obs;
   AuthController authController = Get.find();
 
@@ -48,11 +48,28 @@ class CommunityController extends GetxController {
     await getUserData();
   }
 
-//* this method iis for assigning the listofnotification a value . i will add all the notification exepct the invitetion for unselected aspec in this case i will send an alert notifaction to the sender
+  List<Community> findAspectComm(Aspect aspect) {
+    List<Community> aspectCommunities = [];
+    for (var community in listOfCreatedCommunities) {
+      if (community.aspect == aspect.name) {
+        aspectCommunities.add(community);
+      }
+    }
+    for (var community in listOfJoinedCommunities) {
+      if (community.aspect == aspect.name) {
+        aspectCommunities.add(community);
+      }
+    }
+    return aspectCommunities;
+  }
+
+//* this method is for assigning the listofnotification a value . i will add all the notification exepct the invitetion for unselected aspec in this case i will send an alert notifaction to the sender
   getNotifications(List selectedAspect) async {
     try {
       listOfNotifications.clear();
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
 
     try {
       if (notificationQuerySnapshot.docs.isNotEmpty) {
@@ -107,16 +124,20 @@ class CommunityController extends GetxController {
                   creationDate: notydoc['creation_date'].toDate(),
                   post: notydoc['post'],
                   reply: notydoc['reply'],
-                  userName: notydoc['user_name'],
+                  userName: notydoc['userName'],
                   notificationType: notydoc['type'] ?? "invite",
                   notificationOfTheCommunity: notydoc['community_link']),
             );
-          } catch (e) {}
+          } catch (e) {
+            log('error: $e');
+          }
         }
         listOfNotifications
             .sort((b, a) => a.creationDate.compareTo(b.creationDate));
-      } else {}
-    } catch (e) {}
+      }
+    } catch (e) {
+      log('error: $e');
+    }
     update();
   }
 
@@ -136,36 +157,46 @@ class CommunityController extends GetxController {
     List createdCommunitiess = [];
     try {
       createdCommunitiess = userData['createdCommunities'];
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
     List joinedCommunitiess = [];
     try {
       joinedCommunitiess = userData['joinedCommunities'];
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
 
 //! the issue starts here
     for (var community in createdCommunitiess) {
-      listOfCreatedCommunities.add(Community(
-          progressList: community['progress_list'],
-          aspect: community['aspect'],
-          founderUsername: community['founderUsername'],
-          communityName: community['communityName'],
-          creationDate: community['creationDate'].toDate(),
-          goalName: community['goalName'],
-          isPrivate: community['isPrivate'],
-          isDeleted: community['isDeleted'],
-          id: community['_id']));
+      if (!(listOfCreatedCommunities
+          .any((element) => element.id == community['_id']))) {
+        listOfCreatedCommunities.add(Community(
+            progressList: community['progress_list'],
+            aspect: community['aspect'],
+            founderUsername: community['founderUsername'],
+            communityName: community['communityName'],
+            creationDate: community['creationDate'].toDate(),
+            goalName: community['goalName'],
+            isPrivate: community['isPrivate'],
+            isDeleted: community['isDeleted'],
+            id: community['_id']));
+      }
     }
     for (var community in joinedCommunitiess) {
-      listOfJoinedCommunities.add(Community(
-          progressList: community['progress_list'],
-          aspect: community['aspect'],
-          founderUsername: community['founderUsername'],
-          communityName: community['communityName'],
-          creationDate: community['creationDate'].toDate(),
-          goalName: community['goalName'],
-          isPrivate: community['isPrivate'],
-          isDeleted: community['isDeleted'],
-          id: community['_id']));
+      if (!(listOfJoinedCommunities
+          .any((element) => element.id == community['_id']))) {
+        listOfJoinedCommunities.add(Community(
+            progressList: community['progress_list'],
+            aspect: community['aspect'],
+            founderUsername: community['founderUsername'],
+            communityName: community['communityName'],
+            creationDate: community['creationDate'].toDate(),
+            goalName: community['goalName'],
+            isPrivate: community['isPrivate'],
+            isDeleted: community['isDeleted'],
+            id: community['_id']));
+      }
     }
 
     update();
@@ -263,12 +294,12 @@ class CommunityController extends GetxController {
       });
       futureGroup.close();
       getSuccessSnackBar('تم انشاء المجتمع بنجاح');
-      // Get.off(() => const navBar());
+      // Get.off(() => const NavBar());
     } catch (e) {
       listOfCreatedCommunities.remove(community);
       getErrorSnackBar('حدث خطأ ما ،عاود التسجيل مرة أخرى ');
 
-      Get.off(() => const navBar(
+      Get.off(() => const NavBar(
             selectedIndex: 1,
           )); // here you  might need to change the number
     }
@@ -294,7 +325,9 @@ class CommunityController extends GetxController {
                 })
             .toList(),
       });
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
     Get.back();
   }
 
@@ -313,6 +346,8 @@ class CommunityController extends GetxController {
           ds.reference.delete();
         }
       });
-    } catch (e) {}
+    } catch (e) {
+      log('error: $e');
+    }
   }
 }

@@ -40,7 +40,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _firstNameKey = GlobalKey<FormState>();
   final _userNameKey = GlobalKey<FormState>();
   final _emailKey = GlobalKey<FormState>();
-  final _OldPassKey = GlobalKey<FormState>();
+  final _oldPassKey = GlobalKey<FormState>();
   final _newPassKey = GlobalKey<FormState>();
   final _confirmNewPassKey = GlobalKey<FormState>();
   String oldFirstName = "";
@@ -115,9 +115,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 firstnameController.text != oldUsername ||
                 emailController.text != oldEmail ||
                 oldPasswordController.text.isNotEmpty ||
-                cuurentProfile != authController.currentUser.value.avatarURL))
+                cuurentProfile != authController.currentUser.value.avatarURL)) {
               Navigator.pop(context);
-            else {
+            } else {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -370,7 +370,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               Padding(
                   padding: const EdgeInsets.only(bottom: 35.0),
                   child: Form(
-                    key: _OldPassKey,
+                    key: _oldPassKey,
                     child: TextFormField(
                       obscureText: showOldPassword,
                       controller: oldPasswordController,
@@ -571,7 +571,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  const getAllAspects(
+                                  const GetAllAspects(
                                     page: 'Home',
                                   )));
                     }).onError((error, stackTrace) {});
@@ -604,7 +604,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    const getAllAspects(
+                                    const GetAllAspects(
                                       page: 'Home',
                                     )));
                       }).onError((error, stackTrace) {});
@@ -645,14 +645,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          const getAllAspects(
+                                          const GetAllAspects(
                                             page: 'Home',
                                           )));
                             }).onError((error, stackTrace) {});
                           });
                         }
                       }).onError((error, stackTrace) {
-                        _OldPassKey.currentState!.validate();
+                        _oldPassKey.currentState!.validate();
                       });
                     } else {
                       Fluttertoast.showToast(
@@ -683,12 +683,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      const getAllAspects(
+                                      const GetAllAspects(
                                         page: 'Home',
                                       )));
                         }).onError((error, stackTrace) {});
                       }).onError((error, stackTrace) {
-                        _OldPassKey.currentState!.validate();
+                        _oldPassKey.currentState!.validate();
                       });
                     } else {
                       Fluttertoast.showToast(

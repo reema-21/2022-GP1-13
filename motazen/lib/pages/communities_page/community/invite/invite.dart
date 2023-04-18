@@ -6,6 +6,7 @@ import 'package:motazen/controllers/auth_controller.dart';
 import 'package:motazen/models/user.dart';
 import 'package:motazen/theme.dart';
 
+//DONEnNOW
 // import 'package:flutter_slidable/flutter_slidable.dart';
 class User {
   final String name;
@@ -21,7 +22,7 @@ class Invite extends StatefulWidget {
   const Invite({Key? key, required this.comm}) : super(key: key);
 
   @override
-  _InviteState createState() => _InviteState();
+  State<Invite> createState() => _InviteState();
 }
 
 class _InviteState extends State<Invite> {
@@ -32,9 +33,8 @@ class _InviteState extends State<Invite> {
   FutureGroup futureGroup = FutureGroup();
   List<Userr> _members = [];
   List<Userr> _foundedUsers = [];
-
   bool isinvite = true;
-//   @override
+
 // add an attribute to the user model inviteIsSended  and then make it false for all thne check the invitaion collection in firebase and then adjust the boolean ans use that bool eversince
   @override
   void initState() {
@@ -52,6 +52,7 @@ class _InviteState extends State<Invite> {
     for (int i = 0; i < _members.length; i++) {
       //fetch notification collection
       final communityNotification = {
+        'userName': firebaseAuth.currentUser!.displayName,
         'sender_avatar': authController.currentUser.value.avatarURL ?? "",
         'sender_id': firebaseAuth.currentUser!.uid,
         'creation_date': widget.comm.creationDate,
@@ -121,6 +122,7 @@ class _InviteState extends State<Invite> {
 
   inviteUser({required Userr user}) {
     final communityNotification = {
+      'userName': firebaseAuth.currentUser!.displayName,
       'sender_avatar': authController.currentUser.value.avatarURL ?? "",
       'sender_id': firebaseAuth.currentUser!.uid,
       'creation_date': widget.comm.creationDate,
@@ -142,49 +144,7 @@ class _InviteState extends State<Invite> {
         .doc(user.userID)
         .collection('notifications')
         .add(communityNotification);
-    // setState(() {
-    //   isinvite = true;
-    // });
-    // getSuccessSnackBar("تمت الدعوة");
   }
-
-  //  isInvited({required Userr user}) {
-  //    final communityNotification = {
-  //     'sender_avatar': authController.currentUser.value.avatarURL == null
-  //         ? ""
-  //         : authController.currentUser.value.avatarURL,
-  //     'sender_id': firebaseAuth.currentUser!.uid,
-  //     'creation_date': widget.comm.creationDate,
-  //     'type': 'invite',
-  //     'community': {
-  //       'progress_list': widget.comm.progressList,
-  //       'aspect': widget.comm.aspect,
-  //       'communityName': widget.comm.communityName,
-  //       'creationDate': widget.comm.creationDate,
-  //       'founderUsername': widget.comm.founderUsername,
-  //       'goalName': widget.comm.goalName,
-  //       'isPrivate': widget.comm.isPrivate,
-  //       '_id': widget.comm.id
-  //     }
-  //   };
-  //   firestore
-  //       .collection('user')
-  //       .doc(user.userID)
-  //       .collection('notifications')
-  //       .where('type', isEqualTo: 'invite')
-  //       .where('community', isEqualTo: communityNotification['community'])
-  //       .get()
-  //       .then((value) {
-  //     if (value.docs.isEmpty) {
-
-  //                 isinvite = false;
-
-  //     }
-  //   });
-
-  //   print("here i am prinitn the isinvite thing ") ;
-  //   print(isinvite);
-  // }
 
   // first step show the users with right info
   // to check if  the user a member see if the id is in the joined
@@ -252,8 +212,6 @@ class _InviteState extends State<Invite> {
   }
 
   userComponent({required Userr user}) {
-    // isinvite = false ;
-    // isInvited(user: user);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.only(top: 10, bottom: 10),

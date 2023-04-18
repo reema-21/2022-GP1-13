@@ -1,19 +1,15 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-import '../../Sidebar_and_navigation/navigation-bar.dart';
+import '../../Sidebar_and_navigation/navigation_bar.dart';
 import '/entities/habit.dart';
-
 import 'package:get/get.dart';
-import "my_controller.dart";
+import '../../controllers/my_controller.dart';
 import '../../entities/aspect.dart';
 
-//alertof completion //tasks // getbeck to the list page // goal dependency
 class AddHabit extends StatefulWidget {
   final IsarService isr;
   const AddHabit({super.key, required this.isr});
@@ -47,7 +43,7 @@ class _AddHabitState extends State<AddHabit> {
 
   Habit newhabit = Habit(userID: IsarService.getUserID);
   int seletedduration = 0;
-  _AddHabit() async {
+  _addHabit() async {
     newhabit.titel = _habitName;
     newhabit.durationIndString = seletedduration;
     newhabit.durationInNumber = freq.frequency.toInt();
@@ -56,17 +52,17 @@ class _AddHabitState extends State<AddHabit> {
     Aspect? selected = await widget.isr.findSepecificAspect(isSelected!);
     newhabit.aspect.value = selected;
     widget.isr.createHabit(newhabit);
-    // selected!.habits.add(newhabit);
-    // widget.isr.createAspect(selected);
     widget.isr.addAspectHabitLink(newhabit, selected!);
 
     freq.frequency = 1.obs;
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return const navBar(
-        //Note: can you make it go to the habits tap ?? I'll try :)
-        selectedIndex: 1,
-      );
-    }));
+    if (mounted) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return const NavBar(
+          //Note: can you make it go to the habits tap ?? I'll try :)
+          selectedIndex: 1,
+        );
+      }));
+    }
   }
 
   @override
@@ -93,17 +89,19 @@ class _AddHabitState extends State<AddHabit> {
                   if (action == DialogsAction.yes) {
                     freq.frequency = 1.obs;
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return const navBar(
-                            selectedIndex: 1,
-                            //! should move to the habits tab
-                          );
-                        },
-                      ),
-                    );
+                    if (mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const NavBar(
+                              selectedIndex: 1,
+                              //! should move to the habits tab
+                            );
+                          },
+                        ),
+                      );
+                    }
                   }
                 },
                 icon: const Icon(
@@ -144,9 +142,6 @@ class _AddHabitState extends State<AddHabit> {
                   const SizedBox(
                     height: 30,
                   ),
-
-                  /// Aspect selectio
-
                   DropdownButtonFormField(
                     value: isSelected,
                     items: aspectList
@@ -182,7 +177,6 @@ class _AddHabitState extends State<AddHabit> {
                   const SizedBox(
                     height: 30,
                   ),
-
                   Row(
                     children: [
                       const Text("عدد مرات التكرار"),
@@ -237,7 +231,6 @@ class _AddHabitState extends State<AddHabit> {
                   const SizedBox(
                     height: 10,
                   ),
-
                   DropdownButtonFormField(
                     value: isDuration,
                     items: durations
@@ -298,6 +291,8 @@ class _AddHabitState extends State<AddHabit> {
                         if (formKey411.currentState!.validate()) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
+                              backgroundColor: Colors.green.shade300,
+                              duration: const Duration(milliseconds: 500),
                               content: Row(
                                 children: const [
                                   Icon(
@@ -313,7 +308,9 @@ class _AddHabitState extends State<AddHabit> {
                             ),
                           );
 
-                          _AddHabit();
+                          _addHabit();
+                        } else {
+                          isFirstclick = true;
                         }
                       }
                     },

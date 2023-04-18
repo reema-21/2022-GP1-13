@@ -1,11 +1,8 @@
-// ignore_for_file: file_names
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-
-import '../../../controllers/aspect_controller.dart';
 import '../../../entities/aspect.dart';
 
 class WheelBackground extends StatefulWidget {
@@ -19,6 +16,7 @@ class _WheelBackgroundState extends State<WheelBackground> {
   //create the sections, border, and title for the outer sections of the wheel
   List<PieChartSectionData> getOutterSections(
       List<Aspect>? data, List<String>? arabicName) {
+    //! do we still need this?
     var temp = arabicName!.asMap();
     return data!
         .asMap()
@@ -36,7 +34,7 @@ class _WheelBackgroundState extends State<WheelBackground> {
                   matchTextDirection: data.iconDirection,
                 ),
                 color: Color(data.color)),
-            titlePositionPercentageOffset: 1.4,
+            titlePositionPercentageOffset: 1.47,
             badgePositionPercentageOffset: 1.14,
             radius: 100 * 1.2, //scale the data to the size of the wheel
           );

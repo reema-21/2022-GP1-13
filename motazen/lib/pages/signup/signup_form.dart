@@ -1,35 +1,33 @@
-// ignore_for_file: library_private_types_in_public_api, non_constant_identifier_names
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/pages/reset/verify.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
-
 import '../../dialogue_boxes.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
 
   @override
-  _SignUpFormState createState() => _SignUpFormState();
+  State<SignUpForm> createState() => _SignUpFormState();
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  TextEditingController first_name_controller = TextEditingController();
-  TextEditingController user_name_controller = TextEditingController();
-  TextEditingController email_controller = TextEditingController();
-  TextEditingController password_controler = TextEditingController();
-  TextEditingController conform_password_controller = TextEditingController();
-  final _SignUpformKey = GlobalKey<FormState>();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController conformPasswordController = TextEditingController();
+  final _signUpformKey = GlobalKey<FormState>();
 
-  bool pass_isObscures = true;
-  bool conform_pass_isObscure = true;
+  bool passIsObscures = true;
+  bool conformPassIsObscures = true;
 
   Future<bool> usernameCheck(String username) async {
     final result = await FirebaseFirestore.instance
         .collection('user')
-        .where('user_name', isEqualTo: username)
+        .where('userName', isEqualTo: username)
         .get();
     return result.docs.isEmpty;
   }
@@ -47,14 +45,14 @@ class _SignUpFormState extends State<SignUpForm> {
     return Column(
       children: [
         Form(
-          key: _SignUpformKey,
+          key: _signUpformKey,
           child: Column(
             children: <Widget>[
               // //=========1========first name field===============
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: TextFormField(
-                      controller: user_name_controller,
+                      controller: userNameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'فضلًا ادخل اسم المستخدم، مثل: motazen1';
@@ -99,7 +97,7 @@ class _SignUpFormState extends State<SignUpForm> {
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: TextFormField(
-                      controller: first_name_controller,
+                      controller: firstNameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'فضلًا ادخل اسمك مثل: محمد';
@@ -122,7 +120,7 @@ class _SignUpFormState extends State<SignUpForm> {
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: TextFormField(
-                      controller: email_controller,
+                      controller: emailController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'فضلًا ادخل بريدك الإلكتروني';
@@ -149,7 +147,7 @@ class _SignUpFormState extends State<SignUpForm> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: TextFormField(
-                  controller: password_controler,
+                  controller: passwordController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'فضلًا ادخل كلمة السر';
@@ -159,7 +157,7 @@ class _SignUpFormState extends State<SignUpForm> {
                     }
                     return null;
                   },
-                  obscureText: pass_isObscures ? true : false,
+                  obscureText: passIsObscures ? true : false,
                   decoration: InputDecoration(
                       labelText: 'كلمة السر',
                       labelStyle: const TextStyle(
@@ -171,10 +169,10 @@ class _SignUpFormState extends State<SignUpForm> {
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
-                            pass_isObscures = !pass_isObscures;
+                            passIsObscures = !passIsObscures;
                           });
                         },
-                        icon: pass_isObscures
+                        icon: passIsObscures
                             ? const Icon(
                                 Icons.visibility_off,
                                 color: kTextFieldColor,
@@ -190,17 +188,17 @@ class _SignUpFormState extends State<SignUpForm> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: TextFormField(
-                  controller: conform_password_controller,
+                  controller: conformPasswordController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'فضلا ادخل كلمة السر';
                     }
-                    if (value != password_controler.text) {
+                    if (value != passwordController.text) {
                       return "كلمة السر لا تتطابق";
                     }
                     return null;
                   },
-                  obscureText: conform_pass_isObscure ? true : false,
+                  obscureText: conformPassIsObscures ? true : false,
                   decoration: InputDecoration(
                       labelText: 'تأكيد كلمة السر',
                       labelStyle: const TextStyle(
@@ -212,10 +210,10 @@ class _SignUpFormState extends State<SignUpForm> {
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
-                            conform_pass_isObscure = !conform_pass_isObscure;
+                            conformPassIsObscures = !conformPassIsObscures;
                           });
                         },
-                        icon: conform_pass_isObscure
+                        icon: conformPassIsObscures
                             ? const Icon(
                                 Icons.visibility_off,
                                 color: kTextFieldColor,
@@ -238,10 +236,10 @@ class _SignUpFormState extends State<SignUpForm> {
         ),
         InkWell(
           onTap: () async {
-            if (_SignUpformKey.currentState!.validate()) {
+            if (_signUpformKey.currentState!.validate()) {
               AllDialogues.showDialogue(title: "جاري التحميل...");
               final validEmail =
-                  await emailIdCheck(email_controller.text.toLowerCase());
+                  await emailIdCheck(emailController.text.toLowerCase());
               //======after validation the form I navigate the user for email verification in the verify screen in reset folder.
               // ====by using the Get.to method. //make sure it is in the yaml class in the motazen share code
               AllDialogues.hideloading();
@@ -249,21 +247,21 @@ class _SignUpFormState extends State<SignUpForm> {
                 AllDialogues.showErrorDialog(
                     title: "!البريد الإلكتروني موجود مُسبقًا",
                     discription:
-                        " مسجل مسبقًا, الرجاء التسجيل ببريد آخر ${email_controller.text} البريد الإلكتروني  ");
+                        " مسجل مسبقًا, الرجاء التسجيل ببريد آخر ${emailController.text} البريد الإلكتروني  ");
               } else {
-                final validUserName = await usernameCheck(
-                    user_name_controller.text.toLowerCase());
+                final validUserName =
+                    await usernameCheck(userNameController.text.toLowerCase());
                 if (!validUserName) {
                   AllDialogues.showErrorDialog(
                       title: "!هذا المستخدم مسجل سابقًا",
                       discription:
-                          " مسجل سابقًا، سجّل باسم مستخدم جديد ${user_name_controller.text} ");
+                          " مسجل سابقًا، سجّل باسم مستخدم جديد ${userNameController.text} ");
                 } else {
                   await Get.to(() => VerifyScreen(
-                        first_name: first_name_controller.text,
-                        user_name: user_name_controller.text.toLowerCase(),
-                        email: email_controller.text.toLowerCase(),
-                        pass: password_controler.text,
+                        firstName: firstNameController.text,
+                        userName: userNameController.text.toLowerCase(),
+                        email: emailController.text.toLowerCase(),
+                        pass: passwordController.text,
                       ));
                 }
               }

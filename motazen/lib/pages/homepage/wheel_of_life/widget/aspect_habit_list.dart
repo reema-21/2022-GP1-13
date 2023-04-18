@@ -1,15 +1,12 @@
-// ignore_for_file: file_names, non_constant_identifier_names, unused_local_variable
-//man
 import 'package:flutter/material.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/entities/habit.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
+import 'package:motazen/pages/goals_habits_tab/details/new_habit_page.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-
-import '../../../goals_habits_tab/habit_edit.dart';
 
 class AspectHabit extends StatefulWidget {
   final IsarService isr;
@@ -54,7 +51,6 @@ class _AspectGoal extends State<AspectHabit> {
             itemBuilder: (context, index) {
               final habit = habits[index];
               final startData = habits[index].frequency;
-              final aspectName = habit.aspect.value?.name;
               return Container(
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(10)),
@@ -88,8 +84,8 @@ class _AspectGoal extends State<AspectHabit> {
                       // should return me to the page with add field
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return EditHbit(
-                            isr: widget.isr, HabitId: habit.id); // must be the
+                        return HabitDetailPage(
+                            isr: widget.isr, habitId: habit.id); // must be the
                       }));
                     },
                   ),

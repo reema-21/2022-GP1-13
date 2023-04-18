@@ -1,5 +1,3 @@
-// ignore_for_file: file_names, camel_case_types
-//Reemas //lastIntegration
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -14,7 +12,7 @@ import 'package:motazen/models/community.dart';
 import 'package:motazen/pages/communities_page/community/community_home.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-import '../../entities/CommunityID.dart';
+import '../../entities/community_id.dart';
 import '../../models/notification_model.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -278,12 +276,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                 type:
                                                     '${communityController.listOfNotifications[index].notificationType}');
                                             Get.to(CommunityHomePage(
-                                                comm: comm,
-                                                cameFromNotification:
-                                                    communityController
-                                                        .listOfNotifications[
-                                                            index]
-                                                        .post));
+                                              comm: comm,
+                                              cameFromNotification:
+                                                  communityController
+                                                      .listOfNotifications[
+                                                          index]
+                                                      .post,
+                                              fromInvite: false,
+                                            ));
                                           }
                                           // } else if (communityController
                                           //         .listOfNotifications[index]
@@ -397,7 +397,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             backgroundImage: notification.senderAvtar == ""
                                 ? null
                                 : CachedNetworkImageProvider(
-                                    notification.senderAvtar!,
+                                    notification.senderAvtar,
                                     errorListener: () {}),
                             radius: 32,
                             backgroundColor: kWhiteColor,
@@ -446,7 +446,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     TextSpan(
                         text: notification.comm != null &&
                                 notification.notificationType != "alert"
-                            ? notification.comm.founderUsername
+                            ? notification.userName
                             : notification.comm == null
                                 ? notification.userName
                                 : "",
@@ -501,6 +501,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               InkWell(
                                 onTap: () {
                                   rejectInvitaion(notification);
+                                  if (communityController
+                                          .listOfNotifications.length ==
+                                      1) {
+                                    communityController.listOfNotifications
+                                        .clear();
+                                    setState(() {
+                                      length = 0;
+                                    });
+                                  }
                                 },
                                 child: const Icon(
                                   Icons.cancel_outlined,
@@ -621,11 +630,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     onPressed: () async {
                       if (formKey.currentState!.validate() &&
                           goalsName.isNotEmpty) {
+                        //here
                         CommunityID newCom =
                             CommunityID(userID: IsarService.getUserID);
-                        newCom.CommunityId = notification.comm.id;
-                        isSelected.Communities.add(newCom);
+                        newCom.communityId = notification.comm.id;
+                        newCom.goal.value = isSelected;
+                        isSelected.communities.add(newCom);
+
                         IsarService iser = IsarService();
+                        iser.saveCom(newCom);
+
                         iser.createGoal(isSelected);
 
                         dynamic comDoc;
@@ -686,7 +700,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         Get.back();
                         Get.to(CommunityHomePage(
                             comm: communityController
-                                .listOfJoinedCommunities.last));
+                                .listOfJoinedCommunities.last,
+                            fromInvite: true));
                       }
 
                       //----------------------------------------------------//

@@ -7,7 +7,7 @@ part of 'goal.dart';
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
 extension GetGoalCollection on Isar {
   IsarCollection<Goal> get goals => this.collection();
@@ -17,9 +17,9 @@ const GoalSchema = CollectionSchema(
   name: r'Goal',
   id: 4693499363663894908,
   properties: {
-    r'DescriptiveGoalDuration': PropertySchema(
+    r'descriptiveGoalDuration': PropertySchema(
       id: 0,
-      name: r'DescriptiveGoalDuration',
+      name: r'descriptiveGoalDuration',
       type: IsarType.string,
     ),
     r'endDate': PropertySchema(
@@ -97,9 +97,9 @@ const GoalSchema = CollectionSchema(
       target: r'LocalTask',
       single: false,
     ),
-    r'Communities': LinkSchema(
-      id: 279475004078980272,
-      name: r'Communities',
+    r'communities': LinkSchema(
+      id: -1017097159980113026,
+      name: r'communities',
       target: r'CommunityID',
       single: false,
     )
@@ -108,7 +108,7 @@ const GoalSchema = CollectionSchema(
   getId: _goalGetId,
   getLinks: _goalGetLinks,
   attach: _goalAttach,
-  version: '3.0.5',
+  version: '3.1.0',
 );
 
 int _goalEstimateSize(
@@ -117,7 +117,7 @@ int _goalEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.DescriptiveGoalDuration.length * 3;
+  bytesCount += 3 + object.descriptiveGoalDuration.length * 3;
   bytesCount += 3 + object.titel.length * 3;
   bytesCount += 3 + object.userID.length * 3;
   return bytesCount;
@@ -129,7 +129,7 @@ void _goalSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.DescriptiveGoalDuration);
+  writer.writeString(offsets[0], object.descriptiveGoalDuration);
   writer.writeDateTime(offsets[1], object.endDate);
   writer.writeLong(offsets[2], object.goalDuration);
   writer.writeDouble(offsets[3], object.goalProgressPercentage);
@@ -148,7 +148,7 @@ Goal _goalDeserialize(
   final object = Goal(
     userID: reader.readString(offsets[7]),
   );
-  object.DescriptiveGoalDuration = reader.readString(offsets[0]);
+  object.descriptiveGoalDuration = reader.readString(offsets[0]);
   object.endDate = reader.readDateTime(offsets[1]);
   object.goalDuration = reader.readLong(offsets[2]);
   object.goalProgressPercentage = reader.readDouble(offsets[3]);
@@ -196,7 +196,7 @@ List<IsarLinkBase<dynamic>> _goalGetLinks(Goal object) {
     object.goalDependency,
     object.aspect,
     object.task,
-    object.Communities
+    object.communities
   ];
 }
 
@@ -206,8 +206,8 @@ void _goalAttach(IsarCollection<dynamic> col, Id id, Goal object) {
       .attach(col, col.isar.collection<Goal>(), r'goalDependency', id);
   object.aspect.attach(col, col.isar.collection<Aspect>(), r'aspect', id);
   object.task.attach(col, col.isar.collection<LocalTask>(), r'task', id);
-  object.Communities.attach(
-      col, col.isar.collection<CommunityID>(), r'Communities', id);
+  object.communities
+      .attach(col, col.isar.collection<CommunityID>(), r'communities', id);
 }
 
 extension GoalQueryWhereSort on QueryBuilder<Goal, Goal, QWhere> {
@@ -391,7 +391,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'DescriptiveGoalDuration',
+        property: r'descriptiveGoalDuration',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -407,7 +407,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'DescriptiveGoalDuration',
+        property: r'descriptiveGoalDuration',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -423,7 +423,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'DescriptiveGoalDuration',
+        property: r'descriptiveGoalDuration',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -440,7 +440,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'DescriptiveGoalDuration',
+        property: r'descriptiveGoalDuration',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -457,7 +457,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'DescriptiveGoalDuration',
+        property: r'descriptiveGoalDuration',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -471,7 +471,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'DescriptiveGoalDuration',
+        property: r'descriptiveGoalDuration',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -483,7 +483,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
           {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'DescriptiveGoalDuration',
+        property: r'descriptiveGoalDuration',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -495,7 +495,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
           {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'DescriptiveGoalDuration',
+        property: r'descriptiveGoalDuration',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -506,7 +506,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
       descriptiveGoalDurationIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'DescriptiveGoalDuration',
+        property: r'descriptiveGoalDuration',
         value: '',
       ));
     });
@@ -516,7 +516,7 @@ extension GoalQueryFilter on QueryBuilder<Goal, Goal, QFilterCondition> {
       descriptiveGoalDurationIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'DescriptiveGoalDuration',
+        property: r'descriptiveGoalDuration',
         value: '',
       ));
     });
@@ -1194,26 +1194,26 @@ extension GoalQueryLinks on QueryBuilder<Goal, Goal, QFilterCondition> {
   QueryBuilder<Goal, Goal, QAfterFilterCondition> communities(
       FilterQuery<CommunityID> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'Communities');
+      return query.link(q, r'communities');
     });
   }
 
   QueryBuilder<Goal, Goal, QAfterFilterCondition> communitiesLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'Communities', length, true, length, true);
+      return query.linkLength(r'communities', length, true, length, true);
     });
   }
 
   QueryBuilder<Goal, Goal, QAfterFilterCondition> communitiesIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'Communities', 0, true, 0, true);
+      return query.linkLength(r'communities', 0, true, 0, true);
     });
   }
 
   QueryBuilder<Goal, Goal, QAfterFilterCondition> communitiesIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'Communities', 0, false, 999999, true);
+      return query.linkLength(r'communities', 0, false, 999999, true);
     });
   }
 
@@ -1222,7 +1222,7 @@ extension GoalQueryLinks on QueryBuilder<Goal, Goal, QFilterCondition> {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'Communities', 0, true, length, include);
+      return query.linkLength(r'communities', 0, true, length, include);
     });
   }
 
@@ -1231,7 +1231,7 @@ extension GoalQueryLinks on QueryBuilder<Goal, Goal, QFilterCondition> {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'Communities', length, include, 999999, true);
+      return query.linkLength(r'communities', length, include, 999999, true);
     });
   }
 
@@ -1243,7 +1243,7 @@ extension GoalQueryLinks on QueryBuilder<Goal, Goal, QFilterCondition> {
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'Communities', lower, includeLower, upper, includeUpper);
+          r'communities', lower, includeLower, upper, includeUpper);
     });
   }
 }
@@ -1251,13 +1251,13 @@ extension GoalQueryLinks on QueryBuilder<Goal, Goal, QFilterCondition> {
 extension GoalQuerySortBy on QueryBuilder<Goal, Goal, QSortBy> {
   QueryBuilder<Goal, Goal, QAfterSortBy> sortByDescriptiveGoalDuration() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'DescriptiveGoalDuration', Sort.asc);
+      return query.addSortBy(r'descriptiveGoalDuration', Sort.asc);
     });
   }
 
   QueryBuilder<Goal, Goal, QAfterSortBy> sortByDescriptiveGoalDurationDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'DescriptiveGoalDuration', Sort.desc);
+      return query.addSortBy(r'descriptiveGoalDuration', Sort.desc);
     });
   }
 
@@ -1349,13 +1349,13 @@ extension GoalQuerySortBy on QueryBuilder<Goal, Goal, QSortBy> {
 extension GoalQuerySortThenBy on QueryBuilder<Goal, Goal, QSortThenBy> {
   QueryBuilder<Goal, Goal, QAfterSortBy> thenByDescriptiveGoalDuration() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'DescriptiveGoalDuration', Sort.asc);
+      return query.addSortBy(r'descriptiveGoalDuration', Sort.asc);
     });
   }
 
   QueryBuilder<Goal, Goal, QAfterSortBy> thenByDescriptiveGoalDurationDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'DescriptiveGoalDuration', Sort.desc);
+      return query.addSortBy(r'descriptiveGoalDuration', Sort.desc);
     });
   }
 
@@ -1460,7 +1460,7 @@ extension GoalQueryWhereDistinct on QueryBuilder<Goal, Goal, QDistinct> {
   QueryBuilder<Goal, Goal, QDistinct> distinctByDescriptiveGoalDuration(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'DescriptiveGoalDuration',
+      return query.addDistinctBy(r'descriptiveGoalDuration',
           caseSensitive: caseSensitive);
     });
   }
@@ -1518,9 +1518,9 @@ extension GoalQueryProperty on QueryBuilder<Goal, Goal, QQueryProperty> {
   }
 
   QueryBuilder<Goal, String, QQueryOperations>
-      DescriptiveGoalDurationProperty() {
+      descriptiveGoalDurationProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'DescriptiveGoalDuration');
+      return query.addPropertyName(r'descriptiveGoalDuration');
     });
   }
 

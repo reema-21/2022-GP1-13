@@ -1,24 +1,23 @@
-// ignore_for_file: camel_case_types, non_constant_identifier_names, unused_field, unused_local_variable, must_call_super
-//new
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
-import 'package:motazen/entities/LocalTask.dart';
-import 'package:motazen/models/taskClass.dart';
+import 'package:motazen/entities/local_task.dart';
+
+import 'package:motazen/models/task_model.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/controllers/taskLocal_controller.dart';
+import 'package:motazen/controllers/localtask_controller.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
+import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import '../../../Sidebar_and_navigation/navigation-bar.dart';
+import '../../../Sidebar_and_navigation/navigation_bar.dart';
 import '/entities/goal.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../../../entities/aspect.dart';
-import 'Edit_task.dart';
+import '../../../../entities/aspect.dart';
+import 'edit_task.dart';
 
-//alertof completion //tasks // getbeck to the list page // goal dependency
-class goalDetails extends StatefulWidget {
+class EditGoal extends StatefulWidget {
   final IsarService isr;
   final String goalName;
   final String goalAspect;
@@ -32,7 +31,7 @@ class goalDetails extends StatefulWidget {
   final String dueDataDescription;
   final int id;
   final List<LocalTask> goalTasks;
-  const goalDetails({
+  const EditGoal({
     super.key,
     required this.isr,
     required this.goalName,
@@ -50,10 +49,10 @@ class goalDetails extends StatefulWidget {
   });
 
   @override
-  State<goalDetails> createState() => _goalDetailsState();
+  State<EditGoal> createState() => _EditGoalState();
 }
 
-class _goalDetailsState extends State<goalDetails> {
+class _EditGoalState extends State<EditGoal> {
   Future<List<LocalTask>> getTasks() async {
     Goal? goal = Goal(userID: IsarService.getUserID);
     goal = await widget.isr.getSepecificGoall(widget.id);
@@ -67,7 +66,6 @@ class _goalDetailsState extends State<goalDetails> {
   List<LocalTask> goalTasks = [];
   List<LocalTask> oldgoalTasks = [];
   int checkGoalDuration = 0;
-  bool isFirstclick = true;
   DateTimeRange? selectedDates;
 
   String duration = "لا يوجد فترة";
@@ -75,7 +73,6 @@ class _goalDetailsState extends State<goalDetails> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   final _goalNmaeController = TextEditingController();
   final _goalaspectController = TextEditingController();
-  final _dueDateController = TextEditingController();
   String? isSelected;
 
   @override
@@ -97,7 +94,7 @@ class _goalDetailsState extends State<goalDetails> {
     importance = widget.importance;
     for (int i = 0; i < widget.selected.length; i++) {
       String name = widget.selected[i].name;
-      if (name.contains(widget.goalAspect)) {
+      if (name == widget.goalAspect) {
         isSelected = widget.selected[i].name;
       }
     }
@@ -107,17 +104,18 @@ class _goalDetailsState extends State<goalDetails> {
       for (var i in value) {
         TaskData t = TaskData();
         t.name = i.name;
-        for (var j in i.TaskDependency) {
-          t.TaskDependency.add(j.name);
+        for (var j in i.taskDependency) {
+          t.taskDependency.add(j.name);
         }
-        freq.OrginalTasks.value.add(t);
+        freq.orginalTasks.value.add(t);
       }
     });
+    super.initState();
   }
 
   Goal? goal = Goal(userID: IsarService.getUserID);
 
-  Addgoal() async {
+  Future<void> addgoal() async {
     goal = await widget.isr.getSepecificGoall(widget.id);
     goal?.titel = _goalNmaeController.text;
     goal?.importance = importance;
@@ -125,7 +123,7 @@ class _goalDetailsState extends State<goalDetails> {
     goal?.aspect.value = selected;
     selected!.goals.add(goal!);
     widget.isr.createAspect(selected);
-    goal?.DescriptiveGoalDuration = duration;
+    goal?.descriptiveGoalDuration = duration;
     goal?.goalDuration = goalDuration;
 
     var task = [];
@@ -143,7 +141,7 @@ class _goalDetailsState extends State<goalDetails> {
         goal!.task.add(y);
         y.goal.value = goal;
         goal!.task.add(y); // to link the task to the goal
-        widget.isr.saveTask(y);
+        await widget.isr.saveTask(y);
       }
     }
 
@@ -154,22 +152,20 @@ class _goalDetailsState extends State<goalDetails> {
       goal!.endDate = goal!.endDate;
       goal!.startData = goal!.startData;
     }
-    widget.isr.UpdateGoal(goal!);
-    freq.TaskDuration = 0.obs;
+    widget.isr.updateGoal(goal!);
+    freq.taskDuration = 0.obs;
     freq.currentTaskDuration = 0.obs;
     freq.totalTasksDuration = 0.obs;
     freq.iscool = false.obs;
     freq.tem = 0.obs;
     freq.isSelected = "أيام".obs;
     freq.goalTask = Rx<List<LocalTask>>([]);
-    Rx<List<TaskData>> allTaskForDepency = Rx<List<TaskData>>([]);
-
     freq.newTasksAddedInEditing = Rx<List<LocalTask>>([]);
-    freq.TasksMenue.value.clear();
+    freq.tasksMenue.value.clear();
     freq.selectedTasks.value.clear();
     freq.itemCount = 0.obs;
     freq.itemCountAdd = 0.obs;
-    Get.to(() => const navBar(
+    Get.to(() => const NavBar(
           selectedIndex: 1,
         ));
   }
@@ -177,7 +173,6 @@ class _goalDetailsState extends State<goalDetails> {
 //do the case when the date was selceted and then deleted //
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
         key: _scaffoldkey,
         appBar: AppBar(
@@ -202,21 +197,21 @@ class _goalDetailsState extends State<goalDetails> {
                       goal = await widget.isr.getSepecificGoall(widget.id);
                       g = goal!.task.toList();
                       for (int i = 0; i < g.length; i++) {
-                        widget.isr.deleteTask(g[i].id);
+                        widget.isr.deleteTaskByIdSync(g[i].id);
                       }
                       for (int i = 0; i < oldgoalTasks.length; i++) {
                         //this for canceling
                         //here i will add new code for the dependncy
-                        List<String> Taskss =
-                            freq.OrginalTasks.value[i].TaskDependency;
-                        await Future.forEach(Taskss, (item) async {
+                        List<String> tasks =
+                            freq.orginalTasks.value[i].taskDependency;
+                        await Future.forEach(tasks, (item) async {
                           LocalTask? y =
                               LocalTask(userID: IsarService.getUserID);
                           String name = item;
 
                           y = await widget.isr.findSepecificTask(name);
                           oldgoalTasks[i]
-                              .TaskDependency
+                              .taskDependency
                               .add(y!); // to link task and it depends tasks ;
                         });
 
@@ -230,7 +225,7 @@ class _goalDetailsState extends State<goalDetails> {
                         widget.isr.saveTask(oldgoalTasks[i]);
                       }
 
-                      freq.TaskDuration = 0.obs;
+                      freq.taskDuration = 0.obs;
                       freq.currentTaskDuration = 0.obs;
                       freq.totalTasksDuration = 0.obs;
                       freq.iscool = false.obs;
@@ -241,9 +236,9 @@ class _goalDetailsState extends State<goalDetails> {
 
                       freq.newTasksAddedInEditing = Rx<List<LocalTask>>([]);
 
-                      freq.TasksMenue.value.clear();
+                      freq.tasksMenue.value.clear();
                       freq.selectedTasks.value.clear();
-                      freq.OrginalTasks.value.clear();
+                      freq.orginalTasks.value.clear();
 
                       freq.itemCount = 0.obs;
                       freq.itemCountAdd = 0.obs;
@@ -253,7 +248,7 @@ class _goalDetailsState extends State<goalDetails> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const navBar(selectedIndex: 1)));
+                                    const NavBar(selectedIndex: 1)));
                       }
                     }
                   },
@@ -459,7 +454,7 @@ class _goalDetailsState extends State<goalDetails> {
                       ),
 
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
                           if (formKey.currentState!.validate()) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 backgroundColor: Colors.green.shade300,
@@ -473,8 +468,13 @@ class _goalDetailsState extends State<goalDetails> {
                                     )
                                   ],
                                 )));
-
-                            Addgoal()();
+                            await addgoal();
+                            if (mounted) {
+                              ItemList().createTaskTodoList(
+                                  Provider.of<AspectController>(context,
+                                          listen: false)
+                                      .selected);
+                            }
                           }
                         },
                         child: Container(

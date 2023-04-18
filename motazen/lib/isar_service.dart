@@ -1,14 +1,15 @@
-// ignore_for_file: file_names, non_constant_identifier_names, await_only_futures
-//here is manaras
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:motazen/entities/CommunityID.dart';
-import 'package:motazen/entities/LocalTask.dart';
+import 'package:get/get.dart';
+import 'package:motazen/entities/community_id.dart';
 import 'package:motazen/entities/imporvment.dart';
+import 'package:motazen/entities/local_task.dart';
 import 'package:motazen/theme.dart';
 import '/entities/aspect.dart';
 import '/entities/goal.dart';
 import '/entities/habit.dart';
 import 'package:isar/isar.dart';
+import 'controllers/community_controller.dart';
+import 'package:path_provider/path_provider.dart';
 
 class IsarService {
   late Future<Isar> db;
@@ -18,6 +19,7 @@ class IsarService {
   static String get getUserID => FirebaseAuth.instance.currentUser?.email ?? "";
 
   Future<Isar> openIsar() async {
+    final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
       //if didn't opend before open one if iopen used an exsit one
       return await Isar.open(
@@ -30,7 +32,8 @@ class IsarService {
             CommunityIDSchema
           ] //still the habit schema
           ,
-          inspector: true);
+          inspector: true,
+          directory: dir.path);
     }
     return Future.value(Isar.getInstance());
   }
@@ -43,7 +46,7 @@ class IsarService {
     return true;
   } //<int> because we want to get the id of the  ceated thing
 
-  void UpdateTask(LocalTask tem) async {
+  void updateTask(LocalTask tem) async {
     final isar = await db;
 
     await isar.writeTxn(() async {
@@ -61,7 +64,7 @@ class IsarService {
     });
   }
 
-  Future<LocalTask?> getSepecificTask(int id) async {
+  Future<LocalTask?> findSepecificTaskByID(int id) async {
     final isar = await db;
     return await isar.localTasks
         .where()
@@ -81,7 +84,7 @@ class IsarService {
         .findFirst();
   }
 
-  void deleteTask3(LocalTask task) async {
+  void deleteTask(LocalTask task) async {
     final isar = await db;
 
     await isar.writeTxn(() async {
@@ -115,7 +118,7 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.habits.putSync(newHabit));
   }
 
-  Future<void> CreateCommunity(CommunityID newCommunity) async {
+  Future<void> createCommunity(CommunityID newCommunity) async {
     //Add habits
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.communityIDs.putSync(newCommunity));
@@ -240,17 +243,36 @@ class IsarService {
         .findFirst();
     tempAspect?.percentagePoints = points;
     tempAspect!.percentagePoints = points;
-    Imporvment newImprove = Imporvment(userID: IsarService.getUserID);
-    newImprove.date = DateTime.utc(2023, 1, 1); //!Should be DateTime.now();
-    newImprove.sum = points;
-    tempAspect.imporvmentd.add(newImprove);
-    isar.writeTxnSync<int>(() => isar.aspects.putSync(tempAspect));
+    isar.writeTxn(() async => await isar.aspects.put(tempAspect));
+  }
 
-    // final isar = await db;
-    // Aspect newAspect = Aspect(userID: IsarService.getUserID);
-    // newAspect.name = aspectName;
-    // newAspect.percentagePoints = points;
-    // await isar.writeTxnSync<int>(() => isar.aspects.putSync(newAspect)); // update that object
+  Future<void> addImprovement(double points,
+      {Aspect? aspect, String? aspectName}) async {
+    final isar = await db;
+    if (aspectName != null || aspect == null) {
+      aspect = await findSepecificAspect(aspectName!);
+    }
+
+    Imporvment newImprove = Imporvment(userID: IsarService.getUserID);
+    isar.writeTxn(() async {
+      newImprove.date = DateTime.now();
+      newImprove.sum = points;
+      await isar.imporvments.put(newImprove);
+      aspect!.imporvmentd.add(newImprove);
+      await aspect.imporvmentd.save();
+    });
+  }
+
+  Future<void> removeAspectImprovement(String aspectName) async {
+    final isar = await db;
+    Aspect aspect = Aspect(userID: IsarService.getUserID);
+    aspect = (await findSepecificAspect(aspectName))!;
+    List<Imporvment> aspectImprovements = aspect.imporvmentd.toList();
+    isar.writeTxn(() async {
+      for (var improvement in aspectImprovements) {
+        await isar.imporvments.delete(improvement.id);
+      }
+    });
   }
 
   // to get all other collection records based on a specific Aspect
@@ -303,6 +325,11 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.localTasks.putSync(task));
   }
 
+  Future<void> saveCom(CommunityID task) async {
+    final isar = await db;
+    isar.writeTxnSync<int>(() => isar.communityIDs.putSync(task));
+  }
+
   Future<void> addAspectGoalLink(Goal goal, Aspect aspect) async {
     //create the link
     aspect.goals.add(goal);
@@ -313,12 +340,12 @@ class IsarService {
     });
   }
 
-  Future<void> updateTask(LocalTask task) async {
-    final isar = await db;
-    isar.writeTxnSync<int>(() => isar.localTasks.putSync(task));
-  }
+  // Future<void> updateTaskSync(LocalTask task) async {
+  //   final isar = await db;
+  //   isar.writeTxnSync<int>(() => isar.localTasks.putSync(task));
+  // }
 
-  Future<void> deleteTask(int id) async {
+  Future<void> deleteTaskByIdSync(int id) async {
     final isar = await db;
     isar.writeTxnSync<bool>(() => isar.localTasks.deleteSync(id));
   }
@@ -334,7 +361,7 @@ class IsarService {
   Future<Goal?> getSepecificGoal(int id) async {
     final isar = await db;
     await isar.writeTxn(() async {
-      return await isar.goals
+      return isar.goals
           .filter()
           .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
           .idEqualTo(id);
@@ -344,7 +371,8 @@ class IsarService {
 
   Future<Aspect?> getAspectByGoal(int goalId) async {
     final isar = await db;
-    return await isar.aspects
+
+    return isar.aspects
         .filter()
         .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
         .goals((q) => q.idEqualTo(goalId))
@@ -354,7 +382,7 @@ class IsarService {
   Future<Goal?> getSepecificGoall(int id) async {
     final isar = await db;
 
-    return await isar.goals
+    return isar.goals
         .filter()
         .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
         .idEqualTo(id)
@@ -364,7 +392,7 @@ class IsarService {
   Future<Goal?> getgoal(String name) async {
     final isar = await db;
 
-    return await isar.goals
+    return isar.goals
         .filter()
         .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
         .titelEqualTo(name)
@@ -383,7 +411,7 @@ class IsarService {
   Future<Habit?> getSepecificHabit(int id) async {
     final isar = await db;
 
-    return await isar.habits
+    return isar.habits
         .filter()
         .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
         .idEqualTo(id)
@@ -391,7 +419,7 @@ class IsarService {
   }
 
   //updates the value of isSelected to true
-  void selectAspect(String name) async {
+  Future<bool> selectAspect(String name) async {
     final isar = await db;
     Aspect? selectedAspect = await isar.aspects
         .filter()
@@ -400,13 +428,13 @@ class IsarService {
         .findFirst();
     selectedAspect?.isSelected = true;
     if (selectedAspect != null) {
-      isar.writeTxnSync<int>(() => isar.aspects.putSync(selectedAspect));
-      // update that object
+      await isar.writeTxn(() async => await isar.aspects.put(selectedAspect));
     }
+    return true;
   }
 
 //updates isSelected value to false for a single aspect
-  void deselectAspect(String name) async {
+  Future<bool> deselectAspect(String name) async {
     final isar = await db;
     Aspect? selectedAspect = await isar.aspects
         .filter()
@@ -414,12 +442,12 @@ class IsarService {
         .nameEqualTo(name)
         .findFirst();
     selectedAspect!.isSelected = false;
-    isar.writeTxnSync<int>(
-        () => isar.aspects.putSync(selectedAspect)); // update that object
+    await isar.writeTxn(() async => await isar.aspects.put(selectedAspect));
+    return true;
   }
 
 //update the aspect points
-  void updateAspectPercentage(int id, double newSum) async {
+  Future<void> updateAspectPercentage(int id, double newSum) async {
     final isar = await db;
     Aspect? updatedAspect = await isar.aspects
         .filter()
@@ -433,8 +461,8 @@ class IsarService {
     if (newSum != 0) {
       updatedAspect.imporvmentd.add(newImprove);
     }
-    isar.writeTxnSync<int>(
-        () => isar.aspects.putSync(updatedAspect)); // update that object
+    isar.writeTxn<int>(() async =>
+        await isar.aspects.put(updatedAspect)); // update that object
   }
 
 //return the isSelected value of a single aspect
@@ -458,6 +486,15 @@ class IsarService {
         .findAll();
   }
 
+  Future<void> updateTaskRank(int id, double rank) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      LocalTask? task = await findSepecificTaskByID(id);
+      task!.rank = rank;
+      await isar.localTasks.put(task);
+    });
+  }
+
   //updates the completion percentage of a task
   Future<void> updateTaskPercentage(int id, double percentage) async {
     final isar = await db;
@@ -467,7 +504,8 @@ class IsarService {
         .idEqualTo(id)
         .findFirst();
     completedTask!.taskCompletionPercentage = percentage;
-    await isar.writeTxnSync(() => isar.localTasks.putSync(completedTask));
+
+    isar.writeTxn(() async => await isar.localTasks.put(completedTask));
   }
 
   //change the state of completeForToday
@@ -483,7 +521,8 @@ class IsarService {
     //crossout task
     selected.completedForToday = true;
     //update task
-    await isar.writeTxnSync(() => isar.localTasks.putSync(selected));
+
+    isar.writeTxnSync(() => isar.localTasks.putSync(selected));
   }
 
   Future<void> undoCompleteForTodayTask(int id) async {
@@ -497,7 +536,8 @@ class IsarService {
     selectedLocalTask!.completedForToday = false;
     //decrement progress
     selectedLocalTask.amountCompleted = selectedLocalTask.amountCompleted - 1;
-    await isar.writeTxnSync(() => isar.localTasks.putSync(selectedLocalTask));
+
+    isar.writeTxnSync(() => isar.localTasks.putSync(selectedLocalTask));
   }
 
   //change the state of completeForToday for a habit
@@ -511,7 +551,8 @@ class IsarService {
     //crossout habit
     selected!.completedForToday = true;
     //update habit
-    await isar.writeTxnSync(() => isar.habits.putSync(selected));
+
+    isar.writeTxnSync(() => isar.habits.putSync(selected));
   }
 
   Future<void> undoCompleteForTodayHabit(int id) async {
@@ -524,7 +565,8 @@ class IsarService {
     //uncross a habit
     selected!.completedForToday = false;
     //update habit
-    await isar.writeTxnSync(() => isar.habits.putSync(selected));
+
+    isar.writeTxnSync(() => isar.habits.putSync(selected));
   }
 
   //resert check
@@ -537,7 +579,8 @@ class IsarService {
         .findFirst();
     //uncross task
     selectedLocalTask!.completedForToday = false;
-    await isar.writeTxnSync(() => isar.localTasks.putSync(selectedLocalTask));
+
+    isar.writeTxnSync(() => isar.localTasks.putSync(selectedLocalTask));
   }
 
   //updates the completion percentage of a goal
@@ -549,9 +592,9 @@ class IsarService {
         .idEqualTo(id)
         .findFirst();
     completedGoal!.goalProgressPercentage = percentage;
-    await isar.writeTxnSync(() => isar.goals.putSync(completedGoal));
-    if (completedGoal.Communities.isNotEmpty) {
-      List<dynamic> publicCommunities = completedGoal.Communities.toList();
+    isar.writeTxn(() async => await isar.goals.put(completedGoal));
+    if (completedGoal.communities.isNotEmpty) {
+      List<dynamic> publicCommunities = completedGoal.communities.toList();
 
       //!there is a chance of an error if the community is private there will be
       //so here we first need to know if this goal is shared in private or puublic community and the fetch the progress list in the right collection :)
@@ -560,97 +603,56 @@ class IsarService {
       for (int v = 0; v < publicCommunities.length; v++) {
         //first get the community by id
 
-        dynamic CommunityDoc;
-        CommunityDoc = await firestore
+        dynamic communityDoc;
+        communityDoc = await firestore
             .collection('public_communities')
-            .doc(publicCommunities[v].CommunityId)
+            .doc(publicCommunities[v].communityId)
             .get();
-        if (CommunityDoc.data() != null) {
-          final CuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+        if (communityDoc.data() != null) {
+          final currentCommunityDoc = communityDoc.data()! as dynamic;
 
           final user = FirebaseAuth.instance.currentUser!.uid;
-          List Communitiess = [];
-          Communitiess = CuurentCommunityDoc['progress_list'];
-          for (int i = 0; i < Communitiess.length; i++) {
-            if (Communitiess[i][user] != null) {
-              CuurentCommunityDoc['progress_list'][i][user] = percentage;
+          List communities = [];
+          communities = currentCommunityDoc['progress_list'];
+          for (int i = 0; i < communities.length; i++) {
+            if (communities[i][user] != null) {
+              currentCommunityDoc['progress_list'][i][user] = percentage;
 
               await firestore
                   .collection('public_communities')
-                  .doc(publicCommunities[v].CommunityId)
+                  .doc(publicCommunities[v].communityId)
                   .update({
-                'progress_list': CuurentCommunityDoc['progress_list'],
+                'progress_list': currentCommunityDoc['progress_list'],
               });
             }
           }
         } else {
           //meanig it is a private community
-          CommunityDoc = await firestore
+          communityDoc = await firestore
               .collection('private_communities')
-              .doc(publicCommunities[v].CommunityId)
+              .doc(publicCommunities[v].communityId)
               .get();
-          final CuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+          final currentCommunityDoc = communityDoc.data()! as dynamic;
 
           final user = FirebaseAuth.instance.currentUser!.uid;
-          List Communitiess = [];
-          Communitiess = CuurentCommunityDoc['progress_list'];
-          for (int i = 0; i < Communitiess.length; i++) {
-            if (Communitiess[i][user] != null) {
-              CuurentCommunityDoc['progress_list'][i][user] = percentage;
+          List communities = [];
+          communities = currentCommunityDoc['progress_list'];
+          for (int i = 0; i < communities.length; i++) {
+            if (communities[i][user] != null) {
+              currentCommunityDoc['progress_list'][i][user] = percentage;
 
               await firestore
                   .collection('private_communities')
-                  .doc(publicCommunities[v].CommunityId)
+                  .doc(publicCommunities[v].communityId)
                   .update({
-                'progress_list': CuurentCommunityDoc['progress_list'],
+                'progress_list': currentCommunityDoc['progress_list'],
               });
             }
           }
         }
-        //   CommunityDoc = await firestore
-        // .collection('public_communities')
-        // .doc(publicCommunities[v].CommunityId)
-        // .get();
-        //   final CuurentCommunityDoc = CommunityDoc.data()! as dynamic;
-        //        print("i got it right ") ;
-
-        //     final user = FirebaseAuth.instance.currentUser!.uid;
-        //  List Communitiess = [];
-        // Communitiess = CuurentCommunityDoc['progress_list'];
-        // for (int i = 0  ; i<Communitiess.length ; i++){
-        //   if(Communitiess[i][user] != null){
-
-        // CuurentCommunityDoc['progress_list'][i][user]=percentage;
-        // print("i am here now ");
-
-        // await firestore
-        // .collection('public_communities')
-        // .doc(publicCommunities[v].CommunityId)
-        //   .update({
-
-        //     'progress_list':CuurentCommunityDoc['progress_list'] ,
-
-        //   });
-
-        //   }
-        // }
       }
     }
-    // 1- check if the goal is shared in any community
-    // for now you should first fetch the community doc
-    // find the user index
-    // update the value
   }
-
-//Delete //
-// PENDING - as checked it cleans on app launch
-
-  // Future<void> cleanAspects() async {
-  //   final isar = await db;
-  //   await isar.writeTxn(() async {
-  //     await isar.aspects.clear();
-  //   });
-  // }
 
   Future<void> cleanAspects() async {
     final isar = await db;
@@ -658,26 +660,15 @@ class IsarService {
     List<Aspect> allAspects = await isar.aspects.where().findAll();
     // removing aspects of current user
     allAspects.removeWhere((aspect) => aspect.userID == IsarService.getUserID);
-    await isar.writeTxnSync(() => isar.aspects.putAllSync(allAspects));
+
+    isar.writeTxnSync(() => isar.aspects.putAllSync(allAspects));
   }
-
-// // Not a all used
-//   void deleteAllAspects(List<dynamic>? aspectsChosen) async {
-//     final isar = await db;
-//     for (int i = 0; i < aspectsChosen!.length; i++) {
-//       Aspect x = aspectsChosen[i];
-
-//       await isar.writeTxn(() async {
-//         await isar.aspects.delete(x.id);
-//       });
-//     }
-//   }
 
 // PENDING
   void deleteGoal(Goal goal) async {
     List<LocalTask> goalTasks = goal.task.toList();
     for (var i in goalTasks) {
-      deleteTask2(i);
+      deleteTaskByIdAsync(i);
     }
     final isar = await db;
     await isar.writeTxn(() async {
@@ -685,8 +676,183 @@ class IsarService {
     });
   }
 
+  //! if everything will be deleted then i think i should delete everything with the username .
+  void deleteAllAspectsData(String name) async {
+    Aspect? aspect = await getSepecificAspect(name);
+
+    final isar = await db;
+    //* Delete goals and related tasks
+    await isar.writeTxn(() async {
+      //get the ids of goal related to the sendedaspect ;
+      List<Goal> allGoal = await isar.goals
+          .where()
+          .filter()
+          .aspect((q) => q.nameEqualTo(aspect!.name))
+          .findAll();
+      allGoal.removeWhere((goal) => goal.userID != IsarService.getUserID);
+
+      List<int> ids = [];
+      for (var element in allGoal) {
+        List<LocalTask> allTasks = await isar.localTasks
+            .where()
+            .filter()
+            .goal((q) => q.idEqualTo(element.id))
+            .findAll();
+        allTasks.removeWhere((task) => task.userID != IsarService.getUserID);
+        List<int> tasksIds = [];
+        for (var element in allTasks) {
+          tasksIds.add(element.id);
+        }
+        await isar.localTasks.deleteAll(tasksIds);
+
+//*Community
+        List<CommunityID> allCommunities = await isar.communityIDs
+            .where()
+            .filter()
+            .goal((q) => q.idEqualTo(element.id))
+            .findAll();
+        allCommunities
+            .removeWhere((com) => com.userID != IsarService.getUserID);
+        List<int> comIds = [];
+        for (var element in allCommunities) {
+          comIds.add(element.id);
+        }
+        await isar.communityIDs.deleteAll(comIds);
+
+        ids.add(element.id);
+      }
+      await isar.goals.deleteAll(ids);
+
+      //*Delete habits
+      List<Habit> allHabits = await isar.habits
+          .where()
+          .filter()
+          .aspect((q) => q.nameEqualTo(aspect!.name))
+          .findAll();
+      allHabits.removeWhere((habit) => habit.userID != IsarService.getUserID);
+
+      List<int> habitIds = [];
+      for (var element in allHabits) {
+        habitIds.add(element.id);
+      }
+
+      await isar.habits.deleteAll(habitIds);
+    });
+
+//* try to remove from firebase the communituys relate to the aspect
+    CommunityController communityController = Get.find();
+
+//! you need to mark it as deleted for others
+    for (var element in communityController.listOfCreatedCommunities) {
+      if (element.aspect == aspect!.name) {
+        dynamic communityDoc;
+
+        if (element.isPrivate) {
+          await firestore
+              .collection('private_communities')
+              .doc(element.id)
+              .update({'isDeleted': true});
+          communityDoc = await firestore
+              .collection('private_communities')
+              .doc(element.id)
+              .get();
+          final cuurentCommunityDoc = communityDoc.data()! as dynamic;
+          List progressList = cuurentCommunityDoc['progress_list'];
+          for (int i = 0; i < progressList.length; i++) {
+            String x = progressList[i].toString();
+            String userId = x.substring(1, x.indexOf(':'));
+            dynamic userDoc =
+                await firestore.collection("user").doc(userId).get();
+            final users = userDoc.data()! as dynamic;
+            List join = users["joinedCommunities"];
+            //try to use joinedCommunitiess in the authcontroller
+            for (int i = 0; i < join.length; i++) {
+              if (join[i]["_id"] == element.id) {
+                join[i]["isDeleted"] = true;
+                await firestore
+                    .collection('user')
+                    .doc(userId)
+                    .update({'joinedCommunities': join});
+              }
+            }
+          }
+        } else {
+          await firestore
+              .collection('public_communities')
+              .doc(element.id)
+              .update({'isDeleted': true});
+          communityDoc = await firestore
+              .collection('public_communities')
+              .doc(element.id)
+              .get();
+          final cuurentCommunityDoc = communityDoc.data()! as dynamic;
+          List progressList = cuurentCommunityDoc['progress_list'];
+          for (int i = 0; i < progressList.length; i++) {
+            String x = progressList[i].toString();
+            String userId = x.substring(1, x.indexOf(':'));
+            dynamic userDoc =
+                await firestore.collection("user").doc(userId).get();
+            final users = userDoc.data()! as dynamic;
+            List join = users["joinedCommunities"];
+            //try to use joinedCommunitiess in the authcontroller
+            for (int i = 0; i < join.length; i++) {
+              if (join[i]["_id"] == element.id) {
+                join[i]["isDeleted"] = true;
+                await firestore
+                    .collection('user')
+                    .doc(userId)
+                    .update({'joinedCommunities': join});
+              }
+            }
+          }
+        }
+      }
+    }
+// end of that do it after making sire it is all delted for mth e cureent user
+    communityController.listOfJoinedCommunities
+        .removeWhere((element) => element.aspect == aspect!.name);
+    await firestore
+        .collection('user')
+        .doc(firebaseAuth.currentUser!.uid)
+        .update({
+      'joinedCommunities': communityController.listOfJoinedCommunities
+          .map((e) => {
+                'aspect': e.aspect,
+                'communityName': e.communityName,
+                'creationDate': e.creationDate,
+                'progress_list': e.progressList,
+                'founderUsername': e.founderUsername,
+                'goalName': e.goalName,
+                'isPrivate': e.isPrivate,
+                "isDeleted": e.isDeleted,
+                '_id': e.id
+              })
+          .toList(),
+    });
+    communityController.listOfCreatedCommunities
+        .removeWhere((element) => element.aspect == aspect!.name);
+    await firestore
+        .collection('user')
+        .doc(firebaseAuth.currentUser!.uid)
+        .update({
+      'createdCommunities': communityController.listOfCreatedCommunities
+          .map((e) => {
+                'aspect': e.aspect,
+                'communityName': e.communityName,
+                'creationDate': e.creationDate,
+                'founderUsername': e.founderUsername,
+                'goalName': e.goalName,
+                'isPrivate': e.isPrivate,
+                'progress_list': e.progressList,
+                '_id': e.id,
+                "isDeleted": e.isDeleted
+              })
+          .toList(),
+    });
+  }
+
 // PENDING
-  void deleteTask2(LocalTask task) async {
+  void deleteTaskByIdAsync(LocalTask task) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.localTasks.delete(task.id);
@@ -701,7 +867,7 @@ class IsarService {
     });
   }
 
-  void UpdateGoal(Goal tem) async {
+  void updateGoal(Goal tem) async {
     final isar = await db;
 
     await isar.writeTxn(() async {
@@ -709,7 +875,7 @@ class IsarService {
     });
   }
 
-  void UpdateHabit(Habit tem) async {
+  void updateHabit(Habit tem) async {
     final isar = await db;
 
     await isar.writeTxn(() async {

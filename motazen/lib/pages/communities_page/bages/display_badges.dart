@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:motazen/pages/communities_page/bages/display_badge_info.dart';
 import 'package:motazen/theme.dart';
 
-// ignore: must_be_immutable
 class BadgesPage extends StatelessWidget {
   BadgesPage(
       {super.key,
@@ -13,11 +12,10 @@ class BadgesPage extends StatelessWidget {
       required this.userId,
       required this.avatar});
   final int goalProgress;
-  // ignore: prefer_typing_uninitialized_variables
-  final userId;
+  final dynamic userId;
   final String avatar;
 
-  List badges = [
+  final List badges = [
     {
       'name': '1',
       'state': '',

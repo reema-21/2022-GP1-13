@@ -1,4 +1,3 @@
-// ignore_for_file: non_constant_identifier_names, unused_field
 //TODO: make everything works here (leave , delete the comm , invite , leaderboard)
 //TODO : check if the member list is right if delete or leave for both admin and not
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,8 +11,7 @@ import 'package:motazen/pages/communities_page/community/invite/invite.dart';
 import 'package:motazen/pages/communities_page/community/leaderboard_page.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-
-import '../../../Sidebar_and_navigation/navigation-bar.dart';
+import '../../../Sidebar_and_navigation/navigation_bar.dart';
 import '../../../controllers/community_controller.dart';
 import '../../../isar_service.dart';
 import '../../assesment_page/alert_dialog.dart';
@@ -21,7 +19,8 @@ import '../bages/display_badges.dart';
 
 class CommunityInfo extends StatefulWidget {
   final dynamic comm;
-  const CommunityInfo({super.key, this.comm});
+  final dynamic fromInvite;
+  const CommunityInfo({super.key, this.comm, required this.fromInvite});
 
   @override
   State<CommunityInfo> createState() => _CommunityInfoState();
@@ -33,7 +32,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
 
   bool isadmin =
       true; // this varible will be used to display delete and add widget for admins only
-  List<dynamic> CompletedUsersId =
+  List<dynamic> completedUsersId =
       []; // to be used to display the number of members and members usernames and avatar
   List<dynamic> membersUsername = [];
   String adminName =
@@ -44,20 +43,20 @@ class _CommunityInfoState extends State<CommunityInfo> {
   getDataName() async {
     //* return the list of the members in the community // make sure they are a member by checking there joind  list .
     // first check whther it is proivate or public then check the collction in firebase then of null take it form the user joned or created list
-    dynamic CommunityDoc;
+    dynamic communityDoc;
     if (widget.comm.isPrivate) {
-      CommunityDoc = await firestore
+      communityDoc = await firestore
           .collection('private_communities')
           .doc(widget.comm.id)
           .get();
     } else {
-      CommunityDoc = await firestore
+      communityDoc = await firestore
           .collection('public_communities')
           .doc(widget.comm.id)
           .get();
     }
 
-    final cuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+    final cuurentCommunityDoc = communityDoc.data()! as dynamic;
     List progressList = cuurentCommunityDoc['progress_list'];
     // To alwyas display you at fiRst member in the list
     //for loop just to add you as the first index and breaks out
@@ -65,17 +64,11 @@ class _CommunityInfoState extends State<CommunityInfo> {
     for (int i = 0; i < progressList.length; i++) {
       String x = progressList[i].toString();
       String userId = x.substring(1, x.indexOf(':'));
-//
-// if (communitiess[i][widget.post.authorId] != null) {
-//                 authProgress = communitiess[i][widget.post.authorId]
-//                     .toDouble();
-
-//
       if (userId == firebaseAuth.currentUser!.uid) {
         //TO display أنت instead my the current user name
-        dynamic UserDoc = await firestore.collection("user").doc(userId).get();
+        dynamic userDoc = await firestore.collection("user").doc(userId).get();
 
-        final users = UserDoc.data()! as dynamic;
+        final users = userDoc.data()! as dynamic;
         adminName = users["firstName"];
         membersUsername.add("أنت");
         if (users["avatarURL"] == null) {
@@ -101,14 +94,14 @@ class _CommunityInfoState extends State<CommunityInfo> {
       if (userId == firebaseAuth.currentUser!.uid) {
         continue;
       } else {
-        dynamic UserDoc = await firestore.collection("user").doc(userId).get();
+        dynamic userDoc = await firestore.collection("user").doc(userId).get();
 
-        final users = UserDoc.data()! as dynamic;
-        if (users["firstName"] == widget.comm.founderUsername) {
+        final users = userDoc.data()! as dynamic;
+        if (users["userID"] == widget.comm.founderUsername) {
           if (widget.comm.isDeleted) {
             continue;
           } else {
-            CompletedUsersId.add(x.substring(1, x.indexOf(':')));
+            completedUsersId.add(x.substring(1, x.indexOf(':')));
 
             membersUsername.add(users["firstName"]);
             if (users["avatarURL"] == null) {
@@ -136,7 +129,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
         }
 
         if (ismember) {
-          CompletedUsersId.add(x.substring(1, x.indexOf(':')));
+          completedUsersId.add(x.substring(1, x.indexOf(':')));
 
           membersUsername.add(users["firstName"]);
           if (users["avatarURL"] == null) {
@@ -151,76 +144,31 @@ class _CommunityInfoState extends State<CommunityInfo> {
               progressList[i][x.substring(1, x.indexOf(':'))].toDouble());
           userlist.add(user);
         }
-
-        //check whether the user still a member or not
-
-        //lets fetch the user collection and check his joind community
-
-        // dynamic UserDoc = await firestore
-        //     .collection("user")
-        //     .doc(x.substring(1, x.indexOf(':')))
-        //     .get();
-
-        // final users = UserDoc.data()! as dynamic;
-
-        // here let check the joind
       }
     }
-
-    //     for (int i = 0; i < CompletedUsersId.length; i++) { //create a list of members information
-    //   dynamic UserDoc =
-    //       await firestore.collection("user").doc(CompletedUsersId[i]).get();
-
-    //   final users = UserDoc.data()! as dynamic;
-    //         membersUsername.add(users["firstName"]);
-
-    // }
 
     return userlist;
   }
 
-  // getDataprofile() async {
-  //   // for the list of member to always start with you as the admin i will skip the id of me and always makes the first one fixed
-  //   //* return the list of the members in the community
-  //   dynamic CommunityDoc;
-  //   CommunityDoc = await firestore
-  //       .collection('public_communities')
-  //       .doc(widget.comm.id)
-  //       .get();
-  //   if (CommunityDoc.data() == null) {
-  //     CommunityDoc = await firestore
-  //         .collection('private_communities')
-  //         .doc(widget.comm.id)
-  //         .get();
-  //   }
-  //   final cuurentCommunityDoc = CommunityDoc.data()! as dynamic;
-  //   List communitiess = cuurentCommunityDoc['progress_list'];
-  //   //! maybe you need to extract your id
-  //   for (int i = 0; i < communitiess.length; i++) {
-  //     if (i == 0) {}
-  //     //create a list of the the userid of the user who completed the goal
-  //     String x = communitiess[i].toString();
-  //     CompletedUsersId.add(x.substring(1, x.indexOf(':')));
-  //   }
-
-  //   for (int i = 0; i < CompletedUsersId.length; i++) {
-  //     //create a list of members information
-  //     dynamic UserDoc =
-  //         await firestore.collection("user").doc(CompletedUsersId[i]).get();
-
-  //     final users = UserDoc.data()! as dynamic;
-  //     // membersUserProfile.add(users["avatarURL"]);
-  //   }
-  //   return membersUserProfile;
-  // }
-
   @override
   initState() {
+    if (widget.comm.founderUsername != firebaseAuth.currentUser!.uid) {
+      setState(() {
+        isadmin = false;
+      });
+    }
+
     if (communityController.listOfCreatedCommunities
             .indexWhere((element) => element.id == widget.comm.id) <
         0) // this means you are not an admin
 
     {
+      setState(() {
+        isadmin = false;
+      });
+    }
+
+    if (widget.fromInvite) {
       setState(() {
         isadmin = false;
       });
@@ -332,24 +280,17 @@ class _CommunityInfoState extends State<CommunityInfo> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                communityController.listOfCreatedCommunities
-                                                .indexWhere((element) =>
-                                                    element.id ==
-                                                    widget.comm.id) >=
-                                            0 &&
-                                        widget.comm.isPrivate
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          Get.to(Invite(comm: widget.comm));
-                                        },
-                                        child: const Icon(
-                                          Icons.person_add,
-                                          color: Color.fromARGB(
-                                              255, 252, 254, 255),
-                                          size: 30,
-                                        ))
-                                    : Container(),
-
+                                if (isadmin && widget.comm.isPrivate)
+                                  GestureDetector(
+                                      onTap: () {
+                                        Get.to(() => Invite(comm: widget.comm));
+                                      },
+                                      child: const Icon(
+                                        Icons.person_add,
+                                        color:
+                                            Color.fromARGB(255, 252, 254, 255),
+                                        size: 30,
+                                      )),
                                 const SizedBox(
                                   width: 15,
                                 ),
@@ -359,8 +300,6 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         final data = snapshot.data;
-                                        // double x = data.length / 2;
-                                        // int y = x.toInt();
                                         int y = data.length;
                                         membercount = y;
                                         if (data.length / 2 > 1) {
@@ -400,7 +339,6 @@ class _CommunityInfoState extends State<CommunityInfo> {
               ),
               // here display the aspect Icon then the nmae then the number of participants
             ),
-
             FutureBuilder<dynamic>(
                 future: dbFuture1,
                 builder: (context, snapshot) {
@@ -446,27 +384,18 @@ class _CommunityInfoState extends State<CommunityInfo> {
 
                                             child: ListTile(
                                                 minLeadingWidth: 60,
-                                                // dense: true,
-                                                //
-                                                trailing: ((communityController.listOfCreatedCommunities.indexWhere((element) =>
-                                                                    element.id ==
-                                                                    widget.comm
-                                                                        .id) >=
-                                                                0) &&
-                                                            data[index].firstname ==
-                                                                "أنت") ||
-                                                        ((communityController.listOfCreatedCommunities.indexWhere((element) => element.id == widget.comm.id) < 0) &&
-                                                            data[index].firstname ==
-                                                                widget.comm
-                                                                    .founderUsername)
+                                                //!كلمة المشرف ما طلعت
+                                                trailing: data[index]
+                                                            .id == // this one was or i will make it and and
+                                                        widget.comm
+                                                            .founderUsername
                                                     ? const Text("المشرف")
                                                     : null,
-                                                visualDensity: const VisualDensity(
-                                                    vertical: -3),
+                                                visualDensity:
+                                                    const VisualDensity(
+                                                        vertical: -3),
                                                 title: Text(
-                                                  // data[index++],
                                                   data[index].firstname,
-                                                  //  index%2 == 0? data[index++]:data[++index], //here index in the avtar index+1
                                                   style: const TextStyle(
                                                       fontSize: 18,
                                                       color: Colors.black,
@@ -545,120 +474,13 @@ class _CommunityInfoState extends State<CommunityInfo> {
                         ),
                       ),
                     );
-
-                    //             } else {
-                    //               //! this case will ocure when i do the eextraction of my id from the list
-                    //               return SliverPadding(
-                    //   padding : EdgeInsets.only(top: 15),
-                    //   sliver: MediaQuery.removeViewInsets(
-                    //             removeRight: true,
-                    //     removeLeft: true,
-                    //     removeTop: true,
-                    //     removeBottom: true,
-                    //     context: context,
-                    //     child: SliverList(
-                    //         // ignore: unnecessary_new
-                    //         delegate: new SliverChildListDelegate([
-
-                    //           MediaQuery.removeViewInsets(
-                    //              removeRight: true,
-                    //     removeLeft: true,
-                    //     removeTop: true,
-                    //     removeBottom: true,
-                    //     context: context,
-                    //             child: Card(
-                    //               margin:EdgeInsets.all(0) ,
-                    //                       child: MediaQuery.removeViewInsets(
-                    //              removeRight: true,
-                    //     removeLeft: true,
-                    //     removeTop: true,
-                    //     removeBottom: true,
-                    //     context: context,
-                    //             child:
-                    //                       ListView.builder(
-                    //                         //  add the same scrollController here
-                    //                       controller: scrollController,
-                    //                         shrinkWrap: true,
-                    //                         itemCount: 1,
-                    //                         itemBuilder: (BuildContext context, int index) {
-                    //             return
-                    //              Container(
-                    //                         height: 75,
-                    //                         // margin: const EdgeInsets.symmetric(
-                    //                         //     horizontal: 20, vertical: 10),
-
-                    //                         child: Padding(
-                    //                             padding: const EdgeInsets.symmetric(
-                    //                                 horizontal: 0, vertical: 0),
-                    //                             child: ListTile(
-                    //                               // dense: true,
-                    //                               visualDensity:
-                    //                                   const VisualDensity(vertical: -3),
-                    //                               title: Text(
-                    //                                 "أنت",
-                    //                                 style: const TextStyle(
-                    //                                     fontSize: 18,
-                    //                                     color: Colors.black,
-                    //                                     fontWeight: FontWeight.bold),
-                    //                               ),
-                    //                               contentPadding: const EdgeInsets.symmetric(
-                    //                                   vertical: 0.0, horizontal: 16.0),
-                    //                               leading: const SizedBox(
-                    //                                 width: 50,
-                    //                                 child: CircleAvatar(
-                    //                                     backgroundImage: AssetImage(
-                    //                                         "assets/images/Profile Image.webp")),
-                    //                               )
-                    //                             )
-                    //                         )
-                    //             );
-
-                    //                         },
-                    //                       )),
-                    //                     ),
-                    //           ),
-                    //           SizedBox(
-                    //             height: 10,
-                    //           ),
-
-                    //        ]     ),
-                    //       ),
-                    //   ),
-                    // );;
-                    //             }
                   } else {
                     //! this case will happen when having an error
                     return const SliverToBoxAdapter(child: Text(""));
                   }
                 }),
-            // SliverToBoxAdapter(
-            //   child: Card(
-            //   child: ListView.builder(
-            //     //  add the same scrollController here
-            //   controller: scrollController,
-            //     shrinkWrap: true,
-            //     itemCount: 3,
-            //     itemBuilder: (BuildContext context, int index) {
-            //       return Text("ibnShamas");
-            //     },
-            //   ),
-            // ),
-            // ),
-
-            // SliverToBoxAdapter(
-            //   child: Padding(
-            //       padding: const EdgeInsets.all(20),
-            //       child: Container(
-            //         height: 50,
-            //         child: Text("hi"),
-            //       )),
-            // )
           ],
         ),
-        //check whether
-
-        //
-
         bottomSheet: Padding(
           padding: const EdgeInsets.all(10.0),
           child: GestureDetector(
@@ -681,7 +503,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                const navBar(selectedIndex: 2)));
+                                const NavBar(selectedIndex: 2)));
                   }
                 } else {
                   await leaveCommunity();
@@ -693,7 +515,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                const navBar(selectedIndex: 2)));
+                                const NavBar(selectedIndex: 2)));
                   }
                 }
               }
@@ -723,7 +545,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
 //! add code to delete the documnet of the communinity from the collection when last member leave
   deleteCommunity() async {
     //in here after making isDeleted = true on the collection i should also change it to true in the joined of all members
-    dynamic CommunityDoc;
+    dynamic communityDoc;
 // loop through all users and their joined community of the id is equal than make isDeleted = true;
 
     if (widget.comm.isPrivate) {
@@ -731,18 +553,18 @@ class _CommunityInfoState extends State<CommunityInfo> {
           .collection('private_communities')
           .doc(widget.comm.id)
           .update({'isDeleted': true});
-      CommunityDoc = await firestore
+      communityDoc = await firestore
           .collection('private_communities')
           .doc(widget.comm.id)
           .get();
 
-      final cuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+      final cuurentCommunityDoc = communityDoc.data()! as dynamic;
       List progressList = cuurentCommunityDoc['progress_list'];
       for (int i = 0; i < progressList.length; i++) {
         String x = progressList[i].toString();
         String userId = x.substring(1, x.indexOf(':'));
-        dynamic UserDoc = await firestore.collection("user").doc(userId).get();
-        final users = UserDoc.data()! as dynamic;
+        dynamic userDoc = await firestore.collection("user").doc(userId).get();
+        final users = userDoc.data()! as dynamic;
         List join = users["joinedCommunities"];
         //try to use joinedCommunitiess in the authcontroller
         for (int i = 0; i < join.length; i++) {
@@ -760,17 +582,17 @@ class _CommunityInfoState extends State<CommunityInfo> {
           .collection('public_communities')
           .doc(widget.comm.id)
           .update({'isDeleted': true});
-      CommunityDoc = await firestore
+      communityDoc = await firestore
           .collection('public_communities')
           .doc(widget.comm.id)
           .get();
-      final cuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+      final cuurentCommunityDoc = communityDoc.data()! as dynamic;
       List progressList = cuurentCommunityDoc['progress_list'];
       for (int i = 0; i < progressList.length; i++) {
         String x = progressList[i].toString();
         String userId = x.substring(1, x.indexOf(':'));
-        dynamic UserDoc = await firestore.collection("user").doc(userId).get();
-        final users = UserDoc.data()! as dynamic;
+        dynamic userDoc = await firestore.collection("user").doc(userId).get();
+        final users = userDoc.data()! as dynamic;
         List join = users["joinedCommunities"];
         //try to use joinedCommunitiess in the authcontroller
         for (int i = 0; i < join.length; i++) {
@@ -810,13 +632,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
       }
     }
 
-    // if (!widget.comm.isPrivate) {
-    //   final t = firestore.collection('public_communities').doc(widget.comm.id);
-    //   await t.delete();
-    // }
 //! see what to do with the private collection when it is deleted it
-    // // delete created communities
-    // iser.deleteCommunity(widget.comm.id);
 
     communityController.listOfCreatedCommunities
         .removeWhere((element) => element.id == widget.comm.id);
@@ -848,20 +664,20 @@ class _CommunityInfoState extends State<CommunityInfo> {
     // so first check if it is private or public and then do the rest
 //! this code for adjusting the progress list after a member leaves but i commented it cause we would like to save those who completed the goal even if they left
     // if (widget.comm.isPrivate) {
-    //   CommunityDoc = await firestore
+    //   communityDoc = await firestore
     //       .collection('private_communities')
     //       .doc(widget.comm.id)
     //       .get();
 
-    //   if (CommunityDoc.data() != null) {
-    //     final CurrentCommunityDoc = CommunityDoc.data() as dynamic;
+    //   if (communityDoc.data() != null) {
+    //     final CurrentCommunityDoc = communityDoc.data() as dynamic;
 
-    //     List Communitiess = [];
+    //     List communities = [];
 
-    //     Communitiess = CurrentCommunityDoc['progress_list'];
-    //     for (int i = 0; i < Communitiess.length; i++) {
-    //       if (Communitiess[i][firebaseAuth.currentUser!.uid] != null) {
-    //         Communitiess.removeAt(i);
+    //     communities = CurrentCommunityDoc['progress_list'];
+    //     for (int i = 0; i < communities.length; i++) {
+    //       if (communities[i][firebaseAuth.currentUser!.uid] != null) {
+    //         communities.removeAt(i);
 
     //         await firestore
     //             .collection('private_communities')
@@ -875,20 +691,20 @@ class _CommunityInfoState extends State<CommunityInfo> {
     //   }
     // } else {
     //   //means it is public
-    //   CommunityDoc = await firestore
+    //   communityDoc = await firestore
     //       .collection('public_communities')
     //       .doc(widget.comm.id)
     //       .get();
 
-    //   if (CommunityDoc.data() != null) {
-    //     final CurrentCommunityDoc = CommunityDoc.data() as dynamic;
+    //   if (communityDoc.data() != null) {
+    //     final CurrentCommunityDoc = communityDoc.data() as dynamic;
 
-    //     List Communitiess = [];
+    //     List communities = [];
 
-    //     Communitiess = CurrentCommunityDoc['progress_list'];
-    //     for (int i = 0; i < Communitiess.length; i++) {
-    //       if (Communitiess[i][firebaseAuth.currentUser!.uid] != null) {
-    //         Communitiess.removeAt(i);
+    //     communities = CurrentCommunityDoc['progress_list'];
+    //     for (int i = 0; i < communities.length; i++) {
+    //       if (communities[i][firebaseAuth.currentUser!.uid] != null) {
+    //         communities.removeAt(i);
 
     //         await firestore
     //             .collection('public_communities')

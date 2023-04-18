@@ -1,5 +1,3 @@
-// ignore_for_file: camel_case_types
-//manar
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:motazen/isar_service.dart';
@@ -10,7 +8,7 @@ import '/entities/aspect.dart';
 import '../../models/aspect_model.dart';
 import 'select_aspect.dart';
 
-class handle_aspect {
+class HandleAspect {
   final IsarService isar = IsarService();
 
 //initialize all aspects in local storage
@@ -33,21 +31,6 @@ class handle_aspect {
     return aspects;
   }
 
-  //update aspect status
-  Future<void> updateStatus(String name) async {
-    //check status
-    bool status = await isar.checkSelectionStatus(name);
-    switch (status) {
-      case false:
-        isar.selectAspect(name);
-        break;
-      case true:
-        isar.deselectAspect(name);
-
-        break;
-    }
-  }
-
 //return a list of all selected aspects
   Future<List<Aspect>> getSelectedAspects() async {
     List<Aspect> selectedList = await isar.getSelectedAspects();
@@ -60,13 +43,8 @@ class handle_aspect {
     return list;
   }
 
-  //return a list of all selected aspects
-  Future<void> setAspectpoints(String name, double point) async {
-    isar.assignPointAspect(name, point);
-  }
-
-  void updateAspects(Aspect aspect, Goal goal, double previousGoalProgress,
-      double newGoalProgress) {
+  Future<void> updateAspects(Aspect aspect, Goal goal,
+      double previousGoalProgress, double newGoalProgress) async {
     double aspectImprovement = 0;
     double newAspectPoints = 0;
     double aspectCurrentPoint = aspect.percentagePoints;
@@ -78,33 +56,34 @@ class handle_aspect {
     ///save the improvement (change in points) for the linechart
     ///Note: does it need to be stored every time, the list becomes too big
     aspectImprovement = goal.importance * newGoalProgress;
+    await IsarService().addImprovement(aspectImprovement, aspect: aspect);
 
     //calculate the new points value
     newAspectPoints = aspectImprovement + aspectCurrentPoint;
 
     //only save the current value if it's within range
     if (newAspectPoints <= 100) {
-      IsarService().updateAspectPercentage(aspect.id, newAspectPoints);
+      await IsarService().updateAspectPercentage(aspect.id, newAspectPoints);
     }
   }
 }
 
-////////////////////convert from type-future to type//////////////////////////
+//------------------------convert from type-future to type------------------------//
 
-////////////////////////////initialize for the first time/////////////////////
+//------------------------initialize for the first time------------------------//
 
-class initializeAspects extends StatefulWidget {
+class InitializeAspects extends StatefulWidget {
   final bool? isRetake;
-  const initializeAspects({
+  const InitializeAspects({
     super.key,
     this.isRetake,
   });
 
   @override
-  State<initializeAspects> createState() => _initializeAspectsState();
+  State<InitializeAspects> createState() => _InitializeAspectsState();
 }
 
-class _initializeAspectsState extends State<initializeAspects> {
+class _InitializeAspectsState extends State<InitializeAspects> {
   final IsarService isar = IsarService();
   @override
   Widget build(BuildContext context) {
@@ -112,12 +91,13 @@ class _initializeAspectsState extends State<initializeAspects> {
     return Scaffold(
       body: Center(
         child: FutureBuilder<List<Aspect>>(
-            future: handle_aspect().initializeAspects(aspectList.data),
+            future: HandleAspect().initializeAspects(aspectList.data),
             builder: ((context, snapshot) {
               if (snapshot.hasData) {
                 aspectList.allAspects = snapshot.data!;
                 return AspectSelection(
                   isRetake: widget.isRetake,
+                  previousAspects: aspectList.allAspects,
                 );
               } else {
                 return const CircularProgressIndicator();
@@ -128,28 +108,28 @@ class _initializeAspectsState extends State<initializeAspects> {
   }
 }
 
-//////////////////////////////// fetch aspects from local storage then///////////////////////
-class getAllAspects extends StatefulWidget {
+//------------------------ fetch aspects from local storage then------------------------//
+class GetAllAspects extends StatefulWidget {
   final String page;
-  const getAllAspects({super.key, required this.page});
+  const GetAllAspects({super.key, required this.page});
   @override
-  State<getAllAspects> createState() => _getAllAspectsState();
+  State<GetAllAspects> createState() => _GetAllAspectsState();
 }
 
-class _getAllAspectsState extends State<getAllAspects> {
+class _GetAllAspectsState extends State<GetAllAspects> {
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
       body: Center(
         child: FutureBuilder(
-            future: handle_aspect().getAspects(),
+            future: HandleAspect().getAspects(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 aspectList.allAspects = snapshot.data!;
                 switch (widget.page) {
                   case 'Home':
-                    return const getChosenAspect();
+                    return const GetChosenAspect();
                   default:
                     throw 'Error404: page not found';
                 }

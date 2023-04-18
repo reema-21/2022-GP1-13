@@ -1,18 +1,17 @@
-// ignore_for_file: camel_case_types,
 import 'package:motazen/pages/homepage/wheel_of_life/widget/pie_chart_sections.dart';
 import '../../../entities/aspect.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class life_wheel extends StatefulWidget {
+class LifeWheel extends StatefulWidget {
   final List<Aspect> allAspects;
-  const life_wheel({super.key, required this.allAspects});
+  const LifeWheel({super.key, required this.allAspects});
 
   @override
-  State<life_wheel> createState() => Life_wheelState();
+  State<LifeWheel> createState() => LifeWheelState();
 }
 
-class Life_wheelState extends State<life_wheel> {
+class LifeWheelState extends State<LifeWheel> {
   int touchedIndex = -1;
   @override
   Widget build(BuildContext context) {

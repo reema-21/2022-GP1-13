@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,7 +16,7 @@ class ResetForm extends StatefulWidget {
 
 class _ResetFormState extends State<ResetForm> {
   final _resetformKey = GlobalKey<FormState>();
-  TextEditingController reset_pass_email = TextEditingController();
+  TextEditingController resetPassEmail = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,7 +29,7 @@ class _ResetFormState extends State<ResetForm> {
             Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: TextFormField(
-                    controller: reset_pass_email,
+                    controller: resetPassEmail,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'فضلا ادخل بريدك الإلكتروني، مثل: motazen@gmail.com';
@@ -58,7 +56,7 @@ class _ResetFormState extends State<ResetForm> {
                 if (_resetformKey.currentState!.validate()) {
                   try {
                     await FirebaseAuth.instance
-                        .sendPasswordResetEmail(email: reset_pass_email.text);
+                        .sendPasswordResetEmail(email: resetPassEmail.text);
                     Get.to(() => const LogInScreen());
                     AllDialogues.showErrorDialog(
                         title: "إعادة ضبط كلمة السر",

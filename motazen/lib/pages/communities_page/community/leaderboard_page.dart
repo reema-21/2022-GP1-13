@@ -1,14 +1,13 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names
-//REEMAS
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:motazen/controllers/community_controller.dart';
 import 'package:motazen/models/user_info.dart';
+import 'package:motazen/pages/communities_page/bages/display_badges.dart';
 import 'package:motazen/theme.dart';
 
-import '../bages/display_badges.dart';
-
 class CommunityLeaderboardPage extends StatefulWidget {
-  final comm;
+  final dynamic comm;
   const CommunityLeaderboardPage({super.key, required this.comm});
 
   @override
@@ -21,39 +20,39 @@ class _CommunityLeaderboardPageState extends State<CommunityLeaderboardPage> {
   late int numberOfMembers;
   ScrollController controller = ScrollController();
   double topContainer = 0;
-  List<dynamic> CompletedUsersId = [];
-  List<dynamic> CompletedUsersname = [];
+  List<dynamic> completedUsersId = [];
+  List<dynamic> completedUsersname = [];
   List<UserInfo> userlist = [];
 
   getData() async {
-    dynamic CommunityDoc;
-    CommunityDoc = await firestore
+    dynamic communityDoc;
+    communityDoc = await firestore
         .collection('public_communities')
         .doc(widget.comm.id)
         .get();
-    if (CommunityDoc.data() == null) {
-      CommunityDoc = await firestore
+    if (communityDoc.data() == null) {
+      communityDoc = await firestore
           .collection('private_communities')
           .doc(widget.comm.id)
           .get();
     }
-    final cuurentCommunityDoc = CommunityDoc.data()! as dynamic;
+    final cuurentCommunityDoc = communityDoc.data()! as dynamic;
     List communitiess = cuurentCommunityDoc['progress_list'];
     for (int i = 0; i < communitiess.length; i++) {
       String x = communitiess[i].toString();
       if (x.substring(x.indexOf(' ') + 1, x.length - 1) == "1.0") {
         //add
-        CompletedUsersId.add(x.substring(1, x.indexOf(':')));
+        completedUsersId.add(x.substring(1, x.indexOf(':')));
       }
     }
 
-    for (int i = 0; i < CompletedUsersId.length; i++) {
-      dynamic UserDoc =
-          await firestore.collection("user").doc(CompletedUsersId[i]).get();
-      final users = UserDoc.data()! as dynamic;
-      CompletedUsersname.add(users["firstName"]);
+    for (int i = 0; i < completedUsersId.length; i++) {
+      dynamic userDoc =
+          await firestore.collection("user").doc(completedUsersId[i]).get();
+      final users = userDoc.data()! as dynamic;
+      completedUsersname.add(users["firstName"]);
       UserInfo user = UserInfo(
-          CompletedUsersId[i], users["avatarURL"] ?? "", users["firstName"], 1);
+          completedUsersId[i], users["avatarURL"] ?? "", users["firstName"], 1);
       userlist.add(user);
     }
     return userlist;
@@ -65,6 +64,8 @@ class _CommunityLeaderboardPageState extends State<CommunityLeaderboardPage> {
 
     super.initState();
   }
+
+  CommunityController communityController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -135,27 +136,6 @@ class _CommunityLeaderboardPageState extends State<CommunityLeaderboardPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(height: 2.50),
-              // FutureBuilder<dynamic>(
-              //     future: dbFuture,
-              //     builder: (context, snapshot) {
-              //       if (snapshot.hasData) {
-              //         final data = snapshot.data;
-              //         if (data.length != 0) {
-              //           return Text(
-              //             "${data.length} أعضاء",
-              //             textAlign: TextAlign.center,
-              //             style: const TextStyle(
-              //               color: Colors.white,
-              //               fontSize: 26,
-              //             ),
-              //           );
-              //         } else {
-              //           return const Text("");
-              //         }
-              //       } else {
-              //         return const Text("");
-              //       }
-              //     }),
               Column(
                 children: [
                   //! you need to syle
@@ -281,92 +261,7 @@ class _CommunityLeaderboardPageState extends State<CommunityLeaderboardPage> {
                                       width: 43),
                                 )
                               ]),
-                        )
-
-                            //   Container(
-                            //     height: 75,
-                            //     margin: const EdgeInsets.symmetric(
-                            //         horizontal: 20, vertical: 10),
-                            //     decoration: BoxDecoration(
-                            //         borderRadius: const BorderRadius.all(
-                            //             Radius.circular(20.0)),
-                            //         color: Colors.white,
-                            //         boxShadow: [
-                            //           BoxShadow(
-                            //               color: Colors.black.withAlpha(100),
-                            //               blurRadius: 10.0),
-                            //         ]),
-                            //     child: Padding(
-                            //         padding: const EdgeInsets.symmetric(
-                            //             horizontal: 10.0, vertical: 10),
-                            //         child: ListTile(
-                            //           dense: true,
-                            //           visualDensity:
-                            //               const VisualDensity(vertical: -3),
-                            //           title: Text(
-                            //             "${post.firstname}",
-                            //             style: const TextStyle(
-                            //                 fontSize: 18,
-                            //                 color: Colors.black,
-                            //                 fontWeight: FontWeight.bold),
-                            //           ),
-                            //           contentPadding: const EdgeInsets.symmetric(
-                            //               vertical: 0.0, horizontal: 16.0),
-                            //           leading:  SizedBox(
-                            //             width: 90,
-                            //             child: GestureDetector(
-                            //                               onTap: () => Navigator.push(
-                            // context,
-                            // MaterialPageRoute(
-                            //   builder: (context) => BadgesPage(
-                            //     avatar: post.avatar,
-                            //     goalProgress: (post.currentCommunityProgress * 100).round().toInt(),
-                            //     userId: post.id,
-                            //   ),
-                            // )),
-                            //                               child: SizedBox(
-                            //                                 width: 70,
-                            //                                 child: CircleAvatar(
-                            //                                     // display the avatar if added
-                            //                                     backgroundImage: post.avatar ==
-                            //                                             ""
-                            //                                         ? null
-                            //                                         : CachedNetworkImageProvider(
-                            //                                             post.avatar!,
-                            //                                             errorListener:
-                            //                                                 () {}),
-                            //                                     radius: 150,
-                            //                                     backgroundColor:
-                            //                                         kWhiteColor,
-
-                            //                                     // ignore: prefer_const_constructors
-                            //                                     child: post.avatar !=
-                            //                                             ""
-                            //                                         ? null
-                            //                                         : GestureDetector(
-                            //                                             child:
-                            //                                                 const Icon(
-                            //                                               Icons
-                            //                                                   .account_circle_sharp, //? is better to have the same icon as the one in the side bar
-                            //                                               color: Color
-                            //                                                   .fromARGB(
-                            //                                                       31,
-                            //                                                       0,
-                            //                                                       0,
-                            //                                                       0),
-                            //                                               size: 50,
-                            //                                             ),
-                            //                                           )),
-                            //                               ),
-                            //                             ),
-                            //           ),
-                            //           trailing: Image.asset(
-                            //               'assets/images/medal.png',
-                            //               width: 40),
-                            //         )
-                            //         )
-                            //         )
-                            );
+                        ));
                       });
 
                       return ListView.builder(

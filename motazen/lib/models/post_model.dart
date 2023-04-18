@@ -1,16 +1,14 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
-//Reemas
 class PostModel {
   String? author;
   String? authorId;
-  final time;
-  final text;
-  final comments;
-  final replyingPost;
-  final likes;
-  final progreebar;
+  final dynamic time;
+  final dynamic text;
+  final dynamic comments;
+  final dynamic replyingPost;
+  final dynamic likes;
+  final dynamic progreebar;
   String? postType;
-  final imageURL;
+  final dynamic imageURL;
   PostModel(
       {this.author,
       this.authorId,

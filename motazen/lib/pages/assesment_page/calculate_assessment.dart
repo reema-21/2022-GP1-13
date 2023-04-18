@@ -1,11 +1,11 @@
 import 'package:motazen/entities/aspect.dart';
-
+import 'package:motazen/isar_service.dart';
 import '../select_aspectPage/handle_aspect_data.dart';
 
 class CalculateAspectPoints {
   calculateAllpoints(List questionData) async {
     double aspectPoints;
-    List<Aspect> aspects = await handle_aspect().getSelectedAspects();
+    List<Aspect> aspects = await HandleAspect().getSelectedAspects();
     for (var aspect in aspects) {
       //set to zero at the start for each element
       double sum = 0;
@@ -20,7 +20,7 @@ class CalculateAspectPoints {
       }
       //calculate the pointer
       aspectPoints = (sum / counter) * 100;
-      await handle_aspect().setAspectpoints(aspect.name, aspectPoints);
+      await IsarService().assignPointAspect(aspect.name, aspectPoints);
     }
   }
 }

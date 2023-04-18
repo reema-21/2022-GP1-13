@@ -1,34 +1,29 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously,, unused_local_variable
-
 import 'package:flutter/material.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/pages/add_habit_page/editMy_controller.dart';
+import 'package:motazen/controllers/edit_controller.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
-import 'package:provider/provider.dart';
-import '../../../Sidebar_and_navigation/navigation-bar.dart';
-import '../../controllers/aspect_controller.dart';
+import '../../../Sidebar_and_navigation/navigation_bar.dart';
 import '/entities/habit.dart';
-
 import 'package:get/get.dart';
-import '../../../entities/aspect.dart';
+import '../../../../entities/aspect.dart';
 
 //alertof completion //tasks // getbeck to the list page // goal dependency
-class HabitDetails extends StatefulWidget {
+class EditHabit extends StatefulWidget {
   final IsarService isr;
   final List<Aspect>? chosenAspectNames;
-  final String HabitName;
+  final String habitName;
   final String habitFrequency;
   final String habitAspect;
   final int durationInInt;
   final int duraioninString;
   final int id;
 
-  const HabitDetails({
+  const EditHabit({
     super.key,
     required this.isr,
     this.chosenAspectNames,
-    required this.HabitName,
+    required this.habitName,
     required this.habitFrequency,
     required this.habitAspect,
     required this.durationInInt,
@@ -37,10 +32,10 @@ class HabitDetails extends StatefulWidget {
   });
 
   @override
-  State<HabitDetails> createState() => _AddHabitState();
+  State<EditHabit> createState() => _AddHabitState();
 }
 
-class _AddHabitState extends State<HabitDetails> {
+class _AddHabitState extends State<EditHabit> {
   final formKey2 = GlobalKey<FormState>();
   late int durationIndString;
   late int durationInInt;
@@ -57,7 +52,7 @@ class _AddHabitState extends State<HabitDetails> {
   void initState() {
     super.initState();
 
-    _goalNmaeController.text = widget.HabitName;
+    _goalNmaeController.text = widget.habitName;
 
     freq.setvalue(widget.durationInInt);
     durationIndString = widget.duraioninString;
@@ -93,7 +88,7 @@ class _AddHabitState extends State<HabitDetails> {
 
   String aspectnameInEnglish = "";
   Habit? habit = Habit(userID: IsarService.getUserID);
-  _AddHabit() async {
+  _addHabit() async {
     habit = await widget.isr.getSepecificHabit(widget.id);
     habit?.titel = _goalNmaeController.text;
 
@@ -106,21 +101,21 @@ class _AddHabitState extends State<HabitDetails> {
         await widget.isr.findSepecificAspect(aspectnameInEnglish);
     habit?.aspect.value = selected;
 
-    widget.isr.UpdateHabit(habit!);
+    widget.isr.updateHabit(habit!);
 
     //should be the name days
     // should be the number in frequency
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return const navBar(
-        selectedIndex: 1,
-      );
-    }));
+    if (mounted) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return const NavBar(
+          selectedIndex: 1,
+        );
+      }));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<AspectController>(context);
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -139,12 +134,14 @@ class _AddHabitState extends State<HabitDetails> {
                       'بالنقر على "تاكيد"لن يتم حفظ التغييرات التي قمت بها');
                   if (action == DialogsAction.yes) {
                     //! it should return to the habits tab
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const navBar(
-                        selectedIndex: 1,
-                      );
-                    }));
+                    if (mounted) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const NavBar(
+                          selectedIndex: 1,
+                        );
+                      }));
+                    }
                   }
                 },
                 icon: const Icon(
@@ -348,7 +345,9 @@ class _AddHabitState extends State<HabitDetails> {
                         ],
                       )));
 
-                      _AddHabit();
+                      _addHabit();
+                    } else {
+                      isFirstclick = true;
                     }
                   }
                 },

@@ -1,19 +1,19 @@
-// ignore_for_file: non_constant_identifier_names, unused_field
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
+import 'package:motazen/controllers/community_controller.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/entities/imporvment.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/pages/homepage/wheel_of_life/widget/AspectGoalList.dart';
-import 'package:motazen/pages/homepage/wheel_of_life/widget/AspectHabitList.dart';
+import 'package:motazen/models/community.dart';
+import 'package:motazen/pages/homepage/wheel_of_life/widget/aspect_community_list.dart';
+import 'package:motazen/pages/homepage/wheel_of_life/widget/aspect_goal_list.dart';
+import 'package:motazen/pages/homepage/wheel_of_life/widget/aspect_habit_list.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../../entities/goal.dart';
 
-//manar
 class ProgressScreen extends StatefulWidget {
   final IsarService isr;
   final Aspect aspect;
@@ -25,33 +25,32 @@ class ProgressScreen extends StatefulWidget {
 
 class _ProgressScreenState extends State<ProgressScreen> {
   late List<GDPData> _chartData;
-  late TooltipBehavior _tooltipBehavior;
-
+  List<Community> communities = [];
+  CommunityController communityController = Get.find();
   @override
   initState() {
     super.initState();
-    List<Goal> NotStartedGoalList = widget.aspect.goals
+    communities = communityController.findAspectComm(widget.aspect);
+    List<Goal> notStartedGoalList = widget.aspect.goals
         .toList()
         .where((element) => element.goalProgressPercentage == 0)
         .toList();
-    int NumberOfNotStarted = NotStartedGoalList.length;
-    List<Goal> StartedGoalList = widget.aspect.goals
+    int numberOfNotStarted = notStartedGoalList.length;
+    List<Goal> startedGoalList = widget.aspect.goals
         .toList()
         .where((element) =>
             element.goalProgressPercentage > 0 &&
             element.endDate.isAfter(DateTime.now()))
         .toList();
-    int NumberOfStarted = StartedGoalList.length;
+    int numberOfStarted = startedGoalList.length;
     List<Goal> lateGoalList = widget.aspect.goals
         .toList()
         .where((element) => element.endDate.isBefore(DateTime.now()))
         .toList();
-    int NumberOfLate = lateGoalList.length;
+    int numberOfLate = lateGoalList.length;
 
-    _chartData = getChartData(NumberOfLate, lateGoalList, NumberOfStarted,
-        StartedGoalList, NumberOfNotStarted, NotStartedGoalList);
-
-    _tooltipBehavior = TooltipBehavior(enable: true);
+    _chartData = getChartData(numberOfLate, lateGoalList, numberOfStarted,
+        startedGoalList, numberOfNotStarted, notStartedGoalList);
   } // here is the array
 
   List<Color> gradientColors = [const Color(0xff23b6e6), Colors.green.shade300];
@@ -59,58 +58,9 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context);
-    List<AspectImporvment> chartData = [];
+    //* a list of the aspect's improvements
+    List<Imporvment> improvements = widget.aspect.imporvmentd.toList();
 
-    List<Imporvment> tempList = [];
-
-    tempList = widget.aspect.imporvmentd.toList();
-    DateTime dateOfSelection = tempList[0].date;
-
-    DateTime dateOfSelectionFormated = DateTime.utc(
-        dateOfSelection.year, dateOfSelection.month, dateOfSelection.day);
-    DateTime todayDate = DateTime.now();
-    DateTime todayDateFormated =
-        DateTime.utc(todayDate.year, todayDate.month, todayDate.day);
-
-    List<Imporvment> startList = [];
-
-    while (dateOfSelectionFormated.compareTo(todayDateFormated) != 0) {
-      Imporvment newImprove = Imporvment(userID: IsarService.getUserID);
-      newImprove.date = dateOfSelectionFormated;
-      newImprove.sum = tempList[0].sum;
-      startList.add(newImprove);
-      dateOfSelectionFormated =
-          dateOfSelectionFormated.add(const Duration(days: 1));
-    }
-    Imporvment newImprove = Imporvment(userID: IsarService.getUserID);
-    newImprove.date = dateOfSelectionFormated;
-    newImprove.sum = tempList[0].sum;
-    startList.add(newImprove);
-
-//create the list to be used in the line chart
-    double currentpoints = startList[0].sum;
-    for (int i = 1; i < startList.length; i++) {
-      for (var b = 1; b < tempList.length;) {
-        if (startList[i].date.compareTo(tempList[b].date) == 0) {
-          // try print the date in tem to chak its kind first
-          currentpoints = tempList[b].sum;
-          b++;
-        } else {
-          break;
-        }
-      }
-      startList[i].sum = currentpoints;
-    }
-    for (int i = 0; i < startList.length; i++) {}
-
-    for (var i in startList) {
-      DateTime x = i.date;
-      DateTime date = DateTime.utc(x.year, x.month, x.day);
-
-      AspectImporvment currentImrove = AspectImporvment(date.toUtc(), i.sum);
-
-      chartData.add(currentImrove);
-    }
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -190,11 +140,16 @@ class _ProgressScreenState extends State<ProgressScreen> {
                               ),
 
                               GestureDetector(
-                                child: customCircularIndicator("المجتمعات", "3",
-                                    'blueProgress.png', Colors.blue),
-                                onTap: () {},
+                                child: customCircularIndicator(
+                                    "المجتمعات",
+                                    communities.length.toString(),
+                                    'blueProgress.png',
+                                    Colors.blue),
+                                onTap: () => Get.to(() => AspectCommunityList(
+                                      community: communities,
+                                      aspect: widget.aspect,
+                                    )),
                               ),
-
                               // Fixed for now need to be changed
                             ],
                           )),
@@ -224,18 +179,20 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           title: ChartTitle(text: "تطور الجانب "),
                           primaryXAxis: DateTimeAxis(
                             minorTicksPerInterval: 4,
-                            minimum: chartData[0].day,
-                            maximum: chartData[chartData.length - 1].day,
+                            minimum: improvements[0].date.toUtc(),
+                            maximum: improvements[improvements.length - 1]
+                                .date
+                                .toUtc(),
                           ),
                           series: <ChartSeries>[
                             // Renders line chart
-                            SplineAreaSeries<AspectImporvment, DateTime>(
+                            SplineAreaSeries<Imporvment, DateTime>(
                               yAxisName: "النقاط",
-                              dataSource: chartData,
-                              xValueMapper: (AspectImporvment improve, _) =>
-                                  improve.day,
-                              yValueMapper: (AspectImporvment improve, _) =>
-                                  improve.points,
+                              dataSource: improvements,
+                              xValueMapper: (Imporvment improve, _) =>
+                                  improve.date.toUtc(),
+                              yValueMapper: (Imporvment improve, _) =>
+                                  improve.sum,
                               gradient: LinearGradient(
                                   colors: gradientColors
                                       .map((e) => e.withOpacity(0.3))
@@ -409,21 +366,21 @@ class AspectImporvment {
 }
 
 List<GDPData> getChartData(
-    int NumberOfLate,
+    int numberOfLate,
     List<Goal> lateGoalList,
-    int NumberOfStarted,
-    List<Goal> StartedGoalList,
-    int NumberOfNotStarted,
-    List<Goal> NotStartedGoalList) {
+    int numberOfStarted,
+    List<Goal> startedGoalList,
+    int numberOfNotStarted,
+    List<Goal> notStartedGoalList) {
   // here you need to get the value
   // لم يتم البدء فيها  then ones with zero as progress
   // قيد التحقيق the ones where  progress greater than zero and due date is before today
   // متاأخرة those with due date before datetime.now
 
   final List<GDPData> chartData = [
-    GDPData('لم يتم البدء فيها', NumberOfNotStarted, color: Colors.grey),
-    GDPData('قيد التحقيق', NumberOfStarted, color: Colors.blue),
-    GDPData('متأخره', NumberOfLate,
+    GDPData('لم يتم البدء فيها', numberOfNotStarted, color: Colors.grey),
+    GDPData('قيد التحقيق', numberOfStarted, color: Colors.blue),
+    GDPData('متأخره', numberOfLate,
         color: const Color.fromARGB(255, 218, 61, 50)),
   ];
   return chartData;

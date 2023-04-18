@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'CommunityID.dart';
+part of 'community_id.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
 extension GetCommunityIDCollection on Isar {
   IsarCollection<CommunityID> get communityIDs => this.collection();
@@ -17,9 +17,9 @@ const CommunityIDSchema = CollectionSchema(
   name: r'CommunityID',
   id: 5082505318590053175,
   properties: {
-    r'CommunityId': PropertySchema(
+    r'communityId': PropertySchema(
       id: 0,
-      name: r'CommunityId',
+      name: r'communityId',
       type: IsarType.string,
     ),
     r'userID': PropertySchema(
@@ -34,12 +34,19 @@ const CommunityIDSchema = CollectionSchema(
   deserializeProp: _communityIDDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'goal': LinkSchema(
+      id: 3589664572998991852,
+      name: r'goal',
+      target: r'Goal',
+      single: true,
+    )
+  },
   embeddedSchemas: {},
   getId: _communityIDGetId,
   getLinks: _communityIDGetLinks,
   attach: _communityIDAttach,
-  version: '3.0.5',
+  version: '3.1.0',
 );
 
 int _communityIDEstimateSize(
@@ -48,7 +55,7 @@ int _communityIDEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.CommunityId.length * 3;
+  bytesCount += 3 + object.communityId.length * 3;
   bytesCount += 3 + object.userID.length * 3;
   return bytesCount;
 }
@@ -59,7 +66,7 @@ void _communityIDSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.CommunityId);
+  writer.writeString(offsets[0], object.communityId);
   writer.writeString(offsets[1], object.userID);
 }
 
@@ -72,7 +79,7 @@ CommunityID _communityIDDeserialize(
   final object = CommunityID(
     userID: reader.readString(offsets[1]),
   );
-  object.CommunityId = reader.readString(offsets[0]);
+  object.communityId = reader.readString(offsets[0]);
   object.id = id;
   return object;
 }
@@ -98,12 +105,13 @@ Id _communityIDGetId(CommunityID object) {
 }
 
 List<IsarLinkBase<dynamic>> _communityIDGetLinks(CommunityID object) {
-  return [];
+  return [object.goal];
 }
 
 void _communityIDAttach(
     IsarCollection<dynamic> col, Id id, CommunityID object) {
   object.id = id;
+  object.goal.attach(col, col.isar.collection<Goal>(), r'goal', id);
 }
 
 extension CommunityIDQueryWhereSort
@@ -193,7 +201,7 @@ extension CommunityIDQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'CommunityId',
+        property: r'communityId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -209,7 +217,7 @@ extension CommunityIDQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'CommunityId',
+        property: r'communityId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -225,7 +233,7 @@ extension CommunityIDQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'CommunityId',
+        property: r'communityId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -242,7 +250,7 @@ extension CommunityIDQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'CommunityId',
+        property: r'communityId',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -259,7 +267,7 @@ extension CommunityIDQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'CommunityId',
+        property: r'communityId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -273,7 +281,7 @@ extension CommunityIDQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'CommunityId',
+        property: r'communityId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -284,7 +292,7 @@ extension CommunityIDQueryFilter
       communityIdContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'CommunityId',
+        property: r'communityId',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -295,7 +303,7 @@ extension CommunityIDQueryFilter
       communityIdMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'CommunityId',
+        property: r'communityId',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -306,7 +314,7 @@ extension CommunityIDQueryFilter
       communityIdIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'CommunityId',
+        property: r'communityId',
         value: '',
       ));
     });
@@ -316,7 +324,7 @@ extension CommunityIDQueryFilter
       communityIdIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'CommunityId',
+        property: r'communityId',
         value: '',
       ));
     });
@@ -514,19 +522,32 @@ extension CommunityIDQueryObject
     on QueryBuilder<CommunityID, CommunityID, QFilterCondition> {}
 
 extension CommunityIDQueryLinks
-    on QueryBuilder<CommunityID, CommunityID, QFilterCondition> {}
+    on QueryBuilder<CommunityID, CommunityID, QFilterCondition> {
+  QueryBuilder<CommunityID, CommunityID, QAfterFilterCondition> goal(
+      FilterQuery<Goal> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'goal');
+    });
+  }
+
+  QueryBuilder<CommunityID, CommunityID, QAfterFilterCondition> goalIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'goal', 0, true, 0, true);
+    });
+  }
+}
 
 extension CommunityIDQuerySortBy
     on QueryBuilder<CommunityID, CommunityID, QSortBy> {
   QueryBuilder<CommunityID, CommunityID, QAfterSortBy> sortByCommunityId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'CommunityId', Sort.asc);
+      return query.addSortBy(r'communityId', Sort.asc);
     });
   }
 
   QueryBuilder<CommunityID, CommunityID, QAfterSortBy> sortByCommunityIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'CommunityId', Sort.desc);
+      return query.addSortBy(r'communityId', Sort.desc);
     });
   }
 
@@ -547,13 +568,13 @@ extension CommunityIDQuerySortThenBy
     on QueryBuilder<CommunityID, CommunityID, QSortThenBy> {
   QueryBuilder<CommunityID, CommunityID, QAfterSortBy> thenByCommunityId() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'CommunityId', Sort.asc);
+      return query.addSortBy(r'communityId', Sort.asc);
     });
   }
 
   QueryBuilder<CommunityID, CommunityID, QAfterSortBy> thenByCommunityIdDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'CommunityId', Sort.desc);
+      return query.addSortBy(r'communityId', Sort.desc);
     });
   }
 
@@ -587,7 +608,7 @@ extension CommunityIDQueryWhereDistinct
   QueryBuilder<CommunityID, CommunityID, QDistinct> distinctByCommunityId(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'CommunityId', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'communityId', caseSensitive: caseSensitive);
     });
   }
 
@@ -607,9 +628,9 @@ extension CommunityIDQueryProperty
     });
   }
 
-  QueryBuilder<CommunityID, String, QQueryOperations> CommunityIdProperty() {
+  QueryBuilder<CommunityID, String, QQueryOperations> communityIdProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'CommunityId');
+      return query.addPropertyName(r'communityId');
     });
   }
 

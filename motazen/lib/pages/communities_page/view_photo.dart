@@ -1,16 +1,14 @@
-// ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables
-//REEMAS
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
-class viewPhoto extends StatefulWidget {
-  const viewPhoto({super.key, this.imgURL});
-  final imgURL;
+class ViewPhoto extends StatefulWidget {
+  const ViewPhoto({super.key, this.imgURL});
+  final dynamic imgURL;
   @override
-  State<viewPhoto> createState() => _viewPhotoState();
+  State<ViewPhoto> createState() => _ViewPhotoState();
 }
 
-class _viewPhotoState extends State<viewPhoto> {
+class _ViewPhotoState extends State<ViewPhoto> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

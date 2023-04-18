@@ -1,7 +1,7 @@
-// ignore_for_file: must_be_immutable, non_constant_identifier_names, await_only_futures, deprecated_member_use, unused_local_variable
+// ignore_for_file: must_be_immutable
 
 import 'dart:async';
-
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,19 +14,18 @@ import 'package:motazen/models/community.dart';
 import 'package:motazen/pages/signup/sign_up_method.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
-
 import '../select_aspectPage/handle_aspect_data.dart';
 
 class VerifyScreen extends StatefulWidget {
   //======= this data is received from sign up form.
-  final String first_name;
-  final String user_name;
+  final String firstName;
+  final String userName;
   String email;
   final String pass;
   VerifyScreen(
       {Key? key,
-      required this.first_name,
-      this.user_name = "",
+      required this.firstName,
+      this.userName = "",
       this.email = "",
       this.pass = ""})
       : super(key: key);
@@ -193,20 +192,20 @@ class _VerifyScreenState extends State<VerifyScreen> {
           ' .  إذا لم تقم بطلب رمز التحقق فضلا تجاهل هذه الرسالة. \n\n فريق مُتزن $otp رمز التحقق من هويتك من خلال البريد المُسجل لدينا في تطبيق متزن هو   $receiverEmailعزيزي ';
 
     try {
-      final sendReport = await send(message, smtpServer);
+      await send(message, smtpServer);
       AllDialogues.hideloading();
       Fluttertoast.showToast(
           msg: "تم إرسال الرمز عبر بريدك الإلكتروني الخاص",
           toastLength: Toast.LENGTH_LONG);
       _startTimer();
     } on MailerException catch (e) {
-      for (var p in e.problems) {}
       setState(() {
         _counter = 00;
       });
       _timer.cancel();
       AllDialogues.hideloading();
       Fluttertoast.showToast(msg: "حدث خطأ");
+      log('error on verify page: $e');
     }
   }
 
@@ -223,19 +222,19 @@ class _VerifyScreenState extends State<VerifyScreen> {
           'Dear $receiverEmail,\n${comm.founderUsername} has invited you in the community ${comm.communityName}. Please check the app notification to accept or reject the invitation\n\nRegards,\nTeam Motazen';
 
     try {
-      final sendReport = await send(message, smtpServer);
+      await send(message, smtpServer);
       AllDialogues.hideloading();
       Fluttertoast.showToast(
           msg: "Invite sent", toastLength: Toast.LENGTH_LONG);
       _startTimer();
     } on MailerException catch (e) {
-      for (var p in e.problems) {}
       setState(() {
         _counter = 00;
       });
       _timer.cancel();
       AllDialogues.hideloading();
       Fluttertoast.showToast(msg: "Failed sending invite mail");
+      log('error on verify: $e');
     }
   }
 
@@ -267,12 +266,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: widget.email, password: widget.pass);
-      await userCredential.user!.updateDisplayName(widget.first_name);
-      await saveSignUpFormData(widget.first_name, widget.user_name,
-          widget.email, widget.pass, userCredential.user!.uid);
+      await userCredential.user!.updateDisplayName(widget.firstName);
+      await saveSignUpFormData(widget.firstName, widget.userName, widget.email,
+          widget.pass, userCredential.user!.uid);
       Fluttertoast.showToast(msg: "تم التحقق من بريدك الإلكتروني");
       AllDialogues.hideloading();
-      Get.to(() => const initializeAspects());
+      Get.to(() => const InitializeAspects());
     } on FirebaseAuthException catch (e) {
       AllDialogues.hideloading();
       if (e.code == 'weak-password') {

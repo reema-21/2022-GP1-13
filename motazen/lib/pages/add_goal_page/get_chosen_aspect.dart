@@ -1,23 +1,19 @@
-// ignore_for_file: camel_case_types
-
-import 'package:motazen/Sidebar_and_navigation/navigation-bar.dart';
+import 'package:motazen/Sidebar_and_navigation/navigation_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../../isar_service.dart';
 import '../../controllers/aspect_controller.dart';
 
-class getChosenAspect extends StatefulWidget {
-  final String? origin;
-  const getChosenAspect({
+class GetChosenAspect extends StatefulWidget {
+  const GetChosenAspect({
     super.key,
-    this.origin,
   });
 
   @override
-  State<getChosenAspect> createState() => _showsState();
+  State<GetChosenAspect> createState() => _ShowsState();
 }
 
-class _showsState extends State<getChosenAspect> {
+class _ShowsState extends State<GetChosenAspect> {
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context);
@@ -28,8 +24,8 @@ class _showsState extends State<getChosenAspect> {
           builder: ((context, snapshot) {
             if (snapshot.hasData) {
               //a list of selected aspects
-              aspectList.selected = snapshot.data!;
-              return const navBar(
+              aspectList.updateSelectedList(snapshot.data!);
+              return const NavBar(
                 selectedIndex: 0,
               );
             } else {

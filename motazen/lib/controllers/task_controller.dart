@@ -1,18 +1,12 @@
-// ignore_for_file: non_constant_identifier_names, unused_local_variable
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:motazen/models/taskClass.dart';
-
+import 'package:motazen/models/task_model.dart';
 import '/entities/task.dart';
-// create  a class called task
-//the class have the same name property except having a list that
-// when save in here save
 
 class TaskControleer extends GetxController {
   var checkTotalTaskDuration =
       0.obs; // to check whether the user Enterd a valid goal duration or not
-  var TaskDuration = 0.obs;
+  var taskDuration = 0.obs;
   var currentTaskDuration = 0.obs;
   var totalTasksDuration = 0.obs;
   var iscool = false.obs;
@@ -21,7 +15,7 @@ class TaskControleer extends GetxController {
 
   Rx<List<Task>> goalTask =
       Rx<List<Task>>([]); // for saving the task depenecy  .
-  Rx<List<String>> TasksMenue = Rx<List<String>>([]);
+  Rx<List<String>> tasksMenue = Rx<List<String>>([]);
   Rx<List<String>> selectedTasks = Rx<List<String>>([]);
   var selectedOption = "".obs;
 
@@ -33,7 +27,7 @@ class TaskControleer extends GetxController {
   var itemCountAdd = 0.obs;
   var itemCountDelete = 0.obs;
   var itemCountEdit = 0.obs;
-  Rx<List<TaskData>> OrginalTasks = Rx<List<TaskData>>([]);
+  Rx<List<TaskData>> orginalTasks = Rx<List<TaskData>>([]);
 
   Rx<List<TaskData>> allTaskForDepency = Rx<List<TaskData>>([]);
   Rx<TaskData> tryTask = Rx<TaskData>(TaskData());
@@ -41,15 +35,15 @@ class TaskControleer extends GetxController {
   TextEditingController inputTaskName = TextEditingController();
 
   bool addTask(String name, String duName, int val) {
-    TaskData TaskForDependency = TaskData();
-    TaskForDependency.name = name;
+    TaskData taskForDependency = TaskData();
+    taskForDependency.name = name;
     //this is just to create the list to check for andy dependen to not delete .
     for (int i = 0; i < selectedTasks.value.length; i++) {
-      TaskForDependency.TaskDependency.add(selectedTasks.value[i]);
+      taskForDependency.taskDependency.add(selectedTasks.value[i]);
     }
-    // TaskForDependency.TaskDependency = selectedTasks.value ;
+    // taskForDependency.taskDependency = selectedTasks.value ;
 
-    allTaskForDepency.value.add(TaskForDependency);
+    allTaskForDepency.value.add(taskForDependency);
 
     String durationDescribtion = "";
     int duraitionn = 0;
@@ -80,7 +74,7 @@ class TaskControleer extends GetxController {
     }
     Task newTak = Task(
         name: name,
-        TaskDependency: selectedTasks.value,
+        taskDependency: selectedTasks.value,
         amountCompleted: 0,
         duration: duraitionn,
         durationDescribtion: durationDescribtion,
@@ -95,9 +89,6 @@ class TaskControleer extends GetxController {
   removeTask(int index) {
     // i am suppose that they will have the same index
     allTaskForDepency.value.removeAt(index);
-
-    for (var i in allTaskForDepency.value) {}
-
     goalTask.value.removeAt(index);
     itemCount.value = goalTask.value.length;
   }
@@ -109,7 +100,7 @@ class TaskControleer extends GetxController {
       totalSummation = totalSummation + goalTask.value[i].duration;
     }
 
-    TaskDuration.value = taskduration;
+    taskDuration.value = taskduration;
     currentTaskDuration.value = currentTaskduraions;
     tem.value = totalDurtion;
     totalTasksDuration.value = totalDurtion;
@@ -153,18 +144,14 @@ class TaskControleer extends GetxController {
     }
 
     if (tem > goalduration) {
-       
-                               
-                     
       Get.snackbar(
-        colorText:Colors.black ,
-         duration: const Duration(milliseconds: 1000),
+        colorText: Colors.black,
+        duration: const Duration(milliseconds: 1000),
         backgroundColor: const Color.fromARGB(255, 243, 9, 9),
-          "", "لا يمكن زيادة الفترة ، فترة المهام ستصبح أعلى من فترة الهدف ",
-          icon: const Icon(Icons.alarm),
-          
-          
-          );
+        "",
+        "لا يمكن زيادة الفترة ، فترة المهام ستصبح أعلى من فترة الهدف ",
+        icon: const Icon(Icons.alarm),
+      );
 
       switch (isSelected.value) {
         case "أيام":
@@ -216,27 +203,27 @@ class TaskControleer extends GetxController {
           "", "لا يمكن زيادة الفترة ، فترة المهام ستصبح أعلى من فترة الهدف ",
           icon: const Icon(Icons.alarm), barBlur: 20);
     } else {
-      TaskDuration.value++;
+      taskDuration.value++;
     }
   }
 
   setdefult() {
-    TaskDuration.value = 0;
+    taskDuration.value = 0;
     tem.value = tem.value - currentTaskDuration.value;
     currentTaskDuration.value = 0;
   }
 
   dcrement() {
-    if (TaskDuration.value <= 0) {
+    if (taskDuration.value <= 0) {
       Get.snackbar("", "قيمة الفترة لا يمكن ان تكون اقل من واحد",
           icon: const Icon(Icons.alarm), barBlur: 20);
     } else {
-      TaskDuration.value--;
+      taskDuration.value--;
 
       switch (isSelected.value) {
         case "أيام":
-          tem.value = tem.value - TaskDuration.value;
-          currentTaskDuration.value = TaskDuration.value;
+          tem.value = tem.value - taskDuration.value;
+          currentTaskDuration.value = taskDuration.value;
 
           break;
         case "أسابيع":
