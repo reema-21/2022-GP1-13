@@ -4,6 +4,7 @@ import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:motazen/pages/assesment_page/calculate_assessment.dart';
+import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +38,7 @@ class _AssessmentPageState extends State<AssessmentPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('ادخل اجابتك بإستخدام المؤشر', style: subTitle),
-                  Text('١ تعني لا أوافق ١٠ تعني أوافق', style: subTitle),
+                  Text('لا أوافق بشدة = 1  أوافق بشدة = 10', style: subTitle),
                 ],
               ),
             ]),
@@ -175,6 +176,7 @@ class _AssessmentPageState extends State<AssessmentPage> {
                   .calculateAllpoints(aspectList.questionData);
               //get to the new page
               if (mounted) {
+                ItemList().createTaskTodoList(aspectList.selected);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
