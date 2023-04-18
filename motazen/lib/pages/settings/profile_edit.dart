@@ -534,6 +534,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       setState(() {
                         formIsOkay = false;
                       });
+                    } else {
+                      final validUserName = await usernameCheck(
+                          usernameController.text.toLowerCase());
+                      if (!validUserName) {
+                        setState(() {
+                          formIsOkay = false;
+                        });
+                        AllDialogues.showErrorDialog(
+                            title: "المستخدم مسجل سابقًا!",
+                            discription:
+                                "${usernameController.text}  مسجل سابقًا، سجّل باسم مستخدم جديد ");
+                      }
                     }
                   }
                   if (firstnameController.text.isNotEmpty &&
@@ -542,16 +554,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       setState(() {
                         formIsOkay = false;
                       });
-                      final validUserName = await usernameCheck(
-                          firstnameController.text.toLowerCase());
-                      if (!validUserName) {
+                    }
+                  }
+
+                  if (formIsOkay &&
+                      emailController.text.isNotEmpty &&
+                      _emailKey.currentState!.validate()) {
+                    if (emailController.text != oldEmail) {
+                      final validEmail = await emailIdCheck(
+                          emailController.text.toLowerCase());
+                      AllDialogues.hideloading();
+                      if (!validEmail) {
                         setState(() {
                           formIsOkay = false;
                         });
                         AllDialogues.showErrorDialog(
-                            title: "!هذا المستخدم مسجل سابقًا",
+                            title: "!البريد الإلكتروني موجود مُسبقًا",
                             discription:
-                                " مسجل سابقًا، سجّل باسم مستخدم جديد ${firstnameController.text} ");
+                                " مسجل مسبقًا, الرجاء التسجيل ببريد آخر ${emailController.text} البريد الإلكتروني  ");
                       }
                     }
                   }
@@ -560,21 +580,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       usernameController.text.isNotEmpty &&
                       usernameController.text != oldFirstName &&
                       _userNameKey.currentState!.validate()) {
-                    ref.doc(userID!.uid.toString()).update({
-                      'userName': usernameController.text.toString(),
-                    }).then((value) {
-                      Fluttertoast.showToast(msg: "تم بنجاح");
-                      usernameController.text = '';
+                    final validUserName = await usernameCheck(
+                        firstnameController.text.toLowerCase());
+                    if (!validUserName) {
+                      AllDialogues.showErrorDialog(
+                          title: "!هذا المستخدم مسجل سابقًا",
+                          discription:
+                              " مسجل سابقًا، سجّل باسم مستخدم جديد ${firstnameController.text} ");
+                    } else {
+                      ref.doc(userID!.uid.toString()).update({
+                        'userName': usernameController.text.toString(),
+                      }).then((value) {
+                        Fluttertoast.showToast(msg: "تم بنجاح");
+                        usernameController.text = '';
 
-                      setState(() {});
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const GetAllAspects(
-                                    page: 'Home',
-                                  )));
-                    }).onError((error, stackTrace) {});
+                        setState(() {});
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const GetAllAspects(
+                                      page: 'Home',
+                                    )));
+                      }).onError((error, stackTrace) {});
+                    }
                   }
                   // username
                   if (formIsOkay &&

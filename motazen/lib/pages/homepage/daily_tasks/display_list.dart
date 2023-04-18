@@ -6,7 +6,6 @@ import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/pages/homepage/daily_tasks/custom_rect_tween.dart';
 import 'package:motazen/pages/homepage/daily_tasks/hero_dialog_route.dart';
 import 'package:motazen/pages/homepage/daily_tasks/list_popups.dart';
-import 'package:motazen/pages/settings/tasklist_variables.dart';
 import 'package:motazen/theme.dart';
 import '../../goals_habits_tab/calculate_progress.dart';
 
