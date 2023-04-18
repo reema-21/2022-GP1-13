@@ -17,21 +17,21 @@ class BadgesPage extends StatelessWidget {
 
   final List badges = [
     {
-      'name': '1',
+      'name': 'مبتدئ',
       'state': '',
       'description':
           'يقدم هذا الوسام للمستخدم عندما يحصل على ٢٥ اعجاب في المجموعة',
       'badgePath': 'assets/badges/Artboard 2_1.png',
     },
     {
-      'name': '2',
+      'name': 'متوسط',
       'state': '',
       'description':
           'يقدم هذا الوسام للمستخدم عندما يحصل على ٥٠ اعجاب في المجموعة',
       'badgePath': 'assets/badges/Artboard 2_2.png',
     },
     {
-      'name': '3',
+      'name': 'محترف',
       'state': '',
       'description':
           'يقدم هذا الوسام للمستخدم عندما يحصل على ١٠٠ اعجاب في المجموعة',
