@@ -24,11 +24,6 @@ class TaskTodoCard extends StatefulWidget {
 class _TaskTodoCardState extends State<TaskTodoCard> {
   @override
   Widget build(BuildContext context) {
-    if (ItemList.itemList.isEmpty ||
-        ItemList.itemList.length < toShowTaskNumber) {
-      ItemList().createTaskTodoList(widget.aspectList);
-    }
-
     final scrollController = ScrollController();
 
     return GestureDetector(
