@@ -40,180 +40,186 @@ class BadgesPage extends StatelessWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'إنجازاتي', // أوسمتي
-          style: titleText,
+    return Container(
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+        image: AssetImage('assets/images/badges_background.png'),
+        fit: BoxFit.cover,
+      )),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: Text(
+            'إنجازاتي', // أوسمتي
+            style: titleText,
+          ),
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back,
+                  ));
+            },
+          ),
         ),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back,
-                ));
-          },
-        ),
-      ),
-      backgroundColor: Colors.white,
-      body: FutureBuilder(
-        future: FirebaseFirestore.instance.collection('user').doc(userId).get(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Container();
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CupertinoActivityIndicator(); //! later replace with shimmer effect
-          } else {
-            final List listOfLikes =
-                snapshot.data!.data()?['messageLikedUserIds'] ?? [];
-
-            if (listOfLikes.length >= 25) {
-              badges[0]['state'] = 'active';
-            } else if (listOfLikes.length >= 50) {
-              badges[0]['state'] = 'active';
-              badges[1]['state'] = 'active';
-            } else {
-              badges[0]['state'] = 'active';
-              badges[1]['state'] = 'active';
-              badges[2]['state'] = 'active';
+        body: FutureBuilder(
+          future:
+              FirebaseFirestore.instance.collection('user').doc(userId).get(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Container();
             }
-          }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CupertinoActivityIndicator(); //! later replace with shimmer effect
+            } else {
+              final List listOfLikes =
+                  snapshot.data!.data()?['messageLikedUserIds'] ?? [];
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                      width: 140.0,
-                      height: 140.0,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: CircleAvatar(
-                            // display the avatar if added
-                            backgroundImage: avatar == ""
-                                ? null
-                                : CachedNetworkImageProvider(avatar,
-                                    errorListener: () {}),
-                            radius: 60,
-                            backgroundColor: kWhiteColor,
-                            child: avatar != ""
-                                ? null
-                                : const Icon(
-                                    Icons
-                                        .account_circle_sharp, //? is better to have the same icon as the one in the side bar
-                                    color: Color.fromARGB(31, 0, 0, 0),
-                                    size: 150,
-                                  )),
-                      )), //user image
+              if (listOfLikes.length < 25) {
+                //if the user has less than 25 likes then all badges are inactive
+                badges[0]['state'] = 'inactive';
+                badges[1]['state'] = 'inactive';
+                badges[2]['state'] = 'inactive';
+              } else if (listOfLikes.length >= 25) {
+                //if the user has at least 25 likes then only the first badge is active
+                badges[0]['state'] = 'active';
+                badges[1]['state'] = 'inactive';
+                badges[2]['state'] = 'inactive';
+              } else if (listOfLikes.length >= 50) {
+                //if the user has at least 50 likes then the first and second badges are active
+                badges[0]['state'] = 'active';
+                badges[1]['state'] = 'active';
+                badges[2]['state'] = 'inactive';
+              } else {
+                //if the user has at least xxx likes then all badges are active
+                badges[0]['state'] = 'active';
+                badges[1]['state'] = 'active';
+                badges[2]['state'] = 'active';
+              }
+            }
 
-                  StreamBuilder(
-                    stream:
-                        firestore.collection('user').doc(userId).snapshots(),
-                    builder: (context, snapshot) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(
-                            snapshot.hasData
-                                ? '${snapshot.data!['firstName']}'
-                                : '',
-                            textScaleFactor: 1.5,
-                            overflow: TextOverflow.visible,
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                    width: 140.0,
+                    height: 140.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: CircleAvatar(
+                          // display the avatar if added
+                          backgroundImage: avatar == ""
+                              ? null
+                              : CachedNetworkImageProvider(avatar,
+                                  errorListener: () {}),
+                          radius: 60,
+                          backgroundColor: Colors.transparent,
+                          child: avatar != ""
+                              ? null
+                              : const Icon(
+                                  Icons.account_circle_sharp,
+                                  color: Color.fromARGB(31, 0, 0, 0),
+                                  size: 150,
+                                )),
+                    )),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      snapshot.hasData ? '${snapshot.data!['firstName']}' : '',
+                      textScaleFactor: 1.5,
+                      overflow: TextOverflow.visible,
+                    ),
+                    Text(
+                      snapshot.hasData ? '${snapshot.data!['userName']}@' : '',
+                      textScaleFactor: 1,
+                      overflow: TextOverflow.visible,
+                      style: const TextStyle(height: 1),
+                    )
+                  ],
+                ), //user image
+
+                Text(
+                  "${goalProgress.round()}% ",
+                  textScaleFactor: 2,
+                  overflow: TextOverflow.visible,
+                  style: titleText3,
+                ),
+                const Divider(
+                  thickness: 1,
+                  endIndent: 20,
+                  indent: 20,
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return Center(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () => badges[index]['state'] == 'active'
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return BadgeInfo(
+                                          badge: badges[index],
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : null, //! later set a condition to see if achieved is true
+                            child: Container(
+                              width: 150.0,
+                              height: 150.0,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: AssetImage(
+                                          badges[index]['badgePath']),
+                                      colorFilter:
+                                          badges[index]['state'] != 'active'
+                                              ? ColorFilter.mode(
+                                                  Colors.grey[800]!,
+                                                  BlendMode.modulate,
+                                                )
+                                              : null)),
+                            ), //the clickable image
+                            //the name of the badge
                           ),
                           Text(
-                            snapshot.hasData
-                                ? '${snapshot.data!['userName']}@'
-                                : '',
-                            textScaleFactor: 1,
+                            badges[index]['name'],
+                            textScaleFactor: 1.3,
                             overflow: TextOverflow.visible,
-                            style: const TextStyle(height: 1),
-                          )
+                            style: const TextStyle(height: 2),
+                          ),
                         ],
-                      );
+                      ));
                     },
-                  ), // username
-                  Text(
-                    "${goalProgress.round()}% ",
-                    textScaleFactor: 2,
-                    overflow: TextOverflow.visible,
-                    style: titleText3,
                   ),
-                  const Divider(thickness: 1),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Expanded(
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                      ),
-                      itemCount: 3,
-                      itemBuilder: (context, index) {
-                        return Center(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () => badges[index]['state'] == 'active'
-                                  ? Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return BadgeInfo(
-                                            badge: badges[index],
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  : null, //! later set a condition to see if achieved is true
-                              child: Container(
-                                width: 150.0,
-                                height: 150.0,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: AssetImage(
-                                            badges[index]['badgePath']),
-                                        colorFilter: badges[index]['state'] !=
-                                                'active'
-                                            ? ColorFilter.mode(
-                                                Colors.grey.withOpacity(0.8),
-                                                BlendMode.modulate,
-                                              )
-                                            : null)),
-                              ), //the clickable image
-                              //the name of the badge
-                            ),
-                            Expanded(
-                              child: Text(
-                                badges[index]['name'],
-                                textScaleFactor: 1.3,
-                                overflow: TextOverflow.visible,
-                                style: const TextStyle(height: 2),
-                              ),
-                            ),
-                          ],
-                        ));
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        },
+                )
+              ],
+            );
+          },
+        ),
       ),
     );
   }

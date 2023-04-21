@@ -90,23 +90,42 @@ class OtherMessageDesign extends StatelessWidget {
                             Row(
                               children: [
                                 GestureDetector(
-                                    onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return BadgesPage(
-                                                avatar: avatar,
-                                                goalProgress:
-                                                    progressValue.toInt(),
-                                                userId: authID,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                    child: const CircleAvatar(
-                                        maxRadius: 15,
-                                        backgroundImage: CachedNetworkImageProvider(
-                                            'https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-portrait-176256935.jpg'))),
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return BadgesPage(
+                                          avatar: avatar,
+                                          goalProgress: progressValue.toInt(),
+                                          userId: authID,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  child: SizedBox(
+                                      width: 35.0,
+                                      height: 35.0,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: CircleAvatar(
+                                            // display the avatar if added
+                                            backgroundImage: avatar == ""
+                                                ? null
+                                                : CachedNetworkImageProvider(
+                                                    avatar,
+                                                    errorListener: () {}),
+                                            radius: 60,
+                                            backgroundColor: Colors.transparent,
+                                            child: avatar != ""
+                                                ? null
+                                                : const Icon(
+                                                    Icons.account_circle_sharp,
+                                                    color: Color.fromARGB(
+                                                        31, 0, 0, 0),
+                                                    size: 35,
+                                                  )),
+                                      )),
+                                ),
                                 const SizedBox(
                                   width: 10,
                                 ),
@@ -122,12 +141,17 @@ class OtherMessageDesign extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            const Divider(
+                              thickness: 0.8,
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
                             if (pst.replyingPost['text'] != '')
                               Text(
                                 pst.replyingPost['text'].length > 30
                                     ? '...${pst.replyingPost['text'].substring(0, 30)}'
                                     : '${pst.replyingPost['text']}',
-                                // overflow: TextOverflow.visible,
                                 style: TextStyle(
                                   color: Colors.grey[800],
                                   fontSize: 12,
@@ -385,13 +409,10 @@ class OtherMessageDesign extends StatelessWidget {
                                       errorListener: () {}),
                               radius: 60,
                               backgroundColor: kWhiteColor,
-
-                              // ignore: prefer_const_constructors
                               child: avatar != ""
                                   ? null
                                   : const Icon(
-                                      Icons
-                                          .account_circle_sharp, //? is better to have the same icon as the one in the side bar
+                                      Icons.account_circle_sharp,
                                       color: Color.fromARGB(31, 0, 0, 0),
                                       size: 35,
                                     )),
