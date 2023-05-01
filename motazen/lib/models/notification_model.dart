@@ -6,10 +6,12 @@ class NotificationModel {
   final String userName;
   final dynamic reply;
   final dynamic notificationOfTheCommunity;
+  final String notificationId;
   DateTime creationDate;
   String? notificationType;
   NotificationModel(
-      {this.notificationType,
+      {required this.notificationId,
+      this.notificationType,
       required this.comm,
       required this.post,
       required this.reply,
@@ -20,6 +22,7 @@ class NotificationModel {
       required this.senderID});
 
   Map<String, dynamic> toJson() => {
+        'Id': notificationId,
         'community': comm,
         'post': post,
         'userName': userName,

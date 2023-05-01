@@ -28,7 +28,6 @@ class _CreateCommunityState extends State<CreateCommunity> {
   TextEditingController goalNameController = TextEditingController();
   TextEditingController searchContentSetor = TextEditingController();
   CommunityController communityController = Get.find();
-  bool isFirstClick = true;
   TaskControleer taskControleer = Get.find();
   String? goalName;
   bool enabled = false;
@@ -229,59 +228,53 @@ class _CreateCommunityState extends State<CreateCommunity> {
                         children: [
                           InkWell(
                             onTap: () async {
-                              if (isFirstClick) {
-                                isFirstClick = false;
-                                String commID =
-                                    '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
-                                if (formKey.currentState!.validate()) {
-                                  Goal? choseGoal =
-                                      Goal(userID: IsarService.getUserID);
-                                  IsarService iser =
-                                      IsarService(); // initialize local storage
-                                  choseGoal = await iser.getgoal(
-                                    goalName!,
-                                  ); // here iam fetching the goal information from isar to assign it to the communties
-                                  final createdComm = Community(
-                                      progressList: [
-                                        //!here you changes it form being a zero when start to the value of the goalProgress
-                                        {
-                                          firebaseAuth.currentUser!.uid:
-                                              choseGoal!.goalProgressPercentage
-                                        }
-                                      ],
-                                      communityName:
-                                          communityNameController.text,
-                                      aspect: isSelected,
-                                      isPrivate: private,
-                                      isDeleted:
-                                          false, //!isDeleted in here false you just create it
+                              String commID =
+                                  '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
+                              if (formKey.currentState!.validate()) {
+                                Goal? choseGoal =
+                                    Goal(userID: IsarService.getUserID);
+                                IsarService iser =
+                                    IsarService(); // initialize local storage
+                                choseGoal = await iser.getgoal(
+                                  goalName!,
+                                ); // here iam fetching the goal information from isar to assign it to the communties
+                                final createdComm = Community(
+                                    progressList: [
+                                      //!here you changes it form being a zero when start to the value of the goalProgress
+                                      {
+                                        firebaseAuth.currentUser!.uid:
+                                            choseGoal!.goalProgressPercentage
+                                      }
+                                    ],
+                                    communityName: communityNameController.text,
+                                    aspect: isSelected,
+                                    isPrivate: private,
+                                    isDeleted:
+                                        false, //!isDeleted in here false you just create it
 
-                                      founderUsername:
-                                          firebaseAuth.currentUser!.uid,
-                                      creationDate: DateTime.now(),
-                                      goalName: goalName,
-                                      id: commID);
-                                  communityController.listOfCreatedCommunities
-                                      .insert(0, createdComm);
-                                  communityController.update();
-                                  communityController.createCommunity(
-                                    invitedUsers: [],
-                                    community: createdComm,
-                                  );
-                                  CommunityID newCom = CommunityID(
-                                      userID: IsarService.getUserID);
-                                  newCom.communityId = commID;
-                                  newCom.goal.value = choseGoal;
-                                  iser.saveCom(newCom);
-                                  choseGoal.communities.add(newCom);
-                                  iser.createGoal(choseGoal);
+                                    founderUsername:
+                                        firebaseAuth.currentUser!.uid,
+                                    creationDate: DateTime.now(),
+                                    goalName: goalName,
+                                    id: commID);
+                                communityController.listOfCreatedCommunities
+                                    .insert(0, createdComm);
+                                communityController.update();
+                                communityController.createCommunity(
+                                  invitedUsers: [],
+                                  community: createdComm,
+                                );
+                                CommunityID newCom =
+                                    CommunityID(userID: IsarService.getUserID);
+                                newCom.communityId = commID;
+                                newCom.goal.value = choseGoal;
+                                iser.saveCom(newCom);
+                                choseGoal.communities.add(newCom);
+                                iser.createGoal(choseGoal);
 
-                                  Get.back();
-                                  Get.to(() => CommunityHomePage(
-                                      fromInvite: false, comm: createdComm));
-                                } else {
-                                  isFirstClick = true;
-                                }
+                                Get.back();
+                                Get.to(() => CommunityHomePage(
+                                    fromInvite: false, comm: createdComm));
                               }
                             },
                             child: Container(

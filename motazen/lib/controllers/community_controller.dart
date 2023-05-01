@@ -1,52 +1,17 @@
 import 'dart:developer';
-
 import 'package:async/async.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:motazen/Sidebar_and_navigation/navigation_bar.dart';
 import 'package:motazen/controllers/auth_controller.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/models/community.dart';
 import 'package:motazen/models/user.dart';
-
-import '../models/notification_model.dart';
 import '../theme.dart';
 
 class CommunityController extends GetxController {
-  final Rx<Map<String, dynamic>> _user = Rx<Map<String, dynamic>>({});
-  Map<String, dynamic> get user => _user.value;
-
-  RxList<dynamic> projects = <dynamic>[].obs;
-
   RxList<Community> listOfCreatedCommunities = <Community>[].obs;
   RxList<Community> listOfJoinedCommunities = <Community>[].obs;
-  RxList<NotificationModel> listOfNotifications = <NotificationModel>[].obs;
-  RxList shoppingList = [].obs;
-  Rx<bool> isProfilePhotoUpdating = false.obs;
-  Rx<bool> isProfileComplete = false.obs;
-  Rx<bool> isPremiumUser = false.obs;
-  Rx<String> name = ''.obs;
-  Rx<String> email = ''.obs;
-  Rx<String> sex = ''.obs;
-  Rx<String> memberSince = ''.obs;
-  Rx<String> trainingSession = ''.obs;
-  Rx<DateTime> birthday = DateTime.now().obs;
-  Rx<String> gender = ''.obs;
-  Rx<String> profilePhoto = ''.obs;
-  Rx<String> height = ''.obs;
-  Rx<String> startWeight = ''.obs;
-  Rx<String> currentWeight = ''.obs;
-  Rx<String> goalWeight = ''.obs;
-  Rx<String> goal = ''.obs;
-  Rx<String> activityLevel = ''.obs;
-  dynamic notificationQuerySnapshot;
-  final Rx<String> _uid = "".obs;
-  AuthController authController = Get.find();
-
-  updateUserData(String uid) async {
-    _uid.value = uid;
-    await getUserData();
-  }
+  RxList<Community> userCommunities = <Community>[].obs;
+  AuthController authController = Get.put(AuthController());
 
   List<Community> findAspectComm(Aspect aspect) {
     List<Community> aspectCommunities = [];
@@ -63,143 +28,77 @@ class CommunityController extends GetxController {
     return aspectCommunities;
   }
 
-//* this method is for assigning the listofnotification a value . i will add all the notification exepct the invitetion for unselected aspec in this case i will send an alert notifaction to the sender
-  getNotifications(List selectedAspect) async {
-    try {
-      listOfNotifications.clear();
-    } catch (e) {
-      log('error: $e');
-    }
+  void removeDuplicateCommunities() {
+    final uniqueCommunities = <Community>{};
+    final duplicates = <Community>[];
 
-    try {
-      if (notificationQuerySnapshot.docs.isNotEmpty) {
-        for (var doc in notificationQuerySnapshot.docs) {
-          var notydoc = doc.data();
-          //first i will check if it is an  invition if so i will check the aspect and then delete it
-          if (notydoc['community'] != null) {
-            bool selecetd = false;
-            for (var aspect in selectedAspect) {
-              if (aspect.name == notydoc['community']['aspect']) {
-                selecetd = true;
-                break;
-              }
-            }
-// here if it is not selected i will delete it
-            if (!selecetd) {
-              //not selected
-              await firestore
-                  .collection('user')
-                  .doc(firebaseAuth.currentUser!.uid)
-                  .collection('notifications')
-                  .where('type', isEqualTo: "invite")
-                  .where('creation_date', isEqualTo: notydoc['creation_date'])
-                  .get()
-                  .then((snapshot) {
-                for (DocumentSnapshot ds in snapshot.docs) {
-                  ds.reference.delete();
-                }
-              });
-            }
-          }
-
-          try {
-            listOfNotifications.add(
-              NotificationModel(
-                  senderAvtar: notydoc['sender_avatar'],
-                  senderID: notydoc['sender_id'],
-                  comm: notydoc['community'] == null
-                      ? null
-                      : Community(
-                          progressList: notydoc['community']['progress_list'],
-                          isDeleted: notydoc['community']['isDeleted'],
-                          aspect: notydoc['community']['aspect'],
-                          communityName: notydoc['community']['communityName'],
-                          creationDate:
-                              notydoc['community']['creationDate'].toDate(),
-                          founderUsername: notydoc['community']
-                              ['founderUsername'],
-                          goalName: notydoc['community']['goalName'],
-                          isPrivate: notydoc['community']['isPrivate'],
-                          id: notydoc['community']['_id']),
-                  creationDate: notydoc['creation_date'].toDate(),
-                  post: notydoc['post'],
-                  reply: notydoc['reply'],
-                  userName: notydoc['userName'],
-                  notificationType: notydoc['type'] ?? "invite",
-                  notificationOfTheCommunity: notydoc['community_link']),
-            );
-          } catch (e) {
-            log('error: $e');
-          }
-        }
-        listOfNotifications
-            .sort((b, a) => a.creationDate.compareTo(b.creationDate));
+    for (final community in userCommunities) {
+      if (!uniqueCommunities.add(community)) {
+        // Community already exists, add to duplicates list
+        duplicates.add(community);
       }
-    } catch (e) {
-      log('error: $e');
     }
+
+    // Remove duplicates from userCommunities list
+    userCommunities.removeWhere((community) => duplicates.contains(community));
     update();
   }
 
-  getUserData() async {
-    listOfJoinedCommunities.clear();
-    listOfCreatedCommunities.clear();
+  Future<void> getUserData() async {
+    userCommunities.clear();
 
-    dynamic userDoc;
-
-    userDoc = await firestore
+    final userDoc = await firestore
         .collection('user')
         .doc(firebaseAuth.currentUser!.uid)
         .get();
 
-    final userData = userDoc.data()! as dynamic;
+    final userData = userDoc.data()!;
 
-    List createdCommunitiess = [];
-    try {
-      createdCommunitiess = userData['createdCommunities'];
-    } catch (e) {
-      log('error: $e');
-    }
-    List joinedCommunitiess = [];
-    try {
-      joinedCommunitiess = userData['joinedCommunities'];
-    } catch (e) {
-      log('error: $e');
+    final createdCommunities = List<Map<String, dynamic>>.from(
+        userData['createdCommunities'] ?? <Map<String, dynamic>>[]);
+    final joinedCommunities = List<Map<String, dynamic>>.from(
+        userData['joinedCommunities'] ?? <Map<String, dynamic>>[]);
+
+    final communityIds = <String>{};
+
+    for (final community in createdCommunities) {
+      addCommunityIfNotExists(
+        community,
+        communityIds,
+      );
     }
 
-//! the issue starts here
-    for (var community in createdCommunitiess) {
-      if (!(listOfCreatedCommunities
-          .any((element) => element.id == community['_id']))) {
-        listOfCreatedCommunities.add(Community(
-            progressList: community['progress_list'],
-            aspect: community['aspect'],
-            founderUsername: community['founderUsername'],
-            communityName: community['communityName'],
-            creationDate: community['creationDate'].toDate(),
-            goalName: community['goalName'],
-            isPrivate: community['isPrivate'],
-            isDeleted: community['isDeleted'],
-            id: community['_id']));
-      }
-    }
-    for (var community in joinedCommunitiess) {
-      if (!(listOfJoinedCommunities
-          .any((element) => element.id == community['_id']))) {
-        listOfJoinedCommunities.add(Community(
-            progressList: community['progress_list'],
-            aspect: community['aspect'],
-            founderUsername: community['founderUsername'],
-            communityName: community['communityName'],
-            creationDate: community['creationDate'].toDate(),
-            goalName: community['goalName'],
-            isPrivate: community['isPrivate'],
-            isDeleted: community['isDeleted'],
-            id: community['_id']));
-      }
+    for (final community in joinedCommunities) {
+      addCommunityIfNotExists(
+        community,
+        communityIds,
+      );
     }
 
     update();
+  }
+
+  void addCommunityIfNotExists(
+    Map<String, dynamic> communityData,
+    Set<String> communityIds,
+  ) {
+    final communityId = communityData['_id'] as String;
+    if (communityIds.contains(communityId)) return;
+
+    final communityModel = Community(
+      progressList: communityData['progress_list'],
+      aspect: communityData['aspect'],
+      founderUsername: communityData['founderUsername'],
+      communityName: communityData['communityName'],
+      creationDate: communityData['creationDate'].toDate(),
+      goalName: communityData['goalName'],
+      isPrivate: communityData['isPrivate'],
+      isDeleted: communityData['isDeleted'],
+      id: communityId,
+    );
+
+    userCommunities.add(communityModel);
+    communityIds.add(communityId);
   }
 
   createCommunity({
@@ -207,7 +106,7 @@ class CommunityController extends GetxController {
     required List<Userr> invitedUsers,
   }) async {
     FutureGroup futureGroup = FutureGroup();
-
+    //* adding the coomunity to the list of created communities
     try {
       await firestore
           .collection('user')
@@ -227,6 +126,7 @@ class CommunityController extends GetxController {
           };
         }).toList(),
       }).then((value) async {
+        //* sending invitations to other users
         if (invitedUsers.isNotEmpty) {
           for (var user in invitedUsers) {
             futureGroup.add(firestore
@@ -250,6 +150,7 @@ class CommunityController extends GetxController {
             }));
           }
         }
+        //* adding a community to the public_communities collection
         if (!(community.isPrivate)) {
           await firestore
               .collection('public_communities')
@@ -263,15 +164,10 @@ class CommunityController extends GetxController {
             'goalName': community.goalName,
             'isPrivate': community.isPrivate,
             'isDeleted': community.isDeleted,
-
-            // 'listOfTasks': community.listOfTasks!.isNotEmpty
-            //     ? community.listOfTasks!.map((e) => e.toJson()).toList()
-            //     : [],
-            // 'tillDate': community.tillDate,
             '_id': community.id
           });
         } else {
-          //!here add to the private_communities collection
+          //* adding a community to the private_communities collection
           await firestore
               .collection('private_communities')
               .doc(community.id)
@@ -284,24 +180,15 @@ class CommunityController extends GetxController {
             'goalName': community.goalName,
             'isPrivate': community.isPrivate,
             'isDeleted': community.isDeleted,
-            // 'listOfTasks': community.listOfTasks!.isNotEmpty
-            //     ? community.listOfTasks!.map((e) => e.toJson()).toList()
-            //     : [],
-            // 'tillDate': community.tillDate,
             '_id': community.id
           });
         }
       });
       futureGroup.close();
       getSuccessSnackBar('تم انشاء المجتمع بنجاح');
-      // Get.off(() => const NavBar());
     } catch (e) {
       listOfCreatedCommunities.remove(community);
       getErrorSnackBar('حدث خطأ ما ،عاود التسجيل مرة أخرى ');
-
-      Get.off(() => const NavBar(
-            selectedIndex: 1,
-          )); // here you  might need to change the number
     }
   }
 
@@ -324,27 +211,6 @@ class CommunityController extends GetxController {
                   'isDeleted': e.isDeleted,
                 })
             .toList(),
-      });
-    } catch (e) {
-      log('error: $e');
-    }
-    Get.back();
-  }
-
-  removeNotification(
-      {required DateTime creationDateOfCommunity, required String type}) async {
-    try {
-      await firestore
-          .collection('user')
-          .doc(firebaseAuth.currentUser!.uid)
-          .collection('notifications')
-          .where('type', isEqualTo: type)
-          .where('creation_date', isEqualTo: creationDateOfCommunity)
-          .get()
-          .then((snapshot) {
-        for (DocumentSnapshot ds in snapshot.docs) {
-          ds.reference.delete();
-        }
       });
     } catch (e) {
       log('error: $e');

@@ -8,9 +8,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/models/post_model.dart';
 import 'package:motazen/pages/communities_page/community/posts/community_post_design.dart';
 import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../../Sidebar_and_navigation/navigation_bar.dart';
 import '../../../controllers/auth_controller.dart';
@@ -56,7 +58,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
   bool isSendingImage = false;
   int initialIndex = 0;
   bool initialCome = true;
-  _addPost() {
+  _addPost() async {
     final user = FirebaseAuth.instance.currentUser;
     final time = DateTime.now().toUtc().millisecondsSinceEpoch;
     _dbRef
@@ -73,32 +75,36 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
       'replied_post': replyingPost?.toJson()
     });
     if (replyingPost != null && replyingPost!.authorId != user.uid) {
-      firestore
-          .collection('user')
-          .doc(replyingPost!.authorId)
-          .collection('notifications')
-          .add({
-        'sender_avatar': authController.currentUser.value.avatarURL ?? "",
-        'sender_id': firebaseAuth.currentUser!.uid,
-        'creation_date': DateTime.now(),
-        'type': 'reply',
-        'reply': replyingPost!.postType == 'text'
-            ? replyingPost!.text
-            : 'Attachment (Image)',
-        'community_link': widget.comm.id,
-        'post': PostModel(
-                text: _post,
-                postType: 'text',
-                author: user.displayName,
-                authorId: user.uid,
-                time: time,
-                comments: [],
-                likes: [],
-                replyingPost: null,
-                imageURL: null)
-            .toJson(),
-        'userName': user.displayName,
-      });
+      try {
+        await firestore
+            .collection('user')
+            .doc(replyingPost!.authorId)
+            .collection('notifications')
+            .add({
+          'sender_avatar': authController.currentUser.value.avatarURL ?? "",
+          'sender_id': firebaseAuth.currentUser!.uid,
+          'creation_date': DateTime.now(),
+          'type': 'reply',
+          'reply': replyingPost!.postType == 'text'
+              ? replyingPost!.text
+              : 'Attachment (Image)',
+          'community_link': widget.comm.id,
+          'post': PostModel(
+                  text: _post,
+                  postType: 'text',
+                  author: user.displayName,
+                  authorId: user.uid,
+                  time: time,
+                  comments: [],
+                  likes: [],
+                  replyingPost: null,
+                  imageURL: null)
+              .toJson(),
+          'userName': user.displayName,
+        });
+      } on Exception catch (e) {
+        log('error: $e');
+      }
     }
     setState(() {
       replyingPost = null;
@@ -108,47 +114,55 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
 
   AuthController authController = Get.find();
 
-  _likeTheText(PostModel pst, String link) {
+  _likeTheText(PostModel pst, String link) async {
     final user = FirebaseAuth.instance.currentUser;
     var newList = List<dynamic>.from(pst.likes);
     newList.add(user!.uid);
     _dbRef.ref(link).child('likes').set(newList);
     if (pst.authorId != user.uid) {
-      firestore
-          .collection('user')
-          .doc(pst.authorId)
-          .collection('notifications')
-          .add({
-        'sender_avatar': authController.currentUser.value.avatarURL ?? "",
-        'sender_id': firebaseAuth.currentUser!.uid,
-        'creation_date': DateTime.now(),
-        'community_link': widget.comm.id,
-        'type': 'like',
-        'post': pst.toJson(),
-        'userName': user.displayName,
-      });
+      try {
+        await firestore
+            .collection('user')
+            .doc(pst.authorId)
+            .collection('notifications')
+            .add({
+          'sender_avatar': authController.currentUser.value.avatarURL ?? "",
+          'sender_id': firebaseAuth.currentUser!.uid,
+          'creation_date': DateTime.now(),
+          'community_link': widget.comm.id,
+          'type': 'like',
+          'post': pst.toJson(),
+          'userName': user.displayName,
+        });
+      } on Exception catch (e) {
+        log('error: $e');
+      }
     }
   }
 
-  _unlikeTheText(PostModel pst, String link) {
+  _unlikeTheText(PostModel pst, String link) async {
     final user = FirebaseAuth.instance.currentUser;
     var newList = List<dynamic>.from(pst.likes);
     newList.remove(user!.uid);
     _dbRef.ref(link).child('likes').set(newList);
 
-    firestore
-        .collection('user')
-        .doc(pst.authorId)
-        .collection('notifications')
-        .where('type', isEqualTo: 'like')
-        .where('userName', isEqualTo: user.displayName)
-        .where('post', isEqualTo: pst.toJson())
-        .get()
-        .then((snapshot) {
-      for (DocumentSnapshot ds in snapshot.docs) {
-        ds.reference.delete();
-      }
-    });
+    try {
+      await firestore
+          .collection('user')
+          .doc(pst.authorId)
+          .collection('notifications')
+          .where('type', isEqualTo: 'like')
+          .where('userName', isEqualTo: user.displayName)
+          .where('post', isEqualTo: pst.toJson())
+          .get()
+          .then((snapshot) {
+        for (DocumentSnapshot ds in snapshot.docs) {
+          ds.reference.delete();
+        }
+      });
+    } on Exception catch (e) {
+      log('error: $e');
+    }
   }
 
   File? imageFile;
@@ -189,33 +203,36 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
     });
 
     if (replyingPost != null && replyingPost!.authorId != user.uid) {
-      firestore
-          .collection('user')
-          .doc(replyingPost!.authorId)
-          .collection('notifications')
-          .add({
-        'sender_avatar': authController.currentUser.value.avatarURL ?? "",
-        'sender_id': firebaseAuth.currentUser!.uid,
-        // 'sender_id': firebaseAuth.currentUser!.uid,
-        'creation_date': DateTime.now(),
-        'type': 'reply',
-        'reply': replyingPost!.postType == 'text'
-            ? replyingPost!.text
-            : 'Attachment (Image)',
-        'community_link': widget.comm.id,
-        'post': PostModel(
-                text: _post,
-                postType: 'text',
-                author: user.displayName,
-                authorId: user.uid,
-                time: time,
-                comments: [],
-                likes: [],
-                replyingPost: null,
-                imageURL: null)
-            .toJson(),
-        'userName': user.displayName,
-      });
+      try {
+        await firestore
+            .collection('user')
+            .doc(replyingPost!.authorId)
+            .collection('notifications')
+            .add({
+          'sender_avatar': authController.currentUser.value.avatarURL ?? "",
+          'sender_id': firebaseAuth.currentUser!.uid,
+          'creation_date': DateTime.now(),
+          'type': 'reply',
+          'reply': replyingPost!.postType == 'text'
+              ? replyingPost!.text
+              : 'Attachment (Image)',
+          'community_link': widget.comm.id,
+          'post': PostModel(
+                  text: _post,
+                  postType: 'text',
+                  author: user.displayName,
+                  authorId: user.uid,
+                  time: time,
+                  comments: [],
+                  likes: [],
+                  replyingPost: null,
+                  imageURL: null)
+              .toJson(),
+          'userName': user.displayName,
+        });
+      } on Exception catch (e) {
+        log('error: $e');
+      }
     }
     setState(() {
       _post = '';
@@ -236,8 +253,12 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const NavBar(selectedIndex: 2)));
+                          builder: (context) => NavBar(
+                                selectedIndex: 2,
+                                selectedNames:
+                                    Provider.of<AspectController>(context)
+                                        .getSelectedNames(),
+                              )));
                 },
                 icon: const Icon(
                   Icons.arrow_back,

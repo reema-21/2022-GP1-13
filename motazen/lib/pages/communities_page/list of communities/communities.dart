@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/community_controller.dart';
@@ -22,7 +24,6 @@ class _CommunitiesState extends State<Communities> {
   bool isSearchCommunitySelected = false;
   bool isMyCommunitySelected = true;
   bool isFilterClicked = false;
-  List<Community> userCommunities = [];
   List<bool> whichFilter = [
     false,
     false,
@@ -36,17 +37,15 @@ class _CommunitiesState extends State<Communities> {
 
   // we target on listOfCreatedCommunities, listOfCreatedCommunities + listOfJoinedCommunities
   CommunityController communityController = Get.find();
-
+  bool isIniState = true;
   @override
   void initState() {
-    userDataUpdate();
     super.initState();
+    userDataUpdate();
   }
 
   Future<void> userDataUpdate() async {
     await communityController.getUserData();
-    userCommunities = communityController.listOfCreatedCommunities +
-        communityController.listOfJoinedCommunities;
     setState(() {});
   }
 
@@ -132,7 +131,7 @@ class _CommunitiesState extends State<Communities> {
             SizedBox(
               height: screenHeight(context) * 0.01,
             ),
-            communityTile(userCommunities, firebaseAuth.currentUser!.uid)
+            communityTile(firebaseAuth.currentUser!.uid, context)
           ],
         );
       }),
@@ -403,95 +402,83 @@ class _CommunitiesState extends State<Communities> {
   }
 }
 
-Widget communityTile(final community, final currentUserFounderName) {
+Widget communityTile(final currentUserFounderName, context) {
+  CommunityController communityController = Get.find();
+  //* this log was added to check if the number of coomunities to be shown is  as expected
+  log(communityController.userCommunities.length.toString());
+  final aspectList = Provider.of<AspectController>(context);
   return Expanded(
     child: ListView.builder(
-        itemCount: community.length,
-        itemBuilder: (context, index) {
-          String goalname = community[index].goalName;
-          String communityAspect = community[index].aspect;
-          var aspectList = Provider.of<AspectController>(context);
-          List<Aspect> listOfaspect = aspectList.selected;
-          int selsectAspectIndex = 0;
-          for (int i = 0; i < listOfaspect.length; i++) {
-            if (listOfaspect[i].name == communityAspect) {
-              selsectAspectIndex = i;
-            }
-          }
-
-          Icon aspectIcon = Icon(
-            IconData(
-              aspectList.selected[selsectAspectIndex].iconCodePoint,
-              fontFamily:
-                  aspectList.selected[selsectAspectIndex].iconFontFamily,
-              fontPackage:
-                  aspectList.selected[selsectAspectIndex].iconFontPackage,
-              matchTextDirection:
-                  aspectList.selected[selsectAspectIndex].iconDirection,
-            ),
-          );
-          Color aspectColor =
-              Color(aspectList.selected[selsectAspectIndex].color);
-
-          //switch to get the colors .
-          bool isAdmin =
-              community[index].founderUsername == currentUserFounderName;
-          return GestureDetector(
-            onTap: (() {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CommunityHomePage(
-                            fromInvite: false,
-                            comm: community[index],
-                          )));
-            }),
-            child: ListTile(
-              leading: Container(
-                height: 46,
-                width: 46,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: aspectColor,
-                ),
-                alignment: Alignment.center,
-                child: Icon(
-                  aspectIcon.icon,
-                  color: Colors.white,
+      itemCount: communityController.userCommunities.length,
+      itemBuilder: (context, index) {
+        final community = communityController.userCommunities[index];
+        final aspect = aspectList.selected
+            .firstWhere((aspect) => aspect.name == community.aspect!);
+        final aspectIcon = Icon(
+          IconData(
+            aspect.iconCodePoint,
+            fontFamily: aspect.iconFontFamily,
+            fontPackage: aspect.iconFontPackage,
+            matchTextDirection: aspect.iconDirection,
+          ),
+        );
+        final aspectColor = Color(aspect.color);
+        final isAdmin = community.founderUsername == currentUserFounderName;
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CommunityHomePage(
+                  fromInvite: false,
+                  comm: community,
                 ),
               ),
-              subtitle: Text('  الهدف : $goalname'),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    community[index].communityName ?? '',
-                    style: const TextStyle(
-                      color: kBlackColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Icon(
-                    community[index].isPrivate! ? Icons.lock : Icons.people,
-                    color: Colors.grey[600],
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    isAdmin ? 'مشرف' : 'منضم',
-                    style: const TextStyle(
-                      color: kBlackColor,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
+            );
+          },
+          child: ListTile(
+            leading: Container(
+              height: 46,
+              width: 46,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: aspectColor,
+              ),
+              alignment: Alignment.center,
+              child: Icon(
+                aspectIcon.icon,
+                color: Colors.white,
               ),
             ),
-          );
-        }),
+            subtitle: Text('  الهدف : ${community.goalName}'),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  community.communityName ?? '',
+                  style: const TextStyle(
+                    color: kBlackColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(
+                  community.isPrivate ? Icons.lock : Icons.people,
+                  color: Colors.grey[600],
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  isAdmin ? 'مشرف' : 'منضم',
+                  style: const TextStyle(
+                    color: kBlackColor,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ),
   );
 }

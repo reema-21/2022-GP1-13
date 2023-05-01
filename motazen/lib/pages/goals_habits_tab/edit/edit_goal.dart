@@ -115,7 +115,7 @@ class _EditGoalState extends State<EditGoal> {
 
   Goal? goal = Goal(userID: IsarService.getUserID);
 
-  Future<void> addgoal() async {
+  Future<void> addgoal(List<String> selectedNames) async {
     goal = await widget.isr.getSepecificGoall(widget.id);
     goal?.titel = _goalNmaeController.text;
     goal?.importance = importance;
@@ -165,14 +165,16 @@ class _EditGoalState extends State<EditGoal> {
     freq.selectedTasks.value.clear();
     freq.itemCount = 0.obs;
     freq.itemCountAdd = 0.obs;
-    Get.to(() => const NavBar(
+    Get.to(() => NavBar(
           selectedIndex: 1,
+          selectedNames: selectedNames,
         ));
   }
 
 //do the case when the date was selceted and then deleted //
   @override
   Widget build(BuildContext context) {
+    var aspectList = Provider.of<AspectController>(context, listen: false);
     return Scaffold(
         key: _scaffoldkey,
         appBar: AppBar(
@@ -247,8 +249,10 @@ class _EditGoalState extends State<EditGoal> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const NavBar(selectedIndex: 1)));
+                                builder: (context) => NavBar(
+                                    selectedIndex: 1,
+                                    selectedNames:
+                                        aspectList.getSelectedNames())));
                       }
                     }
                   },
@@ -468,13 +472,9 @@ class _EditGoalState extends State<EditGoal> {
                                     )
                                   ],
                                 )));
-                            await addgoal();
-                            if (mounted) {
-                              ItemList().createTaskTodoList(
-                                  Provider.of<AspectController>(context,
-                                          listen: false)
-                                      .selected);
-                            }
+                            await addgoal(aspectList.getSelectedNames());
+                            await ItemList()
+                                .createTaskTodoList(aspectList.selected);
                           }
                         },
                         child: Container(

@@ -174,9 +174,9 @@ class _AssessmentPageState extends State<AssessmentPage> {
               //calculate the points and save result
               CalculateAspectPoints()
                   .calculateAllpoints(aspectList.questionData);
+              await ItemList().createTaskTodoList(aspectList.selected);
               //get to the new page
               if (mounted) {
-                ItemList().createTaskTodoList(aspectList.selected);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

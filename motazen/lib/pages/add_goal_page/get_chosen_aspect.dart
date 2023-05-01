@@ -25,8 +25,9 @@ class _ShowsState extends State<GetChosenAspect> {
             if (snapshot.hasData) {
               //a list of selected aspects
               aspectList.updateSelectedList(snapshot.data!);
-              return const NavBar(
+              return NavBar(
                 selectedIndex: 0,
+                selectedNames: aspectList.getSelectedNames(),
               );
             } else {
               return const CircularProgressIndicator();

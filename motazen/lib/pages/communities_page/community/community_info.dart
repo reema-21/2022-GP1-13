@@ -1,4 +1,3 @@
-//TODO: make everything works here (leave , delete the comm , invite , leaderboard)
 //TODO : check if the member list is right if delete or leave for both admin and not
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -354,8 +353,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
                         removeBottom: true,
                         context: context,
                         child: SliverList(
-                          // ignore: unnecessary_new
-                          delegate: new SliverChildListDelegate([
+                          delegate: SliverChildListDelegate([
                             MediaQuery.removeViewInsets(
                               removeRight: true,
                               removeLeft: true,
@@ -441,8 +439,6 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                                         radius: 60,
                                                         backgroundColor:
                                                             kWhiteColor,
-
-                                                        // ignore: prefer_const_constructors
                                                         child: data[index]
                                                                     .avatar !=
                                                                 ""
@@ -502,20 +498,24 @@ class _CommunityInfoState extends State<CommunityInfo> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                const NavBar(selectedIndex: 2)));
+                            builder: (context) => NavBar(
+                                  selectedIndex: 2,
+                                  selectedNames: aspectList.getSelectedNames(),
+                                )));
                   }
                 } else {
                   await leaveCommunity();
                   setState(() {});
                   if (mounted) {
+                    //! why are there 2 pop
                     Navigator.pop(context);
                     Navigator.pop(context);
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                const NavBar(selectedIndex: 2)));
+                            builder: (context) => NavBar(
+                                selectedIndex: 2,
+                                selectedNames: aspectList.getSelectedNames())));
                   }
                 }
               }

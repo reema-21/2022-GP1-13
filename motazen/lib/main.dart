@@ -5,14 +5,12 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:is_first_run/is_first_run.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/pages/login/login.dart';
 import 'package:motazen/pages/onboarding_page.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 import 'controllers/aspect_controller.dart';
 import 'firebase_options.dart';
-import 'package:cron/cron.dart';
 
 Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -22,12 +20,6 @@ Future main() async {
   IsarService iser = IsarService(); // initialize local storage
   iser.openIsar();
   FlutterNativeSplash.remove();
-  final cron = Cron();
-
-  cron.schedule(Schedule.parse('0 0 * * *'), () async {
-    ItemList().resetCheck();
-    ItemList().updateList();
-  });
 
   /// check if the the app is in it's first run
   bool ifr = await IsFirstRun.isFirstRun();

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:motazen/Sidebar_and_navigation/expandable_fab.dart';
+import 'package:motazen/controllers/notification_controller.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/notifications_screen.dart/notifications_screen.dart';
 import 'package:motazen/pages/add_goal_page/add_goal_screen.dart';
@@ -21,11 +22,11 @@ import '../pages/communities_page/list of Communities/Communities.dart';
 import '../pages/journal_page/journal_screen.dart';
 import 'sidebar.dart';
 
-//ours
-
 class NavBar extends StatefulWidget {
   final int selectedIndex;
-  const NavBar({super.key, required this.selectedIndex});
+  final List<String> selectedNames;
+  const NavBar(
+      {super.key, required this.selectedIndex, required this.selectedNames});
 
   @override
   State<NavBar> createState() => _MynavBar();
@@ -33,15 +34,20 @@ class NavBar extends StatefulWidget {
 
 class _MynavBar extends State<NavBar> {
   late int selectedIndex;
-  AuthController authController = Get.put(AuthController());
-  CommunityController communityController = Get.put(CommunityController());
-  TaskControleer taskControleer = Get.put(TaskControleer());
+  int numOfNotifications = 0;
+  final NotificationController _notificationController =
+      NotificationController();
   final List<Widget> _widgetOptions = [
     const Homepage(),
     GoalsHabit(iser: IsarService()),
     const Communities(),
     Journal(),
   ];
+
+  AuthController authController = Get.put(AuthController());
+  CommunityController communityController = Get.put(CommunityController());
+  TaskControleer taskControleer = Get.put(TaskControleer());
+
   @override
   void initState() {
     super.initState();
@@ -49,6 +55,22 @@ class _MynavBar extends State<NavBar> {
     authController.getUsersList();
     authController.getUserAvatar();
     communityController.getUserData();
+    _listenToNotifications();
+  }
+
+  @override
+  void dispose() {
+    _notificationController.cancelNotificationsSubscription();
+    super.dispose();
+  }
+
+  void _listenToNotifications() {
+    _notificationController.listenToNotifications(widget.selectedNames);
+    _notificationController.notificationsStream.listen((notifications) {
+      setState(() {
+        numOfNotifications = notifications.length;
+      });
+    });
   }
 
   @override
@@ -109,7 +131,9 @@ class _MynavBar extends State<NavBar> {
             actions: <Widget>[
               InkWell(
                 onTap: (() {
-                  Get.to(() => const NotificationsScreen());
+                  Get.to(() => NotificationsScreen(
+                        selectedAspects: aspectList.getSelectedNames(),
+                      ));
                 }),
                 child: SizedBox(
                   width: 72,
@@ -125,48 +149,25 @@ class _MynavBar extends State<NavBar> {
                           ),
                         ],
                       ),
-                      StreamBuilder(
-                        stream: firestore
-                            .collection('user')
-                            .doc(firebaseAuth.currentUser!.uid)
-                            .collection('notifications')
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            communityController.notificationQuerySnapshot =
-                                snapshot.data;
-                            communityController
-                                .getNotifications(aspectList.selected);
-                          }
-                          return snapshot.hasData &&
-                                  snapshot.data!.docs.isNotEmpty
-                              ? Positioned(
-                                  top: -1,
-                                  right: 7,
-                                  child: (snapshot.hasData &
-                                          (communityController
-                                              .listOfNotifications.isNotEmpty))
-                                      ? Container(
-                                          decoration: const BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.green),
-                                          alignment: Alignment.center,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6.0),
-                                            child: Text(
-                                              communityController
-                                                  .listOfNotifications.length
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 14),
-                                            ),
-                                          ),
-                                        )
-                                      : const SizedBox())
-                              : const SizedBox();
-                        },
-                      ),
+                      numOfNotifications > 0
+                          ? Positioned(
+                              top: -1,
+                              right: 7,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green),
+                                alignment: Alignment.center,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: Text(
+                                    numOfNotifications.toString(),
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
+                                ),
+                              ))
+                          : const SizedBox(),
                     ],
                   ),
                 ),

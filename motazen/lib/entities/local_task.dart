@@ -15,5 +15,6 @@ class LocalTask {
   bool completedForToday = false;
   double rank = 0;
   String userID;
+  DateTime? lastCompletionDate;
   LocalTask({required this.userID});
 }

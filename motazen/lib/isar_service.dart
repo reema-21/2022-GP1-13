@@ -39,12 +39,27 @@ class IsarService {
   }
 
   /// ADD GOALS , ADD TASKS , ADD ASPECT  */
-  Future<bool> createGoal(Goal newgoal) async {
+  Future<int> createGoal(Goal newgoal) async {
     //Add goals
     final isar = await db;
-    isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
-    return true;
+    return isar.writeTxnSync<int>(() => isar.goals.putSync(newgoal));
   } //<int> because we want to get the id of the  ceated thing
+
+  Future<void> linkGoalAndTasks(int goalId, List<LocalTask> tasks) async {
+    //Add goals
+    final isar = await db;
+    Goal? goal = await getSepecificGoall(goalId);
+    isar.writeTxnSync(() {
+      // first create the goal
+      goal!.task.addAll(tasks);
+      goal.task.saveSync();
+
+      tasks.forEach((task) {
+        task.goal.value = goal;
+        task.goal.saveSync();
+      });
+    });
+  }
 
   void updateTask(LocalTask tem) async {
     final isar = await db;
@@ -662,6 +677,12 @@ class IsarService {
     allAspects.removeWhere((aspect) => aspect.userID == IsarService.getUserID);
 
     isar.writeTxnSync(() => isar.aspects.putAllSync(allAspects));
+  }
+
+  Future<void> cleanTasks() async {
+    final isar = await db;
+    // not to delete all, need to delete only current user specific data
+    await isar.writeTxn(() async => await isar.localTasks.clear());
   }
 
 // PENDING

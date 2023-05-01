@@ -1,22 +1,19 @@
-import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/community_controller.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
-import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/entities/goal.dart';
+import 'package:motazen/controllers/notification_controller.dart';
 import 'package:motazen/isar_service.dart';
-import 'package:motazen/models/community.dart';
 import 'package:motazen/pages/communities_page/community/community_home.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-import '../../entities/community_id.dart';
 import '../../models/notification_model.dart';
 
 class NotificationsScreen extends StatefulWidget {
-  const NotificationsScreen({super.key});
+  const NotificationsScreen({super.key, required this.selectedAspects});
+  final List<String> selectedAspects;
 
   @override
   State<NotificationsScreen> createState() => _NotificationsScreenState();
@@ -24,41 +21,34 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   TextEditingController goalNameController = TextEditingController();
-//* this method to fetch the goals related to the community aspect in the invitation
-  Future<List<Goal>> getgoals(String aspect) async {
-    IsarService iser = IsarService(); // initialize local storage
-    Aspect? chosenAspect =
-        Aspect(userID: IsarService.getUserID); //?Note: what is this used for
-    // here I am creating an aspect object to fetch the shared goal aspect to check whether the user has goal related to this aspect or not
-    chosenAspect = await iser.getSepecificAspect(aspect);
-
-    List<Goal> goalList = chosenAspect!.goals.toList();
-    return goalList;
-  }
-
+  List<NotificationModel> _notifications = [];
   CommunityController communityController = Get.find();
-  int length = 0;
+  final NotificationController _notificationController =
+      NotificationController();
   @override
   void initState() {
     super.initState();
-    if (communityController.listOfNotifications.isNotEmpty) {
-      setState(() {
-        length = communityController.listOfNotifications.length;
-      });
-    }
-    // startTheTimer();
+    _listenToNotifications();
   }
 
-  void startTheTimer() {
-    Timer.periodic(const Duration(seconds: 2), (_) {
-      // setState(() {});
+  @override
+  void dispose() {
+    _notificationController.cancelNotificationsSubscription();
+    super.dispose();
+  }
+
+  void _listenToNotifications() {
+    _notificationController.listenToNotifications(widget.selectedAspects);
+    _notificationController.notificationsStream.listen((notifications) {
+      setState(() {
+        _notifications = notifications;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context, listen: false);
-
     return Container(
       decoration: const BoxDecoration(
           image: DecorationImage(
@@ -98,9 +88,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             padding: const EdgeInsets.all(8.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // Obx(() {
-              // return
-              length == 0
+              _notifications.isEmpty
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -141,165 +129,101 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       ],
                     )
                   : Expanded(
-                      child: StreamBuilder(
-                        stream: firestore
-                            .collection('user')
-                            .doc(firebaseAuth.currentUser!.uid)
-                            .collection('notifications')
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            communityController.notificationQuerySnapshot =
-                                snapshot.data;
-                            communityController
-                                .getNotifications(aspectList.selected);
-                          }
-                          return ListView.builder(
-                              itemCount: communityController
-                                  .listOfNotifications.length,
-                              itemBuilder: (context, index) {
-                                return Slidable(
-                                    // Specify a key if the Slidable is dismissible.
-                                    key: UniqueKey(),
+                      child: ListView.builder(
+                          itemCount: _notifications.length,
+                          itemBuilder: (context, index) {
+                            return Slidable(
+                                // Specify a key if the Slidable is dismissible.
+                                key: UniqueKey(),
 
-                                    // The start action pane is the one at the left or the top side.
-                                    startActionPane: ActionPane(
-                                      // A motion is a widget used to control how the pane animates.
-                                      motion: const ScrollMotion(),
+                                // The start action pane is the one at the left or the top side.
+                                startActionPane: ActionPane(
+                                  // A motion is a widget used to control how the pane animates.
+                                  motion: const ScrollMotion(),
 
-                                      // A pane can dismiss the Slidable.
-                                      dismissible: //! ERROR this code delete only the like and reply invitaion we need to fix it to be able to delete invation and alert types only
-                                          DismissiblePane(onDismissed: () {
-                                        communityController.removeNotification(
-                                            creationDateOfCommunity:
-                                                communityController
-                                                    .listOfNotifications[index]
-                                                    .creationDate,
-                                            type:
-                                                '${communityController.listOfNotifications[index].notificationType}');
-                                        if (communityController
-                                                .listOfNotifications.length ==
-                                            1) {
-                                          communityController
-                                              .listOfNotifications
-                                              .clear();
-                                          setState(() {
-                                            length = 0;
-                                          });
+                                  // A pane can dismiss the Slidable.
+                                  dismissible: //! ERROR this code delete only the like and reply invitaion we need to fix it to be able to delete invation and alert types only
+                                      DismissiblePane(onDismissed: () {
+                                    _notificationController.removeNotification(
+                                        notificationId: _notifications[index]
+                                            .notificationId);
+                                    if (_notifications.length == 1) {
+                                      _notifications.clear();
+                                    }
+                                  }),
+
+                                  // All actions are defined in the children parameter.
+                                  children: [
+                                    // A SlidableAction can have an icon and/or a label.
+                                    SlidableAction(
+                                      //! ERROR same as above
+                                      onPressed: ((context) {
+                                        _notificationController
+                                            .removeNotification(
+                                          notificationId: _notifications[index]
+                                              .notificationId,
+                                        );
+                                        if (_notifications.length == 1) {
+                                          _notifications.clear();
                                         }
-                                        // if(communityController
-                                        // .listOfNotifications.isEmpty){
-                                        //   print("herllo");
-                                        //    Get.to( NoNotificationScreen ()); // link the back to the right place
-                                        // }
                                       }),
-
-                                      // All actions are defined in the children parameter.
-                                      children: [
-                                        // A SlidableAction can have an icon and/or a label.
-                                        SlidableAction(
-                                          //! ERROR same as above
-                                          onPressed: ((context) {
-                                            communityController.removeNotification(
-                                                creationDateOfCommunity:
-                                                    communityController
-                                                        .listOfNotifications[
-                                                            index]
-                                                        .creationDate,
-                                                type:
-                                                    '${communityController.listOfNotifications[index].notificationType}');
-                                            if (communityController
-                                                    .listOfNotifications
-                                                    .length ==
-                                                1) {
-                                              communityController
-                                                  .listOfNotifications
-                                                  .clear();
-                                              setState(() {
-                                                length = 0;
-                                              });
-                                            }
-                                          }),
-                                          backgroundColor:
-                                              const Color(0xFFFE4A49),
-                                          foregroundColor: Colors.white,
-                                          icon: Icons.delete,
-                                          label: 'حذف',
-                                        ),
-                                      ],
+                                      backgroundColor: const Color(0xFFFE4A49),
+                                      foregroundColor: Colors.white,
+                                      icon: Icons.delete,
+                                      label: 'حذف',
                                     ),
-                                    child: InkWell(
-                                      //* in here  i am specifying what to do when click on a notification
-                                      child: notificationItem(
-                                          communityController
-                                              .listOfNotifications[index],
-                                          aspectList),
-                                      onTap: () {
-                                        if (communityController
-                                                    .listOfNotifications[index]
-                                                    .notificationType ==
-                                                'reply' ||
-                                            communityController
-                                                    .listOfNotifications[index]
-                                                    .notificationType ==
-                                                'like') {
-                                          final inA = communityController
-                                              .listOfCreatedCommunities
-                                              .indexWhere((e) =>
-                                                  e.id ==
-                                                  communityController
-                                                      .listOfNotifications[
-                                                          index]
-                                                      .notificationOfTheCommunity);
-                                          final inB = communityController
-                                              .listOfJoinedCommunities
-                                              .indexWhere((e) =>
-                                                  e.id ==
-                                                  communityController
-                                                      .listOfNotifications[
-                                                          index]
-                                                      .notificationOfTheCommunity);
-                                          final comm = inA >= 0
+                                  ],
+                                ),
+                                child: InkWell(
+                                  //* in here  i am specifying what to do when click on a notification
+                                  child: notificationItem(
+                                      _notifications[index], aspectList),
+                                  onTap: () {
+                                    if (_notifications[index]
+                                                .notificationType ==
+                                            'reply' ||
+                                        _notifications[index]
+                                                .notificationType ==
+                                            'like') {
+                                      final inA = communityController
+                                          .listOfCreatedCommunities
+                                          .indexWhere((e) =>
+                                              e.id ==
+                                              _notifications[index]
+                                                  .notificationOfTheCommunity);
+                                      final inB = communityController
+                                          .listOfJoinedCommunities
+                                          .indexWhere((e) =>
+                                              e.id ==
+                                              _notifications[index]
+                                                  .notificationOfTheCommunity);
+                                      final comm = inA >= 0
+                                          ? communityController
+                                              .listOfCreatedCommunities[inA]
+                                          : inB >= 0
                                               ? communityController
-                                                  .listOfCreatedCommunities[inA]
-                                              : inB >= 0
-                                                  ? communityController
-                                                      .listOfJoinedCommunities[inB]
-                                                  : null;
-                                          if (comm != null) {
-                                            communityController.removeNotification(
-                                                creationDateOfCommunity:
-                                                    communityController
-                                                        .listOfNotifications[
-                                                            index]
-                                                        .creationDate,
-                                                type:
-                                                    '${communityController.listOfNotifications[index].notificationType}');
-                                            Get.to(CommunityHomePage(
-                                              comm: comm,
-                                              cameFromNotification:
-                                                  communityController
-                                                      .listOfNotifications[
-                                                          index]
-                                                      .post,
-                                              fromInvite: false,
-                                            ));
-                                          }
-                                          // } else if (communityController
-                                          //         .listOfNotifications[index]
-                                          //         .notificationType ==
-                                          //     'invite') {
-                                          //   //TODO :here we might need to add a code to provide more details about the community
-                                          // } else {
-                                          //   //TODO: here add code for clicking on the alert if you want to add deatails
-                                        }
-                                      },
-                                    ));
-                              });
-                        },
-                      ),
+                                                  .listOfJoinedCommunities[inB]
+                                              : null;
+                                      if (comm != null) {
+                                        _notificationController
+                                            .removeNotification(
+                                                notificationId:
+                                                    _notifications[index]
+                                                        .notificationId);
+                                        Get.to(CommunityHomePage(
+                                          comm: comm,
+                                          cameFromNotification:
+                                              _notifications[index].post,
+                                          fromInvite: false,
+                                        ));
+                                      }
+                                      //   //TODO :here we might need to add a code to provide more details about the community
+                                      //   //TODO: here add code for clicking on the alert if you want to add deatails
+                                    }
+                                  },
+                                ));
+                          }),
                     )
-              // })
             ]),
           ),
         ),
@@ -333,7 +257,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         }
         break;
       case "invite":
-        // String CommunityName = notification.comm.communityName.toString() ;
         content = "  يدعوك للإنضمام إلى مجتمع ";
 
         break;
@@ -401,8 +324,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                     errorListener: () {}),
                             radius: 32,
                             backgroundColor: kWhiteColor,
-
-                            // ignore: prefer_const_constructors
                             child: notification.senderAvtar != ""
                                 ? null
                                 : const Icon(
@@ -489,7 +410,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               const SizedBox(width: 8),
                               InkWell(
                                 onTap: (() {
-                                  acceptInvitaion(notification, aspectList);
+                                  _notificationController.acceptInvitaion(
+                                      notification, aspectList, context);
                                 }),
                                 child: const Icon(
                                   Icons.check_circle_outline_rounded,
@@ -500,16 +422,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               const SizedBox(width: 10),
                               InkWell(
                                 onTap: () {
-                                  rejectInvitaion(notification);
-                                  if (communityController
-                                          .listOfNotifications.length ==
-                                      1) {
-                                    communityController.listOfNotifications
-                                        .clear();
-                                    setState(() {
-                                      length = 0;
-                                    });
-                                  }
+                                  _notificationController
+                                      .rejectInvitaion(notification);
                                 },
                                 child: const Icon(
                                   Icons.cancel_outlined,
@@ -525,202 +439,5 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ],
       ),
     );
-  }
-
-  acceptInvitaion(NotificationModel notification, aspectList) {
-    final goalaspectController = TextEditingController();
-    goalaspectController.text = notification.comm.goalName!;
-
-    final formKey = GlobalKey<FormState>();
-    Goal isSelected = Goal(userID: IsarService.getUserID);
-
-    List<Goal> goalsName = [];
-    getgoals(notification.comm.aspect.toString()).then((value) {
-      aspectList.goalList = value;
-
-      for (int i = 0; i < aspectList.goalList.length; i++) {
-        goalsName.add(aspectList.goalList[i]);
-      }
-    });
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              title: Text(
-                "اختر هدف المجتمع من قائمة أهدافك",
-                style: titleText2,
-              ),
-              content: Form(
-                key: formKey,
-                child: SingleChildScrollView(
-                    child: Column(children: [
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  goalsName.isEmpty
-                      ? const Text(
-                          " ليس لديك أهداف متعلقة بهذا الجانب",
-                        )
-                      :
-
-                      //------
-                      DropdownButtonFormField(
-                          menuMaxHeight: 200,
-                          key: UniqueKey(),
-                          value: null,
-                          items: goalsName
-                              .map((e) => DropdownMenuItem(
-                                    value: e,
-                                    child: Text(e.titel),
-                                  ))
-                              .toList(),
-                          onChanged: (val) {
-                            isSelected = val!;
-                          },
-                          icon: const Icon(
-                            Icons.arrow_drop_down_circle,
-                            color: Color(0xFF66BF77),
-                          ),
-                          validator: (value) => value == null
-                              ? 'من فضلك اختر الهدف المناسب للمجتمع'
-                              : null,
-                          decoration: const InputDecoration(
-                            labelText: "الأهدف ",
-                            prefixIcon: Icon(
-                              Icons.pie_chart,
-                              color: Color(0xFF66BF77),
-                            ),
-                            border: UnderlineInputBorder(),
-                          ),
-                        ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-
-                  // end of the button for adding task
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed)) {
-                            return Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withOpacity(0.4);
-                          } else if (states.contains(MaterialState.disabled)) {
-                            return const Color.fromARGB(136, 159, 167, 159);
-                          }
-                          return kPrimaryColor;
-                        },
-                      ),
-                      padding:
-                          const MaterialStatePropertyAll<EdgeInsetsGeometry>(
-                              kDefaultPadding),
-                      textStyle: const MaterialStatePropertyAll<TextStyle>(
-                        TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Frutiger',
-                        ),
-                      ),
-                    ),
-                    //maybe the condition will be that user added one task
-                    //stateproblen
-                    onPressed: () async {
-                      if (formKey.currentState!.validate() &&
-                          goalsName.isNotEmpty) {
-                        //here
-                        CommunityID newCom =
-                            CommunityID(userID: IsarService.getUserID);
-                        newCom.communityId = notification.comm.id;
-                        newCom.goal.value = isSelected;
-                        isSelected.communities.add(newCom);
-
-                        IsarService iser = IsarService();
-                        iser.saveCom(newCom);
-
-                        iser.createGoal(isSelected);
-
-                        dynamic comDoc;
-                        comDoc = await firestore
-                            .collection('private_communities')
-                            .doc(notification.comm.id)
-                            .get();
-                        final comData = comDoc.data()! as dynamic;
-                        List memeberProgressList = [];
-                        memeberProgressList = comData['progress_list'];
-
-                        memeberProgressList.add({
-                          firebaseAuth.currentUser!.uid:
-                              isSelected.goalProgressPercentage
-                        }); //! here i am changing the value for being zero when getting a community to the value of the chosen goal progress to be shared
-                        communityController.listOfJoinedCommunities.add(
-                          Community(
-                              progressList: notification.comm.progressList,
-                              communityName: notification.comm.communityName,
-                              aspect: notification.comm.aspect,
-                              isPrivate: notification.comm.isPrivate,
-                              isDeleted: notification.comm.isDeleted,
-                              founderUsername:
-                                  notification.comm.founderUsername,
-                              // tillDate: community.tillDate,
-                              creationDate: notification.comm.creationDate,
-                              goalName: notification.comm.goalName,
-                              // listOfTasks: community.listOfTasks,
-                              id: notification.comm.id),
-                        );
-                        communityController.update();
-
-                        await firestore
-                            .collection('private_communities')
-                            .doc(notification.comm.id)
-                            .set({
-                          'aspect': notification.comm.aspect,
-                          'communityName': notification.comm.communityName,
-                          'creationDate': notification.comm.creationDate,
-                          'progress_list': memeberProgressList,
-                          'founderUsername': notification.comm.founderUsername,
-                          'goalName': notification.comm.goalName,
-                          'isPrivate': notification.comm.isPrivate,
-                          '_id': notification.comm.id,
-                          "isDeleted": notification.comm.isDeleted
-                        });
-
-                        await communityController.acceptInvitation();
-                        communityController.listOfNotifications
-                            .remove(notification.comm);
-
-                        communityController.removeNotification(
-                            creationDateOfCommunity:
-                                notification.comm.creationDate!,
-                            type: 'invite');
-                        communityController.update();
-                        // setState(() {});
-                        Get.back();
-                        Get.to(CommunityHomePage(
-                            comm: communityController
-                                .listOfJoinedCommunities.last,
-                            fromInvite: true));
-                      }
-
-                      //----------------------------------------------------//
-
-                      else {
-                        Navigator.pop(context);
-                      }
-                    },
-                    child: const Text("انضمام"),
-                  )
-                ])),
-              ));
-        });
-  }
-
-  rejectInvitaion(NotificationModel notification) {
-    communityController.listOfNotifications.remove(notification.comm);
-    communityController.removeNotification(
-        creationDateOfCommunity: notification.creationDate, type: 'invite');
-    communityController.update();
   }
 }

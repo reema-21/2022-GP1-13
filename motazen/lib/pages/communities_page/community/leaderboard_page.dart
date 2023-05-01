@@ -225,8 +225,6 @@ class _CommunityLeaderboardPageState extends State<CommunityLeaderboardPage> {
                                                       errorListener: () {}),
                                               radius: 60,
                                               backgroundColor: kWhiteColor,
-
-                                              // ignore: prefer_const_constructors
                                               child: post.avatar != null ||
                                                       post.avatar != ""
                                                   ? null

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/controllers/edit_controller.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
 import '../../../Sidebar_and_navigation/navigation_bar.dart';
 import '/entities/habit.dart';
 import 'package:get/get.dart';
 import '../../../../entities/aspect.dart';
 
-//alertof completion //tasks // getbeck to the list page // goal dependency
 class EditHabit extends StatefulWidget {
   final IsarService isr;
   final List<Aspect>? chosenAspectNames;
@@ -41,7 +42,6 @@ class _AddHabitState extends State<EditHabit> {
   late int durationInInt;
   final _goalNmaeController = TextEditingController();
   final _goalaspectController = TextEditingController(); // for fixed habits
-  bool isFirstclick = true;
   final EditMyControleer freq = Get.put(EditMyControleer());
   final List<String> durations = ['اليوم', 'الأسبوع', 'الشهر', 'السنة'];
   String? isDuration;
@@ -107,8 +107,10 @@ class _AddHabitState extends State<EditHabit> {
     // should be the number in frequency
     if (mounted) {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return const NavBar(
+        return NavBar(
           selectedIndex: 1,
+          selectedNames:
+              Provider.of<AspectController>(context).getSelectedNames(),
         );
       }));
     }
@@ -137,8 +139,10 @@ class _AddHabitState extends State<EditHabit> {
                     if (mounted) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return const NavBar(
+                        return NavBar(
                           selectedIndex: 1,
+                          selectedNames: Provider.of<AspectController>(context)
+                              .getSelectedNames(),
                         );
                       }));
                     }
@@ -327,28 +331,22 @@ class _AddHabitState extends State<EditHabit> {
 
               InkWell(
                 onTap: () {
-                  if (isFirstclick) {
-                    isFirstclick = false;
+                  if (formKey2.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Row(
+                      children: const [
+                        Icon(
+                          Icons.thumb_up_sharp,
+                          color: kWhiteColor,
+                        ),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: Text("تم حفظ التغييرات بنجاح "),
+                        )
+                      ],
+                    )));
 
-                    if (formKey2.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Row(
-                        children: const [
-                          Icon(
-                            Icons.thumb_up_sharp,
-                            color: kWhiteColor,
-                          ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            child: Text("تم حفظ التغييرات بنجاح "),
-                          )
-                        ],
-                      )));
-
-                      _addHabit();
-                    } else {
-                      isFirstclick = true;
-                    }
+                    _addHabit();
                   }
                 },
                 child: Container(

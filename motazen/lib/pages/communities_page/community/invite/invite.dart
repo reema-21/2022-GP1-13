@@ -232,8 +232,6 @@ class _InviteState extends State<Invite> {
                               errorListener: () {}),
                       radius: 60,
                       backgroundColor: kWhiteColor,
-
-                      // ignore: prefer_const_constructors
                       child: user.avatarURL != null
                           ? null
                           : const Icon(

@@ -27,20 +27,20 @@ class Todo {
 /// {@endtemplate}
 class Item {
   /// {@macro item}
-  Item({
-    this.importance,
-    this.dueDate,
-    this.daysCompletedTask,
-    this.rank,
-    required this.type,
-    this.duration,
-    this.itemGoal,
-    required this.id,
-    this.description = '',
-    required this.completed,
-    required this.icon, // tie in with aspect
-    this.repetition,
-  });
+  Item(
+      {this.importance,
+      this.dueDate,
+      this.daysCompletedTask,
+      this.rank,
+      required this.type,
+      this.duration,
+      this.itemGoal,
+      required this.id,
+      this.description = '',
+      required this.completed,
+      required this.icon, // tie in with aspect
+      this.repetition,
+      this.lastCompletionDate});
 
   /// The id of this item.
   final int id;
@@ -86,4 +86,7 @@ class Item {
 
   //the number of times a habit is repeated
   final int? repetition;
+
+  //the last date an item has been completed
+  DateTime? lastCompletionDate;
 }

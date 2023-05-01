@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
@@ -58,67 +59,63 @@ class _AddGoalState extends State<AddGoal> {
     });
   }
 
-  Goal newgoal = Goal(userID: IsarService.getUserID);
+  Goal newGoal = Goal(userID: IsarService.getUserID);
 
-  Future<void> _addgoal() async {
-    newgoal.titel = _goalName;
-    newgoal.importance = importance;
-    Aspect? selected = await widget.isr.findSepecificAspect(isSelected!);
-    newgoal.aspect.value = selected; // link aspect to the goal
-    selected!.goals.add(newgoal);
-    // widget.isr.createAspect(selected); //Note: what is it used for
-    newgoal.descriptiveGoalDuration = duration;
-    newgoal.goalDuration = goalDuration;
-    newgoal.startData = selectedDates!.start;
-    newgoal.endDate = selectedDates!.end;
-    widget.goalsTasks = freq.goalTask.value;
-    var task = [];
-    task = freq.goalTask.value;
+  Future<void> _addGoal(List<String> selectedNames) async {
+    try {
+      final selectedAspect = await widget.isr.findSepecificAspect(isSelected!);
+      newGoal.titel = _goalName;
+      newGoal.importance = importance;
+      Aspect? selected = await widget.isr.findSepecificAspect(isSelected!);
+      newGoal.aspect.value = selected; // link aspect to the goal
+      selected!.goals.add(newGoal);
+      newGoal.descriptiveGoalDuration = duration;
+      newGoal.goalDuration = goalDuration;
+      newGoal.startData = selectedDates!.start;
+      newGoal.endDate = selectedDates!.end;
 
-    for (int i = 0; i < freq.goalTask.value.length; i++) {
-      LocalTask? y = LocalTask(userID: IsarService.getUserID);
-      String name = "";
+      List<LocalTask> tasks = [];
+      for (var newTask in freq.goalTask.value) {
+        LocalTask? task = await widget.isr.findSepecificTask2(newTask.name);
+        tasks.add(task!);
+      }
 
-      name = task[i].name;
+      int goalId = await widget.isr.createGoal(newGoal);
+      await widget.isr.addAspectGoalLink(newGoal, selectedAspect!);
+      await widget.isr.linkGoalAndTasks(goalId, tasks.toList());
 
-      y = await widget.isr.findSepecificTask2(name);
-      y!.goal.value = newgoal;
-      newgoal.task.add(y); // to link the task to the goal
-      widget.isr.saveTask(y);
-    }
-    await widget.isr.createGoal(newgoal);
-    await widget.isr.addAspectGoalLink(newgoal, selected);
-    freq.taskDuration = 0.obs;
-    freq.currentTaskDuration = 0.obs;
-    freq.totalTasksDuration = 0.obs;
-    freq.checkTotalTaskDuration = 0.obs;
+      // Clearing the global state variables
+      freq.taskDuration.value = 0;
+      freq.currentTaskDuration.value = 0;
+      freq.totalTasksDuration.value = 0;
+      freq.checkTotalTaskDuration.value = 0;
+      freq.iscool.value = false;
+      freq.tem.value = 0;
+      freq.isSelected.value = 'أيام';
+      freq.goalTask.value.clear();
+      freq.tasksMenue.value.clear();
+      freq.selectedTasks.value.clear();
+      freq.newTasksAddedInEditing.value.clear();
+      freq.allTaskForDepency.value.clear();
+      freq.tryTask.value = TaskData();
+      freq.itemCount.value = 0;
+      freq.allTaskForDepency.value.clear();
+      freq.itemCountAdd.value = 0;
 
-    freq.iscool = false.obs;
-    freq.tem = 0.obs;
-    freq.isSelected = "أيام".obs;
-    freq.goalTask = Rx<List<LocalTask>>([]);
-    freq.tasksMenue = Rx<List<String>>([]);
-    freq.selectedTasks = Rx<List<String>>([]);
-    freq.newTasksAddedInEditing = Rx<List<LocalTask>>([]);
-    freq.tasksMenue.value.clear();
-    freq.selectedTasks.value.clear();
-    freq.allTaskForDepency = Rx<List<TaskData>>([]);
-    freq.tryTask = Rx<TaskData>(TaskData());
-    freq.itemCount = 0.obs;
-    freq.allTaskForDepency.value.clear();
-    freq.itemCountAdd = 0.obs;
-
-    if (mounted) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return const NavBar(
+      // Navigating to the goals list screen
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavBar(
               selectedIndex: 1,
-            );
-          },
-        ),
-      );
+              selectedNames: selectedNames,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      log('Error adding goal: $e');
     }
   }
 
@@ -173,9 +170,9 @@ class _AddGoalState extends State<AddGoal> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return const NavBar(
-                          selectedIndex: 1,
-                        );
+                        return NavBar(
+                            selectedIndex: 1,
+                            selectedNames: aspectList.getSelectedNames());
                       },
                     ),
                   );
@@ -387,28 +384,34 @@ class _AddGoalState extends State<AddGoal> {
                   ),
                   InkWell(
                     onTap: () async {
-                      // if (isFirstclick) {
-                      //   isFirstclick = false;
-
                       if (formKey.currentState!.validate()) {
                         if (goalDuration != 0) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                          Get.snackbar(" اضافة الهدف ", "تمت اضافة الهدف بنجاح",
+                              snackPosition: SnackPosition.BOTTOM,
                               backgroundColor: Colors.green.shade300,
                               duration: const Duration(milliseconds: 500),
-                              content: Row(
-                                children: const [
-                                  Icon(Icons.thumb_up_sharp),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Text("تمت اضافة الهدف "),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                          await _addgoal();
-                          ItemList().createTaskTodoList(aspectList.selected);
+                              icon: const Icon(
+                                Icons.thumb_up_sharp,
+                                color: Colors.white,
+                              ));
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     backgroundColor: Colors.green.shade300,
+                          //     duration: const Duration(milliseconds: 500),
+                          //     content: Row(
+                          //       children: const [
+                          //         Icon(Icons.thumb_up_sharp),
+                          //         SizedBox(width: 20),
+                          //         Expanded(
+                          //           child: ,
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // );
+                          await _addGoal(aspectList.getSelectedNames());
+                          await ItemList()
+                              .createTaskTodoList(aspectList.selected);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -433,10 +436,6 @@ class _AddGoalState extends State<AddGoal> {
                           );
                         }
                       }
-                      // else {
-                      //   isFirstclick = true;
-                      // }
-                      // }
                     },
                     child: Container(
                       height: screenHeight(context) * 0.05,

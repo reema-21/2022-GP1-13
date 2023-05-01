@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/pages/select_aspectPage/handle_aspect_data.dart';
 import 'package:motazen/pages/settings/numberof_shown_task.dart';
 import 'package:motazen/pages/settings/profile_edit.dart';
+import 'package:provider/provider.dart';
 import '../../Sidebar_and_navigation/navigation_bar.dart';
 
 //REEMAS
@@ -10,12 +12,17 @@ class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    List<String> aspectNames =
+        Provider.of<AspectController>(context).getSelectedNames();
     return WillPopScope(
       onWillPop: () async {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => const NavBar(selectedIndex: 0)));
+                builder: (context) => NavBar(
+                      selectedIndex: 0,
+                      selectedNames: aspectNames,
+                    )));
         return false;
       },
       child: Scaffold(
@@ -28,7 +35,8 @@ class SettingScreen extends StatelessWidget {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const NavBar(selectedIndex: 0)));
+                      builder: (context) => NavBar(
+                          selectedIndex: 0, selectedNames: aspectNames)));
             },
             icon: const Icon(
               Icons.arrow_back,

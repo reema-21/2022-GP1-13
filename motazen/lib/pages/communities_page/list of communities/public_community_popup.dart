@@ -28,7 +28,6 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
   }
 
   CommunityController communityController = Get.find();
-  bool isFirstClick = true;
 
   return showDialog(
       context: context,
@@ -198,176 +197,157 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                 //maybe the condition will be that user added one task
                                                 //stateproblen
                                                 onPressed: () async {
-                                                  if (isFirstClick) {
-                                                    isFirstClick = false;
-                                                    if (formKey.currentState!
-                                                            .validate() &&
-                                                        goalsName.isNotEmpty) {
-                                                      //-----------------------------------
-                                                      //here
-                                                      CommunityID newCom =
-                                                          CommunityID(
-                                                              userID: IsarService
-                                                                  .getUserID);
-                                                      newCom.communityId =
-                                                          community.id;
-                                                      newCom.goal.value =
-                                                          isSelected;
+                                                  if (formKey.currentState!
+                                                          .validate() &&
+                                                      goalsName.isNotEmpty) {
+                                                    //-----------------------------------
+                                                    CommunityID newCom =
+                                                        CommunityID(
+                                                            userID: IsarService
+                                                                .getUserID);
+                                                    newCom.communityId =
+                                                        community.id;
+                                                    newCom.goal.value =
+                                                        isSelected;
 
-                                                      isSelected.communities
-                                                          .add(newCom);
-                                                      IsarService iser =
-                                                          IsarService();
-                                                      iser.saveCom(newCom);
+                                                    isSelected.communities
+                                                        .add(newCom);
+                                                    IsarService iser =
+                                                        IsarService();
+                                                    iser.saveCom(newCom);
 
-                                                      iser.createGoal(
-                                                          isSelected);
-                                                      bool isJoined = false;
-                                                      for (int i = 0;
-                                                          i <
-                                                              community
-                                                                  .progressList
-                                                                  .length;
-                                                          i++) {
-                                                        String x = community
-                                                            .progressList[i]
-                                                            .toString();
-                                                        String userId =
-                                                            x.substring(1,
-                                                                x.indexOf(':'));
-                                                        if (userId ==
-                                                            firebaseAuth
-                                                                .currentUser!
-                                                                .uid) {
-                                                          community
-                                                                  .progressList[
-                                                              i] = {
-                                                            userId: isSelected
-                                                                .goalProgressPercentage
-                                                          };
-                                                          isJoined = true;
-                                                          break;
-                                                        }
-                                                      }
-                                                      if (!isJoined) {
-                                                        community.progressList
-                                                            .add({
+                                                    iser.createGoal(isSelected);
+                                                    bool isJoined = false;
+                                                    for (int i = 0;
+                                                        i <
+                                                            community
+                                                                .progressList
+                                                                .length;
+                                                        i++) {
+                                                      String x = community
+                                                          .progressList[i]
+                                                          .toString();
+                                                      String userId =
+                                                          x.substring(1,
+                                                              x.indexOf(':'));
+                                                      if (userId ==
                                                           firebaseAuth
-                                                                  .currentUser!
-                                                                  .uid:
-                                                              isSelected
-                                                                  .goalProgressPercentage
-                                                        });
+                                                              .currentUser!
+                                                              .uid) {
+                                                        community
+                                                            .progressList[i] = {
+                                                          userId: isSelected
+                                                              .goalProgressPercentage
+                                                        };
+                                                        isJoined = true;
+                                                        break;
                                                       }
-
-                                                      await firestore
-                                                          .collection(
-                                                              'public_communities')
-                                                          .doc(community.id)
-                                                          .set({
-                                                        'aspect':
-                                                            community.aspect,
-                                                        'communityName':
-                                                            community
-                                                                .communityName,
-                                                        'creationDate':
-                                                            community
-                                                                .creationDate,
-                                                        'progress_list':
-                                                            community
-                                                                .progressList,
-                                                        'founderUsername':
-                                                            community
-                                                                .founderUsername,
-                                                        'goalName':
-                                                            community.goalName,
-                                                        'isPrivate':
-                                                            community.isPrivate,
-                                                        "isDeleted":
-                                                            community.isDeleted,
-                                                        '_id': community.id
-                                                      });
-
-                                                      dynamic userDoc;
-                                                      userDoc = await firestore
-                                                          .collection(
-                                                              'public_communities')
-                                                          .doc(community.id)
-                                                          .get();
-                                                      final userData = userDoc
-                                                          .data()! as dynamic;
-
-                                                      await firestore
-                                                          .collection(
-                                                              'public_communities')
-                                                          .doc(community.id)
-                                                          .update({
-                                                        'aspect':
-                                                            community.aspect,
-                                                        'communityName':
-                                                            community
-                                                                .communityName,
-                                                        'creationDate':
-                                                            community
-                                                                .creationDate,
-                                                        'progress_list':
-                                                            userData[
-                                                                'progress_list'],
-                                                        'founderUsername':
-                                                            community
-                                                                .founderUsername,
-                                                        'goalName':
-                                                            community.goalName,
-                                                        'isPrivate':
-                                                            community.isPrivate,
-                                                        "isDeleted":
-                                                            community.isDeleted,
-                                                        '_id': community.id
-                                                      });
-                                                      communityController
-                                                          .listOfJoinedCommunities
-                                                          .add(
-                                                        Community(
-                                                          progressList:
-                                                              community
-                                                                  .progressList,
-                                                          communityName:
-                                                              community
-                                                                  .communityName,
-                                                          aspect:
-                                                              community.aspect,
-                                                          isPrivate: community
-                                                              .isPrivate,
-                                                          founderUsername:
-                                                              community
-                                                                  .founderUsername,
-                                                          isDeleted: community
-                                                              .isDeleted,
-                                                          creationDate:
-                                                              community
-                                                                  .creationDate,
-                                                          goalName: community
-                                                              .goalName,
-                                                          id: community.id,
-                                                        ),
-                                                      );
-                                                      communityController
-                                                          .update();
-                                                      await communityController
-                                                          .acceptInvitation();
-
-                                                      communityController
-                                                          .update();
-                                                      Get.to(CommunityHomePage(
-                                                          fromInvite: false,
-                                                          comm: communityController
-                                                              .listOfJoinedCommunities
-                                                              .last));
-                                                    } else {
-                                                      isFirstClick = true;
-
-                                                      Navigator.pop(context);
                                                     }
+                                                    if (!isJoined) {
+                                                      community.progressList
+                                                          .add({
+                                                        firebaseAuth
+                                                                .currentUser!
+                                                                .uid:
+                                                            isSelected
+                                                                .goalProgressPercentage
+                                                      });
+                                                    }
+
+                                                    await firestore
+                                                        .collection(
+                                                            'public_communities')
+                                                        .doc(community.id)
+                                                        .set({
+                                                      'aspect':
+                                                          community.aspect,
+                                                      'communityName': community
+                                                          .communityName,
+                                                      'creationDate': community
+                                                          .creationDate,
+                                                      'progress_list': community
+                                                          .progressList,
+                                                      'founderUsername':
+                                                          community
+                                                              .founderUsername,
+                                                      'goalName':
+                                                          community.goalName,
+                                                      'isPrivate':
+                                                          community.isPrivate,
+                                                      "isDeleted":
+                                                          community.isDeleted,
+                                                      '_id': community.id
+                                                    });
+
+                                                    dynamic userDoc;
+                                                    userDoc = await firestore
+                                                        .collection(
+                                                            'public_communities')
+                                                        .doc(community.id)
+                                                        .get();
+                                                    final userData = userDoc
+                                                        .data()! as dynamic;
+
+                                                    await firestore
+                                                        .collection(
+                                                            'public_communities')
+                                                        .doc(community.id)
+                                                        .update({
+                                                      'aspect':
+                                                          community.aspect,
+                                                      'communityName': community
+                                                          .communityName,
+                                                      'creationDate': community
+                                                          .creationDate,
+                                                      'progress_list': userData[
+                                                          'progress_list'],
+                                                      'founderUsername':
+                                                          community
+                                                              .founderUsername,
+                                                      'goalName':
+                                                          community.goalName,
+                                                      'isPrivate':
+                                                          community.isPrivate,
+                                                      "isDeleted":
+                                                          community.isDeleted,
+                                                      '_id': community.id
+                                                    });
+                                                    communityController
+                                                        .listOfJoinedCommunities
+                                                        .add(
+                                                      Community(
+                                                        progressList: community
+                                                            .progressList,
+                                                        communityName: community
+                                                            .communityName,
+                                                        aspect:
+                                                            community.aspect,
+                                                        isPrivate:
+                                                            community.isPrivate,
+                                                        founderUsername:
+                                                            community
+                                                                .founderUsername,
+                                                        isDeleted:
+                                                            community.isDeleted,
+                                                        creationDate: community
+                                                            .creationDate,
+                                                        goalName:
+                                                            community.goalName,
+                                                        id: community.id,
+                                                      ),
+                                                    );
+                                                    communityController
+                                                        .update();
+                                                    await communityController
+                                                        .acceptInvitation();
+
+                                                    // communityController
+                                                    //     .update();
+                                                    Get.to(() => CommunityHomePage(
+                                                        fromInvite: false,
+                                                        comm: communityController
+                                                            .listOfJoinedCommunities
+                                                            .last));
                                                   }
                                                 },
 

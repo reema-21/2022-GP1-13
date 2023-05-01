@@ -5,7 +5,6 @@ import 'package:motazen/isar_service.dart';
 import 'package:motazen/models/todo_model.dart';
 import 'package:motazen/pages/homepage/daily_tasks/ranking_algorithm.dart';
 import 'package:motazen/pages/settings/tasklist_variables.dart';
-import 'package:sorted/sorted.dart';
 
 class ItemList {
 //initialize attributes
@@ -15,118 +14,142 @@ class ItemList {
   static List<Item> weeklyHabits = [];
   static List<Item> monthlyHabits = [];
   static List<Item> yearlyHabits = [];
+  static DateTime? lastResetDate;
 
 //* adds the items to the items list, used when the item list is empty, and in the daily background process
   Future<void> createTaskTodoList(List<Aspect> aspectList) async {
-    //initialize
-    List<Item> taskItemList = [];
-
-    if (itemList.isNotEmpty) {
-      itemList.clear();
-    }
-
-    if (rankedList.isNotEmpty) {
-      rankedList.clear();
+    // check if a new day has started
+    if (lastResetDate == null || lastResetDate!.day != DateTime.now().day) {
+      await resetCheck(aspectList);
+      lastResetDate = DateTime.now();
     }
 
     //step1: add all tasks to a list
+    itemList.clear();
     for (var aspect in aspectList) {
       //retrieve the aspect's goals
-      for (var goal in aspect.goals.toList()) {
+      for (var goal in aspect.goals) {
         //retrive the goal's tasks
-        for (var task in goal.task.toList()) {
-          //skip completed tasks
-          if (task.taskCompletionPercentage == 1) {
+        for (var task in goal.task) {
+          //skip completed tasks if the last completion date is before today
+          if (task.lastCompletionDate != null &&
+              task.lastCompletionDate!.year == DateTime.now().year &&
+              task.lastCompletionDate!.month == DateTime.now().month &&
+              task.lastCompletionDate!.day < DateTime.now().day) {
             continue;
           }
-          //initialtize the importance to 0
-          double importance = 0;
+          print('task: ${task.name}');
+          //initialize the importance to 0
+          double importance = goal.importance / 4;
 
-          //map the importance to the value used in the ranking equation
-          switch (goal.importance) {
-            case 1:
-              importance = 0.25;
-              break;
-            case 2:
-              importance = 0.5;
-              break;
-            case 3:
-              importance = 0.75;
-              break;
-          }
-
-          //create the dependancy graph
+          //create the dependency graph
           Rank().createDepGraph(task);
 
-          //ceate task items
-          taskItemList.add(Item(
-              description: task.name,
-              completed: task.completedForToday,
-              duration: task.duration,
-              itemGoal: goal.id,
-              id: task.id,
-              icon: Icon(
-                IconData(aspect.iconCodePoint,
-                    fontFamily: aspect.iconFontFamily,
-                    fontPackage: aspect.iconFontPackage,
-                    matchTextDirection: aspect.iconDirection),
-                color: Color(aspect.color),
-              ),
-              type: 'Task',
-              daysCompletedTask: task.amountCompleted,
-              dueDate: goal.endDate,
-              importance: importance));
+          //create task items
+          itemList.add(Item(
+            description: task.name,
+            completed: task.completedForToday,
+            duration: task.duration,
+            itemGoal: goal.id,
+            id: task.id,
+            icon: Icon(
+              IconData(aspect.iconCodePoint,
+                  fontFamily: aspect.iconFontFamily,
+                  fontPackage: aspect.iconFontPackage,
+                  matchTextDirection: aspect.iconDirection),
+              color: Color(aspect.color),
+            ),
+            type: 'Task',
+            daysCompletedTask: task.amountCompleted,
+            dueDate: goal.endDate,
+            importance: importance,
+          ));
         }
       }
     }
 
-    ///step 2: rank the list
-    ///------------------------(add call to ranking code here, pass the item list as a parameter)----------------------------------------
-    rankedList = Rank().calculateRank(taskItemList);
+    //step 2: rank the list
+    Rank().calculateRank(itemList);
+    rankedList = itemList;
 
-    //save the item's rank in local storage so that it's accessible after update the selection status
+    //save the item's rank in local storage so that it's accessible after updating the selection status
     for (var item in rankedList) {
       await IsarService().updateTaskRank(item.id, item.rank!);
     }
 
-    ///Step3: visualize the list
+    //step 3: visualize the list
     totalTaskNumbers = rankedList.length;
-    itemList = rankedList.length < toShowTaskNumber
-        ? rankedList
-        : defaultTasklist
-            ? rankedList
-            : toShowTaskNumber == 0
-                ? []
-                : rankedList.sublist(0, toShowTaskNumber);
-  } //end of create task list
+    if (rankedList.length < toShowTaskNumber) {
+      itemList = rankedList;
+    } else if (defaultTasklist) {
+      itemList = rankedList;
+    } else if (toShowTaskNumber == 0) {
+      itemList.clear();
+    } else {
+      itemList = rankedList.sublist(0, toShowTaskNumber);
+    }
+  }
 
 //* updates the list when a task is checked
-  Future<void> updateList() async {
-    List<Item> temp = [];
+  Future<void> updateList(List<Aspect> aspectList) async {
+    // check if a new day has started
+    if (lastResetDate == null || lastResetDate!.day != DateTime.now().day) {
+      await resetCheck(aspectList);
+      lastResetDate = DateTime.now();
+    }
+
     //calculate the rank
     for (var item in itemList) {
       //check items should be displayed at the bottom of the list
-      if (item.completed) {
+      if (item.completed &&
+          item.lastCompletionDate != null &&
+          item.lastCompletionDate!.year == DateTime.now().year &&
+          item.lastCompletionDate!.month == DateTime.now().month &&
+          item.lastCompletionDate!.day < DateTime.now().day) {
         item.rank = 0;
-        continue;
+        lastResetDate =
+            DateTime.now(); // update lastResetDate when an item is checked
       } else if (item.rank == 0) {
         LocalTask? task = await IsarService().findSepecificTaskByID(item.id);
         item.rank = task!.rank;
       }
     }
-    temp = itemList.sorted(
-        [SortedComparable<Item, double>((task) => task.rank!, invert: true)]);
-    itemList.clear();
-    itemList = temp;
+    itemList = bucketSort(itemList);
   }
 
-//* this method is used to update the list when a task has been deleted
-  void removeTaskFromItemList(int id) {
-    //remove the task from the item list
-    itemList.removeWhere((element) => element.id == id);
+  List<Item> bucketSort(List<Item> items) {
+    // Create an array of empty buckets
+    final List<List<Item>> buckets = List.generate(items.length + 1, (_) => []);
 
-    //remove the task from the ranked list
-    rankedList.removeWhere((element) => element.id == id);
+    // Add each item to the appropriate bucket based on its rank
+    for (var item in items) {
+      int index = (item.rank! * items.length).floor();
+      buckets[index].add(item);
+    }
+
+    // Concatenate the buckets into a single list
+    List<Item> result = [];
+    for (var bucket in buckets.reversed) {
+      result.addAll(bucket);
+    }
+
+    return result;
+  }
+
+//* reset the check status of all tasks in the database
+  Future<void> resetCheck(List<Aspect> aspectList) async {
+    for (var aspect in aspectList) {
+      for (var goal in aspect.goals) {
+        for (var task in goal.task) {
+          if (task.lastCompletionDate != null &&
+              task.lastCompletionDate!.year == DateTime.now().year &&
+              task.lastCompletionDate!.month == DateTime.now().month &&
+              task.lastCompletionDate!.day < DateTime.now().day) {
+            IsarService().reserCheck(task.id);
+          }
+        }
+      }
+    }
   }
 
 //* this method initializes all the habits' lists
@@ -237,12 +260,5 @@ class ItemList {
     weeklyHabits.clear();
     monthlyHabits.clear();
     yearlyHabits.clear();
-  }
-
-  //reset check value each day
-  void resetCheck() {
-    for (var item in itemList) {
-      IsarService().reserCheck(item.id);
-    }
   }
 }

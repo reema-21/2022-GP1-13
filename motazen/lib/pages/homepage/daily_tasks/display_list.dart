@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/models/todo_model.dart';
 import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/pages/homepage/daily_tasks/custom_rect_tween.dart';
 import 'package:motazen/pages/homepage/daily_tasks/hero_dialog_route.dart';
-import 'package:motazen/pages/homepage/daily_tasks/list_popups.dart';
+import 'package:motazen/pages/settings/tasklist_variables.dart';
+import 'package:motazen/widget/list_popups.dart';
 import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
 import '../../goals_habits_tab/calculate_progress.dart';
 
 ///----------------------------------------Task Card----------------------------------------
@@ -22,8 +25,25 @@ class TaskTodoCard extends StatefulWidget {
 
 class _TaskTodoCardState extends State<TaskTodoCard> {
   @override
+  void initState() {
+    super.initState();
+    userDataUpdate();
+  }
+
+  Future<void> userDataUpdate() async {
+    final aspectList = Provider.of<AspectController>(context, listen: false);
+    if (ItemList.itemList.isEmpty ||
+        ItemList.itemList.length < toShowTaskNumber) {
+      await ItemList().createTaskTodoList(aspectList.selected);
+    }
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     final scrollController = ScrollController();
+    final aspects =
+        Provider.of<AspectController>(context, listen: false).selected;
 
     return GestureDetector(
       onTap: () {
@@ -75,7 +95,7 @@ class _TaskTodoCardState extends State<TaskTodoCard> {
                                     ItemList.itemList[index].itemGoal,
                                     'Decrement',
                                     ItemList.itemList[index].type);
-                                await ItemList().updateList();
+                                await ItemList().updateList(aspects);
                               } else {
                                 //completed = false, then we need to increment
                                 ItemList.itemList[index].completed = true;
@@ -92,7 +112,7 @@ class _TaskTodoCardState extends State<TaskTodoCard> {
                                     ItemList.itemList[index].itemGoal,
                                     'Increment',
                                     ItemList.itemList[index].type);
-                                await ItemList().updateList();
+                                await ItemList().updateList(aspects);
                                 bool isTaskCompleted =
                                     (ItemList.itemList[index].duration -
                                             ItemList.itemList[index]
@@ -107,6 +127,8 @@ class _TaskTodoCardState extends State<TaskTodoCard> {
                                         return const ListDialog(
                                           title: 'اكتملت المهمة!',
                                           description: 'كلام عن اكتمال المهمة',
+                                          imagePath:
+                                              'https://assets10.lottiefiles.com/packages/lf20_jsignqmt.json',
                                         );
                                       });
                                 }
@@ -156,6 +178,8 @@ class __TaskTodoPopupCardState extends State<_TaskTodoPopupCard> {
   @override
   Widget build(BuildContext context) {
     final scrollController = ScrollController();
+    List<Aspect> aspects =
+        Provider.of<AspectController>(context, listen: false).selected;
 
     return Hero(
       tag: 'todo-tag-1',
@@ -197,7 +221,7 @@ class __TaskTodoPopupCardState extends State<_TaskTodoPopupCard> {
                                   ItemList.itemList[index].itemGoal,
                                   'Decrement',
                                   ItemList.itemList[index].type);
-                              await ItemList().updateList();
+                              await ItemList().updateList(aspects);
                             } else {
                               //completed = false, then we need to increment
                               ItemList.itemList[index].completed = true;
@@ -213,7 +237,7 @@ class __TaskTodoPopupCardState extends State<_TaskTodoPopupCard> {
                                   ItemList.itemList[index].itemGoal,
                                   'Increment',
                                   ItemList.itemList[index].type);
-                              await ItemList().updateList();
+                              await ItemList().updateList(aspects);
                               bool isTaskCompleted =
                                   (ItemList.itemList[index].duration -
                                           ItemList.itemList[index]
@@ -228,6 +252,8 @@ class __TaskTodoPopupCardState extends State<_TaskTodoPopupCard> {
                                       return const ListDialog(
                                         title: 'اكتملت المهمة!',
                                         description: 'كلام عن اكتمال المهمة',
+                                        imagePath:
+                                            'https://assets10.lottiefiles.com/packages/lf20_jsignqmt.json',
                                       );
                                     });
                               }

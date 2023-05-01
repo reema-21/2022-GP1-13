@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:motazen/Sidebar_and_navigation/navigation_bar.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
+import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/pages/settings/tasklist_variables.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
+import 'package:provider/provider.dart';
 
 class NumberOfShownTaskPage extends StatefulWidget {
   const NumberOfShownTaskPage({super.key});
@@ -178,21 +181,32 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 40, vertical: 30),
                             child: InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 if (toShowTaskNumber != taskToShow) {
                                   setState(() {
                                     toShowTaskNumber = taskToShow;
                                     defaultTasklist = false;
                                   });
+                                  await ItemList().createTaskTodoList(
+                                      Provider.of<AspectController>(context,
+                                              listen: false)
+                                          .selected);
                                   Fluttertoast.showToast(
                                       msg: "تم العملية بنجاح",
                                       toastLength: Toast.LENGTH_LONG);
 
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const NavBar(selectedIndex: 0)));
+                                  if (mounted) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => NavBar(
+                                                  selectedIndex: 0,
+                                                  selectedNames: Provider.of<
+                                                              AspectController>(
+                                                          context)
+                                                      .getSelectedNames(),
+                                                )));
+                                  }
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "للتغيير عليك بإدخال قيمة",

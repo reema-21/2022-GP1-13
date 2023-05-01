@@ -37,23 +37,28 @@ const LocalTaskSchema = CollectionSchema(
       name: r'durationDescribtion',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
+    r'lastCompletionDate': PropertySchema(
       id: 4,
+      name: r'lastCompletionDate',
+      type: IsarType.dateTime,
+    ),
+    r'name': PropertySchema(
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
     r'rank': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'rank',
       type: IsarType.double,
     ),
     r'taskCompletionPercentage': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'taskCompletionPercentage',
       type: IsarType.double,
     ),
     r'userID': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'userID',
       type: IsarType.string,
     )
@@ -107,10 +112,11 @@ void _localTaskSerialize(
   writer.writeBool(offsets[1], object.completedForToday);
   writer.writeLong(offsets[2], object.duration);
   writer.writeString(offsets[3], object.durationDescribtion);
-  writer.writeString(offsets[4], object.name);
-  writer.writeDouble(offsets[5], object.rank);
-  writer.writeDouble(offsets[6], object.taskCompletionPercentage);
-  writer.writeString(offsets[7], object.userID);
+  writer.writeDateTime(offsets[4], object.lastCompletionDate);
+  writer.writeString(offsets[5], object.name);
+  writer.writeDouble(offsets[6], object.rank);
+  writer.writeDouble(offsets[7], object.taskCompletionPercentage);
+  writer.writeString(offsets[8], object.userID);
 }
 
 LocalTask _localTaskDeserialize(
@@ -120,16 +126,17 @@ LocalTask _localTaskDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = LocalTask(
-    userID: reader.readString(offsets[7]),
+    userID: reader.readString(offsets[8]),
   );
   object.amountCompleted = reader.readLong(offsets[0]);
   object.completedForToday = reader.readBool(offsets[1]);
   object.duration = reader.readLong(offsets[2]);
   object.durationDescribtion = reader.readString(offsets[3]);
   object.id = id;
-  object.name = reader.readString(offsets[4]);
-  object.rank = reader.readDouble(offsets[5]);
-  object.taskCompletionPercentage = reader.readDouble(offsets[6]);
+  object.lastCompletionDate = reader.readDateTimeOrNull(offsets[4]);
+  object.name = reader.readString(offsets[5]);
+  object.rank = reader.readDouble(offsets[6]);
+  object.taskCompletionPercentage = reader.readDouble(offsets[7]);
   return object;
 }
 
@@ -149,12 +156,14 @@ P _localTaskDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 5:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 6:
       return (reader.readDouble(offset)) as P;
     case 7:
+      return (reader.readDouble(offset)) as P;
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -555,6 +564,80 @@ extension LocalTaskQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      lastCompletionDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastCompletionDate',
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      lastCompletionDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastCompletionDate',
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      lastCompletionDateEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastCompletionDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      lastCompletionDateGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastCompletionDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      lastCompletionDateLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastCompletionDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterFilterCondition>
+      lastCompletionDateBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastCompletionDate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1083,6 +1166,19 @@ extension LocalTaskQuerySortBy on QueryBuilder<LocalTask, LocalTask, QSortBy> {
     });
   }
 
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByLastCompletionDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastCompletionDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
+      sortByLastCompletionDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastCompletionDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<LocalTask, LocalTask, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1198,6 +1294,19 @@ extension LocalTaskQuerySortThenBy
     });
   }
 
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByLastCompletionDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastCompletionDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<LocalTask, LocalTask, QAfterSortBy>
+      thenByLastCompletionDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastCompletionDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<LocalTask, LocalTask, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1277,6 +1386,12 @@ extension LocalTaskQueryWhereDistinct
     });
   }
 
+  QueryBuilder<LocalTask, LocalTask, QDistinct> distinctByLastCompletionDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastCompletionDate');
+    });
+  }
+
   QueryBuilder<LocalTask, LocalTask, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1335,6 +1450,13 @@ extension LocalTaskQueryProperty
       durationDescribtionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'durationDescribtion');
+    });
+  }
+
+  QueryBuilder<LocalTask, DateTime?, QQueryOperations>
+      lastCompletionDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastCompletionDate');
     });
   }
 

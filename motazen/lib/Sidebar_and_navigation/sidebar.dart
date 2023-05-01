@@ -103,11 +103,8 @@ class _SideBarState extends State<SideBar> {
                             : CachedNetworkImageProvider(
                                 authController.currentUser.value.avatarURL!,
                                 errorListener: () {}),
-
                     radius: 32,
                     backgroundColor: kWhiteColor,
-
-                    // ignore: prefer_const_constructors
                     child: authController.currentUser.value.avatarURL == null ||
                             authController.currentUser.value.avatarURL == ""
                         ? const Icon(

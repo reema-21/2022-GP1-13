@@ -25,7 +25,6 @@ class _AddHabitState extends State<AddHabit> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   final _goalNmaeController = TextEditingController();
   final List<String> durations = ['اليوم', 'الأسبوع', 'الشهر', 'السنة'];
-  bool isFirstclick = true;
   String? isSelected;
   String? isDuration;
   String duratioSelected = "";
@@ -43,7 +42,7 @@ class _AddHabitState extends State<AddHabit> {
 
   Habit newhabit = Habit(userID: IsarService.getUserID);
   int seletedduration = 0;
-  _addHabit() async {
+  _addHabit(List<String> selectedAspects) async {
     newhabit.titel = _habitName;
     newhabit.durationIndString = seletedduration;
     newhabit.durationInNumber = freq.frequency.toInt();
@@ -57,9 +56,10 @@ class _AddHabitState extends State<AddHabit> {
     freq.frequency = 1.obs;
     if (mounted) {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return const NavBar(
+        return NavBar(
           //Note: can you make it go to the habits tap ?? I'll try :)
           selectedIndex: 1,
+          selectedNames: selectedAspects,
         );
       }));
     }
@@ -94,9 +94,10 @@ class _AddHabitState extends State<AddHabit> {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return const NavBar(
+                            return NavBar(
                               selectedIndex: 1,
                               //! should move to the habits tab
+                              selectedNames: aspectList.getSelectedNames(),
                             );
                           },
                         ),
@@ -285,33 +286,27 @@ class _AddHabitState extends State<AddHabit> {
                   ),
                   InkWell(
                     onTap: () {
-                      if (isFirstclick) {
-                        isFirstclick = false;
-
-                        if (formKey411.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: Colors.green.shade300,
-                              duration: const Duration(milliseconds: 500),
-                              content: Row(
-                                children: const [
-                                  Icon(
-                                    Icons.thumb_up_sharp,
-                                    color: kWhiteColor,
-                                  ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Text("تمت اضافة العادة "),
-                                  ),
-                                ],
-                              ),
+                      if (formKey411.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.green.shade300,
+                            duration: const Duration(milliseconds: 500),
+                            content: Row(
+                              children: const [
+                                Icon(
+                                  Icons.thumb_up_sharp,
+                                  color: kWhiteColor,
+                                ),
+                                SizedBox(width: 20),
+                                Expanded(
+                                  child: Text("تمت اضافة العادة "),
+                                ),
+                              ],
                             ),
-                          );
+                          ),
+                        );
 
-                          _addHabit();
-                        } else {
-                          isFirstclick = true;
-                        }
+                        _addHabit(aspectList.getSelectedNames());
                       }
                     },
                     child: Container(
