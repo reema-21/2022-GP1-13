@@ -108,7 +108,8 @@ class NotificationController {
     final goalaspectController = TextEditingController();
     goalaspectController.text = notification.comm.goalName!;
 
-    final formKey = GlobalKey<FormState>();
+    final acceptInvitation = GlobalKey<FormState>(
+        debugLabel: 'acceptInvitationFormKey-${UniqueKey().toString()}');
     Goal isSelected = Goal(userID: IsarService.getUserID);
 
     List<Goal> goalsName = [];
@@ -129,7 +130,7 @@ class NotificationController {
                 style: titleText2,
               ),
               content: Form(
-                key: formKey,
+                key: acceptInvitation,
                 child: SingleChildScrollView(
                     child: Column(children: [
                   const SizedBox(
@@ -205,7 +206,7 @@ class NotificationController {
                     //maybe the condition will be that user added one task
                     //stateproblen
                     onPressed: () async {
-                      if (formKey.currentState!.validate() &&
+                      if (acceptInvitation.currentState!.validate() &&
                           goalsName.isNotEmpty) {
                         //here
                         CommunityID newCom =

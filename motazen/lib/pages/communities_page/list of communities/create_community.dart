@@ -22,7 +22,8 @@ class CreateCommunity extends StatefulWidget {
 }
 
 class _CreateCommunityState extends State<CreateCommunity> {
-  final formKey = GlobalKey<FormState>();
+  final _createCommunityFormKey = GlobalKey<FormState>(
+      debugLabel: 'CreateCommunityFormKey-${UniqueKey().toString()}');
   TextEditingController communityNameController = TextEditingController();
   List<String> list = [];
   TextEditingController goalNameController = TextEditingController();
@@ -93,7 +94,7 @@ class _CreateCommunityState extends State<CreateCommunity> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: //Wrap it with form
                   Form(
-                key: formKey,
+                key: _createCommunityFormKey,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -230,7 +231,8 @@ class _CreateCommunityState extends State<CreateCommunity> {
                             onTap: () async {
                               String commID =
                                   '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
-                              if (formKey.currentState!.validate()) {
+                              if (_createCommunityFormKey.currentState!
+                                  .validate()) {
                                 Goal? choseGoal =
                                     Goal(userID: IsarService.getUserID);
                                 IsarService iser =

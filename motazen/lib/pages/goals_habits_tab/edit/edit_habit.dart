@@ -37,7 +37,8 @@ class EditHabit extends StatefulWidget {
 }
 
 class _AddHabitState extends State<EditHabit> {
-  final formKey2 = GlobalKey<FormState>();
+  final _editHabitFormKey = GlobalKey<FormState>(
+      debugLabel: 'editHabitFormKey-${UniqueKey().toString()}');
   late int durationIndString;
   late int durationInInt;
   final _goalNmaeController = TextEditingController();
@@ -159,7 +160,7 @@ class _AddHabitState extends State<EditHabit> {
         Container(
           padding: const EdgeInsets.all(20),
           child: Form(
-            key: formKey2,
+            key: _editHabitFormKey,
             child: ListView(children: [
               TextFormField(
                 controller: _goalNmaeController,
@@ -331,7 +332,7 @@ class _AddHabitState extends State<EditHabit> {
 
               InkWell(
                 onTap: () {
-                  if (formKey2.currentState!.validate()) {
+                  if (_editHabitFormKey.currentState!.validate()) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Row(
                       children: const [

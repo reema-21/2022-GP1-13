@@ -5,6 +5,7 @@ import 'package:motazen/isar_service.dart';
 import 'package:motazen/models/todo_model.dart';
 import 'package:motazen/pages/homepage/daily_tasks/ranking_algorithm.dart';
 import 'package:motazen/pages/settings/tasklist_variables.dart';
+import 'package:sorted/sorted.dart';
 
 class ItemList {
 //initialize attributes
@@ -17,6 +18,7 @@ class ItemList {
   static DateTime? lastResetDate;
 
 //* adds the items to the items list, used when the item list is empty, and in the daily background process
+//! the list doesn't retrieve the added required item right away
   Future<void> createTaskTodoList(List<Aspect> aspectList) async {
     // check if a new day has started
     if (lastResetDate == null || lastResetDate!.day != DateTime.now().day) {
@@ -36,14 +38,18 @@ class ItemList {
               task.lastCompletionDate!.year == DateTime.now().year &&
               task.lastCompletionDate!.month == DateTime.now().month &&
               task.lastCompletionDate!.day < DateTime.now().day) {
+            // Set rank to 1 for past due tasks
+            task.rank = 1;
             continue;
           }
-          print('task: ${task.name}');
           //initialize the importance to 0
           double importance = goal.importance / 4;
 
           //create the dependency graph
           Rank().createDepGraph(task);
+
+          // set the rank to 0 if the task is completed
+          double? rank = task.completedForToday ? 0 : null;
 
           //create task items
           itemList.add(Item(
@@ -63,6 +69,7 @@ class ItemList {
             daysCompletedTask: task.amountCompleted,
             dueDate: goal.endDate,
             importance: importance,
+            rank: rank,
           ));
         }
       }
@@ -74,7 +81,7 @@ class ItemList {
 
     //save the item's rank in local storage so that it's accessible after updating the selection status
     for (var item in rankedList) {
-      await IsarService().updateTaskRank(item.id, item.rank!);
+      await IsarService().updateTaskRank(item.id, item.rank ?? 0);
     }
 
     //step 3: visualize the list
@@ -88,6 +95,8 @@ class ItemList {
     } else {
       itemList = rankedList.sublist(0, toShowTaskNumber);
     }
+    itemList = itemList.sorted(
+        [SortedComparable<Item, double>((task) => task.rank!, invert: true)]);
   }
 
 //* updates the list when a task is checked
@@ -100,40 +109,24 @@ class ItemList {
 
     //calculate the rank
     for (var item in itemList) {
-      //check items should be displayed at the bottom of the list
-      if (item.completed &&
-          item.lastCompletionDate != null &&
+      //set rank to 0 for checked tasks
+      if (item.completed) {
+        item.rank = 0;
+      }
+      if (item.lastCompletionDate != null &&
           item.lastCompletionDate!.year == DateTime.now().year &&
           item.lastCompletionDate!.month == DateTime.now().month &&
           item.lastCompletionDate!.day < DateTime.now().day) {
-        item.rank = 0;
         lastResetDate =
             DateTime.now(); // update lastResetDate when an item is checked
-      } else if (item.rank == 0) {
+      } else if (item.rank == 0 && !(item.completed)) {
+        //retrieve the task's rank from local storage
         LocalTask? task = await IsarService().findSepecificTaskByID(item.id);
         item.rank = task!.rank;
       }
     }
-    itemList = bucketSort(itemList);
-  }
-
-  List<Item> bucketSort(List<Item> items) {
-    // Create an array of empty buckets
-    final List<List<Item>> buckets = List.generate(items.length + 1, (_) => []);
-
-    // Add each item to the appropriate bucket based on its rank
-    for (var item in items) {
-      int index = (item.rank! * items.length).floor();
-      buckets[index].add(item);
-    }
-
-    // Concatenate the buckets into a single list
-    List<Item> result = [];
-    for (var bucket in buckets.reversed) {
-      result.addAll(bucket);
-    }
-
-    return result;
+    itemList = itemList.sorted(
+        [SortedComparable<Item, double>((task) => task.rank!, invert: true)]);
   }
 
 //* reset the check status of all tasks in the database

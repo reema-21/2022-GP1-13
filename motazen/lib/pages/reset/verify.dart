@@ -34,7 +34,8 @@ class VerifyScreen extends StatefulWidget {
 }
 
 class _VerifyScreenState extends State<VerifyScreen> {
-  final otpformkey = GlobalKey<FormState>();
+  final _otpformkey = GlobalKey<FormState>(
+      debugLabel: 'myOtpFormKey-${UniqueKey().toString()}');
   TextEditingController otpTextfield = TextEditingController();
 
   //=====================timer
@@ -103,7 +104,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
               ),
               //=================otp field===============================
               Form(
-                key: otpformkey,
+                key: _otpformkey,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: TextFormField(
@@ -147,7 +148,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
               GestureDetector(
                 onTap: () {
                   //==this button a verify otp function
-                  if (otpformkey.currentState!.validate()) {
+                  if (_otpformkey.currentState!.validate()) {
                     verifyEmail();
                   }
                 },

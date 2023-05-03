@@ -45,7 +45,6 @@ class _MynavBar extends State<NavBar> {
   ];
 
   AuthController authController = Get.put(AuthController());
-  CommunityController communityController = Get.put(CommunityController());
   TaskControleer taskControleer = Get.put(TaskControleer());
 
   @override
@@ -54,7 +53,6 @@ class _MynavBar extends State<NavBar> {
     selectedIndex = widget.selectedIndex;
     authController.getUsersList();
     authController.getUserAvatar();
-    communityController.getUserData();
     _listenToNotifications();
   }
 

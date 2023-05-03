@@ -37,12 +37,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final oldPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
   final confirmNewPasswordController = TextEditingController();
-  final _firstNameKey = GlobalKey<FormState>();
-  final _userNameKey = GlobalKey<FormState>();
-  final _emailKey = GlobalKey<FormState>();
-  final _oldPassKey = GlobalKey<FormState>();
-  final _newPassKey = GlobalKey<FormState>();
-  final _confirmNewPassKey = GlobalKey<FormState>();
+  final _firstNameKey = GlobalKey<FormState>(
+      debugLabel: 'firstNameFormKey-${UniqueKey().toString()}');
+  final _userNameKey = GlobalKey<FormState>(
+      debugLabel: 'userNameFormKey-${UniqueKey().toString()}');
+  final _emailKey = GlobalKey<FormState>(
+      debugLabel: 'emailFormKey-${UniqueKey().toString()}');
+  final _oldPassKey = GlobalKey<FormState>(
+      debugLabel: 'oldPassFormKey-${UniqueKey().toString()}');
+  final _newPassKey = GlobalKey<FormState>(
+      debugLabel: 'newPassFormKey-${UniqueKey().toString()}');
+  final _confirmNewPassKey = GlobalKey<FormState>(
+      debugLabel: 'confirmNewPassFormKey-${UniqueKey().toString()}');
   String oldFirstName = "";
   String oldUsername = "";
   String oldEmail = "";

@@ -19,10 +19,13 @@ class AddHabit extends StatefulWidget {
 }
 
 class _AddHabitState extends State<AddHabit> {
-  final formKey411 = GlobalKey<FormState>();
+  final _addHabitFormKey = GlobalKey<FormState>(
+      debugLabel: 'AddHabitFormKey-${UniqueKey().toString()}');
+  final GlobalKey<ScaffoldState> _addHabitScaffoldkey =
+      GlobalKey<ScaffoldState>(
+          debugLabel: 'AddHabitScaffoldKey-${UniqueKey().toString()}');
   late String _habitName;
   final MyControleer freq = Get.put(MyControleer());
-  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   final _goalNmaeController = TextEditingController();
   final List<String> durations = ['اليوم', 'الأسبوع', 'الشهر', 'السنة'];
   String? isSelected;
@@ -70,7 +73,7 @@ class _AddHabitState extends State<AddHabit> {
     var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      key: _scaffoldkey,
+      key: _addHabitScaffoldkey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF66BF77),
@@ -117,7 +120,7 @@ class _AddHabitState extends State<AddHabit> {
           Container(
             padding: const EdgeInsets.all(20),
             child: Form(
-              key: formKey411,
+              key: _addHabitFormKey,
               child: ListView(
                 children: [
                   TextFormField(
@@ -286,7 +289,7 @@ class _AddHabitState extends State<AddHabit> {
                   ),
                   InkWell(
                     onTap: () {
-                      if (formKey411.currentState!.validate()) {
+                      if (_addHabitFormKey.currentState!.validate()) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: Colors.green.shade300,

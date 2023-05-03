@@ -19,8 +19,8 @@ class _SignUpFormState extends State<SignUpForm> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController conformPasswordController = TextEditingController();
-  final _signUpformKey = GlobalKey<FormState>();
-
+  final _signUpformKey = GlobalKey<FormState>(
+      debugLabel: 'mySignUpFormKey-${UniqueKey().toString()}');
   bool passIsObscures = true;
   bool conformPassIsObscures = true;
 

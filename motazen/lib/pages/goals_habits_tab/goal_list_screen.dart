@@ -5,6 +5,7 @@ import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/add_goal_screen.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/pages/goals_habits_tab/details/new_goal_detail.dart';
+import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/theme.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<AspectController>(context);
+    var aspectList = Provider.of<AspectController>(context, listen: false);
     return StreamBuilder<List<Goal>>(
       stream: IsarService().getAllGoals(),
       builder: (context, snapshot) {
@@ -69,8 +70,6 @@ class _GoalListScreenState extends State<GoalListScreen> {
                 dueDataDescription =
                     "تاريخ الاستحقاق :${intl.DateFormat.yMMMEd().format(endDate)}";
 
-                // }
-
                 final aspectName = goal.aspect.value?.name;
                 return Container(
                   decoration:
@@ -97,6 +96,8 @@ class _GoalListScreenState extends State<GoalListScreen> {
                                             'بالنقر على "تاكيد"لن تتمكن من استرجاع الهدف  ');
                                     if (action == DialogsAction.yes) {
                                       widget.isr.deleteGoal(goal);
+                                      await ItemList().createTaskTodoList(
+                                          aspectList.selected);
                                     }
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(

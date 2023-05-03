@@ -77,7 +77,10 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                     TextEditingController();
                                 goalaspectController.text = community.goalName!;
 
-                                final formKey = GlobalKey<FormState>();
+                                final joinPublicCommunityFormKey = GlobalKey<
+                                        FormState>(
+                                    debugLabel:
+                                        'joinPublicCommunityFormKey-${UniqueKey().toString()}');
                                 Goal isSelected =
                                     Goal(userID: IsarService.getUserID);
 
@@ -102,7 +105,7 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                             style: titleText2,
                                           ),
                                           content: Form(
-                                            key: formKey,
+                                            key: joinPublicCommunityFormKey,
                                             child: SingleChildScrollView(
                                                 child: Column(children: [
                                               const SizedBox(
@@ -197,7 +200,8 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                 //maybe the condition will be that user added one task
                                                 //stateproblen
                                                 onPressed: () async {
-                                                  if (formKey.currentState!
+                                                  if (joinPublicCommunityFormKey
+                                                          .currentState!
                                                           .validate() &&
                                                       goalsName.isNotEmpty) {
                                                     //-----------------------------------

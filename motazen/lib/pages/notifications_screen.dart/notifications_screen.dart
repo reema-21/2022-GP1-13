@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:motazen/controllers/community_controller.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/controllers/notification_controller.dart';
-import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/communities_page/community/community_home.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';

@@ -13,11 +13,11 @@ class CalculateProgress {
     switch (methodToBeUsed) {
       case 'Increment Task':
         await IsarService().completeForTodayTask(taskId);
-        calculateTaskPercentage(taskId, goalId!);
+        await calculateTaskPercentage(taskId, goalId!);
         break;
       case 'Decrement Task':
         await IsarService().undoCompleteForTodayTask(taskId);
-        calculateTaskPercentage(taskId, goalId!);
+        await calculateTaskPercentage(taskId, goalId!);
         break;
       case 'Increment Habit':
         await IsarService().completeForTodayHabit(taskId);
@@ -26,6 +26,7 @@ class CalculateProgress {
         await IsarService().undoCompleteForTodayHabit(taskId);
         break;
       default:
+        return; // Exit function if methodToBeUsed is invalid
     }
   }
 
@@ -33,12 +34,12 @@ class CalculateProgress {
     LocalTask? completedTask =
         await IsarService().findSepecificTaskByID(taskId);
     Goal? goal = await IsarService().getSepecificGoall(goalId);
+
     double completionPercentage =
         completedTask!.amountCompleted / completedTask.duration;
-    //check if the value is within range
     if (completionPercentage < 1 || completionPercentage == 1) {
       await IsarService().updateTaskPercentage(taskId, completionPercentage);
-      calculateGoalPercentage(goal, goal!.goalProgressPercentage);
+      await calculateGoalPercentage(goal, goal!.goalProgressPercentage);
     }
   }
 
@@ -51,12 +52,11 @@ class CalculateProgress {
     //save the previous goal progress
     List<LocalTask> allTasks = goal!.task.toList();
     for (var element in allTasks) {
-      totalDaysCompleted = totalDaysCompleted + element.amountCompleted;
-      totalGoalDuration = totalGoalDuration + element.duration;
+      totalDaysCompleted += element.amountCompleted;
+      totalGoalDuration += element.duration;
     }
     totalGoalProgress = totalDaysCompleted / totalGoalDuration;
 
-    //check if the progress is within range
     if (totalGoalProgress < 1 || totalGoalProgress == 1) {
       await IsarService().updateGoalPercentage(goal.id, totalGoalProgress);
       Aspect? aspect = await IsarService().getAspectByGoal(goal.id);

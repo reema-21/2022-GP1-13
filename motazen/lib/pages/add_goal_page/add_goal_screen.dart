@@ -30,15 +30,15 @@ class AddGoal extends StatefulWidget {
 
 class _AddGoalState extends State<AddGoal> {
   DateRangePickerController newSelectedDate = DateRangePickerController();
-
-  final formKey = GlobalKey<FormState>();
+  final _addGoalFormKey = GlobalKey<FormState>(
+      debugLabel: 'AddGoalFormKey-${UniqueKey().toString()}');
+  final GlobalKey<ScaffoldState> _addGoalScaffoldkey = GlobalKey<ScaffoldState>(
+      debugLabel: 'AddGoalScaffoldKey-${UniqueKey().toString()}');
   late String _goalName;
   DateTimeRange? selectedDates;
-
   int goalDuration = 0;
   String duration = "لا يوجد فترة";
   int importance = 0;
-  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   final _goalNmaeController = TextEditingController();
   final _dueDateController = TextEditingController();
   final TaskLocalControleer freq = Get.put(TaskLocalControleer());
@@ -124,7 +124,7 @@ class _AddGoalState extends State<AddGoal> {
     var aspectList = Provider.of<AspectController>(context, listen: false);
     return Scaffold(
       /// key
-      key: _scaffoldkey,
+      key: _addGoalScaffoldkey,
 
       /// appbar
       appBar: AppBar(
@@ -189,7 +189,7 @@ class _AddGoalState extends State<AddGoal> {
           Container(
             padding: const EdgeInsets.all(20),
             child: Form(
-              key: formKey,
+              key: _addGoalFormKey,
               child: ListView(
                 children: [
                   /// field
@@ -384,7 +384,7 @@ class _AddGoalState extends State<AddGoal> {
                   ),
                   InkWell(
                     onTap: () async {
-                      if (formKey.currentState!.validate()) {
+                      if (_addGoalFormKey.currentState!.validate()) {
                         if (goalDuration != 0) {
                           Get.snackbar(" اضافة الهدف ", "تمت اضافة الهدف بنجاح",
                               snackPosition: SnackPosition.BOTTOM,

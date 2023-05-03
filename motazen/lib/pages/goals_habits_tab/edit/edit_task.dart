@@ -191,8 +191,8 @@ class _EditTaskState extends State<EditTask> {
     });
   }
 
-  final formKey = GlobalKey<FormState>();
-
+  final _editTaskFormKey = GlobalKey<FormState>(
+      debugLabel: 'editTaskFormKey-${UniqueKey().toString()}');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -361,7 +361,7 @@ class _EditTaskState extends State<EditTask> {
                                                   "تعديل المهمة",
                                                 ),
                                                 content: Form(
-                                                  key: formKey,
+                                                  key: _editTaskFormKey,
                                                   child: SingleChildScrollView(
                                                       child: Column(children: [
                                                     TextFormField(
@@ -636,7 +636,7 @@ class _EditTaskState extends State<EditTask> {
                                                           onPressed:
                                                               freq.iscool.value
                                                                   ? () {
-                                                                      if (formKey
+                                                                      if (_editTaskFormKey
                                                                           .currentState!
                                                                           .validate()) {
                                                                         setState(
@@ -900,7 +900,7 @@ class _EditTaskState extends State<EditTask> {
                         " مهمة جديدة",
                       ),
                       content: Form(
-                        key: formKey,
+                        key: _editTaskFormKey,
                         child: SingleChildScrollView(
                             child: Column(children: [
                           TextFormField(
@@ -1081,7 +1081,8 @@ class _EditTaskState extends State<EditTask> {
                           Obx(() => ElevatedButton(
                                 onPressed: freq.iscool.value
                                     ? () {
-                                        if (formKey.currentState!.validate()) {
+                                        if (_editTaskFormKey.currentState!
+                                            .validate()) {
                                           setState(() {
                                             LocalTask newTak = LocalTask(
                                                 userID: IsarService.getUserID);

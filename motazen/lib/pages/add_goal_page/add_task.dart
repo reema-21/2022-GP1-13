@@ -52,7 +52,8 @@ class _AddTaskState extends State<AddTask> {
     widget.isr.saveTask(newTask);
   }
 
-  final formKey = GlobalKey<FormState>();
+  final _addTaskFormKey = GlobalKey<FormState>(
+      debugLabel: 'AddTaskFormKey-${UniqueKey().toString()}');
 
   @override
   Widget build(BuildContext context) {
@@ -249,7 +250,7 @@ class _AddTaskState extends State<AddTask> {
                         " مهمة جديدة",
                       ),
                       content: Form(
-                        key: formKey,
+                        key: _addTaskFormKey,
                         child: SingleChildScrollView(
                             child: Column(children: [
                           TextFormField(
@@ -430,7 +431,8 @@ class _AddTaskState extends State<AddTask> {
                           Obx(() => ElevatedButton(
                                 onPressed: freq.iscool.value
                                     ? () {
-                                        if (formKey.currentState!.validate()) {
+                                        if (_addTaskFormKey.currentState!
+                                            .validate()) {
                                           setState(() {
                                             // tasksNamedropmenue.add(inputTaskName.text);
 

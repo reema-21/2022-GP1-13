@@ -19,8 +19,8 @@ class _LogInScreenState extends State<LogInScreen> {
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _passwordcontroler = TextEditingController();
   bool obscureText = true;
-  final _formKey = GlobalKey<FormState>();
-
+  final _loginFormKey = GlobalKey<FormState>(
+      debugLabel: 'loginFormKey-${UniqueKey().toString()}');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +73,7 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
               //=================login form=================
               Form(
-                key: _formKey,
+                key: _loginFormKey,
                 child: Column(
                   children: <Widget>[
                     // //=================email field===============
@@ -167,7 +167,7 @@ class _LogInScreenState extends State<LogInScreen> {
               //==============Signin Button============================
               InkWell(
                 onTap: () {
-                  if (_formKey.currentState!.validate()) {
+                  if (_loginFormKey.currentState!.validate()) {
                     //=============== call a function to sign in with email and pass.
                     //====uncomment the below function when app is connected to firebase.
                     signIn(_emailcontroller.text, _passwordcontroler.text);

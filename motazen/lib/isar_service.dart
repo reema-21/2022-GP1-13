@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:motazen/entities/community_id.dart';
@@ -54,10 +56,10 @@ class IsarService {
       goal!.task.addAll(tasks);
       goal.task.saveSync();
 
-      tasks.forEach((task) {
+      for (var task in tasks) {
         task.goal.value = goal;
         task.goal.saveSync();
-      });
+      }
     });
   }
 
@@ -505,7 +507,11 @@ class IsarService {
     final isar = await db;
     await isar.writeTxn(() async {
       LocalTask? task = await findSepecificTaskByID(id);
-      task!.rank = rank;
+      if (task == null) {
+        log('Error: task is null, id = $id');
+        return;
+      }
+      task.rank = rank;
       await isar.localTasks.put(task);
     });
   }

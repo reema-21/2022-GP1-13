@@ -22,7 +22,8 @@ class GoalDetailPage extends StatefulWidget {
 }
 
 bool tasksOpened = false;
-GlobalKey _taskShowCase = GlobalKey();
+GlobalKey _taskShowCase =
+    GlobalKey(debugLabel: 'taskShowCase-${UniqueKey().toString()}');
 
 class _GoalDetailPageState extends State<GoalDetailPage> {
   TextEditingController displayGoalNameControlller = TextEditingController();

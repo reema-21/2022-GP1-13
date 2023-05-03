@@ -59,9 +59,13 @@ class _EditGoalState extends State<EditGoal> {
     return goal!.task.toList();
   }
 
+  final _editGoalFormKey = GlobalKey<FormState>(
+      debugLabel: 'editGoalFormKey-${UniqueKey().toString()}');
+  final GlobalKey<ScaffoldState> _editGoalScaffoldkey =
+      GlobalKey<ScaffoldState>(
+          debugLabel: 'editGoalScaffoldKey-${UniqueKey().toString()}');
   final TaskLocalControleer freq = Get.put(TaskLocalControleer());
   DateRangePickerController newSelectedDate = DateRangePickerController();
-  final formKey = GlobalKey<FormState>();
   int goalDuration = 0;
   List<LocalTask> goalTasks = [];
   List<LocalTask> oldgoalTasks = [];
@@ -70,7 +74,6 @@ class _EditGoalState extends State<EditGoal> {
 
   String duration = "لا يوجد فترة";
   int importance = 0;
-  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   final _goalNmaeController = TextEditingController();
   final _goalaspectController = TextEditingController();
   String? isSelected;
@@ -176,7 +179,7 @@ class _EditGoalState extends State<EditGoal> {
   Widget build(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context, listen: false);
     return Scaffold(
-        key: _scaffoldkey,
+        key: _editGoalScaffoldkey,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: const Color(0xFF66BF77),
@@ -268,7 +271,7 @@ class _EditGoalState extends State<EditGoal> {
             Container(
                 padding: const EdgeInsets.all(20),
                 child: Form(
-                    key: formKey,
+                    key: _editGoalFormKey,
                     child: ListView(children: [
                       TextFormField(
                         controller: _goalNmaeController,
@@ -459,7 +462,7 @@ class _EditGoalState extends State<EditGoal> {
 
                       InkWell(
                         onTap: () async {
-                          if (formKey.currentState!.validate()) {
+                          if (_editGoalFormKey.currentState!.validate()) {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 backgroundColor: Colors.green.shade300,
                                 duration: const Duration(milliseconds: 700),
