@@ -282,7 +282,11 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                 if (isadmin && widget.comm.isPrivate)
                                   GestureDetector(
                                       onTap: () {
-                                        Get.to(() => Invite(comm: widget.comm));
+                                        Get.to(() => Invite(
+                                              comm: widget.comm,
+                                              selected:
+                                                  aspectList.getSelectedNames(),
+                                            ));
                                       },
                                       child: const Icon(
                                         Icons.person_add,

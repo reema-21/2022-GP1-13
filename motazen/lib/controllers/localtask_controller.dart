@@ -88,7 +88,9 @@ class TaskLocalControleer extends GetxController {
 
     LocalTask newTak = LocalTask(userID: IsarService.getUserID);
     newTak.name = name;
+    //serach by name for these task and then add to taskdepency
 
+// newTak.taskDependency.addAll(elements)
     String durationDescribtion = "";
     switch (duName) {
       case "أيام":

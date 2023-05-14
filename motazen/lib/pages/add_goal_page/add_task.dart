@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/local_task.dart';
 import 'package:motazen/models/task_model.dart';
@@ -152,6 +154,29 @@ class _AddTaskState extends State<AddTask> {
                                 if (action == DialogsAction.yes) {
                                   bool isDependent =
                                       false; // prevent the user from deleting any task the depends by other tasks
+                                  for (int i = 0;
+                                      i < freq.goalTask.value.length;
+                                      i++) {
+                                    log("in here");
+                                    log(freq.goalTask.value[i].taskDependency
+                                        .toList()
+                                        .length
+                                        .toString());
+
+                                    freq.goalTask.value[i].taskDependency
+                                        .toList()
+                                        .forEach((element) {
+                                      log(element.id.toString());
+                                      log(freq.goalTask.value[index].id
+                                          .toString());
+                                      if (element.id ==
+                                          freq.goalTask.value[index].id) {
+                                        isDependent = true;
+                                        log("here");
+                                      }
+                                    });
+                                  }
+
                                   for (int i = 0;
                                       i < freq.goalTask.value.length;
                                       i++) {

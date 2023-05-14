@@ -26,7 +26,6 @@ class Todo {
 /// An individual item model, used within a [Todo].
 /// {@endtemplate}
 class Item {
-  /// {@macro item}
   Item(
       {this.importance,
       this.dueDate,

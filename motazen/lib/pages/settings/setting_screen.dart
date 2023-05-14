@@ -77,10 +77,6 @@ class SettingScreen extends StatelessWidget {
                           builder: (context) => const EditProfilePage()));
                 },
               ),
-              BuildAccountOptionRow(
-                title: "خانة احتياط",
-                onClick: () {},
-              ),
               const SizedBox(height: 40),
               Row(
                 children: const [

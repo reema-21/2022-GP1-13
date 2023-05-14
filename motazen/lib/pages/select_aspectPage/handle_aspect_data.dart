@@ -1,13 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:motazen/controllers/auth_controller.dart';
 import 'package:motazen/controllers/community_controller.dart';
+import 'package:motazen/controllers/edit_controller.dart';
+import 'package:motazen/controllers/my_controller.dart';
+import 'package:motazen/controllers/task_controller.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
+import 'package:motazen/pages/journal_page/journal_controller.dart';
+import 'package:motazen/pages/settings/tasklist_variables.dart';
+import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-import '../../controllers/aspect_controller.dart';
+import 'package:motazen/controllers/aspect_controller.dart';
 import '/entities/aspect.dart';
-import '../../models/aspect_model.dart';
+import 'package:motazen/models/aspect_model.dart';
 import 'select_aspect.dart';
 
 class HandleAspect {
@@ -87,6 +95,21 @@ class InitializeAspects extends StatefulWidget {
 class _InitializeAspectsState extends State<InitializeAspects> {
   final IsarService isar = IsarService();
   @override
+  void initState() {
+    _saveNumOfTasksToBeShown(5); // the default value set for a new user
+    toShowTaskNumber = 5;
+    if (!(widget.isRetake!)) {
+      Get.put(CommunityController());
+      Get.put(AuthController());
+      Get.put(TaskControleer());
+      Get.put(MyControleer());
+      Get.put(EditMyControleer());
+      Get.put(JournalController());
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
@@ -109,6 +132,13 @@ class _InitializeAspectsState extends State<InitializeAspects> {
       ),
     );
   }
+
+  Future<void> _saveNumOfTasksToBeShown(int value) async {
+    final userDoc = FirebaseFirestore.instance
+        .collection('user')
+        .doc(firebaseAuth.currentUser!.uid);
+    await userDoc.set({'numOfTasksToBeShown': value}, SetOptions(merge: true));
+  }
 } //------------------------ fetch aspects from local storage then------------------------//
 
 class GetAllAspects extends StatefulWidget {
@@ -120,43 +150,70 @@ class GetAllAspects extends StatefulWidget {
 }
 
 class _GetAllAspectsState extends State<GetAllAspects> {
-  final CommunityController communityController =
-      Get.put(CommunityController());
-
   @override
   void initState() {
     super.initState();
-    communityController.getUserData();
+    // Call _fetchNumOfTasksToBeShown() method and set the value to _numOfTasksToBeShown
+    _fetchNumOfTasksToBeShown().then((value) {
+      setState(() {
+        toShowTaskNumber = value;
+      });
+    });
+
+    // create the getx controllers
+    Get.put(CommunityController());
+    Get.put(AuthController());
+    // Get.put(TaskLocalControleer());
+    Get.put(TaskControleer());
+    Get.put(MyControleer());
+    Get.put(EditMyControleer());
+    Get.put(JournalController());
+    Get.find<CommunityController>().getUserData();
+    Get.find<AuthController>().getUserAvatar();
   }
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<AspectController>(context);
     return Scaffold(
       body: Center(
-        child: FutureBuilder<List<Aspect>>(
-          future: HandleAspect().getAspects(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasData) {
-                aspectList.allAspects = snapshot.data!;
-                switch (widget.page) {
-                  case 'Home':
-                    return const GetChosenAspect();
-                  default:
-                    return const Text('Error 404: Page not found');
+        child: Consumer<AspectController>(
+          builder: (context, aspectList, _) {
+            return FutureBuilder<List<Aspect>>(
+              future: HandleAspect().getAspects(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  aspectList.allAspects = snapshot.data!;
+                  switch (widget.page) {
+                    case 'Home':
+                      return FutureBuilder(builder: (context, snapshot) {
+                        return const GetChosenAspect();
+                      });
+                  }
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return const CircularProgressIndicator();
                 }
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                return const CircularProgressIndicator();
-              }
-            } else {
-              return const CircularProgressIndicator();
-            }
+                return const SizedBox.shrink(); //might c
+              },
+            );
           },
         ),
       ),
     );
+  }
+
+  Future<int> _fetchNumOfTasksToBeShown() async {
+    final userDoc = FirebaseFirestore.instance
+        .collection('user')
+        .doc(firebaseAuth.currentUser!.uid);
+    final userData = await userDoc.get();
+    if (userData.exists) {
+      final data = userData.data();
+      if (data != null && data.containsKey('numOfTasksToBeShown')) {
+        return data['numOfTasksToBeShown'];
+      }
+    }
+    return 0;
   }
 }

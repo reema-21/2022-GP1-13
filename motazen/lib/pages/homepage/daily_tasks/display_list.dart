@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
+import 'package:motazen/controllers/item_list_controller.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/models/todo_model.dart';
 import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
@@ -27,24 +28,11 @@ class _TaskTodoCardState extends State<TaskTodoCard> {
   @override
   void initState() {
     super.initState();
-    userDataUpdate();
-  }
-
-  Future<void> userDataUpdate() async {
-    final aspectList = Provider.of<AspectController>(context, listen: false);
-    if (ItemList.itemList.isEmpty ||
-        ItemList.itemList.length < toShowTaskNumber) {
-      await ItemList().createTaskTodoList(aspectList.selected);
-    }
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final scrollController = ScrollController();
-    final aspects =
-        Provider.of<AspectController>(context, listen: false).selected;
-
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -62,103 +50,104 @@ class _TaskTodoCardState extends State<TaskTodoCard> {
           margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Material(
-              color: Colors.white,
-              elevation: 5.0,
-              borderRadius: BorderRadius.circular(12),
-              child: ItemList.itemList.isEmpty
-                  ? const Center(
-                      child: Text('لا يوجد مهام مسجلة'),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.all(8.0),
-                      controller: scrollController,
-                      shrinkWrap: true,
-                      itemCount: (ItemList.itemList.length),
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          trailing: Checkbox(
-                            onChanged: (bool? val) async {
-                              if (ItemList.itemList[index].completed) {
-                                //completed = true, then we need to decrement
-                                ItemList.itemList[index].completed = false;
-                                if (ItemList
-                                        .itemList[index].daysCompletedTask !=
-                                    null) {
-                                  ItemList.itemList[index].daysCompletedTask =
-                                      ItemList.itemList[index]
-                                              .daysCompletedTask! -
-                                          1;
+            child: Consumer<ItemListProvider>(
+              builder: (context, value, child) => Material(
+                color: Colors.white,
+                elevation: 5.0,
+                borderRadius: BorderRadius.circular(12),
+                child: value.sublist.isEmpty
+                    ? const Center(
+                        child: Text('لا يوجد مهام مسجلة'),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(8.0),
+                        controller: scrollController,
+                        shrinkWrap: true,
+                        itemCount: (value.sublist.length),
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            trailing: Checkbox(
+                              onChanged: (bool? val) async {
+                                if (value.sublist[index].completed) {
+                                  //completed = true, then we need to decrement
+                                  value.sublist[index].completed = false;
+                                  if (value.sublist[index].daysCompletedTask !=
+                                      null) {
+                                    value.sublist[index].daysCompletedTask =
+                                        value.sublist[index]
+                                                .daysCompletedTask! -
+                                            1;
+                                  }
+                                  await CalculateProgress()
+                                      .updateAmountCompleted(
+                                          value.sublist[index].id,
+                                          value.sublist[index].itemGoal,
+                                          'Decrement',
+                                          value.sublist[index].type);
+                                  await value.updateList();
+                                } else {
+                                  //completed = false, then we need to increment
+                                  value.sublist[index].completed = true;
+                                  if (value.sublist[index].daysCompletedTask !=
+                                      null) {
+                                    value.sublist[index].daysCompletedTask =
+                                        value.sublist[index]
+                                                .daysCompletedTask! +
+                                            1;
+                                  }
+                                  await CalculateProgress()
+                                      .updateAmountCompleted(
+                                          value.sublist[index].id,
+                                          value.sublist[index].itemGoal,
+                                          'Increment',
+                                          value.sublist[index].type);
+                                  await value.updateList();
+                                  bool isTaskCompleted =
+                                      (value.sublist[index].duration -
+                                              value.sublist[index]
+                                                  .daysCompletedTask) ==
+                                          0;
+                                  if (context.mounted && isTaskCompleted) {
+                                    //a user has finished a task
+                                    showCupertinoDialog(
+                                        barrierDismissible: true,
+                                        context: context,
+                                        builder: (context) {
+                                          return const ListDialog(
+                                            title: 'اكتملت المهمة!',
+                                            description:
+                                                'كلام عن اكتمال المهمة',
+                                            imagePath:
+                                                'assets/animations/Complete_task.json',
+                                          );
+                                        });
+                                  }
                                 }
-                                await CalculateProgress().updateAmountCompleted(
-                                    ItemList.itemList[index].id,
-                                    ItemList.itemList[index].itemGoal,
-                                    'Decrement',
-                                    ItemList.itemList[index].type);
-                                await ItemList().updateList(aspects);
-                              } else {
-                                //completed = false, then we need to increment
-                                ItemList.itemList[index].completed = true;
-                                if (ItemList
-                                        .itemList[index].daysCompletedTask !=
-                                    null) {
-                                  ItemList.itemList[index].daysCompletedTask =
-                                      ItemList.itemList[index]
-                                              .daysCompletedTask! +
-                                          1;
-                                }
-                                await CalculateProgress().updateAmountCompleted(
-                                    ItemList.itemList[index].id,
-                                    ItemList.itemList[index].itemGoal,
-                                    'Increment',
-                                    ItemList.itemList[index].type);
-                                await ItemList().updateList(aspects);
-                                bool isTaskCompleted =
-                                    (ItemList.itemList[index].duration -
-                                            ItemList.itemList[index]
-                                                .daysCompletedTask) ==
-                                        0;
-                                if (mounted && isTaskCompleted) {
-                                  //a user has finished a task
-                                  showCupertinoDialog(
-                                      barrierDismissible: true,
-                                      context: context,
-                                      builder: (context) {
-                                        return const ListDialog(
-                                          title: 'اكتملت المهمة!',
-                                          description: 'كلام عن اكتمال المهمة',
-                                          imagePath:
-                                              'https://assets10.lottiefiles.com/packages/lf20_jsignqmt.json',
-                                        );
-                                      });
-                                }
-                              }
-                              setState(() {});
-                            },
-                            value: ItemList.itemList[index].completed,
-                            activeColor: kPrimaryColor,
-                            checkColor: kWhiteColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              },
+                              value: value.sublist[index].completed,
+                              activeColor: kPrimaryColor,
+                              checkColor: kWhiteColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                          ),
-                          title: Text(
-                            ItemList.itemList[index].description,
-                            style: TextStyle(
-                                color:
-                                    ItemList.itemList[index].type == 'Task' &&
-                                            ItemList.itemList[index].dueDate!
-                                                .isBefore(DateTime.now())
-                                        ? Colors.red
-                                        : Colors.black,
-                                decoration: ItemList.itemList[index].completed
-                                    ? TextDecoration.lineThrough
-                                    : null),
-                          ),
-                          leading: ItemList.itemList[index].icon,
-                        );
-                      },
-                    ),
+                            title: Text(
+                              value.sublist[index].description,
+                              style: TextStyle(
+                                  color: value.sublist[index].type == 'Task' &&
+                                          value.sublist[index].dueDate!
+                                              .isBefore(DateTime.now())
+                                      ? Colors.red
+                                      : Colors.black,
+                                  decoration: value.sublist[index].completed
+                                      ? TextDecoration.lineThrough
+                                      : null),
+                            ),
+                            leading: value.sublist[index].icon,
+                          );
+                        },
+                      ),
+              ),
             ),
           ),
         ),
@@ -178,8 +167,6 @@ class __TaskTodoPopupCardState extends State<_TaskTodoPopupCard> {
   @override
   Widget build(BuildContext context) {
     final scrollController = ScrollController();
-    List<Aspect> aspects =
-        Provider.of<AspectController>(context, listen: false).selected;
 
     return Hero(
       tag: 'todo-tag-1',
@@ -191,98 +178,98 @@ class __TaskTodoPopupCardState extends State<_TaskTodoPopupCard> {
         child: Material(
           borderRadius: BorderRadius.circular(16),
           color: Colors.white,
-          child: SizedBox(
-            child: ItemList.itemList.isEmpty
-                ? const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text('لا يوجد مهام مسجلة'),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(8.0),
-                    controller: scrollController,
-                    shrinkWrap: true,
-                    itemCount: (ItemList.itemList.length),
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        trailing: Checkbox(
-                          onChanged: (bool? val) async {
-                            if (ItemList.itemList[index].completed) {
-                              //completed = true, then we need to decrement
-                              ItemList.itemList[index].completed = false;
-                              if (ItemList.itemList[index].daysCompletedTask !=
-                                  null) {
-                                ItemList.itemList[index].daysCompletedTask =
-                                    ItemList.itemList[index]
-                                            .daysCompletedTask! -
-                                        1;
+          child: Consumer<ItemListProvider>(
+            builder: (context, value, child) => SizedBox(
+              child: value.sublist.isEmpty
+                  ? const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Text('لا يوجد مهام مسجلة'),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(8.0),
+                      controller: scrollController,
+                      shrinkWrap: true,
+                      itemCount: (value.sublist.length),
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          trailing: Checkbox(
+                            onChanged: (bool? val) async {
+                              if (value.sublist[index].completed) {
+                                //completed = true, then we need to decrement
+                                value.sublist[index].completed = false;
+                                if (value.sublist[index].daysCompletedTask !=
+                                    null) {
+                                  value.sublist[index].daysCompletedTask =
+                                      value.sublist[index].daysCompletedTask! -
+                                          1;
+                                }
+                                await CalculateProgress().updateAmountCompleted(
+                                    value.sublist[index].id,
+                                    value.sublist[index].itemGoal,
+                                    'Decrement',
+                                    value.sublist[index].type);
+                                await value.updateList();
+                              } else {
+                                //completed = false, then we need to increment
+                                value.sublist[index].completed = true;
+                                if (value.sublist[index].daysCompletedTask !=
+                                    null) {
+                                  value.sublist[index].daysCompletedTask =
+                                      value.sublist[index].daysCompletedTask! +
+                                          1;
+                                }
+                                await CalculateProgress().updateAmountCompleted(
+                                    value.sublist[index].id,
+                                    value.sublist[index].itemGoal,
+                                    'Increment',
+                                    value.sublist[index].type);
+                                await value.updateList();
+                                bool isTaskCompleted =
+                                    (value.sublist[index].duration -
+                                            value.sublist[index]
+                                                .daysCompletedTask) ==
+                                        0;
+                                if (context.mounted && isTaskCompleted) {
+                                  //a user has finished a task
+                                  showCupertinoDialog(
+                                      barrierDismissible: true,
+                                      context: context,
+                                      builder: (context) {
+                                        return const ListDialog(
+                                          title: 'اكتملت المهمة!',
+                                          description: 'كلام عن اكتمال المهمة',
+                                          imagePath:
+                                              'assets/animations/Complete_task.json',
+                                        );
+                                      });
+                                }
                               }
-                              await CalculateProgress().updateAmountCompleted(
-                                  ItemList.itemList[index].id,
-                                  ItemList.itemList[index].itemGoal,
-                                  'Decrement',
-                                  ItemList.itemList[index].type);
-                              await ItemList().updateList(aspects);
-                            } else {
-                              //completed = false, then we need to increment
-                              ItemList.itemList[index].completed = true;
-                              if (ItemList.itemList[index].daysCompletedTask !=
-                                  null) {
-                                ItemList.itemList[index].daysCompletedTask =
-                                    ItemList.itemList[index]
-                                            .daysCompletedTask! +
-                                        1;
-                              }
-                              await CalculateProgress().updateAmountCompleted(
-                                  ItemList.itemList[index].id,
-                                  ItemList.itemList[index].itemGoal,
-                                  'Increment',
-                                  ItemList.itemList[index].type);
-                              await ItemList().updateList(aspects);
-                              bool isTaskCompleted =
-                                  (ItemList.itemList[index].duration -
-                                          ItemList.itemList[index]
-                                              .daysCompletedTask) ==
-                                      0;
-                              if (mounted && isTaskCompleted) {
-                                //a user has finished a task
-                                showCupertinoDialog(
-                                    barrierDismissible: true,
-                                    context: context,
-                                    builder: (context) {
-                                      return const ListDialog(
-                                        title: 'اكتملت المهمة!',
-                                        description: 'كلام عن اكتمال المهمة',
-                                        imagePath:
-                                            'https://assets10.lottiefiles.com/packages/lf20_jsignqmt.json',
-                                      );
-                                    });
-                              }
-                            }
-                            setState(() {});
-                          },
-                          value: ItemList.itemList[index].completed,
-                          activeColor: kPrimaryColor,
-                          checkColor: kWhiteColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                              setState(() {});
+                            },
+                            value: value.sublist[index].completed,
+                            activeColor: kPrimaryColor,
+                            checkColor: kWhiteColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                        ),
-                        title: Text(
-                          ItemList.itemList[index].description,
-                          style: TextStyle(
-                              color: ItemList.itemList[index].type == 'Task' &&
-                                      ItemList.itemList[index].dueDate!
-                                          .isBefore(DateTime.now())
-                                  ? Colors.red
-                                  : Colors.black,
-                              decoration: ItemList.itemList[index].completed
-                                  ? TextDecoration.lineThrough
-                                  : null),
-                        ),
-                        leading: ItemList.itemList[index].icon,
-                      );
-                    },
-                  ),
+                          title: Text(
+                            value.sublist[index].description,
+                            style: TextStyle(
+                                color: value.sublist[index].type == 'Task' &&
+                                        value.sublist[index].dueDate!
+                                            .isBefore(DateTime.now())
+                                    ? Colors.red
+                                    : Colors.black,
+                                decoration: value.sublist[index].completed
+                                    ? TextDecoration.lineThrough
+                                    : null),
+                          ),
+                          leading: value.sublist[index].icon,
+                        );
+                      },
+                    ),
+            ),
           ),
         ),
       ),

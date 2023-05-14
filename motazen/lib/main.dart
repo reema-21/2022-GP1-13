@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:is_first_run/is_first_run.dart';
+import 'package:motazen/controllers/item_list_controller.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/login/login.dart';
 import 'package:motazen/pages/onboarding_page.dart';
@@ -25,8 +26,13 @@ Future main() async {
   bool ifr = await IsFirstRun.isFirstRun();
   iser = IsarService();
   runApp(
-    ChangeNotifierProvider<AspectController>(
-      create: (_) => AspectController(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AspectController>(
+            create: (_) => AspectController()),
+        ChangeNotifierProvider<ItemListProvider>(
+            create: (_) => ItemListProvider())
+      ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

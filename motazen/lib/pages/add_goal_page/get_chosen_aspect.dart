@@ -1,4 +1,5 @@
 import 'package:motazen/Sidebar_and_navigation/navigation_bar.dart';
+import 'package:motazen/controllers/item_list_controller.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,8 @@ class _ShowsState extends State<GetChosenAspect> {
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context);
+    final tasklist = Provider.of<ItemListProvider>(context);
+
     return Scaffold(
       body: Center(
         child: FutureBuilder<List<Aspect>>(
@@ -28,7 +31,7 @@ class _ShowsState extends State<GetChosenAspect> {
               return Text('Error: ${snapshot.error}');
             } else {
               aspectList.updateSelectedList(snapshot.data!);
-              ItemList().createTaskTodoList(snapshot.data!);
+              tasklist.createTaskTodoList();
               return NavBar(
                 selectedIndex: 0,
                 selectedNames: aspectList.getSelectedNames(),

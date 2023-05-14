@@ -109,7 +109,7 @@ class _ListDialogState extends State<ListDialog>
                         fit: BoxFit.contain,
                       ),
                     ),
-                    Lottie.network(
+                    Lottie.asset(
                       widget
                           .imagePath, //replace the link with the link provided
                       fit: BoxFit.contain,

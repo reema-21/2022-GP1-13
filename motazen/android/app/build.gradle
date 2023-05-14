@@ -63,7 +63,7 @@ android {
 }
 
 flutter {
-    source '../..'
+    source 'package:motazen'
 }
 
 dependencies {

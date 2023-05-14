@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:motazen/controllers/aspect_controller.dart';
+import 'package:motazen/controllers/item_list_controller.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/add_goal_screen.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
@@ -27,6 +28,8 @@ class _GoalListScreenState extends State<GoalListScreen> {
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context, listen: false);
+    final tasklist = Provider.of<ItemListProvider>(context);
+
     return StreamBuilder<List<Goal>>(
       stream: IsarService().getAllGoals(),
       builder: (context, snapshot) {
@@ -96,8 +99,7 @@ class _GoalListScreenState extends State<GoalListScreen> {
                                             'بالنقر على "تاكيد"لن تتمكن من استرجاع الهدف  ');
                                     if (action == DialogsAction.yes) {
                                       widget.isr.deleteGoal(goal);
-                                      await ItemList().createTaskTodoList(
-                                          aspectList.selected);
+                                      await tasklist.createTaskTodoList();
                                     }
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
+import 'package:motazen/controllers/item_list_controller.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:motazen/pages/assesment_page/calculate_assessment.dart';
@@ -23,6 +24,7 @@ class _AssessmentPageState extends State<AssessmentPage> {
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context);
+    final tasklist = Provider.of<ItemListProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -174,7 +176,7 @@ class _AssessmentPageState extends State<AssessmentPage> {
               //calculate the points and save result
               CalculateAspectPoints()
                   .calculateAllpoints(aspectList.questionData);
-              await ItemList().createTaskTodoList(aspectList.selected);
+              await tasklist.createTaskTodoList();
               //get to the new page
               if (mounted) {
                 Navigator.push(

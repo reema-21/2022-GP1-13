@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
+import 'package:motazen/controllers/item_list_controller.dart';
 import 'package:motazen/entities/local_task.dart';
 
 import 'package:motazen/models/task_model.dart';
@@ -178,6 +179,7 @@ class _EditGoalState extends State<EditGoal> {
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context, listen: false);
+    final tasklist = Provider.of<ItemListProvider>(context);
     return Scaffold(
         key: _editGoalScaffoldkey,
         appBar: AppBar(
@@ -476,8 +478,8 @@ class _EditGoalState extends State<EditGoal> {
                                   ],
                                 )));
                             await addgoal(aspectList.getSelectedNames());
-                            await ItemList()
-                                .createTaskTodoList(aspectList.selected);
+                            List<Aspect> selected = aspectList.selected;
+                            tasklist.createTaskTodoList();
                           }
                         },
                         child: Container(

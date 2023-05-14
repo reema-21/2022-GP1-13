@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
+import 'package:motazen/controllers/item_list_controller.dart';
 import 'package:motazen/entities/local_task.dart';
 import 'package:motazen/entities/goal.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -122,6 +123,8 @@ class _AddGoalState extends State<AddGoal> {
   @override
   Widget build(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context, listen: false);
+    final tasklist = Provider.of<ItemListProvider>(context);
+
     return Scaffold(
       /// key
       key: _addGoalScaffoldkey,
@@ -410,8 +413,8 @@ class _AddGoalState extends State<AddGoal> {
                           //   ),
                           // );
                           await _addGoal(aspectList.getSelectedNames());
-                          await ItemList()
-                              .createTaskTodoList(aspectList.selected);
+                          List<Aspect> selected = aspectList.selected;
+                          await tasklist.createTaskTodoList();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

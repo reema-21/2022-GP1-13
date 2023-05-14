@@ -503,6 +503,15 @@ class IsarService {
         .findAll();
   }
 
+//returns a list of selected aspects
+  Future<List<LocalTask>> getAllTasks() async {
+    final isar = await db;
+    return await isar.localTasks
+        .filter()
+        .userIDEqualTo(IsarService.getUserID, caseSensitive: true)
+        .findAll();
+  }
+
   Future<void> updateTaskRank(int id, double rank) async {
     final isar = await db;
     await isar.writeTxn(() async {
@@ -541,9 +550,11 @@ class IsarService {
     selected!.amountCompleted = selected.amountCompleted + 1;
     //crossout task
     selected.completedForToday = true;
+    //set last completion date
+    selected.lastCompletionDate = DateTime.now();
     //update task
 
-    isar.writeTxnSync(() => isar.localTasks.putSync(selected));
+    await isar.writeTxn(() async => await isar.localTasks.put(selected));
   }
 
   Future<void> undoCompleteForTodayTask(int id) async {
@@ -558,7 +569,8 @@ class IsarService {
     //decrement progress
     selectedLocalTask.amountCompleted = selectedLocalTask.amountCompleted - 1;
 
-    isar.writeTxnSync(() => isar.localTasks.putSync(selectedLocalTask));
+    await isar
+        .writeTxn(() async => await isar.localTasks.put(selectedLocalTask));
   }
 
   //change the state of completeForToday for a habit
@@ -587,7 +599,7 @@ class IsarService {
     selected!.completedForToday = false;
     //update habit
 
-    isar.writeTxnSync(() => isar.habits.putSync(selected));
+    await isar.writeTxn(() async => await isar.habits.put(selected));
   }
 
   //resert check

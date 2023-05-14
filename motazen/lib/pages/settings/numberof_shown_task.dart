@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:motazen/Sidebar_and_navigation/navigation_bar.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
+import 'package:motazen/controllers/item_list_controller.dart';
+import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/pages/settings/tasklist_variables.dart';
 import 'package:motazen/primary_button.dart';
@@ -19,6 +22,9 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
   int taskToShow = defaultTasklist ? totalTaskNumbers : toShowTaskNumber;
   @override
   Widget build(BuildContext context) {
+    List<Aspect> selected =
+        Provider.of<AspectController>(context, listen: false).selected;
+    final tasklist = Provider.of<ItemListProvider>(context);
     return Scaffold(
       appBar: AppBar(
         shadowColor: Colors.white,
@@ -109,17 +115,19 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    setState(() {
-                                      //? is this condition really nessacerry? what if
-                                      //? I want to increase the number of displayed items before adding new items
-                                      if (taskToShow <= totalTaskNumbers) {
-                                        taskToShow++;
-                                      } else if (totalTaskNumbers == 0) {
-                                        Fluttertoast.showToast(
-                                            msg: "لا يوجد أي مهمة حاليًا",
-                                            toastLength: Toast.LENGTH_LONG);
-                                      }
-                                    });
+                                    taskToShow++;
+
+                                    // setState(() {
+                                    //   //? is this condition really nessacerry? what if
+                                    //   //? I want to increase the number of displayed items before adding new items
+                                    //   if (taskToShow <= totalTaskNumbers) {
+                                    //     taskToShow++;
+                                    //   } else if (totalTaskNumbers == 0) {
+                                    //     Fluttertoast.showToast(
+                                    //         msg: "لا يوجد أي مهمة حاليًا",
+                                    //         toastLength: Toast.LENGTH_LONG);
+                                    //   }
+                                    // });
                                   },
                                   child: Container(
                                     alignment: Alignment.center,
@@ -187,10 +195,8 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
                                     toShowTaskNumber = taskToShow;
                                     defaultTasklist = false;
                                   });
-                                  await ItemList().createTaskTodoList(
-                                      Provider.of<AspectController>(context,
-                                              listen: false)
-                                          .selected);
+                                  _saveNumOfTasksToBeShown(taskToShow);
+                                  tasklist.createTaskTodoList();
                                   Fluttertoast.showToast(
                                       msg: "تم العملية بنجاح",
                                       toastLength: Toast.LENGTH_LONG);
@@ -229,5 +235,12 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _saveNumOfTasksToBeShown(int value) async {
+    final userDoc = FirebaseFirestore.instance
+        .collection('user')
+        .doc(firebaseAuth.currentUser!.uid);
+    await userDoc.set({'numOfTasksToBeShown': value}, SetOptions(merge: true));
   }
 }

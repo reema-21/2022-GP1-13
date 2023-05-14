@@ -8,7 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:motazen/controllers/auth_controller.dart';
+import 'package:motazen/controllers/community_controller.dart';
+import 'package:motazen/controllers/edit_controller.dart';
+import 'package:motazen/controllers/my_controller.dart';
+import 'package:motazen/controllers/task_controller.dart';
 import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
+import 'package:motazen/pages/journal_page/journal_controller.dart';
 import 'package:motazen/pages/login/login.dart';
 import 'package:motazen/pages/settings/profile_edit.dart';
 import 'package:motazen/pages/settings/setting_screen.dart';
@@ -24,40 +29,39 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
-  final userID = FirebaseAuth.instance.currentUser;
-
   /// for update data
   CollectionReference ref = FirebaseFirestore.instance.collection('user');
   final ImagePicker _picker = ImagePicker();
-  AuthController authController = Get.find();
-
+  final AuthController authController = Get.find<AuthController>();
   File? file;
-  //! i think i should first fetch the current users avatar and have the value so that if user cking
 
+  /// Uploads an image file to Firebase storage and returns the download URL
+  Future<String> uploadImage(File file, String userId) async {
+    final storageRef =
+        FirebaseStorage.instance.ref().child("user/profile/$userId.jpg");
+    var uploadTask = await storageRef.putFile(file);
+    return await uploadTask.ref.getDownloadURL();
+  }
+
+  /// Retrieves an image from the device gallery and sets it as the user's avatar
   Future<void> getImage() async {
     XFile? profileImage = await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      file = File(profileImage!.path);
-    });
+    if (profileImage == null) return;
 
-    //* uplaod the image to the firebase storage
-    //! this should be moved to a method
-    final user = FirebaseAuth.instance.currentUser;
-    final storageRef =
-        FirebaseStorage.instance.ref().child("user/profile/${user!.uid}.jpg");
-    var uploadTask = await storageRef.putFile(file!);
-    String profileImageUrl = await uploadTask.ref.getDownloadURL();
+    File imageFile = File(profileImage.path);
+    String profileImageUrl =
+        await uploadImage(imageFile, authController.currentUser.value.userID!);
 
-// here lets set the value of user avatar
-    setState(() {
-      authController.currentUser.value.avatarURL = profileImageUrl;
-    });
+    // Set the user's avatar URL in the AuthController
     authController.setUserAvatar(profileImageUrl);
   }
 
   @override
   void initState() {
-    authController.getUserAvatar();
+    // If the user's avatar URL is not already available, fetch it
+    if (authController.currentUser.value.avatarURL == null) {
+      authController.getUserAvatar();
+    }
     super.initState();
   }
 
@@ -192,156 +196,6 @@ class _SideBarState extends State<SideBar> {
               ],
             ),
           ),
-
-          // UserAccountsDrawerHeader(
-          //   accountName: SizedBox(
-          //     height: 50,
-          //     width: MediaQuery.of(context).size.width,
-          //     child: Padding(
-          //       padding: const EdgeInsets.only(top: 30.0),
-          //       child: Row(
-          //         crossAxisAlignment: CrossAxisAlignment.center,
-          //         mainAxisAlignment: MainAxisAlignment.start,
-          //         children: [
-          //           Text(
-          //             userName!,
-          //             style: sidebarUser,
-          //           ),
-          //           Spacer(),
-          //           InkWell(
-          //             onTap: () {
-          //               Navigator.pop(context);
-          //               showDialog(
-          //                   context: context,
-          //                   builder: (BuildContext context) {
-          //                     return AlertDialog(
-          //                       title: Text('Update Username'),
-          //                       content: SizedBox(
-          //                         child: TextFormField(
-          //                           controller: usernameController,
-          //                           decoration: InputDecoration(
-          //                             hintText: 'Edit your name',
-          //                           ),
-          //                         ),
-          //                       ),
-          //                       actions: [
-          //                         TextButton(
-          //                           onPressed: () {
-          //                             Navigator.pop(context);
-          //                           },
-          //                           child: Text('Cancel'),
-          //                         ),
-          //                         TextButton(
-          //                           onPressed: () {
-          //                             userID!.updateDisplayName(usernameController.text.toString()).then((value) {
-          //                               print('Update Username Successfully');
-          //                             });
-          //                             ref.doc(userID!.uid.toString()).update({
-          //                               'firstName' : usernameController.text.toString(),
-          //                             }).then((value) {
-          //                               print('Update Username Successfully');
-          //                               Navigator.pop(context);
-          //                             }).onError((error, stackTrace) {
-          //                               print(error.toString());
-          //                             });
-          //                           },
-          //                           child: Text('Update'),
-          //                         ),
-          //                       ],
-          //                     );
-          //                   });
-          //             },
-          //             radius: 50,
-          //             borderRadius: BorderRadius.circular(50.0),
-          //             child: const Padding(
-          //               padding: EdgeInsets.all(8.0),
-          //               child: Icon(
-          //                 Icons.edit,
-          //                 color: kWhiteColor,
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          //   accountEmail: Row(
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     mainAxisAlignment: MainAxisAlignment.start,
-          //     children: [
-          //       Text(
-          //         userEmail!,
-          //         style: sidebarUser,
-          //       ),
-          //       Material(
-          //         color: Colors.transparent,
-          //         child: InkWell(
-          //           onTap: () {
-          //             Navigator.pop(context);
-          //             showDialog(
-          //                 context: context,
-          //                 builder: (BuildContext context) {
-          //                   return AlertDialog(
-          //                     title: Text('Update Email'),
-          //                     content: SizedBox(
-          //                       child: TextFormField(
-          //                         controller: emailController,
-          //                         decoration: InputDecoration(
-          //                           hintText: 'Edit your email',
-          //                         ),
-          //                       ),
-          //                     ),
-          //                     actions: [
-          //                       TextButton(
-          //                         onPressed: () {
-          //                           Navigator.pop(context);
-          //                         },
-          //                         child: Text('Cancel'),
-          //                       ),
-          //                       TextButton(
-          //                         onPressed: () {
-          //                           userID!.updateEmail(emailController.text.toString()).then((value) {
-          //                             print('Email Updated Successfully');
-          //                           });
-          //                           ref.doc(userID!.uid.toString()).update({
-          //                             'email' : emailController.text.toString(),
-          //                           }).then((value) {
-          //                             print('Email Updated Successfully');
-          //                             Navigator.pop(context);
-          //                           }).onError((error, stackTrace) {
-          //                             print(error.toString());
-          //                           });
-          //                         },
-          //                         child: Text('Update'),
-          //                       ),
-          //                     ],
-          //                   );
-          //                 });
-          //           },
-          //           radius: 50,
-          //           borderRadius: BorderRadius.circular(50.0),
-          //           child: const Padding(
-          //             padding: EdgeInsets.all(12.0),
-          //             child: Icon(
-          //               Icons.edit,
-          //               color: kWhiteColor,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          //   currentAccountPicture: const CircleAvatar(
-          //       backgroundColor: kWhiteColor,
-          //       child: Icon(
-          //         Icons.person,
-          //         color: kBlackColor,
-          //         size: 30,
-          //       ),),
-          //   decoration: const BoxDecoration(
-          //     color: kPrimaryColor,
-          //   ),
-          // ),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('الإعدادات'),
@@ -364,8 +218,16 @@ class _SideBarState extends State<SideBar> {
                   ' هل أنت متاكد من تسجيل الخروج؟ ',
                   'بالنقر على "تأكيد" سيتم تسجيل خروجك من تطبيق متزن  ');
               if (action == DialogsAction.yes) {
+                //! I might need to dispose of tasklist provider
                 await FirebaseAuth.instance.signOut();
                 ItemList().clearList();
+                // Get.delete<TaskLocalControleer>();
+                Get.delete<TaskControleer>();
+                Get.delete<MyControleer>();
+                Get.delete<EditMyControleer>();
+                Get.delete<JournalController>();
+                Get.delete<CommunityController>();
+                Get.delete<AuthController>();
                 Get.to(() => const LogInScreen());
               }
             },
