@@ -4,8 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:motazen/Sidebar_and_navigation/navigation_bar.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/controllers/item_list_controller.dart';
-import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/pages/settings/tasklist_variables.dart';
 import 'package:motazen/primary_button.dart';
 import 'package:motazen/theme.dart';
@@ -19,11 +17,15 @@ class NumberOfShownTaskPage extends StatefulWidget {
 }
 
 class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
-  int taskToShow = defaultTasklist ? totalTaskNumbers : toShowTaskNumber;
+  late int taskToShow;
+  @override
+  void initState() {
+    taskToShow = toShowTaskNumber;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Aspect> selected =
-        Provider.of<AspectController>(context, listen: false).selected;
     final tasklist = Provider.of<ItemListProvider>(context);
     return Scaffold(
       appBar: AppBar(
@@ -116,6 +118,7 @@ class _NumberOfShownTaskPageState extends State<NumberOfShownTaskPage> {
                                 InkWell(
                                   onTap: () {
                                     taskToShow++;
+                                    setState(() {});
 
                                     // setState(() {
                                     //   //? is this condition really nessacerry? what if

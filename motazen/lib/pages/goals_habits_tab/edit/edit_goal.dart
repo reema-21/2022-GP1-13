@@ -8,7 +8,6 @@ import 'package:motazen/models/task_model.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/controllers/localtask_controller.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
-import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -65,7 +64,7 @@ class _EditGoalState extends State<EditGoal> {
   final GlobalKey<ScaffoldState> _editGoalScaffoldkey =
       GlobalKey<ScaffoldState>(
           debugLabel: 'editGoalScaffoldKey-${UniqueKey().toString()}');
-  final TaskLocalControleer freq = Get.put(TaskLocalControleer());
+  final TaskLocalControleer freq = Get.find();
   DateRangePickerController newSelectedDate = DateRangePickerController();
   int goalDuration = 0;
   List<LocalTask> goalTasks = [];
@@ -302,24 +301,26 @@ class _EditGoalState extends State<EditGoal> {
                       /// Aspect selectio
                       GestureDetector(
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              duration: const Duration(milliseconds: 900),
-                              backgroundColor:
-                                  const Color.fromARGB(255, 230, 38, 38),
-                              content: Row(
-                                children: const [
-                                  Icon(
-                                    Icons.error,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                  ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Text(
-                                        "لا يمكن تغيير جانب حياة الهدف ",
-                                        style: TextStyle(color: Colors.black)),
-                                  )
-                                ],
-                              )));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  duration: Duration(milliseconds: 900),
+                                  backgroundColor:
+                                      Color.fromARGB(255, 230, 38, 38),
+                                  content: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.error,
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      ),
+                                      SizedBox(width: 20),
+                                      Expanded(
+                                        child: Text(
+                                            "لا يمكن تغيير جانب حياة الهدف ",
+                                            style:
+                                                TextStyle(color: Colors.black)),
+                                      )
+                                    ],
+                                  )));
                         },
                         child: TextFormField(
                           enabled: false,
@@ -423,8 +424,8 @@ class _EditGoalState extends State<EditGoal> {
                                         duration:
                                             const Duration(milliseconds: 500),
                                         backgroundColor: Colors.yellow.shade300,
-                                        content: Row(
-                                          children: const [
+                                        content: const Row(
+                                          children: [
                                             Icon(
                                               Icons.error,
                                               color:
@@ -468,8 +469,8 @@ class _EditGoalState extends State<EditGoal> {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 backgroundColor: Colors.green.shade300,
                                 duration: const Duration(milliseconds: 700),
-                                content: Row(
-                                  children: const [
+                                content: const Row(
+                                  children: [
                                     Icon(Icons.thumb_up_sharp),
                                     SizedBox(width: 20),
                                     Expanded(
@@ -478,7 +479,6 @@ class _EditGoalState extends State<EditGoal> {
                                   ],
                                 )));
                             await addgoal(aspectList.getSelectedNames());
-                            List<Aspect> selected = aspectList.selected;
                             tasklist.createTaskTodoList();
                           }
                         },
@@ -549,14 +549,13 @@ class _EditGoalState extends State<EditGoal> {
                                       if (newDate.duration.inDays <
                                           freq.checkTotalTaskDuration.value) {
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                duration: const Duration(
+                                            .showSnackBar(const SnackBar(
+                                                duration: Duration(
                                                     milliseconds: 1000),
-                                                backgroundColor:
-                                                    const Color.fromARGB(
-                                                        255, 243, 9, 9),
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 243, 9, 9),
                                                 content: Row(
-                                                  children: const [
+                                                  children: [
                                                     Icon(
                                                       Icons.error,
                                                       color: Color.fromARGB(

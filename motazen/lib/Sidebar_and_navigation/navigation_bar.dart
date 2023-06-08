@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:motazen/Sidebar_and_navigation/expandable_fab.dart';
+import 'package:motazen/controllers/community_controller.dart';
 import 'package:motazen/controllers/notification_controller.dart';
 import 'package:motazen/isar_service.dart';
+import 'package:motazen/pages/journal_page/journal_controller.dart';
 import 'package:motazen/pages/notifications_screen.dart/notifications_screen.dart';
 import 'package:motazen/pages/add_goal_page/add_goal_screen.dart';
 import 'package:motazen/pages/communities_page/list%20of%20communities/create_community.dart';
@@ -14,7 +16,6 @@ import 'package:motazen/pages/homepage/homepage.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
-import '../controllers/community_controller.dart';
 import '../controllers/aspect_controller.dart';
 import '../controllers/task_controller.dart';
 import '../pages/add_habit_page/add_habit.dart';
@@ -33,6 +34,11 @@ class NavBar extends StatefulWidget {
 }
 
 class _MynavBar extends State<NavBar> {
+  AuthController authController = Get.put(AuthController());
+  TaskControleer taskControleer = Get.put(TaskControleer());
+  CommunityController communityController = Get.put(CommunityController());
+  final JournalController journalController = Get.put(JournalController());
+
   late int selectedIndex;
   int numOfNotifications = 0;
   final NotificationController _notificationController =
@@ -43,9 +49,6 @@ class _MynavBar extends State<NavBar> {
     const Communities(),
     Journal(),
   ];
-
-  AuthController authController = Get.put(AuthController());
-  TaskControleer taskControleer = Get.put(TaskControleer());
 
   @override
   void initState() {
@@ -138,9 +141,9 @@ class _MynavBar extends State<NavBar> {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      Column(
+                      const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children: [
                           Icon(
                             Icons.notifications,
                             color: Colors.black,
@@ -227,7 +230,7 @@ class _MynavBar extends State<NavBar> {
               tabs: const [
                 GButton(
                   icon: LineIcons.home,
-                  text: 'الرئسية',
+                  text: 'الرئيسية',
                 ),
                 GButton(
                   icon: LineIcons.check, //click here move me to a page

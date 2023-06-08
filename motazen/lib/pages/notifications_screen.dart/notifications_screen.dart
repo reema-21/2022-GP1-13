@@ -116,10 +116,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       }
                     });
                     return notifications.isEmpty
-                        ? Center(
+                        ? const Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text(
                                   'لا يوجد اشعارات حتي الان!',
                                   textAlign: TextAlign.center,
@@ -213,7 +213,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                     notificationItem(
                                         notification, aspectList.selected),
                                     Positioned(
-                                      bottom: 8.0,
+                                      bottom: notification.notificationType !=
+                                              "invite"
+                                          ? 8.0
+                                          : 45,
                                       right: 8.0,
                                       child: SizedBox(
                                           height: 20,

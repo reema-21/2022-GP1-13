@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,50 +14,54 @@ import 'package:provider/provider.dart';
 import 'controllers/aspect_controller.dart';
 import 'firebase_options.dart';
 
-Future main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding); //create splash
-  Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform); // initialize the DB
-  IsarService iser = IsarService(); // initialize local storage
-  iser.openIsar();
-  FlutterNativeSplash.remove();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-  /// check if the the app is in it's first run
-  bool ifr = await IsFirstRun.isFirstRun();
-  iser = IsarService();
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AspectController>(
-            create: (_) => AspectController()),
-        ChangeNotifierProvider<ItemListProvider>(
-            create: (_) => ItemListProvider())
-      ],
-      child: GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          colorScheme: const ColorScheme.light(primary: kPrimaryColor),
-          fontFamily: 'Frutiger',
-          appBarTheme: AppBarTheme(
-            backgroundColor: kWhiteColor,
-            iconTheme: const IconThemeData(color: kBlackColor),
-            titleTextStyle: titleText,
-            toolbarTextStyle: subTitle,
-            elevation: 0,
+  // Delay the initialization of IsarService to a background thread
+  Timer.run(() async {
+    IsarService iser = IsarService();
+    await iser.openIsar();
+
+    // Check if the app is in its first run
+    bool isFirstRun = await IsFirstRun.isFirstRun();
+
+    // Initialize Firebase
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+
+    // Remove the splash screen
+    FlutterNativeSplash.remove();
+    // Run the app
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AspectController>(
+              create: (_) => AspectController()),
+          ChangeNotifierProvider<ItemListProvider>(
+              create: (_) => ItemListProvider()),
+        ],
+        child: GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            colorScheme: const ColorScheme.light(primary: kPrimaryColor),
+            fontFamily: 'Frutiger',
+            appBarTheme: AppBarTheme(
+              backgroundColor: kWhiteColor,
+              iconTheme: const IconThemeData(color: kBlackColor),
+              titleTextStyle: titleText,
+              toolbarTextStyle: subTitle,
+              elevation: 0,
+            ),
+            buttonTheme: const ButtonThemeData(disabledColor: kDisabled),
           ),
-          buttonTheme: const ButtonThemeData(disabledColor: kDisabled),
+          home: isFirstRun ? const OnboardingPage() : const LogInScreen(),
+          locale: const Locale('ar', ''),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
         ),
-        home: ifr
-            ? const OnboardingPage()
-            : const LogInScreen(), //add verification to check which page should be next (sign in/homepage)
-        locale: const Locale('ar', ''),
-
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
       ),
-    ),
-  );
+    );
+  });
 }

@@ -220,7 +220,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       ..recipients.add(receiverEmail)
       ..subject = 'Motazen Community Invitation [${comm.communityName}]'
       ..text =
-          'Dear $receiverEmail,\n${comm.founderUsername} has invited you in the community ${comm.communityName}. Please check the app notification to accept or reject the invitation\n\nRegards,\nTeam Motazen';
+          'Dear $receiverEmail,\n${comm.founderUserID} has invited you in the community ${comm.communityName}. Please check the app notification to accept or reject the invitation\n\nRegards,\nTeam Motazen';
 
     try {
       await send(message, smtpServer);
@@ -272,7 +272,9 @@ class _VerifyScreenState extends State<VerifyScreen> {
           widget.pass, userCredential.user!.uid);
       Fluttertoast.showToast(msg: "تم التحقق من بريدك الإلكتروني");
       AllDialogues.hideloading();
-      Get.to(() => const InitializeAspects());
+      Get.to(() => const InitializeAspects(
+            isRetake: false,
+          ));
     } on FirebaseAuthException catch (e) {
       AllDialogues.hideloading();
       if (e.code == 'weak-password') {

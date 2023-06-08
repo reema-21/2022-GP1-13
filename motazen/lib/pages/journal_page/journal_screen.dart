@@ -6,7 +6,7 @@ import 'package:motazen/theme.dart';
 
 class Journal extends StatelessWidget {
   Journal({super.key});
-  final JournalController journalController = Get.put(JournalController());
+  final JournalController journalController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +29,8 @@ class Journal extends StatelessWidget {
               onTap: () {
                 Get.to(() => const AddJournalScreen());
               },
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   CircleAvatar(
                     backgroundColor: kPrimaryColor,
                     child: Icon(

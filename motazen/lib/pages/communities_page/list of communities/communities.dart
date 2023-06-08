@@ -36,7 +36,8 @@ class _CommunitiesState extends State<Communities> {
   ];
 
   // we target on listOfCreatedCommunities, listOfCreatedCommunities + listOfJoinedCommunities
-  CommunityController communityController = Get.find();
+  CommunityController communityController = Get.find<CommunityController>();
+
   bool isIniState = true;
   @override
   void initState() {
@@ -212,21 +213,15 @@ class _CommunitiesState extends State<Communities> {
                   final publicCommunitiesDoc = snapshot.data!.docs;
                   List<Community> publicCommunities = [];
                   for (var community in publicCommunitiesDoc) {
-                    if (!(communityController.listOfJoinedCommunities
-                                    .indexWhere((element) =>
-                                        element.id == community['_id']) >=
-                                0 ||
-                            communityController.listOfCreatedCommunities
-                                    .indexWhere((element) =>
-                                        element.id == community['_id']) >=
-                                0) &&
+                    if (!(communityController.userCommunities
+                            .any((element) => element.id == community.id)) &&
                         aspectList
                             .getSelectedNames()
                             .contains(community['aspect'])) {
                       publicCommunities.add(Community(
                           progressList: community['progress_list'],
                           aspect: community['aspect'],
-                          founderUsername: community['founderUsername'],
+                          founderUserID: community['founderUserID'],
                           communityName: community['communityName'],
                           creationDate: community['creationDate'].toDate(),
                           goalName: community['goalName'],
@@ -303,7 +298,7 @@ class _CommunitiesState extends State<Communities> {
                             );
                             Color aspectColor = Color(
                                 aspectList.selected[selsectAspectIndex].color);
-                            publicCommunities[index].founderUsername ==
+                            publicCommunities[index].founderUserID ==
                                 firebaseAuth.currentUser!.displayName;
                             return GestureDetector(
                               onTap: () {
@@ -339,23 +334,6 @@ class _CommunitiesState extends State<Communities> {
                                     const SizedBox(
                                       width: 8,
                                     ),
-                                    //! uncomment to return the public/private icon and the admin/joind text
-                                    // Icon(
-                                    //   publicCommunities[index].isPrivate
-                                    //       ? Icons.lock
-                                    //       : Icons.people,
-                                    //   color: Colors.grey[600],
-                                    // ),
-                                    // const SizedBox(
-                                    //   width: 8,
-                                    // ),
-                                    // Text(
-                                    //   isAdmin ? 'مشرف' : 'منضم',
-                                    //   style: const TextStyle(
-                                    //     color: kBlackColor,
-                                    //     fontStyle: FontStyle.italic,
-                                    //   ),
-                                    // ),
                                   ],
                                 ),
                               ),
@@ -423,7 +401,7 @@ Widget communityTile(final currentUserFounderName, context) {
           ),
         );
         final aspectColor = Color(aspect.color);
-        final isAdmin = community.founderUsername == currentUserFounderName;
+        final isAdmin = community.founderUserID == currentUserFounderName;
         return GestureDetector(
           onTap: () {
             Navigator.push(

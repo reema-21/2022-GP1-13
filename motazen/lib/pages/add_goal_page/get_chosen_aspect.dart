@@ -1,7 +1,6 @@
 import 'package:motazen/Sidebar_and_navigation/navigation_bar.dart';
 import 'package:motazen/controllers/item_list_controller.dart';
 import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../../isar_service.dart';
@@ -31,10 +30,18 @@ class _ShowsState extends State<GetChosenAspect> {
               return Text('Error: ${snapshot.error}');
             } else {
               aspectList.updateSelectedList(snapshot.data!);
-              tasklist.createTaskTodoList();
-              return NavBar(
-                selectedIndex: 0,
-                selectedNames: aspectList.getSelectedNames(),
+              return FutureBuilder(
+                future: tasklist.createTaskTodoList(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else {
+                    return NavBar(
+                      selectedIndex: 0,
+                      selectedNames: aspectList.getSelectedNames(),
+                    );
+                  }
+                },
               );
             }
           },

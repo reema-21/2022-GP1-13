@@ -19,7 +19,7 @@ saveSignUpFormData(firstName, userName, email, pass, userId) async {
             createdCommunities: [],
             joinedCommunities: []).toJson())
         .whenComplete(
-            () => {Fluttertoast.showToast(msg: "تم تسجيلك بنجاح في متزن!")});
+            () => Fluttertoast.showToast(msg: "تم تسجيلك بنجاح في متزن!"));
   } catch (e) {
     AllDialogues.showErrorDialog(
         discription: "حدث خطأأثناء حفظ بياناتك، الرجاء المحاولة لاحقًا.");

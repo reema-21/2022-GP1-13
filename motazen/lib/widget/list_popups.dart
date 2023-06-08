@@ -103,12 +103,12 @@ class _ListDialogState extends State<ListDialog>
                 radius: 77,
                 child: Stack(
                   children: [
-                    ClipOval(
-                      child: Image.asset(
-                        'assets/images/popup_background.png',
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+                    // ClipOval(
+                    //   child: Image.asset(
+                    //     'assets/images/popup_background.png',
+                    //     fit: BoxFit.contain,
+                    //   ),
+                    // ),
                     Lottie.asset(
                       widget
                           .imagePath, //replace the link with the link provided

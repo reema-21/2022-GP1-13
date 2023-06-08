@@ -389,8 +389,8 @@ class _GoalDetailPageState extends State<GoalDetailPage> {
                                     MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Column(
-                                    children: const [
+                                  const Column(
+                                    children: [
                                       Text(
                                         'المهام المرتبطة: ',
                                         style: TextStyle(

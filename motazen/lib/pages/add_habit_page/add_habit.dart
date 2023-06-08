@@ -25,7 +25,7 @@ class _AddHabitState extends State<AddHabit> {
       GlobalKey<ScaffoldState>(
           debugLabel: 'AddHabitScaffoldKey-${UniqueKey().toString()}');
   late String _habitName;
-  final MyControleer freq = Get.put(MyControleer());
+  final MyControleer freq = Get.find();
   final _goalNmaeController = TextEditingController();
   final List<String> durations = ['اليوم', 'الأسبوع', 'الشهر', 'السنة'];
   String? isSelected;
@@ -294,8 +294,8 @@ class _AddHabitState extends State<AddHabit> {
                           SnackBar(
                             backgroundColor: Colors.green.shade300,
                             duration: const Duration(milliseconds: 500),
-                            content: Row(
-                              children: const [
+                            content: const Row(
+                              children: [
                                 Icon(
                                   Icons.thumb_up_sharp,
                                   color: kWhiteColor,

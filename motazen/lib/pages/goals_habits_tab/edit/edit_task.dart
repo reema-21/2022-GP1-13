@@ -27,7 +27,7 @@ class EditTask extends StatefulWidget {
 }
 
 class _EditTaskState extends State<EditTask> {
-  final TaskLocalControleer freq = Get.put(TaskLocalControleer());
+  final TaskLocalControleer freq = Get.find();
   List<String> durationName = ['أيام', 'أسابيع', 'أشهر', 'سنوات'];
 
   TextEditingController inputTaskName = TextEditingController();
@@ -805,14 +805,14 @@ class _EditTaskState extends State<EditTask> {
                                         if (isDependent) {
                                           if (mounted) {
                                             ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    duration: const Duration(
-                                                        seconds: 1),
+                                                .showSnackBar(const SnackBar(
+                                                    duration:
+                                                        Duration(seconds: 1),
                                                     backgroundColor:
-                                                        const Color.fromARGB(
+                                                        Color.fromARGB(
                                                             255, 196, 48, 37),
                                                     content: Row(
-                                                      children: const [
+                                                      children: [
                                                         Icon(
                                                           Icons.error,
                                                           color: Colors.white,

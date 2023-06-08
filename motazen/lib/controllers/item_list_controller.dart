@@ -12,7 +12,7 @@ import 'package:sorted/sorted.dart';
 
 class ItemListProvider with ChangeNotifier {
   final _isar = IsarService();
-  List<Item> _itemList = [];
+  final List<Item> _itemList = [];
   List<Item> _rankedList = [];
   List<Item> sublist = [];
   static DateTime? lastResetDate;
@@ -84,7 +84,7 @@ class ItemListProvider with ChangeNotifier {
 
     sublist = sublist.sorted(
         [SortedComparable<Item, double>((task) => task.rank!, invert: true)]);
-    notifyListeners();
+    // notifyListeners(); //this might be the problem
   }
 
 //* updates the list when a task is checked
@@ -157,7 +157,7 @@ class ItemListProvider with ChangeNotifier {
             builder: (context) {
               return const ListDialog(
                 title: 'اكتملت المهمة!',
-                description: 'كلام عن اكتمال المهمة',
+                description: 'احسنت، لقد انتهيت من هذه المهمة',
                 imagePath: 'assets/animations/Complete_task.json',
               );
             });

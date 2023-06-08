@@ -5,7 +5,6 @@ import 'package:motazen/controllers/item_list_controller.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/get_chosen_aspect.dart';
 import 'package:motazen/pages/assesment_page/calculate_assessment.dart';
-import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
 

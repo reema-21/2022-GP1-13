@@ -64,7 +64,7 @@ class AspectCommunityList extends StatelessWidget {
                   Color(aspectList.selected[selsectAspectIndex].color);
 
               //switch to get the colors .
-              bool isAdmin = community[index].founderUsername ==
+              bool isAdmin = community[index].founderUserID ==
                   firebaseAuth.currentUser!.uid;
               return GestureDetector(
                 onTap: (() {

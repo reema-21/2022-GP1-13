@@ -7,7 +7,7 @@ import 'wheel_of_life/pie_chart_page.dart';
 import 'wheel_of_life/render_wheel_sections.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  const Homepage({Key? key}) : super(key: key);
   @override
   State<Homepage> createState() => _MyHomepageState();
 }
@@ -15,95 +15,82 @@ class Homepage extends StatefulWidget {
 class _MyHomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
+    // Get the height and width of the screen
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+
+    // Calculate the height of the wheel image
     double imageHeight = height * 0.5;
-    return StreamBuilder(
+
+    // Build the UI based on the selected aspects stream
+    return StreamBuilder<List<Aspect>>(
       stream: IsarService().getSelectedAspectsStream(),
       builder: (context, snapshot) {
-        //create empty incase
-        List<Aspect>? aspects = [];
+        // Create an empty list of aspects as a fallback
+        List<Aspect> aspects = [];
         if (snapshot.hasData) {
-          aspects = snapshot.data;
-          //add habits to list later
-          return DefaultTabController(
-            length: 2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                //displays the visualization (wheel of life)
-                Stack(alignment: Alignment.center, children: [
-                  createCentralcircules(
-                    8,
-                  ),
-                  createCentralcircules(
-                    18,
-                  ),
-                  createCentralcircules(
-                    28,
-                  ),
-                  createCentralcircules(
-                    38,
-                  ),
-                  createCentralcircules(
-                    48,
-                  ),
-                  createCentralcircules(
-                    58,
-                  ),
-                  createCentralcircules(
-                    68,
-                  ),
+          // Use the list of selected aspects from the stream if available
+          aspects = snapshot.data!;
+        }
+
+        // Build the UI
+        return DefaultTabController(
+          length: 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              // Display the visualization (wheel of life)
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  for (double i = 8; i <= 68; i += 10) createCentralcircles(i),
                   SizedBox(
                     height: imageHeight,
                     width: width,
                     child: const WheelBackground(),
                   ),
-                  LifeWheel(allAspects: aspects ?? []),
-                ]),
-                // displays the daily tasks list
-                const Center(
-                  child: TabBar(
-                      isScrollable: true,
-                      unselectedLabelColor: Colors.grey,
-                      labelColor: Colors.white,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      labelPadding: EdgeInsets.symmetric(horizontal: 70),
-                      indicatorPadding: EdgeInsets.symmetric(horizontal: 25),
-                      indicator: BubbleTabIndicator(
-                        indicatorHeight: 35.0,
-                        indicatorColor: Color(0xFF66BF77),
-                        tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                      ),
-                      tabs: [
-                        Tab(
-                          child: Text("مهامي"),
-                        ),
-                        Tab(
-                          child: Text("عاداتي"),
-                        ),
-                      ]),
-                ),
+                  LifeWheel(allAspects: aspects),
+                ],
+              ),
 
-                Flexible(
-                  child: Center(
-                    child: TabBarView(children: [
-                      TaskTodoCard(
-                        aspectList: aspects!,
-                      ),
-                      HabitTodoCard(
-                        aspectList: aspects,
-                      )
-                    ]),
+              // Display the daily tasks list
+              const Center(
+                child: TabBar(
+                  isScrollable: true,
+                  unselectedLabelColor: Colors.grey,
+                  labelColor: Colors.white,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  labelPadding: EdgeInsets.symmetric(horizontal: 70),
+                  indicatorPadding: EdgeInsets.symmetric(horizontal: 25),
+                  indicator: BubbleTabIndicator(
+                    indicatorHeight: 35.0,
+                    indicatorColor: Color(0xFF66BF77),
+                    tabBarIndicatorSize: TabBarIndicatorSize.tab,
                   ),
+                  tabs: [
+                    Tab(
+                      child: Text("مهامي"),
+                    ),
+                    Tab(
+                      child: Text("عاداتي"),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
+              ),
+
+              // Display the daily tasks list
+              Flexible(
+                child: TabBarView(
+                  children: [
+                    const TaskTodoCard(),
+                    HabitTodoCard(aspectList: aspects),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
       },
     );
   }

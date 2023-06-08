@@ -77,7 +77,7 @@ class AuthController extends GetxController {
                   progressList: community[
                       'progress_list'], //this list isn't being saved in db
                   aspect: community['aspect'],
-                  founderUsername: community['founderUsername'],
+                  founderUserID: community['founderUserID'],
                   communityName: community['communityName'],
                   creationDate: community['creationDate'].toDate(),
                   goalName: community['goalName'],
@@ -94,7 +94,7 @@ class AuthController extends GetxController {
               joinedCommnitiesOfUser.add(Community(
                   progressList: community['progress_list'],
                   aspect: community['aspect'],
-                  founderUsername: community['founderUsername'],
+                  founderUserID: community['founderUserID'],
                   communityName: community['communityName'],
                   creationDate: community['creationDate'].toDate(),
                   goalName: community['goalName'],

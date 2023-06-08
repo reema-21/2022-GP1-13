@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 //REEMAS
 class Community {
   String? communityName;
-  String? founderUsername;
+  String? founderUserID;
   String? aspect;
   String? goalName;
   bool isPrivate;
-    bool isDeleted;
+  bool isDeleted;
 
   DateTime? creationDate;
   List<dynamic> progressList;
@@ -15,12 +16,11 @@ class Community {
   Community(
       {this.communityName,
       this.aspect,
-          required  this.isDeleted,
-
+      required this.isDeleted,
       this.creationDate,
       this.goalName,
       required this.isPrivate,
-      this.founderUsername,
+      this.founderUserID,
       required this.progressList,
       required this.id});
 
@@ -30,11 +30,10 @@ class Community {
         "isPrivate": isPrivate,
         "goalName": goalName,
         "creationDate": creationDate,
-        "founderUsername": founderUsername,
+        "founderUserID": founderUserID,
         "_id": id,
         "progress_list": progressList,
-                "isDeleted":isDeleted
-
+        "isDeleted": isDeleted
       };
 
   static Community fromSnap(DocumentSnapshot snap) {
@@ -45,10 +44,9 @@ class Community {
         isPrivate: snapshot['isPrivate'],
         goalName: snapshot['goalName'],
         creationDate: snapshot['creationDate'],
-        founderUsername: snapshot['founderUsername'],
+        founderUserID: snapshot['founderUserID'],
         id: snapshot['_id'],
-                                  isDeleted: snapshot['isDeleted'],
-
+        isDeleted: snapshot['isDeleted'],
         progressList: snapshot['progress_list']);
   }
 }

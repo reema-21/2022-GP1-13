@@ -61,6 +61,13 @@ class _InviteState extends State<Invite> {
     notificationController.listenToNotifications(widget.selected);
   }
 
+  @override
+  void dispose() {
+    notificationController
+        .cancelNotificationsSubscription(); // Cancel the subscription here
+    super.dispose();
+  }
+
   // Update the _search variable with the current text
   void _updateText() {
     setState(() {
@@ -108,7 +115,7 @@ class _InviteState extends State<Invite> {
         'aspect': widget.comm.aspect,
         'communityName': widget.comm.communityName,
         'creationDate': widget.comm.creationDate,
-        'founderUsername': widget.comm.founderUsername,
+        'founderUserID': widget.comm.founderUserID,
         'goalName': widget.comm.goalName,
         'isPrivate': widget.comm.isPrivate,
         "isDeleted": widget.comm.isDeleted,
@@ -254,7 +261,7 @@ class _InviteState extends State<Invite> {
                 'aspect': widget.comm.aspect,
                 'communityName': widget.comm.communityName,
                 'creationDate': widget.comm.creationDate,
-                'founderUsername': widget.comm.founderUsername,
+                'founderUserID': widget.comm.founderUserID,
                 'goalName': widget.comm.goalName,
                 'isPrivate': widget.comm.isPrivate,
                 "isDeleted": widget.comm.isDeleted,

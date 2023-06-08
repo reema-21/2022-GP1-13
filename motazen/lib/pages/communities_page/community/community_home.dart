@@ -98,37 +98,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
               ? replyingPost!.text
               : 'Attachment (Image)',
           senderAvatar: authController.currentUser.value.avatarURL ?? "");
-
-      // try {
-      //   await firestore
-      //       .collection('user')
-      //       .doc(replyingPost!.authorId)
-      //       .collection('notifications')
-      //       .add({
-      //     'sender_avatar': authController.currentUser.value.avatarURL ?? "",
-      //     'senderId': firebaseAuth.currentUser!.uid,
-      //     'creation_date': DateTime.now(),
-      //     'type': 'reply',
-      //     'reply': replyingPost!.postType == 'text'
-      //         ? replyingPost!.text
-      //         : 'Attachment (Image)',
-      //     'community_link': widget.comm.id,
-      //     'post': PostModel(
-      //             text: _post,
-      //             postType: 'text',
-      //             author: user.displayName,
-      //             authorId: user.uid,
-      //             time: time,
-      //             comments: [],
-      //             likes: [],
-      //             replyingPost: null,
-      //             imageURL: null)
-      //         .toJson(),
-      //     'userName': user.displayName,
-      //   });
-      // } on Exception catch (e) {
-      //   log('error: $e');
-      // }
     }
     setState(() {
       replyingPost = null;
@@ -136,7 +105,7 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
     });
   }
 
-  AuthController authController = Get.find<AuthController>();
+  AuthController authController = Get.put(AuthController());
 
   _likeTheText(PostModel pst, String link) async {
     final user = FirebaseAuth.instance.currentUser;
@@ -151,23 +120,6 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
           senderAvatar: authController.currentUser.value.avatarURL ?? "",
           post: pst.toJson(),
           communityLink: widget.comm.id);
-      // try {
-      //   await firestore
-      //       .collection('user')
-      //       .doc(pst.authorId)
-      //       .collection('notifications')
-      //       .add({
-      //     'sender_avatar': authController.currentUser.value.avatarURL ?? "",
-      //     'senderId': firebaseAuth.currentUser!.uid,
-      //     'creation_date': DateTime.now(),
-      //     'community_link': widget.comm.id,
-      //     'type': 'like',
-      //     'post': pst.toJson(),
-      //     'userName': user.displayName,
-      //   });
-      // } on Exception catch (e) {
-      //   log('error: $e');
-      // }
     }
   }
 
@@ -717,9 +669,9 @@ class _CommunityHomePageState extends State<CommunityHomePage> {
         ),
       ),
       bottomSheet: (!isActiveCommunity && loadfinished) || widget.comm.isDeleted
-          ? Row(
+          ? const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Icon(Icons.priority_high,
                     color: Color.fromARGB(255, 105, 104, 104)),
                 Padding(

@@ -613,7 +613,8 @@ class IsarService {
     //uncross task
     selectedLocalTask!.completedForToday = false;
 
-    isar.writeTxnSync(() => isar.localTasks.putSync(selectedLocalTask));
+    await isar
+        .writeTxn(() async => await isar.localTasks.put(selectedLocalTask));
   }
 
   //updates the completion percentage of a goal
@@ -860,7 +861,7 @@ class IsarService {
                 'communityName': e.communityName,
                 'creationDate': e.creationDate,
                 'progress_list': e.progressList,
-                'founderUsername': e.founderUsername,
+                'founderUserID': e.founderUserID,
                 'goalName': e.goalName,
                 'isPrivate': e.isPrivate,
                 "isDeleted": e.isDeleted,
@@ -879,7 +880,7 @@ class IsarService {
                 'aspect': e.aspect,
                 'communityName': e.communityName,
                 'creationDate': e.creationDate,
-                'founderUsername': e.founderUsername,
+                'founderUserID': e.founderUserID,
                 'goalName': e.goalName,
                 'isPrivate': e.isPrivate,
                 'progress_list': e.progressList,

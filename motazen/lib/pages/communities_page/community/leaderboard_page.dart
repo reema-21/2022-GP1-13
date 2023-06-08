@@ -144,10 +144,10 @@ class _CommunityLeaderboardPageState extends State<CommunityLeaderboardPage> {
                     padding: const EdgeInsets.all(8),
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         SizedBox(
                           width: 8,
                         ),
@@ -274,10 +274,10 @@ class _CommunityLeaderboardPageState extends State<CommunityLeaderboardPage> {
                       );
                     } else {
                       //this for what is displayed if no member finishes the goal yet
-                      return Padding(
-                        padding: const EdgeInsets.all(80.0),
+                      return const Padding(
+                        padding: EdgeInsets.all(80.0),
                         child: Column(
-                          children: const [
+                          children: [
                             SizedBox(
                               child: Text(
                                 //! i don't know how to do it

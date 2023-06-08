@@ -6,7 +6,6 @@ import 'package:motazen/isar_service.dart';
 import 'package:motazen/pages/add_goal_page/add_goal_screen.dart';
 import 'package:motazen/pages/assesment_page/alert_dialog.dart';
 import 'package:motazen/pages/goals_habits_tab/details/new_goal_detail.dart';
-import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/theme.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -99,18 +98,16 @@ class _GoalListScreenState extends State<GoalListScreen> {
                                             'بالنقر على "تاكيد"لن تتمكن من استرجاع الهدف  ');
                                     if (action == DialogsAction.yes) {
                                       widget.isr.deleteGoal(goal);
-                                      await tasklist.createTaskTodoList();
+                                      await tasklist.updateList();
                                     }
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            duration:
-                                                const Duration(seconds: 1),
-                                            backgroundColor:
-                                                const Color.fromARGB(
-                                                    255, 196, 48, 37),
+                                        const SnackBar(
+                                            duration: Duration(seconds: 1),
+                                            backgroundColor: Color.fromARGB(
+                                                255, 196, 48, 37),
                                             content: Row(
-                                              children: const [
+                                              children: [
                                                 Icon(
                                                   Icons.error,
                                                   color: Colors.white,

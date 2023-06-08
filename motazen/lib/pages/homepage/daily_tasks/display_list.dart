@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/controllers/item_list_controller.dart';
 import 'package:motazen/entities/aspect.dart';
 import 'package:motazen/models/todo_model.dart';
 import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:motazen/pages/homepage/daily_tasks/custom_rect_tween.dart';
 import 'package:motazen/pages/homepage/daily_tasks/hero_dialog_route.dart';
-import 'package:motazen/pages/settings/tasklist_variables.dart';
 import 'package:motazen/widget/list_popups.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
@@ -17,9 +15,7 @@ import '../../goals_habits_tab/calculate_progress.dart';
 class TaskTodoCard extends StatefulWidget {
   const TaskTodoCard({
     Key? key,
-    required this.aspectList,
   }) : super(key: key);
-  final List<Aspect> aspectList;
   @override
   State<TaskTodoCard> createState() => _TaskTodoCardState();
 }

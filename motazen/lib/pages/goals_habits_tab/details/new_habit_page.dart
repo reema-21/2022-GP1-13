@@ -147,12 +147,12 @@ class _HabitDetailPageState extends State<HabitDetailPage> {
                               borderRadius: BorderRadius.only(
                                   topRight: Radius.circular(20),
                                   topLeft: Radius.circular(20))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text(
                                   'التفاصيل',
                                   style: TextStyle(

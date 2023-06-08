@@ -43,7 +43,7 @@ class _AddHabitState extends State<EditHabit> {
   late int durationInInt;
   final _goalNmaeController = TextEditingController();
   final _goalaspectController = TextEditingController(); // for fixed habits
-  final EditMyControleer freq = Get.put(EditMyControleer());
+  final EditMyControleer freq = Get.find();
   final List<String> durations = ['اليوم', 'الأسبوع', 'الشهر', 'السنة'];
   String? isDuration;
   String duratioSelected = "";
@@ -187,11 +187,11 @@ class _AddHabitState extends State<EditHabit> {
               ),
               GestureDetector(
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      duration: const Duration(milliseconds: 900),
-                      backgroundColor: const Color.fromARGB(255, 230, 38, 38),
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      duration: Duration(milliseconds: 900),
+                      backgroundColor: Color.fromARGB(255, 230, 38, 38),
                       content: Row(
-                        children: const [
+                        children: [
                           Icon(
                             Icons.error,
                             color: Color.fromARGB(255, 0, 0, 0),
@@ -333,9 +333,9 @@ class _AddHabitState extends State<EditHabit> {
               InkWell(
                 onTap: () {
                   if (_editHabitFormKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Row(
-                      children: const [
+                      children: [
                         Icon(
                           Icons.thumb_up_sharp,
                           color: kWhiteColor,

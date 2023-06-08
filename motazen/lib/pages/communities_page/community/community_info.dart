@@ -6,15 +6,14 @@ import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:motazen/controllers/aspect_controller.dart';
 import 'package:motazen/models/user_info.dart';
+import 'package:motazen/pages/assesment_page/alert_dialog.dart';
+import 'package:motazen/pages/communities_page/bages/display_badges.dart';
 import 'package:motazen/pages/communities_page/community/invite/invite.dart';
 import 'package:motazen/pages/communities_page/community/leaderboard_page.dart';
 import 'package:motazen/theme.dart';
 import 'package:provider/provider.dart';
-import '../../../Sidebar_and_navigation/navigation_bar.dart';
-import '../../../controllers/community_controller.dart';
-import '../../../isar_service.dart';
-import '../../assesment_page/alert_dialog.dart';
-import '../bages/display_badges.dart';
+import 'package:motazen/Sidebar_and_navigation/navigation_bar.dart';
+import 'package:motazen/controllers/community_controller.dart';
 
 class CommunityInfo extends StatefulWidget {
   final dynamic comm;
@@ -26,11 +25,12 @@ class CommunityInfo extends StatefulWidget {
 }
 
 class _CommunityInfoState extends State<CommunityInfo> {
-  CommunityController communityController = Get.find();
+  CommunityController communityController = Get.find<CommunityController>();
+
   int membercount = 0;
 
-  bool isadmin =
-      true; // this varible will be used to display delete and add widget for admins only
+  late bool
+      isadmin; // this varible will be used to display delete and add widget for admins only
   List<dynamic> completedUsersId =
       []; // to be used to display the number of members and members usernames and avatar
   List<dynamic> membersUsername = [];
@@ -96,7 +96,7 @@ class _CommunityInfoState extends State<CommunityInfo> {
         dynamic userDoc = await firestore.collection("user").doc(userId).get();
 
         final users = userDoc.data()! as dynamic;
-        if (users["userID"] == widget.comm.founderUsername) {
+        if (users["userID"] == widget.comm.founderUserID) {
           if (widget.comm.isDeleted) {
             continue;
           } else {
@@ -151,37 +151,20 @@ class _CommunityInfoState extends State<CommunityInfo> {
 
   @override
   initState() {
-    if (widget.comm.founderUsername != firebaseAuth.currentUser!.uid) {
-      setState(() {
-        isadmin = false;
-      });
+    if (widget.comm.founderUserID == firebaseAuth.currentUser!.uid) {
+      isadmin = true;
+    } else {
+      isadmin = false;
     }
 
-    if (communityController.listOfCreatedCommunities
-            .indexWhere((element) => element.id == widget.comm.id) <
-        0) // this means you are not an admin
-
-    {
-      setState(() {
-        isadmin = false;
-      });
-    }
-
-    if (widget.fromInvite) {
-      setState(() {
-        isadmin = false;
-      });
-    }
     dbFuture1 = getDataName();
 
-    // dbFuture2 = getDataprofile();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var aspectList = Provider.of<AspectController>(context);
-
+    var aspectList = Provider.of<AspectController>(context, listen: false);
     final scrollController = ScrollController();
 
     return Scaffold(
@@ -208,10 +191,10 @@ class _CommunityInfoState extends State<CommunityInfo> {
                     onTap: () {
 // we should check whether there is
 
-                      Get.to(CommunityLeaderboardPage(comm: widget.comm));
+                      Get.to(() => CommunityLeaderboardPage(comm: widget.comm));
                     },
-                    child: Column(
-                      children: const [
+                    child: const Column(
+                      children: [
                         Image(
                             height: 35,
                             width: 35,
@@ -237,7 +220,6 @@ class _CommunityInfoState extends State<CommunityInfo> {
                   ),
                   child: Center(
                     child: SizedBox(
-                      // height:MediaQuery.of(context).size.height/2 ,
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -254,13 +236,6 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                       width: 4,
                                       color: Theme.of(context)
                                           .scaffoldBackgroundColor),
-                                  // boxShadow: [
-                                  //   BoxShadow(
-                                  //       spreadRadius: 2,
-                                  //       blurRadius: 10,
-                                  //       color: Colors.black.withOpacity(0.1),
-                                  //       offset: const Offset(0, 10))
-                                  // ],
                                   shape: BoxShape.circle,
                                 ),
                                 child: aspectList.getSelectedIcon(
@@ -347,7 +322,6 @@ class _CommunityInfoState extends State<CommunityInfo> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final data = snapshot.data;
-                    // if (data.length != 0 ) {
                     return SliverPadding(
                       padding: const EdgeInsets.only(top: 15),
                       sliver: MediaQuery.removeViewInsets(
@@ -381,18 +355,14 @@ class _CommunityInfoState extends State<CommunityInfo> {
                                           (BuildContext context, int index) {
                                         return SizedBox(
                                             height: 75,
-                                            // margin: const EdgeInsets.symmetric(
-                                            //     horizontal: 20, vertical: 10),
-
                                             child: ListTile(
                                                 minLeadingWidth: 60,
                                                 //!كلمة المشرف ما طلعت
-                                                trailing: data[index]
-                                                            .id == // this one was or i will make it and and
-                                                        widget.comm
-                                                            .founderUsername
-                                                    ? const Text("المشرف")
-                                                    : null,
+                                                trailing:
+                                                    widget.comm.founderUserID ==
+                                                            data[index].id
+                                                        ? const Text("المشرف")
+                                                        : null,
                                                 visualDensity:
                                                     const VisualDensity(
                                                         vertical: -3),
@@ -493,34 +463,18 @@ class _CommunityInfoState extends State<CommunityInfo> {
                       : "هل أنت متأكد من مغادرة المجتمع",
                   '');
               if (action == DialogsAction.yes) {
-                if (isadmin) {
-                  await deleteCommunity();
-                  setState(() {});
-                  if (mounted) {
-                    Navigator.pop(context); //Note: why is it duplicated
-                    Navigator.pop(context);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NavBar(
-                                  selectedIndex: 2,
-                                  selectedNames: aspectList.getSelectedNames(),
-                                )));
-                  }
-                } else {
-                  await leaveCommunity();
-                  setState(() {});
-                  if (mounted) {
-                    //! why are there 2 pop
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NavBar(
+                await communityController.deleteCommunity(widget.comm);
+                setState(() {});
+                if (mounted) {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NavBar(
                                 selectedIndex: 2,
-                                selectedNames: aspectList.getSelectedNames())));
-                  }
+                                selectedNames: aspectList.getSelectedNames(),
+                              )));
                 }
               }
             },
@@ -544,214 +498,5 @@ class _CommunityInfoState extends State<CommunityInfo> {
             ),
           ),
         ));
-  }
-
-//! add code to delete the documnet of the communinity from the collection when last member leave
-  deleteCommunity() async {
-    //in here after making isDeleted = true on the collection i should also change it to true in the joined of all members
-    dynamic communityDoc;
-// loop through all users and their joined community of the id is equal than make isDeleted = true;
-
-    if (widget.comm.isPrivate) {
-      await firestore
-          .collection('private_communities')
-          .doc(widget.comm.id)
-          .update({'isDeleted': true});
-      communityDoc = await firestore
-          .collection('private_communities')
-          .doc(widget.comm.id)
-          .get();
-
-      final cuurentCommunityDoc = communityDoc.data()! as dynamic;
-      List progressList = cuurentCommunityDoc['progress_list'];
-      for (int i = 0; i < progressList.length; i++) {
-        String x = progressList[i].toString();
-        String userId = x.substring(1, x.indexOf(':'));
-        dynamic userDoc = await firestore.collection("user").doc(userId).get();
-        final users = userDoc.data()! as dynamic;
-        List join = users["joinedCommunities"];
-        //try to use joinedCommunitiess in the authcontroller
-        for (int i = 0; i < join.length; i++) {
-          if (join[i]["_id"] == widget.comm.id) {
-            join[i]["isDeleted"] = true;
-            await firestore
-                .collection('user')
-                .doc(userId)
-                .update({'joinedCommunities': join});
-          }
-        }
-      }
-    } else {
-      await firestore
-          .collection('public_communities')
-          .doc(widget.comm.id)
-          .update({'isDeleted': true});
-      communityDoc = await firestore
-          .collection('public_communities')
-          .doc(widget.comm.id)
-          .get();
-      final cuurentCommunityDoc = communityDoc.data()! as dynamic;
-      List progressList = cuurentCommunityDoc['progress_list'];
-      for (int i = 0; i < progressList.length; i++) {
-        String x = progressList[i].toString();
-        String userId = x.substring(1, x.indexOf(':'));
-        dynamic userDoc = await firestore.collection("user").doc(userId).get();
-        final users = userDoc.data()! as dynamic;
-        List join = users["joinedCommunities"];
-        //try to use joinedCommunitiess in the authcontroller
-        for (int i = 0; i < join.length; i++) {
-          if (join[i]["_id"] == widget.comm.id) {
-            join[i]["isDeleted"] = true;
-            await firestore
-                .collection('user')
-                .doc(userId)
-                .update({'joinedCommunities': join});
-          }
-        }
-      }
-    }
-
-    //delete messages
-    // FirebaseDatabase.instance
-    //     .ref('post_channels/')
-    //     .child('${widget.comm.id}')
-    //     .child('isActive')
-    //     .set(false);
-
-//delete from public_communities
-    IsarService iser = IsarService();
-    iser.deleteCommunity(widget.comm.id);
-//try the goal check if the link goes and see of the collection delted then cimpien code
-    //! you were trying to delete the community of you werer the lase memer
-
-    if (membercount == 1) {
-      if (!widget.comm.isPrivate) {
-        final t =
-            firestore.collection('public_communities').doc(widget.comm.id);
-        await t.delete();
-      } else {
-        final t =
-            firestore.collection('private_communities').doc(widget.comm.id);
-        await t.delete();
-      }
-    }
-
-//! see what to do with the private collection when it is deleted it
-
-    communityController.listOfCreatedCommunities
-        .removeWhere((element) => element.id == widget.comm.id);
-    await firestore
-        .collection('user')
-        .doc(firebaseAuth.currentUser!.uid)
-        .update({
-      'createdCommunities': communityController.listOfCreatedCommunities
-          .map((e) => {
-                'aspect': e.aspect,
-                'communityName': e.communityName,
-                'creationDate': e.creationDate,
-                'founderUsername': e.founderUsername,
-                'goalName': e.goalName,
-                'isPrivate': e.isPrivate,
-                'progress_list': e.progressList,
-                '_id': e.id,
-                "isDeleted": e.isDeleted
-              })
-          .toList(),
-    });
-  }
-
-  leaveCommunity() async {
-    // delete joined community
-    IsarService iser = IsarService();
-    iser.deleteCommunity(widget.comm.id);
-// here you want to add code to delete the member id from the list in the public/private collections
-    // so first check if it is private or public and then do the rest
-//! this code for adjusting the progress list after a member leaves but i commented it cause we would like to save those who completed the goal even if they left
-    // if (widget.comm.isPrivate) {
-    //   communityDoc = await firestore
-    //       .collection('private_communities')
-    //       .doc(widget.comm.id)
-    //       .get();
-
-    //   if (communityDoc.data() != null) {
-    //     final CurrentCommunityDoc = communityDoc.data() as dynamic;
-
-    //     List communities = [];
-
-    //     communities = CurrentCommunityDoc['progress_list'];
-    //     for (int i = 0; i < communities.length; i++) {
-    //       if (communities[i][firebaseAuth.currentUser!.uid] != null) {
-    //         communities.removeAt(i);
-
-    //         await firestore
-    //             .collection('private_communities')
-    //             .doc(widget.comm.id)
-    //             .update({
-    //           'progress_list': CurrentCommunityDoc['progress_list'],
-    //         });
-    //         break;
-    //       }
-    //     }
-    //   }
-    // } else {
-    //   //means it is public
-    //   communityDoc = await firestore
-    //       .collection('public_communities')
-    //       .doc(widget.comm.id)
-    //       .get();
-
-    //   if (communityDoc.data() != null) {
-    //     final CurrentCommunityDoc = communityDoc.data() as dynamic;
-
-    //     List communities = [];
-
-    //     communities = CurrentCommunityDoc['progress_list'];
-    //     for (int i = 0; i < communities.length; i++) {
-    //       if (communities[i][firebaseAuth.currentUser!.uid] != null) {
-    //         communities.removeAt(i);
-
-    //         await firestore
-    //             .collection('public_communities')
-    //             .doc(widget.comm.id)
-    //             .update({
-    //           'progress_list': CurrentCommunityDoc['progress_list'],
-    //         });
-    //         break;
-    //       }
-    //     }
-    //   }
-    // }
-    communityController.listOfJoinedCommunities
-        .removeWhere((element) => element.id == widget.comm.id);
-    await firestore
-        .collection('user')
-        .doc(firebaseAuth.currentUser!.uid)
-        .update({
-      'joinedCommunities': communityController.listOfJoinedCommunities
-          .map((e) => {
-                'aspect': e.aspect,
-                'communityName': e.communityName,
-                'creationDate': e.creationDate,
-                'progress_list': e.progressList,
-                'founderUsername': e.founderUsername,
-                'goalName': e.goalName,
-                'isPrivate': e.isPrivate,
-                "isDeleted": e.isDeleted,
-                '_id': e.id
-              })
-          .toList(),
-    });
-
-    if (membercount == 1) {
-      if (!widget.comm.isPrivate) {
-        final t =
-            firestore.collection('public_communities').doc(widget.comm.id);
-        await t.delete();
-      } else {
-        final t =
-            firestore.collection('private_communities').doc(widget.comm.id);
-        await t.delete();
-      }
-    }
   }
 }

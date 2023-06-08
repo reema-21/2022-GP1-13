@@ -11,7 +11,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:motazen/models/task_model.dart';
 import 'package:motazen/isar_service.dart';
 import 'package:motazen/controllers/localtask_controller.dart';
-import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../Sidebar_and_navigation/navigation_bar.dart';
@@ -42,7 +41,7 @@ class _AddGoalState extends State<AddGoal> {
   int importance = 0;
   final _goalNmaeController = TextEditingController();
   final _dueDateController = TextEditingController();
-  final TaskLocalControleer freq = Get.put(TaskLocalControleer());
+  final TaskLocalControleer freq = Get.find();
   bool isFirstclick = true;
 
   String? isSelected;
@@ -341,8 +340,8 @@ class _AddGoalState extends State<AddGoal> {
                                 SnackBar(
                                   duration: const Duration(milliseconds: 500),
                                   backgroundColor: Colors.yellow.shade300,
-                                  content: Row(
-                                    children: const [
+                                  content: const Row(
+                                    children: [
                                       Icon(
                                         Icons.error,
                                         color: Color.fromARGB(255, 0, 0, 0),
@@ -397,31 +396,15 @@ class _AddGoalState extends State<AddGoal> {
                                 Icons.thumb_up_sharp,
                                 color: Colors.white,
                               ));
-                          // ScaffoldMessenger.of(context).showSnackBar(
-                          //   SnackBar(
-                          //     backgroundColor: Colors.green.shade300,
-                          //     duration: const Duration(milliseconds: 500),
-                          //     content: Row(
-                          //       children: const [
-                          //         Icon(Icons.thumb_up_sharp),
-                          //         SizedBox(width: 20),
-                          //         Expanded(
-                          //           child: ,
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // );
                           await _addGoal(aspectList.getSelectedNames());
-                          List<Aspect> selected = aspectList.selected;
                           await tasklist.createTaskTodoList();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               duration: const Duration(milliseconds: 500),
                               backgroundColor: Colors.yellow.shade300,
-                              content: Row(
-                                children: const [
+                              content: const Row(
+                                children: [
                                   Icon(
                                     Icons.error,
                                     color: Color.fromARGB(255, 0, 0, 0),
@@ -509,14 +492,13 @@ class _AddGoalState extends State<AddGoal> {
                                       if (newDate.duration.inDays <
                                           freq.checkTotalTaskDuration.value) {
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                duration: const Duration(
+                                            .showSnackBar(const SnackBar(
+                                                duration: Duration(
                                                     milliseconds: 1000),
-                                                backgroundColor:
-                                                    const Color.fromARGB(
-                                                        255, 243, 9, 9),
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 243, 9, 9),
                                                 content: Row(
-                                                  children: const [
+                                                  children: [
                                                     Icon(
                                                       Icons.error,
                                                       color: Color.fromARGB(

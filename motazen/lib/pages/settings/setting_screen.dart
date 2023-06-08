@@ -48,8 +48,8 @@ class SettingScreen extends StatelessWidget {
           padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
           child: ListView(
             children: [
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Icon(
                     Icons.person,
                     color: Colors.green,
@@ -78,8 +78,8 @@ class SettingScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 40),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Icon(
                     Icons.lightbulb_sharp,
                     color: Colors.green,

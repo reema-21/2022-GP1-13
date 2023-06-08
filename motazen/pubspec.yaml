@@ -27,7 +27,7 @@ dependencies:
   line_icons: ^2.0.1
   firebase_auth: ^4.2.5
   google_fonts: ^4.0.3
-  searchfield: ^0.7.2
+  searchfield: ^0.8.2
   textfield_search: ^0.10.0
   flutter_multi_select_items: ^0.4.2
   flutter_custom_clippers: ^2.0.0
@@ -37,7 +37,7 @@ dependencies:
   auto_size_text: ^3.0.0
   flutter_rating_bar: ^4.0.1
   rflutter_alert: ^2.0.4
-  intl: ^0.17.0
+  intl: ^0.18.0
   multiselect: ^0.1.0
   number_inc_dec: ^0.8.0
   flutter_spinbox: ^0.13.0
@@ -104,4 +104,3 @@ flutter:
       fonts:
         - asset: assets/fonts/Frutiger-LT-Arabic-45-Light.ttf
           weight: 300
-

@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:motazen/controllers/auth_controller.dart';
 import 'package:motazen/controllers/community_controller.dart';
 import 'package:motazen/controllers/edit_controller.dart';
+import 'package:motazen/controllers/localtask_controller.dart';
 import 'package:motazen/controllers/my_controller.dart';
 import 'package:motazen/controllers/task_controller.dart';
 import 'package:motazen/pages/homepage/daily_tasks/create_list.dart';
@@ -32,7 +33,7 @@ class _SideBarState extends State<SideBar> {
   /// for update data
   CollectionReference ref = FirebaseFirestore.instance.collection('user');
   final ImagePicker _picker = ImagePicker();
-  final AuthController authController = Get.find<AuthController>();
+  AuthController authController = Get.put(AuthController());
   File? file;
 
   /// Uploads an image file to Firebase storage and returns the download URL
@@ -221,7 +222,7 @@ class _SideBarState extends State<SideBar> {
                 //! I might need to dispose of tasklist provider
                 await FirebaseAuth.instance.signOut();
                 ItemList().clearList();
-                // Get.delete<TaskLocalControleer>();
+                Get.delete<TaskLocalControleer>();
                 Get.delete<TaskControleer>();
                 Get.delete<MyControleer>();
                 Get.delete<EditMyControleer>();

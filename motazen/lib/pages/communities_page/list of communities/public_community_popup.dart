@@ -47,11 +47,11 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: txt(
-                          txt: community.communityName.toString(),
-                          fontSize: 22,
-                        ),
-                      ),
+                          child: Center(
+                              child: Text(
+                        community.communityName.toString(),
+                        style: titleText2,
+                      ))),
                       Expanded(
                         child: txt(
                           txt: 'جانب الحياة: ${community.aspect.toString()}',
@@ -271,9 +271,8 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                           .creationDate,
                                                       'progress_list': community
                                                           .progressList,
-                                                      'founderUsername':
-                                                          community
-                                                              .founderUsername,
+                                                      'founderUserID': community
+                                                          .founderUserID,
                                                       'goalName':
                                                           community.goalName,
                                                       'isPrivate':
@@ -305,9 +304,8 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                           .creationDate,
                                                       'progress_list': userData[
                                                           'progress_list'],
-                                                      'founderUsername':
-                                                          community
-                                                              .founderUsername,
+                                                      'founderUserID': community
+                                                          .founderUserID,
                                                       'goalName':
                                                           community.goalName,
                                                       'isPrivate':
@@ -328,9 +326,8 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                             community.aspect,
                                                         isPrivate:
                                                             community.isPrivate,
-                                                        founderUsername:
-                                                            community
-                                                                .founderUsername,
+                                                        founderUserID: community
+                                                            .founderUserID,
                                                         isDeleted:
                                                             community.isDeleted,
                                                         creationDate: community
@@ -343,7 +340,9 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                     communityController
                                                         .update();
                                                     await communityController
-                                                        .acceptInvitation();
+                                                        .acceptInvitation(
+                                                            community.id,
+                                                            false);
 
                                                     // communityController
                                                     //     .update();
@@ -355,7 +354,7 @@ Future<dynamic> publicCommunityDetailsPopup(BuildContext context,
                                                   }
                                                 },
 
-                                                child: const Text("انضمام"),
+                                                child: const Text("حسنا"),
                                               )
                                             ])),
                                           ));

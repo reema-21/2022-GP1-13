@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:motazen/controllers/auth_controller.dart';
 import 'package:motazen/controllers/community_controller.dart';
 import 'package:motazen/controllers/edit_controller.dart';
+import 'package:motazen/controllers/localtask_controller.dart';
 import 'package:motazen/controllers/my_controller.dart';
 import 'package:motazen/controllers/task_controller.dart';
 import 'package:motazen/entities/goal.dart';
@@ -99,7 +100,7 @@ class _InitializeAspectsState extends State<InitializeAspects> {
     _saveNumOfTasksToBeShown(5); // the default value set for a new user
     toShowTaskNumber = 5;
     if (!(widget.isRetake!)) {
-      Get.put(CommunityController());
+      Get.lazyPut(() => CommunityController());
       Get.put(AuthController());
       Get.put(TaskControleer());
       Get.put(MyControleer());
@@ -161,9 +162,9 @@ class _GetAllAspectsState extends State<GetAllAspects> {
     });
 
     // create the getx controllers
-    Get.put(CommunityController());
+    Get.lazyPut(() => CommunityController());
     Get.put(AuthController());
-    // Get.put(TaskLocalControleer());
+    Get.put(TaskLocalControleer());
     Get.put(TaskControleer());
     Get.put(MyControleer());
     Get.put(EditMyControleer());
@@ -194,7 +195,7 @@ class _GetAllAspectsState extends State<GetAllAspects> {
                 } else {
                   return const CircularProgressIndicator();
                 }
-                return const SizedBox.shrink(); //might c
+                return const SizedBox.shrink(); //might cause error
               },
             );
           },

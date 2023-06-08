@@ -58,7 +58,7 @@ class NotificationController {
     final List<NotificationModel> notifications = [];
 
     for (final doc in querySnapshot.docs
-        .cast<QueryDocumentSnapshot<Map<String, dynamic>>>()) {
+        .whereType<QueryDocumentSnapshot<Map<String, dynamic>>>()) {
       final notydoc = doc.data();
 
       // Check if it's an invitation and if the user has the community aspect
@@ -66,6 +66,7 @@ class NotificationController {
         final communityAspect = notydoc['community']['aspect'];
         if (!selectedAspects.contains(communityAspect)) {
           await removeNotification(notificationId: doc.reference.id);
+
           // Send a notification to the sender
           final recipientId = notydoc['senderId'];
           final senderId = firebaseAuth.currentUser!.uid;
@@ -91,16 +92,19 @@ class NotificationController {
           notifications.any((n) => n.notificationId == doc.reference.id);
       if (alreadyExists) {
         continue;
-      } else if (notydoc['type'] == 'alert') {
+      }
+
+      if (notydoc['type'] == 'alert') {
         // Check if it's an alert notification and if the notificationOfTheCommunity value already exists in the list
         final notificationOfTheCommunity =
             notydoc['notificationOfTheCommunity'];
-        final alreadyExists = notifications.any(
+        final alertAlreadyExists = notifications.any(
             (n) => n.notificationOfTheCommunity == notificationOfTheCommunity);
-        if (alreadyExists) {
+        if (alertAlreadyExists) {
           continue;
         }
       }
+
       // Create a new notification model and add it to the list
       final notification = NotificationModel(
         notificationId: doc.reference.id,
@@ -116,7 +120,7 @@ class NotificationController {
                 creationDate:
                     (notydoc['community']['creationDate'] as Timestamp)
                         .toDate(),
-                founderUsername: notydoc['community']['founderUsername'],
+                founderUserID: notydoc['community']['founderUserID'],
                 goalName: notydoc['community']['goalName'],
                 isPrivate: notydoc['community']['isPrivate'],
                 id: notydoc['community']['_id'],
@@ -157,8 +161,8 @@ class NotificationController {
           builder: (BuildContext context, AsyncSnapshot<List<Goal>> snapshot) {
             // If the goal data has loaded, show the dialog
             if (snapshot.hasData) {
-              List<Goal> goalsName = snapshot.data!;
-              Goal selectedGoal = goalsName.first;
+              final List<Goal> goalsName = snapshot.data!;
+              late Goal selectedGoal = goalsName.first;
 
               return AlertDialog(
                 title: Text(
@@ -177,19 +181,15 @@ class NotificationController {
                               )
                             : DropdownButtonFormField(
                                 menuMaxHeight: 200,
-                                value: selectedGoal
-                                    .id, // Set the initial value to the id of the first goal
-                                items: goalsName.map((goal) {
-                                  return DropdownMenuItem(
-                                    value:
-                                        goal.id, // Use the goal id as the value
-                                    child: Text(goal.titel),
-                                  );
-                                }).toList(),
-                                onChanged: (val) {
-                                  selectedGoal = goalsName
-                                      .firstWhere((goal) => goal.id == val);
-                                },
+                                value: selectedGoal.id,
+                                items: goalsName
+                                    .map((goal) => DropdownMenuItem(
+                                          value: goal.id,
+                                          child: Text(goal.titel),
+                                        ))
+                                    .toList(),
+                                onChanged: (val) => selectedGoal = goalsName
+                                    .firstWhere((goal) => goal.id == val),
                                 icon: const Icon(
                                   Icons.arrow_drop_down_circle,
                                   color: Color(0xFF66BF77),
@@ -216,29 +216,41 @@ class NotificationController {
                             if (acceptInvitationFormKey.currentState!
                                     .validate() &&
                                 goalsName.isNotEmpty) {
-                              CommunityID newCom = _createCommunityID(
+                              String commId = notification.comm.id ??
+                                  notification.notificationOfTheCommunity;
+                              final CommunityID newCom = _createCommunityID(
                                   notification, selectedGoal);
-                              IsarService iser = IsarService();
+                              final IsarService iser = IsarService();
                               await iser.saveCom(newCom);
                               await iser.createGoal(selectedGoal);
                               await _updateCommunityInDatabase(
                                   notification, newCom);
-                              await communityController.acceptInvitation();
+                              await communityController.acceptInvitation(
+                                  commId, true);
                               communityController.update();
-                              removeNotification(
+                              await removeNotification(
                                   notificationId: notification.notificationId);
-                              Get.to(() => CommunityHomePage(
-                                    comm: communityController
-                                        .listOfJoinedCommunities.last,
-                                    fromInvite: true,
-                                  ));
+                              if (context.mounted) {
+                                Navigator.popUntil(
+                                    context, (route) => route.isFirst);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CommunityHomePage(
+                                      comm: communityController
+                                          .listOfJoinedCommunities.last,
+                                      fromInvite: true,
+                                    ),
+                                  ),
+                                );
+                              }
                             } else {
                               Navigator.pop(context);
                             }
                           },
-                          child: const Text(
-                            "انضمام",
-                            style: TextStyle(
+                          child: Text(
+                            goalsName.isEmpty ? "حسنا" : "انضمام",
+                            style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
                             ),
@@ -288,7 +300,7 @@ class NotificationController {
         aspect: notification.comm.aspect,
         isPrivate: notification.comm.isPrivate,
         isDeleted: notification.comm.isDeleted,
-        founderUsername: notification.comm.founderUsername,
+        founderUserID: notification.comm.founderUserID,
         creationDate: notification.comm.creationDate,
         goalName: notification.comm.goalName,
         id: notification.comm.id,
@@ -302,7 +314,7 @@ class NotificationController {
       'communityName': notification.comm.communityName,
       'creationDate': notification.comm.creationDate,
       'progress_list': memeberProgressList,
-      'founderUsername': notification.comm.founderUsername,
+      'founderUserID': notification.comm.founderUserID,
       'goalName': notification.comm.goalName,
       'isPrivate': notification.comm.isPrivate,
       '_id': notification.comm.id,

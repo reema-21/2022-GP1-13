@@ -27,7 +27,7 @@ class AddTask extends StatefulWidget {
 
 class _AddTaskState extends State<AddTask> {
   //counter
-  final TaskLocalControleer freq = Get.put(TaskLocalControleer());
+  final TaskLocalControleer freq = Get.find();
 
   //counter //is this code needed
   List<String> durationName = ['أيام', 'أسابيع', 'أشهر', 'سنوات'];
@@ -200,14 +200,12 @@ class _AddTaskState extends State<AddTask> {
                                   if (isDependent) {
                                     if (mounted) {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              duration:
-                                                  const Duration(seconds: 1),
-                                              backgroundColor:
-                                                  const Color.fromARGB(
-                                                      255, 196, 48, 37),
+                                          .showSnackBar(const SnackBar(
+                                              duration: Duration(seconds: 1),
+                                              backgroundColor: Color.fromARGB(
+                                                  255, 196, 48, 37),
                                               content: Row(
-                                                children: const [
+                                                children: [
                                                   Icon(
                                                     Icons.error,
                                                     color: Colors.white,

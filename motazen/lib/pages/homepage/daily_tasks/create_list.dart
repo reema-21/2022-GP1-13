@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:motazen/entities/aspect.dart';
-import 'package:motazen/entities/local_task.dart';
-import 'package:motazen/isar_service.dart';
 import 'package:motazen/models/todo_model.dart';
 import 'package:motazen/pages/homepage/daily_tasks/ranking_algorithm.dart';
-import 'package:motazen/pages/settings/tasklist_variables.dart';
-import 'package:sorted/sorted.dart';
 
 class ItemList {
 //initialize attributes

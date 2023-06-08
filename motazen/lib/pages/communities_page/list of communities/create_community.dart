@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motazen/controllers/community_controller.dart';
@@ -28,12 +30,13 @@ class _CreateCommunityState extends State<CreateCommunity> {
   List<String> list = [];
   TextEditingController goalNameController = TextEditingController();
   TextEditingController searchContentSetor = TextEditingController();
-  CommunityController communityController = Get.find();
-  TaskControleer taskControleer = Get.find();
+  CommunityController communityController = Get.find<CommunityController>();
+  TaskControleer taskControleer = Get.find<TaskControleer>();
   String? goalName;
   bool enabled = false;
   bool private = true;
   String? isSelected;
+  String? isGoalSelected;
   bool public = false;
   DateTime duration = DateTime.now();
   int difference = 0;
@@ -127,6 +130,7 @@ class _CreateCommunityState extends State<CreateCommunity> {
                           style: TextStyle(fontSize: 16),
                         ),
                       ),
+
                       aspectWidget(context),
                       SizedBox(
                         height: screenHeight(context) * 0.01,
@@ -135,88 +139,129 @@ class _CreateCommunityState extends State<CreateCommunity> {
                           child: Padding(
                         padding: mediaQuery.viewInsets,
                         child: Column(children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8, bottom: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: const [
-                                Text('الهدف', style: TextStyle(fontSize: 16)),
-                              ],
-                            ),
-                          ),
+                          //  Padding(
+                          //   padding: const EdgeInsets.only(top: 8, bottom: 8),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.start,
+                          //     children: const [
+                          //       Text('الهدف', style: TextStyle(fontSize: 16)),
+                          //     ],
+                          //   ),
+                          // ),
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: GestureDetector(
-                              onTap: () {
-                                if (enabled) {
-                                  setState(() {});
-                                }
-                              },
-                              child: SearchField(
-                                controller: goalNameController,
-
-                                onSuggestionTap: (p0) {
-                                  setState(() {
-                                    goalName = p0.searchKey;
-                                  });
-                                },
-                                validator: (value) {
-                                  bool isNotThere = false;
-                                  for (int i = 0; i < list.length; i++) {
-                                    if (value != null && value == list[i]) {
-                                      isNotThere = true;
-                                      break;
-                                    }
-                                  }
-
-                                  if (value == null || value.isEmpty) {
-                                    return "من فضلك اختر الهدف";
-                                  } else if (!isNotThere) {
-                                    return "هذا الهدف غير موجود ";
-                                  } else {
-                                    return null;
+                                onTap: () {
+                                  if (enabled) {
+                                    setState(() {});
                                   }
                                 },
-                                enabled: enabled,
-                                itemHeight: 50,
-                                maxSuggestionsInViewPort: 4,
-                                hint: "اسم الهدف",
-                                searchInputDecoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: Colors.blueGrey.shade200,
-                                          width: 1)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(
-                                          color: kPrimaryColor.withOpacity(0.8),
-                                          width: 2)),
-                                ),
-                                suggestions: ((list)
-                                    .map(
-                                      (e) => SearchFieldListItem(
-                                        e,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              txt(txt: e, fontSize: 16),
-                                            ],
-                                          ),
+                                child: (enabled & list.isNotEmpty)
+                                    ?
+                                    // new widget
+                                    //TODO :in case the user choose aspect the onther aspect BOTH HAVE GOALS
+
+                                    DropdownButtonFormField(
+                                        key: UniqueKey(),
+                                        value: isGoalSelected,
+                                        items: list
+                                            .map(
+                                              (e) => DropdownMenuItem(
+                                                value: e,
+                                                child: Text(e),
+                                              ),
+                                            )
+                                            .toList(),
+                                        onChanged: (val) {
+                                          setState(
+                                            () {
+                                              //this is the selected goal
+                                              isGoalSelected = val as String;
+                                            },
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.arrow_drop_down_circle,
+                                          color: Color(0xFF66BF77),
                                         ),
-                                      ),
-                                    )
-                                    .toList()),
+                                        validator: (value) => value == null
+                                            ? 'اختر الهدف المراد مشاركته '
+                                            : null,
+                                        decoration: const InputDecoration(
+                                          labelText: "الهدف",
+                                          prefixIcon: Icon(
+                                            Icons.pie_chart,
+                                            color: Color(0xFF66BF77),
+                                          ),
+                                          border: UnderlineInputBorder(),
+                                        ),
+                                      )
+                                    : Container()
+                                // SearchField(
+                                //   controller: goalNameController,
+
+                                //   onSuggestionTap: (p0) {
+                                //     setState(() {
+                                //       goalName = p0.searchKey;
+                                //     });
+                                //   },
+                                //   validator: (value) {
+                                //     bool isNotThere = false;
+                                //     for (int i = 0; i < list.length; i++) {
+                                //       if (value != null && value == list[i]) {
+                                //         isNotThere = true;
+                                //         break;
+                                //       }
+                                //     }
+
+                                //     if (value == null || value.isEmpty) {
+                                //       return "من فضلك اختر الهدف";
+                                //     } else if (!isNotThere) {
+                                //       return "هذا الهدف غير موجود ";
+                                //     } else {
+                                //       return null;
+                                //     }
+                                //   },
+                                //   enabled: enabled,
+                                //   itemHeight: 50,
+                                //   maxSuggestionsInViewPort: 4,
+                                //   hint: "اسم الهدف",
+                                //   searchInputDecoration: InputDecoration(
+                                //     enabledBorder: OutlineInputBorder(
+                                //         borderRadius: BorderRadius.circular(10),
+                                //         borderSide: BorderSide(
+                                //             color: Colors.blueGrey.shade200,
+                                //             width: 1)),
+                                //     focusedBorder: OutlineInputBorder(
+                                //         borderRadius: BorderRadius.circular(10),
+                                //         borderSide: BorderSide(
+                                //             color: kPrimaryColor.withOpacity(0.8),
+                                //             width: 2)),
+                                //   ),
+                                //   suggestions: ((list)
+                                //       .map(
+                                //         (e) => SearchFieldListItem(
+                                //           e,
+                                //           child: Padding(
+                                //             padding: const EdgeInsets.all(8.0),
+                                //             child: Row(
+                                //               crossAxisAlignment:
+                                //                   CrossAxisAlignment.end,
+                                //               children: [
+                                //                 txt(txt: e, fontSize: 16),
+                                //               ],
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       )
+                                //       .toList()),
                                 // hasOverlay:
-                                //     false, //this one to a be able to scroll ap
-                              ),
-                            ),
+                                //   //     false, //this one to a be able to scroll ap
+                                // ),
+                                ),
                           )
                         ]),
                       )),
@@ -232,14 +277,17 @@ class _CreateCommunityState extends State<CreateCommunity> {
                               String commID =
                                   '${DateTime.now().toUtc().millisecondsSinceEpoch}_${firebaseAuth.currentUser!.uid}';
                               if (_createCommunityFormKey.currentState!
-                                  .validate()) {
+                                      .validate() &
+                                  enabled &
+                                  list.isNotEmpty) {
                                 Goal? choseGoal =
                                     Goal(userID: IsarService.getUserID);
                                 IsarService iser =
                                     IsarService(); // initialize local storage
                                 choseGoal = await iser.getgoal(
-                                  goalName!,
+                                  isGoalSelected!,
                                 ); // here iam fetching the goal information from isar to assign it to the communties
+
                                 final createdComm = Community(
                                     progressList: [
                                       //!here you changes it form being a zero when start to the value of the goalProgress
@@ -254,16 +302,15 @@ class _CreateCommunityState extends State<CreateCommunity> {
                                     isDeleted:
                                         false, //!isDeleted in here false you just create it
 
-                                    founderUsername:
+                                    founderUserID:
                                         firebaseAuth.currentUser!.uid,
                                     creationDate: DateTime.now(),
-                                    goalName: goalName,
+                                    goalName: isGoalSelected,
                                     id: commID);
-                                communityController.listOfCreatedCommunities
-                                    .insert(0, createdComm);
-                                communityController.update();
+                                // communityController.listOfCreatedCommunities
+                                //     .add(createdComm);
+                                // communityController.update();
                                 communityController.createCommunity(
-                                  invitedUsers: [],
                                   community: createdComm,
                                 );
                                 CommunityID newCom =
@@ -277,6 +324,32 @@ class _CreateCommunityState extends State<CreateCommunity> {
                                 Get.back();
                                 Get.to(() => CommunityHomePage(
                                     fromInvite: false, comm: createdComm));
+                              } else {
+                                log(enabled.toString());
+                                if (!enabled) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          duration: const Duration(
+                                              milliseconds: 1000),
+                                          backgroundColor:
+                                              Colors.yellow.shade300,
+                                          content: const Row(
+                                            children: [
+                                              Icon(
+                                                Icons.error,
+                                                color: Color.fromARGB(
+                                                    255, 0, 0, 0),
+                                              ),
+                                              SizedBox(width: 20),
+                                              Expanded(
+                                                child: Text(
+                                                    "لايمكن انشاء المجتمع , ليس لديك أهداف متعلقة بهذا الجانب ",
+                                                    style: TextStyle(
+                                                        color: Colors.black)),
+                                              )
+                                            ],
+                                          )));
+                                }
                               }
                             },
                             child: Container(
@@ -401,6 +474,9 @@ class _CreateCommunityState extends State<CreateCommunity> {
     );
   }
 
+// create normal dropdownMenue
+
+//
   DropdownButtonFormField aspectWidget(BuildContext context) {
     var aspectList = Provider.of<AspectController>(context);
     return DropdownButtonFormField(
@@ -413,6 +489,7 @@ class _CreateCommunityState extends State<CreateCommunity> {
               ))
           .toList(),
       onChanged: (val) {
+        isGoalSelected = null;
         list.clear();
         bool erase = true;
         setState(() {
@@ -467,7 +544,9 @@ class _CreateCommunityState extends State<CreateCommunity> {
               break;
           }
           if (erase) {
+            //!make the selected dropdown menut unselected
             goalNameController.text = "";
+            isGoalSelected = null;
           }
           late List<Goal> goalList;
           getgoals().then((value) {
@@ -482,8 +561,8 @@ class _CreateCommunityState extends State<CreateCommunity> {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   duration: const Duration(milliseconds: 900),
                   backgroundColor: Colors.yellow.shade300,
-                  content: Row(
-                    children: const [
+                  content: const Row(
+                    children: [
                       Icon(
                         Icons.error,
                         color: Color.fromARGB(255, 0, 0, 0),
